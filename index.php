@@ -1,5 +1,5 @@
 <?php
-	// INCLUDES
+	// INCLUDESe
 	session_start();
 	define('ADMINSERV_VERSION', '2.0');
 	require_once 'config/adminserv.cfg.php';
