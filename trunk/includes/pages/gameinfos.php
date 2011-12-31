@@ -185,6 +185,7 @@
 	
 	
 	// HTML
+	$client->Terminate();
 	AdminServTemplate::getHeader();
 ?>
 <section>

@@ -147,7 +147,7 @@ abstract class Utils {
 			}
 		}
 		// On écrit le cookie
-		if( setcookie($cookie_name, $newCookieData, time()+60*60*24*$cookie_expire) ){
+		if( setcookie($cookie_name, $newCookieData, time()+60*60*24*$cookie_expire, '/') ){
 			return true;
 		}else{
 			return false;

@@ -178,3 +178,40 @@ function round(value, precision){
 	power = Math.pow(10, precision);
 	return (Math.ceil(value * power)) / power;
 }
+
+
+/**
+* Récupère les lignes du chat du serveur
+*
+* @param bool hideServerLines -> Afficher ou non les lignes provenant d'un gestionnaire de serveur
+* @return string html
+*/
+function getChatServerLines(hideServerLines){
+	$.getJSON("includes/ajax/get_chatserverlines.php", {s: hideServerLines}, function(data){
+		if(data != null){
+			$("#chat").html(data);
+		}
+	});
+}
+
+
+/**
+* Ajoute une ligne (pseudo + message) dans le chat du serveur
+*/
+function addChatServerLine(){
+	var nickname = $("#chatNickname").val();
+	if( nickname == $("#chatNickname").attr("data-default-value") ){
+		nickname = "";
+	}
+	var color = $("#chatColor").val();
+	var message = $("#chatMessage").val();
+	var destination = $("#chatDestination").val();
+	var hideServerLines = $("#checkServerLines").attr("data-val");
+	
+	$.post("includes/ajax/add_chatserverline.php", {nic: nickname, clr: color, msg: message, dst: destination}, function(response){
+		if(response != null){
+			getChatServerLines(hideServerLines);
+			$("#chatMessage").val("");
+		}
+	});
+}
