@@ -80,7 +80,7 @@ $(document).ready(function(){
 		/**
 		* Server Options
 		*/
-		else if( $("body").hasClass("section-srvopts")  ){
+		else if( $("body").hasClass("section-srvopts") ){
 			// ServerName
 			$("input#ServerName").keyup(function(event){
 				var key = event.keyCode;
@@ -99,7 +99,7 @@ $(document).ready(function(){
 		/**
 		* Game Infos
 		*/
-		else if( $("body").hasClass("section-gameinfos")  ){
+		else if( $("body").hasClass("section-gameinfos") ){
 			// GameMode
 			getCurrentGameModeConfig();
 			$("select#NextGameMode").change(function(){
@@ -163,6 +163,66 @@ $(document).ready(function(){
 				$(this).parent("td").parent("tr").children("td.preview").html("["+min+" min]");
 			});
 		}
-		
+		/**
+		* Chat
+		*/
+		else if( $("body").hasClass("section-chat") ){
+			
+			// ChatServerLines
+			var hideServerLines = 0;
+			
+			// Clique sur "Masquer les lignes du serveur"
+			$(".title-detail a").click(function(){
+				// Valeur
+				hideServerLines = $(this).attr("data-val");
+				if(hideServerLines == "0"){ hideServerLines = "1"; }
+				else{ hideServerLines = "0"; }
+				getChatServerLines(hideServerLines);
+				$(this).attr("data-val", hideServerLines);
+				
+				// Texte
+				var text = $(this).text();
+				$(this).text( $(this).attr("data-txt") );
+				$(this).attr("data-txt", text);
+				return false;
+			});
+			
+			// Affichage toutes les 3s
+			setInterval(function(){
+				getChatServerLines(hideServerLines);
+			}, 3000);
+			
+			// Ajout d'un message
+			$("#chatNickname, #chatMessage").click(function(){
+				var text = $(this).val();
+				var defaultText = $(this).attr("data-default-value");
+				
+				if(text == defaultText){
+					$(this).val("");
+				}
+			});
+			$("#chatNickname, #chatMessage").blur(function(){
+				var text = $(this).val();
+				var defaultText = $(this).attr("data-default-value");
+				
+				if(text == ""){
+					$(this).val(defaultText);
+				}
+			});
+			$("#chatSend").click(function(){
+				var msg = $("#chatMessage").val();
+				if( msg != $("#chatMessage").attr("data-default-value") && msg != "" ){
+					addChatServerLine();
+				}
+			});
+			$("#chatMessage").keypress(function(event){
+				var msg = $(this).val();
+				if( msg != $(this).attr("data-default-value") && msg != "" ){
+					if( event.keyCode == 13 ){
+						addChatServerLine();
+					}
+				}
+			});
+		}
 	}
 });

@@ -2,6 +2,8 @@
 	// Info serveur
 	$serverInfo = AdminServ::getCurrentServerInfo();
 	
+	
+	// HTML
 	$client->Terminate();
 	AdminServTemplate::getHeader();
 ?>
@@ -56,7 +58,7 @@
 				</tr>
 				<tr>
 					<td class="key">Version dédié</td>
-					<td class="value"><?php echo SERVER_BUILD; ?></td>
+					<td class="value"><?php echo SERVER_BUILD.' ('. SERVER_VERSION .')'; ?></td>
 				</tr>
 			</table>
 		</div>

@@ -57,10 +57,10 @@
 			$srvOpt['BuddyNotification'] = $client->getResponse();
 		}
 	}
-	$client->Terminate();
 	
 	
 	// HTML
+	$client->Terminate();
 	AdminServTemplate::getHeader();
 ?>
 <section>

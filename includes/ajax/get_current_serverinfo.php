@@ -3,7 +3,6 @@
 	* Récupère les informations du serveur actuel (map, serveur, stats, joueurs)
 	*/
 	
-	
 	// INCLUDES
 	session_start();
 	require_once '../../config/servers.cfg.php';
@@ -12,12 +11,12 @@
 	require_once '../adminserv.inc.php';
 	AdminServTemplate::getClass();
 	
-	
 	// DATA
-	AdminServ::initialize(false);
-	$out = AdminServ::getCurrentServerInfo();
-	
+	if( AdminServ::initialize(false) ){
+		$out = AdminServ::getCurrentServerInfo();
+	}
 	
 	// OUT
+	$client->Terminate();
 	echo json_encode($out);
 ?>

@@ -10,7 +10,7 @@
 	require_once '../adminserv.inc.php';
 	require_once '../class/utils.class.php';
 	
-	// GET
+	// ISSET
 	if( isset($_GET['srv']) ){ $serverName = $_GET['srv']; }else{ $serverName = null; }
 	
 	$out = array();

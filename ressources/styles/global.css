@@ -464,6 +464,9 @@ textarea.width3 {
 select.width3 {
 	width: 302px;
 }
+input.width4 {
+	width: 400px;
+}
 
 
 /* Fielset
@@ -535,15 +538,16 @@ h1 {
 	height: 15px;
 	padding: 0 6px 0 7px;
 }
-.title-detail li+li {
+.title-detail li + li,
+.title-detail li.last {
 	border: 0;
 }
 .title-detail a {
-	color: #eee;
+	color: #fff;
 	text-decoration: none;
 }
 .title-detail a:hover {
-	color: #fff;
+	text-shadow: 1px 1px 5px #777;
 	text-decoration: underline;
 }
 .title-detail input[type="checkbox"] {
@@ -864,6 +868,53 @@ footer {
 	text-decoration: none;
 }
 
+/* Page Chat
+---------------------- */
+.section-chat #chat {
+	min-height: 432px;
+}
+.section-chat #chat .tmnick_global {
+	display: block;
+	overflow: hidden;
+}
+.section-chat .options {
+	padding: 6px 10px;
+}
+.section-chat .options input.text,
+.section-chat .options select {
+	float: left;
+	margin-right: 20px;
+	border: 0;
+	height: 20px;
+	color: #aaa;
+	-webkit-border-radius: 3px 0 0 3px;
+	-moz-border-radius: 3px 0 0 3px;
+	-o-border-radius: 3px 0 0 3px;
+	border-radius: 3px 0 0 3px;
+	-webkit-box-shadow: 4px 0 0 #b0b0b0;
+	-moz-box-shadow: 4px 0 0 #b0b0b0;
+	-o-box-shadow: 4px 0 0 #b0b0b0;
+	box-shadow: 4px 0 0 #b0b0b0;
+}
+.section-chat .options input.text:hover,
+.section-chat .options select:hover,
+.section-chat .options input.text:focus,
+.section-chat .options select:focus {
+	color: inherit;
+}
+.section-chat .options select {
+	font-size: 0.9em;
+	height: 26px;
+	padding: 5px 5px 3px;
+}
+.section-chat #chatColor,
+.section-chat #chatDestination,
+.section-chat #chatSend {
+	width: 108px;
+}
+.section-chat #chatSend {
+	margin: 0
+}
 
 
 /* Couleurs GameMode & Jeux

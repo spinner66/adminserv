@@ -525,8 +525,8 @@ class TmNick {
 	/**
 	* Enlève tous les codes de trackmania
 	*
-	* @param  string $str    -> Texte à traiter
-	* @param  string $select -> Un ou plusieurs codes à enlever. Par exemple, si on veut enlever seulement le code "$s". Si plusieurs, les séparer par des virgules
+	* @param string $str    -> Texte à traiter
+	* @param string $select -> Un ou plusieurs codes à enlever. Par exemple, si on veut enlever seulement le code "$s". Si plusieurs, les séparer par des virgules
 	* @return string texte sans codes $s, $o, etc ...
 	*/
 	public static function stripNadeoCode($str, $select = null){
@@ -536,10 +536,10 @@ class TmNick {
 			if($select != null){
 				// On sépare les codes, et on créer le tableau en min/maj
 				$stripNadeoCode = array();
-				$select_list = explode(',', $select);
-				for($i = 0; $i < count($select_list); $i++){
-					$stripNadeoCode[] = strtolower(trim($select_list[$i]));
-					$stripNadeoCode[] = strtoupper(trim($select_list[$i]));
+				$selectList = explode(',', $select);
+				foreach($selectList as $code){
+					$stripNadeoCode[] = strtolower(trim($code));
+					$stripNadeoCode[] = strtoupper(trim($code));
 				}
 			}
 			// Sinon, on enlève tous les codes

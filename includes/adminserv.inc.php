@@ -124,11 +124,12 @@ abstract class AdminServTemplate {
 		require_once __DIR__ .'/footer.inc.php';
 	}
 	
+	
 	/**
 	* Récupère le CSS/JS du site
 	*/
 	public static function getCss($path = AdminServConfig::PATH_RESSOURCES){
-		return ''
+		return '' //TODO : theme courant à charger
 		.'<link type="text/css" rel="stylesheet" media="screen" href="'. $path .'styles/global.css" />';
 	}
 	public static function getJS($path = AdminServConfig::PATH_INCLUDES){
@@ -185,9 +186,10 @@ abstract class AdminServTemplate {
 	/**
 	* Récupère la liste des modes de jeu
 	*
+	* @param int $currentGameMode -> Le mode de jeu à sélectionner
 	* @return string
 	*/
-	public static function getGameModeList($currentGameMode){
+	public static function getGameModeList($currentGameMode = null){
 		$out = null;
 		
 		// On vérifie qu'une configuration existe
@@ -227,6 +229,36 @@ abstract class AdminServTemplate {
 		// Retour
 		if($out === -1){
 			$out = '<option value="null">Aucun mode de jeu disponible</option>';
+		}
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère la liste des joueurs
+	*
+	* @param string $currentPlayerLogin -> Le login joueur à sélectionner
+	* @return string
+	*/
+	public static function getPlayerList($currentPlayerLogin = null){
+		global $client;
+		$out = null;
+		
+		if( !$client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
+			$out = -1;
+		}
+		else{
+			$playerList = $client->getResponse();
+			foreach($playerList as $player){
+				if($currentPlayerLogin == $player['Login']){ $selected = ' selected="selected"'; }
+				else{ $selected = null; }
+				$out .= '<option value="'.$player['Login'].'"'.$selected.'>'.TmNick::toText($player['NickName']).'</option>';
+			}
+		}
+		
+		// Retour
+		if($out === -1){
+			$out = '<option value="null">Aucun joueur disponible</option>';
 		}
 		return $out;
 	}
@@ -628,6 +660,66 @@ abstract class AdminServ {
 		}
 		
 		return $out;
+	}
+	
+	
+	/**
+	* Récupère les lignes du chat serveur
+	*
+	* @param bool $hideServerLines -> Masquer les lignes provenant d'un gestionnaire de serveur
+	* @return string
+	*/
+	public static function getChatServerLines($hideServerLines = false){
+		global $client;
+		$out = null;
+		
+		// ChatLines
+		if( !$client->query('GetChatLines') ){
+			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		}
+		else{
+			$chatLines = $client->getResponse();
+			foreach($chatLines as $line){
+				// On masque les lignes du serveur si c'est demandé
+				if($hideServerLines == true){
+					$line = self::clearChatServerLine($line);
+				}
+				
+				// TODO : On traduit le texte
+				/*if($i18n == 'fr'){
+					if($line == '$99FThis is a draw round.'){ $line = 'Match nul.'; }
+					if($line == '$99FThe $<$00FBlue team$> wins this round.'){ $line = 'L\'équipe bleue remporte ce tour.'; }
+					if($line == '$99FThe $<$F00Red team$> wins this round.'){ $line = 'L\'équipe rouge remporte ce tour.'; }
+				}*/
+				
+				// On enlève les codes nadeo $s, $o, $w, etc
+				$line = TmNick::stripNadeoCode($line);
+				$line = str_replace('$>', '$z', $line);
+				$line = htmlspecialchars($line, ENT_QUOTES, 'UTF-8');
+				
+				// Affichage des lignes
+				if($line != null){
+					// Convertie les codes nadeo restant en html
+					$out .= TmNick::toHtml($line, 10, false, true, '#666');
+				}
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Masque les lignes générées par le gestionnaire de serveur
+	*
+	* @param string $line -> La ligne de la réponse GetChatLines
+	* @return string
+	*/
+	public static function clearChatServerLine($line){
+		$char = substr(utf8_decode($line), 0, 1);
+		if($char == '[' || $char == '/' || substr($line, 0, 11) == '$99F[Admin]' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
+			return $line;
+		}
 	}
 }
 ?>
