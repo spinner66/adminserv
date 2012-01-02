@@ -812,7 +812,7 @@ footer {
 #playerlist {
 	min-height: 433px;
 }
-#playerlist tr:hover {
+#playerlist tbody tr:hover {
 	background: #f9f9f9;
 	cursor: pointer;
 	width: 100%;
@@ -913,7 +913,35 @@ footer {
 	width: 108px;
 }
 .section-chat #chatSend {
-	margin: 0
+	margin: 0;
+}
+
+/* Page Guest-Ban
+---------------------- */
+.section-guestban .playlist {
+	position: relative;
+}
+.section-guestban .playlist .title-detail {
+	top: 4px;
+	right: 0;
+}
+.section-guestban table {
+	margin-bottom: 25px;
+}
+.section-guestban .addPlayer {
+	padding: 5px;
+}
+.section-guestban .addPlayer select,
+.section-guestban .addPlayer input.text {
+	float: left;
+	margin-right: 24px;
+}
+.section-guestban .addPlayer select.addPlayerTypeList {
+	width: 120px;
+}
+.section-guestban .addPlayer input.button {
+	width: 90px;
+	margin: 0;
 }
 
 
