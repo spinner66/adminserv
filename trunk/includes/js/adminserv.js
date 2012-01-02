@@ -167,7 +167,6 @@ $(document).ready(function(){
 		* Chat
 		*/
 		else if( $("body").hasClass("section-chat") ){
-			
 			// ChatServerLines
 			var hideServerLines = 0;
 			
@@ -221,6 +220,30 @@ $(document).ready(function(){
 					if( event.keyCode == 13 ){
 						addChatServerLine();
 					}
+				}
+			});
+		}
+		/**
+		* Guest-Ban
+		*/
+		else if( $("body").hasClass("section-guestban") ){
+			// Ajouter
+			$("#addPlayerList").change(function(){
+				if( $(this).val() == "more" ){
+					$(this).hide();
+					$(this).addClass("displaynone");
+					$("#addPlayerLogin").fadeIn("fast");
+					$("#addPlayerLogin").removeClass("displaynone");
+				}
+			});
+			$("#addPlayerLogin").click(function(){
+				if( $(this).val() == $(this).attr("data-default-value") ){
+					$(this).val("");
+				}
+			});
+			$("#addPlayerLogin").blur(function(){
+				if( $(this).val() == "" ){
+					$(this).val( $(this).attr("data-default-value") );
 				}
 			});
 		}
