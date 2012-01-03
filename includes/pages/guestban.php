@@ -1,4 +1,32 @@
 <?php
+	// GAMEDATA
+	$hiddenFiles = array(
+		'gbx',
+		'dedicated_cfg.txt',
+		'checksum.txt',
+		'servers.txt',
+		'php',
+		'dat',
+		'log',
+		'cfg',
+		'cfg~'
+	);
+	
+	$localMode = false;
+	if( AdminServ::isAdminLevel('Admin') ){
+		if( !$client->query('GameDataDirectory') ){
+			echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		}
+		else{
+			$gameDataDirectory = $client->getResponse();
+			$playlistDirectory = FileFolder::readDirectory($gameDataDirectory.'Config', array(), $hiddenFiles, AdminServConfig::RECENT_STATUS_PERIOD);
+			if($playlistDirectory !== false){
+				$localMode = true;
+			}
+		}
+	}
+	
+	
 	// AJOUTER
 	if( isset($_POST['addPlayer']) ){
 		// Variables
@@ -239,18 +267,35 @@
 				$showPlaylists = null;
 				
 				// Liste des playlists
-				if( count($ignoreList) > 0 ){
+				if( isset($playlistDirectory['files']) && count($playlistDirectory['files']) > 0 ){
 					$i = 0;
-					foreach($ignoreList as $player){
-						// Ligne
-						$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
-							.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
-							.'<td class="center">'.$player['Login'].'</td>'
-							.'<td class="center">'.$player['Login'].'</td>'
-							.'<td class="center">'.$player['Login'].'</td>'
-							.'<td class="checkbox"><input type="checkbox" name="player[]" value="'.$player['Login'].'" /></td>'
-						.'</tr>';
-						$i++;
+					foreach($playlistDirectory['files'] as $file){
+						$ext = FileFolder::getFilenameExtension($file['filename']);
+						if($ext == 'txt' || $ext = 'text' || $ext == 'xml'){
+							$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
+							if( isset($data['logins']) ){
+								$countDataLogins = count($data['logins']);
+								if($countDataLogins > 1){
+									$nbPlayers = $countDataLogins.' joueurs';
+								}
+								else{
+									$nbPlayers = '1 joueur';
+								}
+							}
+							else{
+								$nbPlayers = '0 joueur';
+							}
+							
+							// Ligne
+							$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
+								.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.substr($file['filename'], 0, -4).'</span></td>'
+								.'<td class="center">'.ucfirst($data['type']).'</td>'
+								.'<td class="center">'.$nbPlayers.'</td>'
+								.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'
+								.'<td class="checkbox"><input type="checkbox" name="playlistFile[]" value="'.$file['filename'].'" /></td>'
+							.'</tr>';
+							$i++;
+						}
 					}
 				}
 				else{
