@@ -59,7 +59,7 @@ function getCurrentServerInfo(){
 				$("#map_gamemode").attr("class", "");
 				$("#map_gamemode").addClass("value");
 				$("#map_gamemode").addClass( data.srv.game_mode.toLowerCase() );
-				if(data.map.thumb != null){
+				if(data.map.thumb != ""){
 					$("#map_thumbnail").html('<img src="data:image/jpeg;base64,'+data.map.thumb+'" alt="No thumbnail" />');
 				}
 			}

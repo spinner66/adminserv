@@ -61,6 +61,15 @@
 		else if($page == 'maps'){
 			include_once 'includes/pages/maps_list.php';
 		}
+		else if($page == 'maps-local'){
+			include_once 'includes/pages/maps_local.php';
+		}
+		else if($page == 'maps-upload'){
+			include_once 'includes/pages/maps_upload.php';
+		}
+		else if($page == 'maps-matchset'){
+			include_once 'includes/pages/maps_matchset.php';
+		}
 		else if($page == 'plugins'){
 			include_once 'includes/pages/plugins.php';
 		}
