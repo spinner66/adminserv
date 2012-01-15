@@ -33,7 +33,13 @@
 					<td class="value<?php echo ' '.strtolower($serverInfo['srv']['game_mode']); ?>" id="map_gamemode"><?php echo $serverInfo['srv']['game_mode']; ?></td>
 				</tr>
 			</table>
-			<div id="map_thumbnail"><img src="data:image/jpeg;base64,<?php echo $serverInfo['map']['thumb']; ?>" alt="No thumbnail" /></div>
+			<?php
+				if($serverInfo['map']['thumb'] != null){
+					echo '<div id="map_thumbnail">'
+						.'<img src="data:image/jpeg;base64,'.$serverInfo['map']['thumb'].'" alt="No thumbnail" />'
+					.'</div>';
+				}
+			?>
 			<div class="fclear"></div>
 		</div>
 		
