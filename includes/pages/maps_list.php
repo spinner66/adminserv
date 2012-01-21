@@ -1,4 +1,13 @@
 <?php
+	// CACHE
+	try {
+		$cache = new cache(USER_PAGE, AdminServConfig::PATH_INCLUDES.'cache');
+		$cache->initCache(29);
+	}
+	catch(Exeption $error){
+		echo $error->getMessage();
+	}
+
 	// MAPLIST
 	$mapsList = AdminServ::getMapList();
 	

@@ -47,7 +47,7 @@ class Cache {
 	* @param  bool   $cache_date -> Ajouter ou non la date en fin de fichier cache
 	* @return none  
 	*/
-	public function __construct($file = null,$path = null){
+	public function __construct($file = null, $path = null){
 		if( empty($file) ){
 			$this->file = $this->_clearUri($_SERVER['REQUEST_URI']);
 		}else{
@@ -71,10 +71,11 @@ class Cache {
 	* @return none  
 	*/
 	public function initCache($time = 0){
-		if( file_exists($this->dossier.'/'.$this->file.self::EXTENSION) ){
+		$path = $this->dossier .'/'. $this->file .self::EXTENSION;
+		if( file_exists($path) ){
 			if( is_numeric($time) && $time >= 0 ){
-				if( $time == 0 || (time() - filemtime($this->dossier.'/'.$this->file.self::EXTENSION)) < $time ){
-					readfile($this->dossier.'/'.$this->file.self::EXTENSION);
+				if( $time == 0 || (time() - filemtime($path)) < $time ){
+					readfile($path);
 					exit();
 				}
 				else{
@@ -82,8 +83,8 @@ class Cache {
 				}
 			}
 			else if($time == 'ONEDAY'){
-				if( date('Ymd', filemtime($this->dossier.'/'.$this->file.self::EXTENSION)) == date('Ymd') ){
-					readfile($this->dossier.'/'.$this->file.self::EXTENSION);
+				if( date('Ymd', filemtime($path)) == date('Ymd') ){
+					readfile($path);
 					exit();
 				}
 				else{
@@ -115,7 +116,7 @@ class Cache {
 			}
 		}
 		else{
-			throw new Exception('Le dossier'.$dir'n\'existe pas.');
+			throw new Exception('Le dossier '.$dir.' n\'existe pas.');
 		}
 	}
 	
@@ -130,10 +131,10 @@ class Cache {
 	*/
 	public function clearFileCache($file){
 		if( strpos($file,'*') !== false ){
-			$files = glob($this->dossier.'/'.$file.self::EXTENSION);
+			$files = glob($this->dossier .'/'.$file.self::EXTENSION);
 		}
 		else{
-			$files = array($this->dossier.'/'.$file.self::EXTENSION);
+			$files = array($this->dossier .'/'.$file.self::EXTENSION);
 		}
 		foreach($files as $file){
 			if( file_exists($file) ){
@@ -152,9 +153,9 @@ class Cache {
 	* @return  string    $content
 	*/
 	public function ob_end($content){
-		$file = $this->dossier.'/'.$this->file.self::EXTENSION;
+		$file = $this->dossier .'/'. $this->file .self::EXTENSION;
 		if( !file_put_contents($file,$content.'<!-- fichier de cache généré le '.date("d/m/Y \à H:i:s").' -->') ){
-			throw new Exception('Le fichier suivant '.$this->dossier.'/'.$this->file.self::EXTENSION.' n\'a pas pu être créé ou n\'est pas ouvert à l\'écriture.');
+			throw new Exception('Le fichier suivant '. $this->dossier .'/'.$this->file . self::EXTENSION .' n\'a pas pu être créé ou n\'est pas ouvert à l\'écriture.');
 		}
 		return $content;
 	}
