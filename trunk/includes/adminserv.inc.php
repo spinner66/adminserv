@@ -918,5 +918,77 @@ abstract class AdminServ {
 		}
 		return $playlist;
 	}
+	
+	
+	
+	/**
+	* Récupère la liste des maps sur le serveur
+	*
+	* @global resource $client -> Le client doit être initialisé
+	* @return array
+	*/
+	public static function getMapList(){
+		global $client;
+		$out = array();
+		
+		// Méthodes
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$methodeMapList = 'GetChallengeList';
+			$methodeMapIndex = 'GetCurrentChallengeIndex';
+		}
+		else{
+			$methodeMapList = 'GetMapList';
+			$methodeMapIndex = 'GetCurrentMapIndex';
+		}
+		
+		// MAPSLIST
+		if( $client->query($methodeMapList, AdminServConfig::LIMIT_MAPS_LIST, 0) ){
+			$mapList = $client->getResponse();
+			$countMapList = count($mapList);
+			$client->query($methodeMapIndex);
+			$out['cid'] = $client->getResponse();
+			
+			if( $countMapList > 0 ){
+				$i = 0;
+				foreach($mapList as $map){
+					// Name
+					$name = htmlspecialchars($map['Name'], ENT_QUOTES, 'UTF-8');
+					$out['lst'][$i]['Name'] = TmNick::toHtml($name, 10, true);
+					
+					// Environnement
+					$env = $map['Environnement'];
+					if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
+					$out['lst'][$i]['Environnement'] = $env;
+					
+					// Autres
+					$out['lst'][$i]['UId'] = $map['UId'];
+					$out['lst'][$i]['FileName'] = $map['FileName'];
+					$out['lst'][$i]['Author'] = $map['Author'];
+					$out['lst'][$i]['GoldTime'] = $map['GoldTime'];
+					$out['lst'][$i]['CopperPrice'] = $map['CopperPrice'];
+					$i++;
+				}
+			}
+			else{
+				$out['lst'] = 'Aucune map';
+			}
+			
+			// Nombre de maps
+			if($countMapList > 1){
+				$out['nbm'] = $countMapList.' maps';
+			}
+			else{
+				$out['nbm'] = $countMapList.' map';
+			}
+			
+			// Config
+			$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
+		}
+		else{
+			$out['error'] = 'client not initialized';
+		}
+		
+		return $out;
+	}
 }
 ?>
