@@ -609,7 +609,8 @@ td.imgleft {
 	text-align: left;
 
 }
-td.imgleft img {
+td.imgleft img,
+td.imgcenter img {
 	margin: 0 5px -3px;
 	opacity: 0.8;
 }
