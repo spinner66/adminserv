@@ -70,6 +70,9 @@
 		else if($page == 'maps-matchset'){
 			include_once 'includes/pages/maps_matchset.php';
 		}
+		else if($page == 'maps-order'){
+			include_once 'includes/pages/maps_order.php';
+		}
 		else if($page == 'plugins'){
 			include_once 'includes/pages/plugins.php';
 		}
