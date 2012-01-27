@@ -4,7 +4,6 @@
 		// Si la configuration contient au moins 1 serveur et qu'il n'est pas l'exemple
 		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) ){
 			// Connexion
-			define('USER_PAGE', 'connection');
 			if( isset($_POST['as_server']) && isset($_POST['as_password']) && isset($_POST['as_adminlevel']) ){
 				// Récupération des valeurs
 				$serverName = $_POST['as_server'];
@@ -35,7 +34,7 @@
 		else{
 			// Si on autorise la configuration en ligne
 			if( OnlineConfig::ACTIVATE === true ){
-				Utils::redirection(false, AdminServConfig::PATH_CONFIG);
+				Utils::redirection(false, '?p=servers');
 			}
 			else{
 				// info : Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"
@@ -47,10 +46,11 @@
 	}
 	
 	
-	
+	// HTML
 	AdminServTemplate::getHeader();
 ?>
 <section>
+	<!-- TODO : displayServ -->
 </section>
 <?php
 	AdminServTemplate::getFooter();

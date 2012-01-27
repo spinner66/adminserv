@@ -302,7 +302,6 @@ abstract class AdminServ {
 		
 		if( isset($_SESSION['adminserv']) ){
 			// CONSTANTS
-			if( isset($_GET['p']) ){ define('USER_PAGE', htmlspecialchars($_GET['p']) ); }else{ define('USER_PAGE', 'index'); }
 			define('USER_ADMINLEVEL', $_SESSION['adminserv']['adminlevel']);
 			define('SERVER_ID', $_SESSION['adminserv']['sid']);
 			define('SERVER_NAME', $_SESSION['adminserv']['name']);

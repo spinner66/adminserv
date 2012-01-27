@@ -1,23 +1,30 @@
 <?php
-	// INCLUDES
-	session_start();
-	require_once 'adminserv.cfg.php';
-	require_once 'servers.cfg.php';
-	require_once '../includes/adminserv.inc.php';
-	AdminServTemplate::getClass();
+	require_once './adminserv.cfg.php';
+	require_once './servers.cfg.php';
 	
-	define('USER_PAGE', 'config');
+	// On vérifie qu'une configuration existe
+	if( class_exists('ServerConfig') ){
+		// Si la configuration contient au moins 1 serveur et qu'il n'est pas l'exemple
+		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) ){
+			// Si on autorise la configuration en ligne
+			if( OnlineConfig::ACTIVATE === true ){
+				header('Location: ../?p=servers');
+			}
+			else{
+				// info : Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"
+			}
+		}
+		else{
+			// Si on autorise la configuration en ligne
+			if( OnlineConfig::ACTIVATE === true ){
+				header('Location: ../?p=addserver');
+			}
+			else{
+				// info : Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"
+			}
+		}
+	}
+	else{
+		// error : Le fichier de configuration des serveurs n'est pas reconnu par AdminServ.
+	}
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="robots" content="noindex, nofollow" />
-		<title><?php echo 'Configuration | '.AdminServTemplate::getTitle(); ?></title>
-		<?php echo AdminServTemplate::getCss('../ressources/'); ?>
-		<?php echo AdminServTemplate::getJS('../includes/'); ?>
-	</head>
-	<body>
-		
-	</body>
-</html>
