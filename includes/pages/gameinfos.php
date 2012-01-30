@@ -61,19 +61,10 @@
 			
 			// MatchSettings
 			if(SERVER_MATCHSET){
-				if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-					$mapsDirectoryQuery = 'GetMapsDirectory';
-				}else{
-					$mapsDirectoryQuery = 'GetTracksDirectory';
-				}
-				if( !$client->query($mapsDirectoryQuery) ){
-					echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-				}else{
-					$mapsDirectory = $client->getResponse();
-					if( array_key_exists('SaveCurrentMatchSettings', $_POST) ){
-						if( !$client->query('SaveMatchSettings', $mapsDirectory . SERVER_MATCHSET) ){
-							echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-						}
+				$mapsDirectory = AdminServ::getMapsDirectoryPath();
+				if( array_key_exists('SaveCurrentMatchSettings', $_POST) ){
+					if( !$client->query('SaveMatchSettings', $mapsDirectory . SERVER_MATCHSET) ){
+						echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 					}
 				}
 			}
