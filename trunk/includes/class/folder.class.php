@@ -21,8 +21,8 @@ abstract class Folder {
 		if( substr($path, -1, 1) != '/'){ $path = $path.'/'; }
 		
 		// Si la classe File n'existe pas
-		if( !@class_exists('File') ){
-			$out = 'Class "File" not exists';
+		if( !@class_exists('File') && !@class_exists('Str') ){
+			$out = 'Class "File" or "Str" not exists';
 		}
 		else{
 			// Si le chemin n'est pas un dossier
@@ -42,7 +42,7 @@ abstract class Folder {
 							// Si le dossier n'est pas parmi les dossiers masqués
 							if( !in_array($entry, $hiddenFolders) ){
 								// Enregistrement du nom et de sa taille
-								$out['folders'][$entry]['size'] = self::formatSize(self::getSize($pathToEntry));
+								$out['folders'][$entry]['size'] = Str::formatSize(self::getSize($pathToEntry));
 								$out['folders'][$entry]['nb_file'] = self::countFiles($pathToEntry, $hiddenFiles);
 							}
 						}
@@ -54,7 +54,7 @@ abstract class Folder {
 								// Recupere seulement le timestamp et le poids ici
 								$out['files'][$entry] = @array_slice(@stat($pathToEntry), 20, 3);
 								// Formatage de la taille du fichier
-								$out['files'][$entry]['size'] = self::formatSize($out['files'][$entry]['size']);
+								$out['files'][$entry]['size'] = Str::formatSize($out['files'][$entry]['size']);
 								// Ajout du nom
 								$out['files'][$entry]['filename'] = $entry;
 								// Ajout de l'extension
@@ -89,20 +89,31 @@ abstract class Folder {
 	public static function countFiles($path, $hiddenFiles = array() ){
 		$out = 0;
 		if( substr($path, -1, 1) != '/'){ $path = $path.'/'; }
-		
 		// Si la classe File n'existe pas
 		if( @class_exists('File') ){
 			// Si le dossier existe
 			if( @file_exists($path) ){
 				$dir = scandir($path);
 				foreach($dir as $file){
-					// Si ce n'est pas un dossier
-					if( !is_dir($path.$file) ){
-						// Si le fichier n'est pas masqué
-						if( !in_array($file, $hiddenFiles) ){
-							// Si l'extension n'est pas masqué
-							if( !in_array( File::getExtension($file), $hiddenFiles) ){
-								$out++;
+					$pathToFile = $path.$file;
+					// Si c'est pas un dossier
+					if( is_dir($pathToFile) && $file != '.' && $file != '..' ){
+						if( is_numeric( $result = self::countFiles($pathToFile, $hiddenFiles) ) ){
+							$out += $result;
+						}
+						else{
+							$out = $result;
+							break;
+						}
+					}
+					else{
+						if($file != '.' && $file != '..'){
+							// Si le fichier n'est pas masqué
+							if( !in_array($file, $hiddenFiles) ){
+								// Si l'extension n'est pas masqué
+								if( !in_array( File::getExtension($file), $hiddenFiles) ){
+									$out++;
+								}
 							}
 						}
 					}

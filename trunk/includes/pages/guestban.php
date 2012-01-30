@@ -1,17 +1,5 @@
 <?php
 	// GAMEDATA
-	$hiddenFiles = array(
-		'gbx',
-		'dedicated_cfg.txt',
-		'checksum.txt',
-		'servers.txt',
-		'php',
-		'dat',
-		'log',
-		'cfg',
-		'cfg~'
-	);
-	
 	$localMode = false;
 	if( AdminServ::isAdminLevel('Admin') ){
 		if( !$client->query('GameDataDirectory') ){
@@ -19,7 +7,7 @@
 		}
 		else{
 			$gameDataDirectory = $client->getResponse();
-			$playlistDirectory = FileFolder::readDirectory($gameDataDirectory.'Config', array(), $hiddenFiles, AdminServConfig::RECENT_STATUS_PERIOD);
+			$playlistDirectory = FileFolder::readDirectory($gameDataDirectory.'Config', array(), AdminServConfig::$PLAYLIST_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
 			if($playlistDirectory !== false){
 				$localMode = true;
 			}

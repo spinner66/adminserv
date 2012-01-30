@@ -77,7 +77,7 @@ abstract class AdminServTemplate {
 				if($i == 0){ $class = ' class="first"'; }
 				else if($i == $count_lang-1){ $class = ' class="last"'; }
 				else{ $class = null; }
-				$out .= '<li'.$class.'><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href=""></a></li>';
+				$out .= '<li'.$class.'><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="."></a></li>';
 				$i++;
 			}
 			$out .= '</ul>';
@@ -134,12 +134,12 @@ abstract class AdminServTemplate {
 	*/
 	public static function getCss($path = AdminServConfig::PATH_RESSOURCES){
 		return '' //TODO : theme courant à charger
-		.'<link type="text/css" rel="stylesheet" media="screen" href="'. $path .'styles/global.css" />';
+		.'<link rel="stylesheet" media="screen" href="'.$path.'styles/global.css" />';
 	}
 	public static function getJS($path = AdminServConfig::PATH_INCLUDES){
-		return '<script type="text/javascript" src="'. $path .'js/jquery.js"></script>'
-		.'<script type="text/javascript" src="'. $path .'js/functions.js"></script>'
-		.'<script type="text/javascript" src="'. $path .'js/adminserv.js"></script>';
+		return '<script src="'.$path.'js/jquery.js"></script>'
+		.'<script src="'.$path.'js/functions.js"></script>'
+		.'<script src="'.$path.'js/adminserv.js"></script>';
 	}
 	
 	
@@ -263,6 +263,47 @@ abstract class AdminServTemplate {
 		// Retour
 		if($out === -1){
 			$out = '<option value="null">Aucun joueur disponible</option>';
+		}
+		return $out;
+	}
+	
+	
+	
+	/**
+	*
+	*/
+	public static function getMapsDirectoryList($path){
+		global $client;
+		$out = null;
+		
+		if( class_exists('Folder') ){
+			$out .= '<h1>Dossiers</h1>'
+			.'<div class="title-detail"><a href="">Nouveau</a></div>';
+			
+			if( file_exists($path) ){
+				$directory = Folder::read($path, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+				if( count($directory['folders']) > 0 ){
+					// Chemin de dossiers 
+					$dirPath = str_replace(AdminServ::getMapsDirectoryPath(), '', $path);
+					
+					$out .= '<ul>';
+					foreach($directory['folders'] as $dir => $values){
+						$out .= '<li>'
+							.'<a href="./?p='. USER_PAGE .'&amp;d='.$dirPath.$dir.'/">'
+								.'<span class="dir-name">'.$dir.'</span>'
+								.'<span class="dir-info">'.$values['nb_file'].'</span>'
+							.'</a>'
+						.'</li>';
+					}
+					$out .= '</ul>';
+				}
+			}
+			else{
+				$out = 'Path not exists';
+			}
+		}
+		else{
+			$out = 'Class "Folder" not exists';
 		}
 		return $out;
 	}
@@ -920,6 +961,38 @@ abstract class AdminServ {
 			$playlist['logins'][] = (string)$player->login;
 		}
 		return $playlist;
+	}
+	
+	
+	public static function getMapsDirectoryPath($addPath = null){
+		global $client;
+		$out = null;
+		
+		// Version
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$mapsDirectoryQuery = 'GetTracksDirectory';
+		}
+		else{
+			$mapsDirectoryQuery = 'GetMapsDirectory';
+		}
+		
+		// Requête
+		if( !$client->query($mapsDirectoryQuery) ){
+			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		}
+		else{
+			$mapsDirectory = Str::toSlash( $client->getResponse() );
+			if( substr($mapsDirectory, -1, 1) != '/'){ $mapsDirectory = $mapsDirectory.'/'; }
+			
+			if($addPath){
+				if( substr($addPath, -1, 1) != '/'){ $addPath = $addPath.'/'; }
+				$out = $mapsDirectory.$addPath;
+			}
+			else{
+				$out = $mapsDirectory;
+			}
+		}
+		return $out;
 	}
 	
 	

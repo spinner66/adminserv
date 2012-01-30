@@ -7,7 +7,7 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: Helvetica, Arial, "Trebuchet MS", Verdana, Tahoma, Sans-Serif;
-	font-size: 0.8em;
+	font-size: .8em;
 	color: #666;
 	background: #f2f2f2;
 }
@@ -18,7 +18,7 @@ label {
 	cursor: pointer;
 }
 label span {
-	font-size: 0.8em;
+	font-size: .8em;
 }
 ul {
 	margin: 0;
@@ -117,7 +117,7 @@ header {
 	float: left;
 	color: #eee;
 	font-weight: bold;
-	font-size: 0.9em;
+	font-size: .9em;
 	font-family: "Trebuchet MS", Arial, Sans-serif;
 }
 
@@ -335,7 +335,7 @@ a.button {
 .button {
 	padding: 3px 5px;
 	border: 1px solid;
-	font-size: 0.95em;
+	font-size: .95em;
 	font-variant: small-caps;
 	cursor: pointer;
 	background: #fff;
@@ -530,7 +530,7 @@ h1 {
 	position: absolute;
 	top: 14px;
 	right: 10px;
-	font-size: 0.9em;
+	font-size: .9em;
 }
 .title-detail li {
 	float: left;
@@ -567,7 +567,7 @@ th {
 	background: #f5f5f5;
 	font-variant: small-caps;
 	font-weight: normal;
-	font-size: 0.9em;
+	font-size: .9em;
 }
 th a {
 	color: #d1321e;
@@ -649,7 +649,7 @@ td.value {
 	box-shadow: -4px 0 0 #444;
 }
 .options input {
-	font-size: 0.9em;
+	font-size: .9em;
 	margin-right: 5px;
 }
 .options .nb-line {
@@ -788,7 +788,7 @@ footer {
 #footer-inner {
 	padding-top: 10px;
 	text-align: center;
-	font-size: 0.8em;
+	font-size: .8em;
 	color: #aaa;
 }
 #footer-inner a {
@@ -881,7 +881,7 @@ footer {
 }
 .section-gameinfos .preview a {
 	color: #aaa;
-	font-size: 0.85em;
+	font-size: .85em;
 }
 .section-gameinfos .preview a:hover {
 	color: #888;
@@ -923,7 +923,7 @@ footer {
 	color: inherit;
 }
 .section-chat .options select {
-	font-size: 0.9em;
+	font-size: .9em;
 	height: 26px;
 	padding: 5px 5px 3px;
 }
@@ -938,7 +938,8 @@ footer {
 
 /* Page Maps
 ----------------------- */
-.maps .menu ul li a {
+.maps .menu ul li a,
+.maps .folders ul li a {
 	display: block;
 	color: #888;
 	padding: 8px 10px;
@@ -958,6 +959,33 @@ footer {
 .maps .menu ul li a:hover {
 	color: #fff;
 	background: #5e9cd5;
+}
+
+/* Dossiers */
+.maps .cadre.folders {
+	width: 17%;
+	padding-left: 18px;
+}
+.maps .folders .title-detail {
+	right: 15px;
+	font-size: .8em;
+}
+.maps .cadre.folders ul li a {
+	padding: 6px 10px;
+	border-bottom-color: #f4f398;
+}
+.maps .folders ul li a.active,
+.maps .folders ul li a:hover {
+	background: #f7f6b6;
+}
+.folders .dir-name {
+	font-size: .8em;
+	font-variant: normal;
+}
+.folders .dir-info {
+	float: right;
+	font-weight: normal;
+	font-size: .8em;
 }
 
 
