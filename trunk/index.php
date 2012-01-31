@@ -16,6 +16,7 @@
 	if( isset($_GET['view']) ){ $view = addslashes( htmlspecialchars($_GET['view']) ); }else{ $view = null; }
 	if( isset($_GET['i']) ){ $index = intval($_GET['i']); }else{ $index = 0; }
 	if( isset($_GET['id']) ){ $id = intval($_GET['id']); }else{ $id = 0; }
+	if( isset($_GET['d']) ){ $directory = addslashes($_GET['d']); }else{ $directory = null; }
 	
 	
 	// DÉCONNEXION

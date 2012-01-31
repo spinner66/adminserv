@@ -1,28 +1,4 @@
 <?php
-	// METHODES
-	if(SERVER_VERSION_NAME == 'TmForever'){
-		$methodeMapList = 'GetChallengeList';
-		$methodeMapIndex = 'GetCurrentChallengeIndex';
-	}
-	else{
-		$methodeMapList = 'GetMapList';
-		$methodeMapIndex = 'GetCurrentMapIndex';
-	}
-	
-	// MAPSLIST
-	if( !$client->query($methodeMapList, AdminServConfig::LIMIT_MAPS_LIST, 0) ){
-		echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-	}
-	else{
-		$mapsList = $client->getResponse();
-		if( !$client->query($methodeMapIndex) ){
-			echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-		}
-		else{
-			$currentMapIndex = $client->getResponse();
-		}
-	}
-	
 	// HTML
 	$client->Terminate();
 	AdminServTemplate::getHeader();
@@ -33,7 +9,7 @@
 	</section>
 	
 	<section class="cadre right order">
-		
+		<h1>Ordonner</h1>
 	</section>
 </section>
 <?php

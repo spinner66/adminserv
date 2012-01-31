@@ -1,11 +1,7 @@
 <?php
 	// LECTURE
-	$addPath = null;
-	if( isset($_GET['d']) ){
-		$addPath = addslashes($_GET['d']);
-	}
-	$mapsDirectoryPath = AdminServ::getMapsDirectoryPath($addPath);
-	$mapsDirectoryList = AdminServTemplate::getMapsDirectoryList($mapsDirectoryPath);
+	$mapsDirectoryPath = AdminServ::getMapsDirectoryPath();
+	$mapsDirectoryList = AdminServTemplate::getMapsDirectoryList($mapsDirectoryPath, $directory);
 	
 	// HTML
 	$client->Terminate();
@@ -22,6 +18,7 @@
 	
 	<section class="cadre right upload">
 		<h1>Ajouter</h1>
+		
 	</section>
 </section>
 <?php
