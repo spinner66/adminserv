@@ -268,12 +268,16 @@ abstract class AdminServTemplate {
 	}
 	
 	
-	
 	/**
+	* Récupère la liset des dossiers du répertoire "Maps"
 	*
+	* @require class "Folder", "File", "Str"
+	*
+	* @param string $path -> Le chemin du dossier "Maps"
+	* @param string $currentPath -> Le chemin à partir de "Maps"
+	* @return string
 	*/
-	public static function getMapsDirectoryList($path){
-		global $client;
+	public static function getMapsDirectoryList($path, $currentPath = null){
 		$out = null;
 		
 		if( class_exists('Folder') ){
@@ -281,21 +285,50 @@ abstract class AdminServTemplate {
 			.'<div class="title-detail"><a href="">Nouveau</a></div>';
 			
 			if( file_exists($path) ){
-				$directory = Folder::read($path, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
-				if( count($directory['folders']) > 0 ){
-					// Chemin de dossiers 
-					$dirPath = str_replace(AdminServ::getMapsDirectoryPath(), '', $path);
-					
+				$directory = Folder::read($path.$currentPath, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+				if( is_array($directory) ){
 					$out .= '<ul>';
-					foreach($directory['folders'] as $dir => $values){
+					
+					// Dossier parent
+					if($currentPath){
+						$params = null;
+						$parentPathEx = explode('/', $currentPath);
+						array_pop($parentPathEx);
+						array_pop($parentPathEx);
+						if( count($parentPathEx) > 0 ){
+							$parentPath = null;
+							foreach($parentPathEx as $part){
+								$parentPath .= $part.'/';
+							}
+							if($parentPath){
+								$params = '&amp;d='.$parentPath;
+							}
+						}
+						
 						$out .= '<li>'
-							.'<a href="./?p='. USER_PAGE .'&amp;d='.$dirPath.$dir.'/">'
-								.'<span class="dir-name">'.$dir.'</span>'
-								.'<span class="dir-info">'.$values['nb_file'].'</span>'
+							.'<a href="./?p='. USER_PAGE . $params.'">'
+								.'<img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/back.png" alt="" />'
+								.'<span class="dir-name">Dossier parent</span>'
 							.'</a>'
 						.'</li>';
 					}
+					
+					// Dossiers
+					if( count($directory['folders']) > 0 ){
+						foreach($directory['folders'] as $dir => $values){
+							$out .= '<li>'
+								.'<a href="./?p='. USER_PAGE .'&amp;d='.$currentPath.$dir.'/">'
+									.'<span class="dir-name">'.$dir.'</span>'
+									.'<span class="dir-info">'.$values['nb_file'].'</span>'
+								.'</a>'
+							.'</li>';
+						}
+					}
 					$out .= '</ul>';
+				}
+				else{
+					// Retour des erreurs de la méthode read
+					$out = $directory;
 				}
 			}
 			else{
@@ -964,37 +997,34 @@ abstract class AdminServ {
 	}
 	
 	
-	public static function getMapsDirectoryPath($addPath = null){
+	/**
+	* Récupère le chemin du dossier "Maps"
+	*
+	* @global resource $client -> Le client doit être initialisé
+	* @return string
+	*/
+	public static function getMapsDirectoryPath(){
 		global $client;
 		$out = null;
 		
 		// Version
 		if(SERVER_VERSION_NAME == 'TmForever'){
-			$mapsDirectoryQuery = 'GetTracksDirectory';
+			$queryName = 'GetTracksDirectory';
 		}
 		else{
-			$mapsDirectoryQuery = 'GetMapsDirectory';
+			$queryName = 'GetMapsDirectory';
 		}
 		
 		// Requête
-		if( !$client->query($mapsDirectoryQuery) ){
+		if( !$client->query($queryName) ){
 			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 		}
 		else{
-			$mapsDirectory = Str::toSlash( $client->getResponse() );
-			if( substr($mapsDirectory, -1, 1) != '/'){ $mapsDirectory = $mapsDirectory.'/'; }
-			
-			if($addPath){
-				if( substr($addPath, -1, 1) != '/'){ $addPath = $addPath.'/'; }
-				$out = $mapsDirectory.$addPath;
-			}
-			else{
-				$out = $mapsDirectory;
-			}
+			$out = Str::toSlash( $client->getResponse() );
+			if( substr($out, -1, 1) != '/'){ $out = $out.'/'; }
 		}
 		return $out;
 	}
-	
 	
 	
 	/**

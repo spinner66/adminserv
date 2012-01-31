@@ -987,7 +987,9 @@ footer {
 	font-weight: normal;
 	font-size: .8em;
 }
-
+.folders ul li a img {
+	margin: 0 7px -3px 0;
+}
 
 
 

@@ -1,6 +1,7 @@
 <?php
 	// LECTURE
 	$mapsDirectoryPath = AdminServ::getMapsDirectoryPath();
+	$mapsDirectoryList = AdminServTemplate::getMapsDirectoryList($mapsDirectoryPath, $directory);
 	
 	// HTML
 	$client->Terminate();
@@ -12,11 +13,11 @@
 	</section>
 	
 	<section class="cadre middle folders">
-		<?php echo AdminServTemplate::getMapsDirectoryList($mapsDirectoryPath); ?>
+		<?php echo $mapsDirectoryList; ?>
 	</section>
 	
 	<section class="cadre right local">
-		
+		<h1>Local</h1>
 	</section>
 </section>
 <?php
