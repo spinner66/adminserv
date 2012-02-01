@@ -215,3 +215,77 @@ function addChatServerLine(){
 		}
 	});
 }
+
+
+/**
+* Initialisation de l'uploader Ajax
+*/
+function initializeUploader(){
+	uploader = new qq.FileUploader({
+		element: $("#formUpload")[0],
+		action: 'includes/ajax/upload.php',
+		maxConnections: 2,
+		params: {
+			path: getPath()
+		},
+		template:
+		'<div class="qq-uploader">' + 
+			'<div class="qq-upload-drop-area"><span>'+ t('Drop files here to upload') +'</span></div>' +
+			'<div class="qq-upload-button">'+ t('Upload a file') +'</div>' +
+			'<ul class="qq-upload-list"></ul>' + 
+		'</div>',
+		fileTemplate:
+		'<li>' +
+			'<span class="qq-upload-file"></span>' +
+			'<span class="qq-upload-spinner"><span class="qq-upload-bar"></span></span>' +
+			'<span class="qq-upload-size"></span>' +
+			'<a class="qq-upload-cancel" href="./">'+ t('Cancel') +'</a>' +
+			'<span class="qq-upload-failed-text">'+ t('Failed') +'</span>' +
+		'</li>',
+		onProgress: function(id, fileName, loaded, total){
+			window.onbeforeunload = function(){
+				return "L'upload n'est pas terminé";
+			}
+			$.each( $(".qq-upload-list li"), function(key, value){
+				// Récupèration des données
+				var text = $(this).children(".qq-upload-size").text();
+				var newtext = t(text);
+				var lastpos = text.indexOf("%");
+				var pourcent = text.substring(0, lastpos);
+				
+				// Modification des données
+				$(this).children(".qq-upload-size").text(newtext);
+				$(this).children(".qq-upload-spinner").children(".qq-upload-bar").css("width", pourcent+"px");
+			});
+		},
+		onComplete: function(id, fileName, responseJSON){
+			if(responseJSON.success == true){
+				//getFiles( getPath() );
+				alert('ok');
+			}
+			window.onbeforeunload = function(){}
+		},
+		messages: {
+			typeError: t("{file} has invalid extension. Only {extensions} are allowed."),
+			sizeError: t("{file} is too large, maximum file size is {sizeLimit}."),
+			minSizeError: t("{file} is too small, minimum file size is {minSizeLimit}."),
+			emptyError: t("{file} is empty, please select files again without it."),
+			onLeave: t("The files are being uploaded, if you leave now the upload will be cancelled.")
+		},
+		showMessage: function(message){
+			error(message);
+		}
+	});
+}
+
+function t(text){
+	return text;
+}
+
+function error(text){
+	alert(text);
+}
+
+function getPath(){
+	return $(".path").text();
+}
