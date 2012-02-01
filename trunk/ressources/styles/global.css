@@ -991,6 +991,13 @@ footer {
 	margin: 0 7px -3px 0;
 }
 
+.path {
+	margin-right: 5px;
+	text-align: right;
+	color: #fff;
+	width: 400px;
+}
+
 
 
 /* Page Guest-Ban

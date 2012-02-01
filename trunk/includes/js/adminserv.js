@@ -224,6 +224,16 @@ $(document).ready(function(){
 			});
 		}
 		/**
+		* Maps-upload
+		*/
+		else if( $("body").hasClass("section-maps-upload") ){
+			/**
+			* Upload
+			*/
+			var uploader;
+			initializeUploader();
+		}
+		/**
 		* Guest-Ban
 		*/
 		else if( $("body").hasClass("section-guestban") ){
