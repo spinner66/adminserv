@@ -525,6 +525,15 @@ h1 {
 	-o-box-shadow: -4px 0 0 #ddd;
 	box-shadow: -4px 0 0 #ddd;
 }
+h2 {
+	display: block;
+	color: #5e9cd5;
+	font-size: .9em;
+	text-indent: 10px;
+	text-transform: uppercase;
+	border-bottom: 1px solid #ddd;
+	margin: 20px 0 10px;
+}
 
 .title-detail {
 	position: absolute;
@@ -990,7 +999,6 @@ footer {
 .folders ul li a img {
 	margin: 0 7px -3px 0;
 }
-
 .path {
 	margin-right: 5px;
 	text-align: right;
@@ -998,6 +1006,54 @@ footer {
 	width: 400px;
 }
 
+/* Page upload
+------------------*/
+.section-maps-upload .transferMode {
+	margin-bottom: 30px;
+	overflow: hidden;
+}
+.section-maps-upload .transferMode ul li {
+	display: block;
+	float: left;
+	width: 180px;
+	background: #eee;
+	padding: 5px;
+	cursor: pointer;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
+}
+.section-maps-upload .transferMode ul li:hover,
+.section-maps-upload .transferMode ul li.active {
+	background: #ddd;
+}
+.section-maps-upload .transferMode ul li +li {
+	margin-left: 20px;
+}
+.section-maps-upload .transferMode ul li input {
+	float: left;
+	height: 32px;
+	margin: 0 0 0 8px;
+}
+.section-maps-upload .transferMode ul li .name {
+	float: left;
+	margin-left: 16px;
+	width: 132px;
+	font-size: .8em;
+}
+.section-maps-upload .transferMode ul li .name span {
+	display: block;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+.section-maps-upload .options-checkbox {
+	margin-bottom: 30px;
+}
 
 
 /* Page Guest-Ban
