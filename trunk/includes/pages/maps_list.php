@@ -7,7 +7,7 @@
 	catch(Exeption $error){
 		echo $error->getMessage();
 	}
-
+	
 	// MAPLIST
 	$mapsList = AdminServ::getMapList();
 	

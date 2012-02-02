@@ -1000,7 +1000,6 @@ footer {
 	margin: 0 7px -3px 0;
 }
 .path {
-	margin-right: 5px;
 	text-align: right;
 	color: #fff;
 	width: 400px;
@@ -1008,6 +1007,9 @@ footer {
 
 /* Page upload
 ------------------*/
+.section-maps-upload .path {
+	margin-right: 5px;
+}
 .section-maps-upload .transferMode {
 	margin-bottom: 30px;
 	overflow: hidden;
