@@ -133,15 +133,20 @@ abstract class AdminServTemplate {
 	* Récupère le CSS/JS du site
 	*/
 	public static function getCss($path = AdminServConfig::PATH_RESSOURCES){
-		return '<link rel="stylesheet" media="screen" href="'.$path.'styles/fileuploader.css" />'
-		.'<link rel="stylesheet" media="screen" href="'.$path.'styles/global.css" />';
+		$out = '<link rel="stylesheet" href="'.$path.'styles/jquery-ui.css" />';
+		if(USER_PAGE == 'maps-upload'){
+			$out .= '<link rel="stylesheet" href="'.$path.'styles/fileuploader.css" />';
+		}
+		$out .= '<link rel="stylesheet" href="'.$path.'styles/global.css" />';
 		//TODO : theme courant à charger
+		
+		return $out;
 	}
 	public static function getJS($path = AdminServConfig::PATH_INCLUDES){
 		$out = '<script src="'.$path.'js/jquery.js"></script>'
+		.'<script src="'.$path.'js/jquery-ui.js"></script>'
 		.'<script src="'.$path.'js/functions.js"></script>'
 		.'<script src="'.$path.'js/adminserv.js"></script>';
-		
 		if(USER_PAGE == 'maps-upload'){
 			$out .= '<script src="'.$path.'js/fileuploader.js"></script>';
 		}
