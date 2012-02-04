@@ -289,3 +289,26 @@ function error(text){
 function getPath(){
 	return $(".path").text();
 }
+
+
+/**
+* Coche toutes les checkbox d'un selecteur
+*
+* @param string selector -> Le selecteur de la liste des checkbox à cocher
+*/
+(function($){
+	$.fn.checkAll = function(selector){
+		$(this).click(function(){
+			var lineSelector = $(selector + " tr");
+			var checkboxSelector = $(selector + " td.checkbox input[type=checkbox]");
+			if( $(this).attr("checked") == "checked" ){
+				checkboxSelector.attr("checked", true);
+				lineSelector.addClass("selected");
+			}
+			else{
+				checkboxSelector.attr("checked", false);
+				lineSelector.removeClass("selected");
+			}
+		});
+	};
+})(jQuery);

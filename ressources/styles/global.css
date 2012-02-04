@@ -611,6 +611,20 @@ tr.no-line:hover {
 	background: none !important;
 	cursor: auto !important;
 }
+tbody tr:hover {
+	width: 100%;
+	background: #f9f9f9;
+	cursor: pointer;
+	border: 1px solid #eee;
+}
+tbody tr.current:hover {
+	cursor: default;
+	border: 0;
+	background: none;
+}
+tbody tr.selected {
+	background: #d9e8ff;
+}
 td {
 	text-align: center;
 }

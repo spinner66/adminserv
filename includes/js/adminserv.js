@@ -224,6 +224,34 @@ $(document).ready(function(){
 			});
 		}
 		/**
+		* Maps-list
+		*/
+		else if( $("body").hasClass("section-maps") ){
+			// Checbox
+			$("input#checkAll").checkAll("#maplist");
+			$("input#checkAll").click(function(){
+				if( $("#maplist tr.current").hasClass("selected") ){
+					$("#maplist tr.current").removeClass("selected");
+				}
+			});
+			
+			// Clic sur les lignes
+			$("#maplist tr").live("click", function(){
+				if( !$(this).hasClass("current") ){
+					// Si la ligne est déjà sélectionnée, on l'enlève
+					if( $(this).hasClass("selected") ){
+						$(this).removeClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", false);
+					}
+					// Sinon, on l'ajoute
+					else{
+						$(this).addClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", true);
+					}
+				}
+			});
+		}
+		/**
 		* Maps-upload
 		*/
 		else if( $("body").hasClass("section-maps-upload") ){
