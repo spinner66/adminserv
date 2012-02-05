@@ -83,7 +83,7 @@ function getCurrentServerInfo(){
 			}
 			
 			// Players
-			if(data.ply != null){
+			if(data.ply != null && !$("#playerlist tbody input").attr("checked") ){
 				var out = null;
 				
 				// Création du tableau

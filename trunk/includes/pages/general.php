@@ -1,4 +1,50 @@
 <?php
+	// ACTIONS
+	if( isset($_POST['BanLoginList']) && count($_POST['player']) > 0 ){
+		foreach($_POST['player'] as $player){
+			if( !$client->query('Ban', $player) ){
+				echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				break;
+			}
+		}
+	}
+	else if( isset($_POST['KickLoginList']) && count($_POST['player']) > 0 ){
+		foreach($_POST['player'] as $player){
+			if( !$client->query('Kick', $player) ){
+				echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				break;
+			}
+		}
+	}
+	else if( isset($_POST['ForcePlayerList']) && count($_POST['player']) > 0 ){
+		foreach($_POST['player'] as $player){
+			if( !$client->query('ForceSpectator', $player, 2) ){
+				echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				break;
+			}
+			else{
+				if( !$client->query('ForceSpectator', $player, 0) ){
+					echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					break;
+				}
+			}
+		}
+	}
+	else if( isset($_POST['ForceSpectatorList']) && count($_POST['player']) > 0 ){
+		foreach($_POST['player'] as $player){
+			if( !$client->query('ForceSpectator', $player, 1) ){
+				echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				break;
+			}
+			else{
+				if(!$client->query('ForceSpectator', $player, 0) ){
+					echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					break;
+				}
+			}
+		}
+	}
+	
 	// Info serveur
 	$serverInfo = AdminServ::getCurrentServerInfo();
 	
@@ -115,11 +161,12 @@
 		<div class="title-detail">
 			<ul>
 				<li><a href="">Mode détail</a></li>
-				<li><input type="checkbox" name="" id="" value="" /></li>
+				<li><input type="checkbox" name="checkAll" id="checkAll" value="" /></li>
 			</ul>
 		</div>
 		
 		<!-- Liste des joueurs -->
+		<form method="post" action=".">
 		<div id="playerlist">
 			<table>
 				<thead>
@@ -169,14 +216,15 @@
 					<span class="selected-files-title">Pour la sélection</span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="button" name="delete" id="delete" value="Supprimer" />
-						<input class="button dark" type="button" name="archive" id="archive" value="Créer une archive" />
-						<input class="button dark" type="button" name="rename" id="rename" value="Renommer" />
-						<input class="button dark" type="button" name="move" id="move" value="Déplacer" />
+						<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="Bannir" />
+						<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="Kicker" />
+						<input class="button dark" type="submit" name="ForceSpectatorList" id="ForceSpectatorList" value="Spectateur" />
+						<input class="button dark" type="submit" name="ForcePlayerList" id="ForcePlayerList" value="Joueur" />
 					</div>
 				</div>
 			</div>
 		</div>
+		</form>
 	</div>
 </section>
 
