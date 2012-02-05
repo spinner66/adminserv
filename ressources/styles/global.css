@@ -433,7 +433,8 @@ textarea {
 	font-family: "MS Trebuchet", Arial, Sans-Serif;
 	font-size: 1.05em;
 }
-input[type="checkbox"] {
+input[type="checkbox"],
+input[type="radio"] {
 	cursor: pointer;
 	display: block;
 }
@@ -724,6 +725,9 @@ td.value {
 	border-left: 3px solid #5e9cd5;
 	margin-left: 10px;
 	padding-left: 20px;
+}
+.options-checkbox ul li {
+	margin-bottom: 6px;
 }
 
 
@@ -1046,8 +1050,8 @@ footer {
 	transition: all .2s ease;
 }
 .section-maps-upload .transferMode ul li:hover,
-.section-maps-upload .transferMode ul li.active {
-	background: #ddd;
+.section-maps-upload .transferMode ul li.selected {
+	background: #d9e8ff;
 }
 .section-maps-upload .transferMode ul li +li {
 	margin-left: 20px;
@@ -1108,7 +1112,7 @@ footer {
 	color: #ffcc11;
 }
 .timeattack {
-	color: #aa0000;
+	color: #d1321e;
 }
 .team {
 	color: #aabb00;
