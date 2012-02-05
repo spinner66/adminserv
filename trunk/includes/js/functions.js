@@ -226,7 +226,10 @@ function initializeUploader(){
 		action: 'includes/ajax/upload.php',
 		maxConnections: 2,
 		params: {
-			path: getPath()
+			path: getPath(),
+			transfer: $("#transferMode li.selected").children("input").val(),
+			saveMatchSet: $("#SaveCurrentMatchSettings").attr("checked"),
+			gotoListMaps: $("#GotoListMaps").attr("checked")
 		},
 		template:
 		'<div class="qq-uploader">' + 
@@ -260,9 +263,11 @@ function initializeUploader(){
 		},
 		onComplete: function(id, fileName, responseJSON){
 			if(responseJSON.success == true){
-				//getFiles( getPath() );
-				alert('ok');
+				// OK
 			}
+			window.onbeforeunload = function(){}
+		},
+		onCancel: function(id, fileName){
 			window.onbeforeunload = function(){}
 		},
 		messages: {

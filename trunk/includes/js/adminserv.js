@@ -261,11 +261,38 @@ $(document).ready(function(){
 		* Maps-upload
 		*/
 		else if( $("body").hasClass("section-maps-upload") ){
-			/**
-			* Upload
-			*/
+			//Upload
 			var uploader;
 			initializeUploader();
+			
+			// Mode de transfert
+			$(".transferMode li").click(function(){
+				$(this).children("input").attr("checked", true);
+				
+				$.each( $(".transferMode li"), function(id, selector){
+					selector.className = "";
+				});
+				
+				$(this).addClass("selected");
+				
+				if( $(this).children("input").val() == "upload" ){
+					$("input#GotoListMaps").attr("checked", false);
+				}
+				
+				uploader.setParams({
+					transfer: $(this).children("input").val(),
+				});
+			});
+			
+			// Options
+			$(".options-checkbox input, .options-checkbox label").click(function(){
+				uploader.setParams({
+					saveMatchSet: $("#SaveCurrentMatchSettings").attr("checked"),
+					gotoListMaps: $("#GotoListMaps").attr("checked")
+				});
+			});
+			
+
 		}
 		/**
 		* Guest-Ban
