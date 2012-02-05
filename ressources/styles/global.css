@@ -443,6 +443,9 @@ input[type="checkbox"].inline {
 	margin: -2px 7px 0 0;
 	vertical-align: middle;
 }
+input[disabled="disabled"] {
+	cursor: default;
+}
 input.width1,
 textarea.width1,
 select.width1 {
@@ -860,15 +863,6 @@ footer {
 #playerlist {
 	min-height: 433px;
 }
-#playerlist tbody tr:hover {
-	background: #f9f9f9;
-	cursor: pointer;
-	width: 100%;
-	border: 1px solid #eee;
-}
-#playerlist tr.selected {
-	background: #d9e8ff;
-}
 
 
 /* Page Server options
@@ -1079,10 +1073,18 @@ footer {
 
 /* Page Guest-Ban
 ---------------------- */
-.section-guestban .playlist {
+.section-guestban #banlist,
+.section-guestban #blacklist,
+.section-guestban #guestlist,
+.section-guestban #ignorelist,
+.section-guestban #playlists {
 	position: relative;
 }
-.section-guestban .playlist .title-detail {
+.section-guestban #banlist .title-detail,
+.section-guestban #blacklist .title-detail,
+.section-guestban #guestlist .title-detail,
+.section-guestban #ignorelist .title-detail,
+.section-guestban #playlists .title-detail {
 	top: 4px;
 	right: 0;
 }
