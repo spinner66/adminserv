@@ -617,10 +617,11 @@ tbody tr:hover {
 	cursor: pointer;
 	border: 1px solid #eee;
 }
+tbody tr.current,
 tbody tr.current:hover {
 	cursor: default;
 	border: 0;
-	background: none;
+	background: #fffecf;
 }
 tbody tr.selected {
 	background: #d9e8ff;
@@ -714,7 +715,7 @@ td.value {
 .selected-files-option {
 	display: none;
 	position: absolute;
-	top: -25px;
+	top: -18px;
 	right: -25px;
 	padding: 25px;
 }

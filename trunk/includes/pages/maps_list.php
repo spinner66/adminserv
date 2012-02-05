@@ -1,11 +1,28 @@
 <?php
-	// CACHE
-	try {
-		$cache = new cache(USER_PAGE, AdminServConfig::PATH_INCLUDES.'cache');
-		$cache->initCache(29);
+	// GAME
+	if(SERVER_VERSION_NAME == 'TmForever'){
+		$queries = array(
+			'removeMap' => 'RemoveChallengeList',
+			'chooseNextMap' => 'ChooseNextChallengeList'
+		);
 	}
-	catch(Exeption $error){
-		echo $error->getMessage();
+	else{
+		$queries = array(
+			'removeMap' => 'RemoveMapList',
+			'chooseNextMap' => 'ChooseNextMapList'
+		);
+	}
+	
+	// ACTIONS
+	if( isset($_POST['removeMap']) && count($_POST['map']) > 0 ){
+		if( !$client->query($queries['removeMap'], $_POST['map']) ){
+			echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		}
+	}
+	else if( isset($_POST['chooseNextMap']) && count($_POST['map']) > 0 ){
+		if( !$client->query($queries['chooseNextMap'], $_POST['map']) ){
+			echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		}
 	}
 	
 	// MAPLIST
@@ -30,6 +47,7 @@
 		</div>
 		
 		<!-- Liste des maps -->
+		<form method="post" action="?p=maps">
 		<div id="maplist">
 			<table>
 				<thead>
@@ -79,12 +97,13 @@
 					<span class="selected-files-title">Pour la sélection</span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="button" name="rename" id="rename" value="Supprimer" />
-						<input class="button dark" type="button" name="move" id="move" value="Placer après la map en cours" />
+						<input class="button dark" type="submit" name="removeMap" id="removeMap" value="Supprimer" />
+						<input class="button dark" type="submit" name="chooseNextMap" id="chooseNextMap" value="Déplacer après la map en cours" />
 					</div>
 				</div>
 			</div>
 		</div>
+		</form>
 	</section>
 </section>
 <?php

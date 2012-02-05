@@ -228,11 +228,14 @@ $(document).ready(function(){
 		*/
 		else if( $("body").hasClass("section-maps") ){
 			// Checbox
-			$("input#checkAll").checkAll("#maplist");
 			$("input#checkAll").click(function(){
+				$("#maplist").checkAll( $(this).attr("checked") );
 				if( $("#maplist tr.current").hasClass("selected") ){
 					$("#maplist tr.current").removeClass("selected");
 				}
+				
+				// Mise à jour du nb de lignes sélectionnées
+				$("#maplist").updateNbSelectedLines();
 			});
 			
 			// Clic sur les lignes
@@ -248,6 +251,9 @@ $(document).ready(function(){
 						$(this).addClass("selected");
 						$(this).children("td.checkbox").children("input").attr("checked", true);
 					}
+					
+					// Mise à jour du nb de lignes sélectionnées
+					$("#maplist").updateNbSelectedLines();
 				}
 			});
 		}

@@ -297,18 +297,35 @@ function getPath(){
 * @param string selector -> Le selecteur de la liste des checkbox à cocher
 */
 (function($){
-	$.fn.checkAll = function(selector){
-		$(this).click(function(){
-			var lineSelector = $(selector + " tr");
-			var checkboxSelector = $(selector + " td.checkbox input[type=checkbox]");
-			if( $(this).attr("checked") == "checked" ){
-				checkboxSelector.attr("checked", true);
-				lineSelector.addClass("selected");
-			}
-			else{
-				checkboxSelector.attr("checked", false);
-				lineSelector.removeClass("selected");
-			}
-		});
+	$.fn.checkAll = function(isChecked){
+		var lineSelector = $(this).find("tbody tr");
+		var checkboxSelector = $(this).find("tbody td.checkbox input[type=checkbox]");
+		if(isChecked){
+			checkboxSelector.attr("checked", true);
+			lineSelector.addClass("selected");
+		}
+		else{
+			checkboxSelector.attr("checked", false);
+			lineSelector.removeClass("selected");
+		}
+	};
+})(jQuery);
+
+
+/**
+* Met à jour le nombre de fichiers sélectionnés
+*/
+(function($){
+	$.fn.updateNbSelectedLines = function(){
+		// On récupère le nombre d'élements sélectionnés;
+		var nb = $(this).find("tbody tr.selected").length;
+		
+		// Mise à jour
+		if(nb > 0){
+			$(".selected-files-label").removeClass("locked");
+		}else{
+			$(".selected-files-label").addClass("locked");
+		}
+		$(".selected-files-count").text("("+nb+")");
 	};
 })(jQuery);
