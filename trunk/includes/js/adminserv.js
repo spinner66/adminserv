@@ -327,24 +327,43 @@ $(document).ready(function(){
 		* Guest-Ban
 		*/
 		else if( $("body").hasClass("section-guestban") ){
+			// CleanList
+			$("a.cleanList").click(function(){
+				var out = false;
+				var lines = $(this).parent("li").parent("ul").parent("div").parent("div").find("tbody tr");
+				
+				if(lines.length > 0){
+					$.each(lines, function(id, line){
+						if(line.className == "no-line"){
+							error("La liste est déjà vide.", true);
+						}
+						else{
+							out = true;
+						}
+					});
+				}
+				
+				return out;
+			});
+			
 			// Checkbox
 			$("input#checkAllBanlist").click(function(){
 				$("#banlist").checkAll( $(this).attr("checked") );
-				$("#banlist").updateNbSelectedLines();
+				$(".cadre.left").updateNbSelectedLines();
 			});
 			$("input#checkAllBlacklist").click(function(){
 				$("#blacklist").checkAll( $(this).attr("checked") );
-				$("#blacklist").updateNbSelectedLines();
+				$(".cadre.left").updateNbSelectedLines();
 			});
 			$("input#checkAllGuestlist").click(function(){
 				$("#guestlist").checkAll( $(this).attr("checked") );
-				$("#guestlist").updateNbSelectedLines();
+				$(".cadre.left").updateNbSelectedLines();
 			});
 			$("input#checkAllIgnorelist").click(function(){
 				$("#ignorelist").checkAll( $(this).attr("checked") );
-				$("#ignorelist").updateNbSelectedLines();
+				$(".cadre.left").updateNbSelectedLines();
 			});
-			$("input#checkAllPlaylists").click(function(){
+			$("#playlists input#checkAllPlaylists").click(function(){
 				$("#playlists").checkAll( $(this).attr("checked") );
 				$("#playlists").updateNbSelectedLines();
 			});
@@ -364,7 +383,24 @@ $(document).ready(function(){
 					}
 					
 					// Mise à jour du nb de lignes sélectionnées
-					$("#banlist, #blacklist, #guestlist, #ignorelist").updateNbSelectedLines();
+					$(".cadre.left").updateNbSelectedLines();
+				}
+			});
+			$("#playlists tr").live("click", function(){
+				if( !$(this).hasClass("no-line") ){
+					// Si la ligne est déjà sélectionnée, on l'enlève
+					if( $(this).hasClass("selected") ){
+						$(this).removeClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", false);
+					}
+					// Sinon, on l'ajoute
+					else{
+						$(this).addClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", true);
+					}
+					
+					// Mise à jour du nb de lignes sélectionnées
+					$("#playlists").updateNbSelectedLines();
 				}
 			});
 			

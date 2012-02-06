@@ -3,7 +3,7 @@
 	if( isset($_POST['BanLoginList']) && count($_POST['player']) > 0 ){
 		foreach($_POST['player'] as $player){
 			if( !$client->query('Ban', $player) ){
-				echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				break;
 			}
 		}
@@ -11,7 +11,7 @@
 	else if( isset($_POST['KickLoginList']) && count($_POST['player']) > 0 ){
 		foreach($_POST['player'] as $player){
 			if( !$client->query('Kick', $player) ){
-				echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				break;
 			}
 		}
@@ -19,12 +19,12 @@
 	else if( isset($_POST['ForcePlayerList']) && count($_POST['player']) > 0 ){
 		foreach($_POST['player'] as $player){
 			if( !$client->query('ForceSpectator', $player, 2) ){
-				echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				break;
 			}
 			else{
 				if( !$client->query('ForceSpectator', $player, 0) ){
-					echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 					break;
 				}
 			}
@@ -33,12 +33,12 @@
 	else if( isset($_POST['ForceSpectatorList']) && count($_POST['player']) > 0 ){
 		foreach($_POST['player'] as $player){
 			if( !$client->query('ForceSpectator', $player, 1) ){
-				echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				break;
 			}
 			else{
 				if(!$client->query('ForceSpectator', $player, 0) ){
-					echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 					break;
 				}
 			}

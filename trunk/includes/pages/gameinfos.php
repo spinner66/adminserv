@@ -42,7 +42,7 @@
 		
 		// Requêtes
 		if( !$client->query('SetGameInfos', $struct) ){
-			echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+			AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 		}
 		else{
 			// RoundCustomPoints
@@ -55,7 +55,7 @@
 					}
 				}
 				if( !$client->query('SetRoundCustomPoints', $NextRoundCustomPointsArray) ){
-					echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				}
 			}
 			
@@ -64,7 +64,7 @@
 				$mapsDirectory = AdminServ::getMapsDirectoryPath();
 				if( array_key_exists('SaveCurrentMatchSettings', $_POST) ){
 					if( !$client->query('SaveMatchSettings', $mapsDirectory . SERVER_MATCHSET) ){
-						echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+						AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 					}
 				}
 			}
@@ -74,7 +74,7 @@
 	
 	// LECTURE
 	if( !$client->query('GetGameInfos') ){
-		echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 	}
 	else{
 		$gamInf = $client->getResponse();
@@ -85,7 +85,7 @@
 		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
 			// Nb de WarmUp
 			if( !$client->query('GetAllWarmUpDuration') ){
-				echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 			}
 			else{
 				$GetAllWarmUpDuration = $client->getResponse();
@@ -94,7 +94,7 @@
 				
 				// Respawn
 				if( !$client->query('GetDisableRespawn') ){
-					echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				}
 				else{
 					$DisableRespawn = $client->getResponse();
@@ -103,7 +103,7 @@
 					
 					// ForceShowAllOpponents
 					if( !$client->query('GetForceShowAllOpponents') ){
-						echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+						AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 					}
 					else{
 						$ForceShowAllOpponents = $client->getResponse();
@@ -112,7 +112,7 @@
 						
 						// ScriptName
 						if( !$client->query('GetScriptName') ){
-							echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+							AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 						}
 						else{
 							$ScriptName = $client->getResponse();
@@ -121,28 +121,28 @@
 						
 							// Mode Cup
 							if( !$client->query('GetCupPointsLimit') ){
-								echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+								AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 							}
 							else{
 								$CupPointsLimit = $client->getResponse();
 								$curtGamInf['CupPointsLimit'] = $CupPointsLimit['CurrentValue'];
 								$nextGamInf['CupPointsLimit'] = $CupPointsLimit['NextValue'];
 								if( !$client->query('GetCupRoundsPerMap') ){
-									echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+									AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 								}
 								else{
 									$CupRoundsPerMap = $client->getResponse();
 									$curtGamInf['CupRoundsPerMap'] = $CupRoundsPerMap['CurrentValue'];
 									$nextGamInf['CupRoundsPerMap'] = $CupRoundsPerMap['NextValue'];
 									if( !$client->query('GetCupNbWinners') ){
-										echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+										AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 									}
 									else{
 										$CupNbWinners = $client->getResponse();
 										$curtGamInf['CupNbWinners'] = $CupNbWinners['CurrentValue'];
 										$nextGamInf['CupNbWinners'] = $CupNbWinners['NextValue'];
 										if( !$client->query('GetCupWarmUpDuration') ){
-											echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+											AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 										}
 										else{
 											$CupWarmUpDuration = $client->getResponse();
