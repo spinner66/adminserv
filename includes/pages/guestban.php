@@ -3,13 +3,38 @@
 	$localMode = false;
 	if( AdminServ::isAdminLevel('Admin') ){
 		if( !$client->query('GameDataDirectory') ){
-			echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+			AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 		}
 		else{
 			$gameDataDirectory = $client->getResponse();
 			$playlistDirectory = FileFolder::readDirectory($gameDataDirectory.'Config', array(), AdminServConfig::$PLAYLIST_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
 			if($playlistDirectory !== false){
 				$localMode = true;
+			}
+		}
+	}
+	
+	// ACTIONS
+	if( isset($_GET['clean']) ){
+		$clean = $_GET['clean'];
+		if($clean == 'banlist'){
+			if( !$client->query('CleanBanList') ){
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+			}
+		}
+		else if($clean == 'ignorelist'){
+			if( !$client->query('CleanIgnoreList') ){
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+			}
+		}
+		else if($clean == 'guestlist'){
+			if( !$client->query('CleanGuestList') ){
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+			}
+		}
+		else if($clean == 'blacklist'){
+			if( !$client->query('CleanBlackList') ){
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 			}
 		}
 	}
@@ -34,13 +59,13 @@
 			// Inviter
 			if($addPlayerTypeList == 'guestlist'){
 				if( !$client->query('AddGuest', $playerlogin) ){
-					echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				}
 			}
 			// Blacklister
 			else if($addPlayerTypeList == 'blacklist'){
 				if( !$client->query('BlackList', $playerlogin) ){
-					echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				}
 			}
 		}
@@ -51,28 +76,32 @@
 	
 	// LECTURE
 	if( !$client->query('GetBanList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 	}
 	else{
 		$banList = $client->getResponse();
+		$countBanList = count($banList);
 	}
 	if( !$client->query('GetBlackList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 	}
 	else{
 		$blackList = $client->getResponse();
+		$countBlackList = count($blackList);
 	}
 	if( !$client->query('GetGuestList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 	}
 	else{
 		$guestList = $client->getResponse();
+		$countGuestList = count($guestList);
 	}
 	if( !$client->query('GetIgnoreList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		echo '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 	}
 	else{
 		$ignoreList = $client->getResponse();
+		$countIgnoreList = count($ignoreList);
 	}
 	
 	
@@ -84,11 +113,11 @@
 	<div class="cadre left">
 		<form method="post" action="?p=guestban">
 		<div id="banlist">
-			<h1>Banlist<?php if(count($banList) > 0){ echo ' ('.count($banList).')'; } ?></h1>
+			<h1>Banlist<?php if($countBanList > 0){ echo ' ('.$countBanList.')'; } ?></h1>
 			<div class="title-detail">
 				<ul>
-					<li><a href="">Vider la liste</a></li>
-					<li><input type="checkbox" name="checkAllBanlist" id="checkAllBanlist" value=""<?php if(count($banList) == 0){ echo ' disabled="disabled"'; } ?> /></li>
+					<li><a class="cleanList" href="?p=guestban&amp;clean=banlist">Vider la liste</a></li>
+					<li><input type="checkbox" name="checkAllBanlist" id="checkAllBanlist" value=""<?php if($countBanList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 				</ul>
 			</div>
 			<table>
@@ -105,7 +134,7 @@
 						$showBanList = null;
 						
 						// Liste des joueurs
-						if( count($banList) > 0 ){
+						if( $countBanList > 0 ){
 							$i = 0;
 							foreach($banList as $player){
 								// Ligne
@@ -130,11 +159,11 @@
 		</div>
 		
 		<div id="blacklist">
-			<h1>Blacklist</h1>
+			<h1>Blacklist<?php if($countBlackList > 0){ echo ' ('.$countBlackList.')'; } ?></h1>
 			<div class="title-detail">
 				<ul>
-					<li><a href="">Vider la liste</a></li>
-					<li><input type="checkbox" name="checkAllBlacklist" id="checkAllBlacklist" value=""<?php if(count($blackList) == 0){ echo ' disabled="disabled"'; } ?> /></li>
+					<li><a class="cleanList" href="?p=guestban&amp;clean=blacklist">Vider la liste</a></li>
+					<li><input type="checkbox" name="checkAllBlacklist" id="checkAllBlacklist" value=""<?php if($countBlackList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 				</ul>
 			</div>
 			<table>
@@ -149,7 +178,7 @@
 						$showBlackList = null;
 						
 						// Liste des joueurs
-						if( count($blackList) > 0 ){
+						if( $countBlackList > 0 ){
 							$i = 0;
 							foreach($blackList as $player){
 								// Ligne
@@ -172,11 +201,11 @@
 		</div>
 		
 		<div id="guestlist">
-			<h1>Guestlist</h1>
+			<h1>Guestlist<?php if($countGuestList > 0){ echo ' ('.$countGuestList.')'; } ?></h1>
 			<div class="title-detail">
 				<ul>
-					<li><a href="">Vider la liste</a></li>
-					<li><input type="checkbox" name="checkAllGuestlist" id="checkAllGuestlist" value="" /></li>
+					<li><a class="cleanList" href="?p=guestban&amp;clean=guestlist">Vider la liste</a></li>
+					<li><input type="checkbox" name="checkAllGuestlist" id="checkAllGuestlist" value=""<?php if($countGuestList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 				</ul>
 			</div>
 			<table>
@@ -191,7 +220,7 @@
 						$showGuestList = null;
 						
 						// Liste des joueurs
-						if( count($guestList) > 0 ){
+						if( $countGuestList > 0 ){
 							$i = 0;
 							foreach($guestList as $player){
 								// Ligne
@@ -214,11 +243,11 @@
 		</div>
 		
 		<div id="ignorelist">
-			<h1>Ignorelist</h1>
+			<h1>Ignorelist<?php if($countIgnoreList > 0){ echo ' ('.$countIgnoreList.')'; } ?></h1>
 			<div class="title-detail">
 				<ul>
-					<li><a href="">Vider la liste</a></li>
-					<li><input type="checkbox" name="checkAllIgnorelist" id="checkAllIgnorelist" value="" /></li>
+					<li><a class="cleanList" href="?p=guestban&amp;clean=ignorelist">Vider la liste</a></li>
+					<li><input type="checkbox" name="checkAllIgnorelist" id="checkAllIgnorelist" value=""<?php if($countIgnoreList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 				</ul>
 			</div>
 			<table>
@@ -233,7 +262,7 @@
 						$showIgnoreList = null;
 						
 						// Liste des joueurs
-						if( count($ignoreList) > 0 ){
+						if( $countIgnoreList > 0 ){
 							$i = 0;
 							foreach($ignoreList as $player){
 								// Ligne
@@ -273,89 +302,6 @@
 	</div>
 	
 	<div class="cadre right">
-		<h1>Playlists</h1>
-		<div class="title-detail">
-			<ul>
-				<li><a href="">Nouvelle playlist</a></li>
-				<li><input type="checkbox" name="checkAllPlaylists" id="checkAllPlaylists" value="" /></li>
-			</ul>
-		</div>
-		
-		<form method="post" action="?p=guestban">
-		<div id="playlists">
-			<table>
-				<thead>
-					<tr>
-						<th class="thleft">Playlist</th>
-						<th>Type</th>
-						<th>Contient</th>
-						<th>Modifié le</th>
-						<th class="thright"></th>
-					</tr>
-				</thead>
-				<tbody>
-				<?php
-					$showPlaylists = null;
-					
-					// Liste des playlists
-					if( isset($playlistDirectory['files']) && count($playlistDirectory['files']) > 0 ){
-						$i = 0;
-						foreach($playlistDirectory['files'] as $file){
-							$ext = FileFolder::getFilenameExtension($file['filename']);
-							if($ext == 'txt' || $ext = 'text' || $ext == 'xml'){
-								$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
-								if( isset($data['logins']) ){
-									$countDataLogins = count($data['logins']);
-									if($countDataLogins > 1){
-										$nbPlayers = $countDataLogins.' joueurs';
-									}
-									else{
-										$nbPlayers = '1 joueur';
-									}
-								}
-								else{
-									$nbPlayers = '0 joueur';
-								}
-								
-								// Ligne
-								$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
-									.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.substr($file['filename'], 0, -4).'</span></td>'
-									.'<td class="center">'.ucfirst($data['type']).'</td>'
-									.'<td class="center">'.$nbPlayers.'</td>'
-									.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'
-									.'<td class="checkbox"><input type="checkbox" name="playlistFile[]" value="'.$file['filename'].'" /></td>'
-								.'</tr>';
-								$i++;
-							}
-						}
-					}
-					else{
-						$showPlaylists .= '<tr class="no-line"><td class="center" colspan="4">Aucune playlist</td></tr>';
-					}
-					
-					// Affichage
-					echo $showPlaylists;
-				?>
-				</tbody>
-			</table>
-		</div>
-		</form>
-		
-		<div class="options">
-			<div class="fright">
-				<div class="selected-files-label locked">
-					<span class="selected-files-title">Pour la sélection</span>
-					<span class="selected-files-count">(0)</span>
-					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="Bannir" />
-						<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="Kicker" />
-						<input class="button dark" type="submit" name="ForceSpectatorList" id="ForceSpectatorList" value="Spectateur" />
-						<input class="button dark" type="submit" name="ForcePlayerList" id="ForcePlayerList" value="Joueur" />
-					</div>
-				</div>
-			</div>
-		</div>
-		
 		<h1>Ajouter</h1>
 		<div class="content last addPlayer">
 			<form method="post" action="?p=guestban">
@@ -374,6 +320,89 @@
 					<div class="fclear"></div>
 				</div>
 			</form>
+		</div>
+		
+		<div id="playlists">
+			<h1>Playlists</h1>
+			<div class="title-detail">
+				<ul>
+					<li><a href="">Nouvelle playlist</a></li>
+					<li><input type="checkbox" name="checkAllPlaylists" id="checkAllPlaylists" value="" /></li>
+				</ul>
+			</div>
+			
+			<form method="post" action="?p=guestban">
+				<table>
+					<thead>
+						<tr>
+							<th class="thleft">Playlist</th>
+							<th>Type</th>
+							<th>Contient</th>
+							<th>Modifié le</th>
+							<th class="thright"></th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php
+						$showPlaylists = null;
+						
+						// Liste des playlists
+						if( isset($playlistDirectory['files']) && count($playlistDirectory['files']) > 0 ){
+							$i = 0;
+							foreach($playlistDirectory['files'] as $file){
+								$ext = FileFolder::getFilenameExtension($file['filename']);
+								if($ext == 'txt' || $ext = 'text' || $ext == 'xml'){
+									$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
+									if( isset($data['logins']) ){
+										$countDataLogins = count($data['logins']);
+										if($countDataLogins > 1){
+											$nbPlayers = $countDataLogins.' joueurs';
+										}
+										else{
+											$nbPlayers = '1 joueur';
+										}
+									}
+									else{
+										$nbPlayers = '0 joueur';
+									}
+									
+									// Ligne
+									$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
+										.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.substr($file['filename'], 0, -4).'</span></td>'
+										.'<td class="center">'.ucfirst($data['type']).'</td>'
+										.'<td class="center">'.$nbPlayers.'</td>'
+										.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'
+										.'<td class="checkbox"><input type="checkbox" name="playlistFile[]" value="'.$file['filename'].'" /></td>'
+									.'</tr>';
+									$i++;
+								}
+							}
+						}
+						else{
+							$showPlaylists .= '<tr class="no-line"><td class="center" colspan="4">Aucune playlist</td></tr>';
+						}
+						
+						// Affichage
+						echo $showPlaylists;
+					?>
+					</tbody>
+				</table>
+			</form>
+			
+			<div class="options">
+				<div class="fright">
+					<div class="selected-files-label locked">
+						<span class="selected-files-title">Pour la sélection</span>
+						<span class="selected-files-count">(0)</span>
+						<div class="selected-files-option">
+							<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="Bannir" />
+							<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="Kicker" />
+							<input class="button dark" type="submit" name="ForceSpectatorList" id="ForceSpectatorList" value="Spectateur" />
+							<input class="button dark" type="submit" name="ForcePlayerList" id="ForcePlayerList" value="Joueur" />
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </section>

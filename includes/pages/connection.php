@@ -37,12 +37,12 @@
 				Utils::redirection(false, '?p=servers');
 			}
 			else{
-				// info : Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"
+				AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
 			}
 		}
 	}
 	else{
-		// error : Le fichier de configuration des serveurs n'est pas reconnu par AdminServ.
+		AdminServ::error('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.');
 	}
 	
 	

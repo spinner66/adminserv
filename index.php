@@ -89,16 +89,16 @@
 	else{
 		// CONFIG
 		if(USER_PAGE == 'servers'){
-			$page_title = 'Configuration';
+			$GLOBALS['page_title'] = 'Configuration';
 			include_once 'includes/pages/servers.php';
 		}
 		else if(USER_PAGE == 'addserver'){
-			$page_title = 'Configuration';
+			$GLOBALS['page_title'] = 'Configuration';
 			include_once 'includes/pages/addserver.php';
 		}
 		// CONNEXION
 		else{
-			$page_title = 'Connexion';
+			$GLOBALS['page_title'] = 'Connexion';
 			include_once 'includes/pages/connection.php';
 		}
 	}

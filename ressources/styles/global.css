@@ -327,6 +327,38 @@ nav,
 
 
 
+/* Erreurs - infos
+-------------------------------*/
+#error,
+#info {
+	position: absolute;
+	top: 50px;
+	left: 230px;
+	width: 500px;
+	padding: 5px;
+	min-height: 20px;
+	font-size: 1.2em;
+	text-align: center;
+	z-index: 50;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+	-o-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+#error {
+	color: #fff;
+	background-color: #d1321e;
+}
+#info {
+	color: #222;
+	background-color: #fffecf;
+}
+
+
 /* Bouttons - Input
 -------------------------------*/
 a.button {
@@ -1093,6 +1125,7 @@ footer {
 }
 .section-guestban .addPlayer {
 	padding: 5px;
+	margin-bottom: 25px;
 }
 .section-guestban .addPlayer select,
 .section-guestban .addPlayer input.text {

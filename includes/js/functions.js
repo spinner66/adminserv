@@ -287,8 +287,42 @@ function t(text){
 	return text;
 }
 
-function error(text){
-	alert(text);
+
+/**
+* Affichage du texte d'erreur
+*/
+function error(text, hide){
+	$("#error").fadeIn("fast");
+	if( $("#error").hasClass("displaynone") ){
+		$("#error").removeClass("displaynone");
+	}
+	$("#error").text(text);
+	
+	if(hide){
+		setTimeout(function(){
+			$("#error").addClass("displaynone");
+			$("#error").fadeOut("fast");
+		}, 4000);
+	}
+}
+
+
+/**
+* Affichage du texte d'erreur
+*/
+function info(text, hide){
+	$("#info").fadeIn("fast");
+	if( $("#info").hasClass("displaynone") ){
+		$("#info").removeClass("displaynone");
+	}
+	$("#info").text(text);
+	
+	if(hide){
+		setTimeout(function(){
+			$("#info").addClass("displaynone");
+			$("#info").fadeOut("fast");
+		}, 4000);
+	}
 }
 
 function getPath(){
@@ -327,10 +361,10 @@ function getPath(){
 		
 		// Mise à jour
 		if(nb > 0){
-			$(".selected-files-label").removeClass("locked");
+			$(this).find(".selected-files-label").removeClass("locked");
 		}else{
-			$(".selected-files-label").addClass("locked");
+			$(this).find(".selected-files-label").addClass("locked");
 		}
-		$(".selected-files-count").text("("+nb+")");
+		$(this).find(".selected-files-count").text("("+nb+")");
 	};
 })(jQuery);
