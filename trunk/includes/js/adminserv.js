@@ -86,7 +86,7 @@ $(document).ready(function(){
 				}
 				
 				// Mise à jour du nb de lignes sélectionnées
-				$("#playerlist").updateNbSelectedLines();
+				$(".cadre.right").updateNbSelectedLines();
 			});
 			
 			// Clic sur les lignes
@@ -103,7 +103,7 @@ $(document).ready(function(){
 				}
 				
 				// Mise à jour du nb de lignes sélectionnées
-				$("#playerlist").updateNbSelectedLines();
+				$(".cadre.right").updateNbSelectedLines();
 			});
 		}
 		/**
@@ -264,7 +264,7 @@ $(document).ready(function(){
 				}
 				
 				// Mise à jour du nb de lignes sélectionnées
-				$("#maplist").updateNbSelectedLines();
+				$(".maps .list").updateNbSelectedLines();
 			});
 			
 			// Clic sur les lignes
@@ -282,7 +282,7 @@ $(document).ready(function(){
 					}
 					
 					// Mise à jour du nb de lignes sélectionnées
-					$("#maplist").updateNbSelectedLines();
+					$(".maps .list").updateNbSelectedLines();
 				}
 			});
 		}
