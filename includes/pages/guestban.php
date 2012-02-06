@@ -15,6 +15,7 @@
 	}
 	
 	// ACTIONS
+	// Vider la liste
 	if( isset($_GET['clean']) ){
 		$clean = $_GET['clean'];
 		if($clean == 'banlist'){
@@ -35,6 +36,66 @@
 		else if($clean == 'blacklist'){
 			if( !$client->query('CleanBlackList') ){
 				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+			}
+		}
+	}
+	// Blacklister
+	else if( isset($_POST['blackListPlayer']) ){
+		// Création du tableau de joueurs à blacklister
+		$blackListPlayer = array();
+		if( isset($_POST['banlist']) && count($_POST['banlist']) > 0 ){
+			$blackListPlayer = array_merge($blackListPlayer, $_POST['banlist']);
+		}
+		if( isset($_POST['guestlist']) && count($_POST['guestlist']) > 0 ){
+			$blackListPlayer = array_merge($blackListPlayer, $_POST['guestlist']);
+		}
+		if( isset($_POST['ignorelist']) && count($_POST['ignorelist']) > 0 ){
+			$blackListPlayer = array_merge($blackListPlayer, $_POST['ignorelist']);
+		}
+		$blackListPlayer = array_unique($blackListPlayer);
+		
+		// BlackList de toutes les listes
+		if( count($blackListPlayer) > 0 ){
+			foreach($blackListPlayer as $player){
+				if( !$client->query('BlackList', $player) ){
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					break;
+				}
+			}
+		}
+	}
+	// Retirer un joueur d'une ou plusieurs listes
+	else if( isset($_POST['removeList']) ){
+		if( isset($_POST['banlist']) && count($_POST['banlist']) > 0 ){
+			foreach($_POST['banlist'] as $player){
+				if( !$client->query('UnBan', $player) ){
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					break;
+				}
+			}
+		}
+		else if( isset($_POST['blacklist']) && count($_POST['blacklist']) > 0 ){
+			foreach($_POST['blacklist'] as $player){
+				if( !$client->query('UnBlackList', $player) ){
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					break;
+				}
+			}
+		}
+		else if( isset($_POST['guestlist']) && count($_POST['guestlist']) > 0 ){
+			foreach($_POST['guestlist'] as $player){
+				if( !$client->query('RemoveGuest', $player) ){
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					break;
+				}
+			}
+		}
+		else if( isset($_POST['ignorelist']) && count($_POST['ignorelist']) > 0 ){
+			foreach($_POST['ignorelist'] as $player){
+				if( !$client->query('UnIgnore', $player) ){
+					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					break;
+				}
 			}
 		}
 	}
@@ -142,7 +203,7 @@
 									.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
 									.'<td>'.$player['IPAddress'].'</td>'
 									.'<td>'.$player['ClientName'].'</td>'
-									.'<td class="checkbox"><input type="checkbox" name="player[]" value="'.$player['Login'].'" /></td>'
+									.'<td class="checkbox"><input type="checkbox" name="banlist[]" value="'.$player['Login'].'" /></td>'
 								.'</tr>';
 								$i++;
 							}
@@ -184,7 +245,7 @@
 								// Ligne
 								$showBlackList .= '<tr class="'; if($i%2){ $showBlackList .= 'even'; }else{ $showBlackList .= 'odd'; } $showBlackList .= '">'
 									.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
-									.'<td class="checkbox"><input type="checkbox" name="player[]" value="'.$player['Login'].'" /></td>'
+									.'<td class="checkbox"><input type="checkbox" name="blacklist[]" value="'.$player['Login'].'" /></td>'
 								.'</tr>';
 								$i++;
 							}
@@ -226,7 +287,7 @@
 								// Ligne
 								$showGuestList .= '<tr class="'; if($i%2){ $showGuestList .= 'even'; }else{ $showGuestList .= 'odd'; } $showGuestList .= '">'
 									.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
-									.'<td class="checkbox"><input type="checkbox" name="player[]" value="'.$player['Login'].'" /></td>'
+									.'<td class="checkbox"><input type="checkbox" name="guestlist[]" value="'.$player['Login'].'" /></td>'
 								.'</tr>';
 								$i++;
 							}
@@ -268,7 +329,7 @@
 								// Ligne
 								$showIgnoreList .= '<tr class="'; if($i%2){ $showIgnoreList .= 'even'; }else{ $showIgnoreList .= 'odd'; } $showIgnoreList .= '">'
 									.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
-									.'<td class="checkbox"><input type="checkbox" name="player[]" value="'.$player['Login'].'" /></td>'
+									.'<td class="checkbox"><input type="checkbox" name="ignorelist[]" value="'.$player['Login'].'" /></td>'
 								.'</tr>';
 								$i++;
 							}
@@ -290,10 +351,8 @@
 					<span class="selected-files-title">Pour la sélection</span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="Bannir" />
-						<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="Kicker" />
-						<input class="button dark" type="submit" name="ForceSpectatorList" id="ForceSpectatorList" value="Spectateur" />
-						<input class="button dark" type="submit" name="ForcePlayerList" id="ForcePlayerList" value="Joueur" />
+						<input class="button dark" type="submit" name="blackListPlayer" id="blackListPlayer" value="Blacklister" />
+						<input class="button dark" type="submit" name="removeList" id="removeList" value="Retirer de la liste" />
 					</div>
 				</div>
 			</div>

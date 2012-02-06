@@ -54,18 +54,14 @@ ul li {
 /* Taille du site
 -------------------------------*/
 #header-inner,
+#nav-inner,
+#connexion-inner,
 #content-inner,
 #footer-inner {
 	width: 1000px;
 	margin: 0 auto;
 	position: relative;
 }
-#nav-inner,
-#connexion-inner {
-	width: 990px;
-	margin: 0 auto;
-}
-
 
 
 /* Header
@@ -262,7 +258,7 @@ nav,
 .menu-principal {
 	clear: both;
 	height: 26px;
-	padding: 5px;
+	padding: 5px 0;
 	background: #fff;
 	border: 1px solid #ddd;
 	border-width: 0 1px 1px;
@@ -273,9 +269,11 @@ nav,
 }
 .menu-principal .menu-left {
 	float: left;
+	padding-left: 5px;
 }
 .menu-principal .menu-right {
 	float: right;
+	padding-right: 5px;
 }
 .menu-principal ul li {
 	float: left;
@@ -355,7 +353,7 @@ nav,
 }
 #info {
 	color: #222;
-	background-color: #fffecf;
+	background-color: #f4f398;
 }
 
 
