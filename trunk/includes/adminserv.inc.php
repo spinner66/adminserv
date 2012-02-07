@@ -166,7 +166,7 @@ abstract class AdminServTemplate {
 		if( class_exists('ServerConfig') ){
 			
 			// Si la configuration contient au moins 1 serveur et qu'il n'est pas l'exemple
-			if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) ){
+			if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) && !isset(ServerConfig::$SERVERS['']) ){
 				
 				// Id du serveur utilisé dernièrement
 				$currentServerId = Utils::readCookieData('adminserv', 0);

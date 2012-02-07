@@ -660,6 +660,12 @@ tbody tr.current:hover {
 tbody tr.selected {
 	background: #d9e8ff;
 }
+.section-index .cadre.left tbody tr:hover,
+fieldset tbody tr:hover {
+	cursor: default;
+	border: 0;
+	background: none;
+}
 td {
 	text-align: center;
 }
