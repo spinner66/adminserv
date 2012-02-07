@@ -2,7 +2,7 @@
 	// On vérifie qu'une configuration existe, sinon on la créer
 	if( class_exists('ServerConfig') ){
 		// Si la configuration contient au moins 1 serveur et qu'il n'est pas l'exemple
-		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) ){
+		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) && !isset(ServerConfig::$SERVERS['']) ){
 			// Connexion
 			if( isset($_POST['as_server']) && isset($_POST['as_password']) && isset($_POST['as_adminlevel']) ){
 				// Récupération des valeurs
@@ -12,7 +12,7 @@
 				
 				// Vérification des valeurs
 				if($password === ''){
-					Utils::redirection(false, '?error='.urlencode('Veuillez mettre un mot de passe'));
+					AdminServ::error('Veuillez mettre un mot de passe.');
 				}
 				else{
 					// Sessions & Cookies
@@ -26,7 +26,7 @@
 					if($_SESSION['adminserv']['sid'] != -1 && $_SESSION['adminserv']['name'] != null && $_SESSION['adminserv']['password'] != null && $_SESSION['adminserv']['adminlevel'] != null){
 						Utils::redirection(false);
 					}else{
-						Utils::redirection(false, '?error='.urlencode('Erreur de connexion : session invalide'));
+						AdminServ::error('Erreur de connexion : session invalide.');
 					}
 				}
 			}
