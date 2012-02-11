@@ -24,7 +24,8 @@ class AdminServConfig {
 	const LIMIT_PLAYERS_LIST = 250;
 	const LIMIT_MAPS_LIST = 1000;
 	const RECENT_STATUS_PERIOD = 86400;
-	const COOKIE_EXPIRE = 15;
+	const COOKIE_EXPIRE = 15; // jours
+	const CONNECTION_TIMEOUT = 3; //sec
 	
 	/* PATH DIRECTORY */
 	const PATH_CONFIG = './config/';
@@ -39,5 +40,9 @@ class AdminServConfig {
 	public static $MATCHSET_HIDDEN_FOLDERS =  array('Campaigns', 'Replays');
 	public static $MATCHSET_HIDDEN_FILES = array('db', 'gbx', 'php', 'log');
 	public static $PLAYLIST_HIDDEN_FILES = array('gbx', 'dedicated_cfg.txt', 'checksum.txt', 'servers.txt', 'php', 'dat', 'log', 'cfg', 'cfg~');
+	
+	/* UPLOAD */
+	public static $ALLOWED_EXTENSIONS = array('gbx', 'zip', 'rar', '7z', 'gzip');
+	public static $SIZE_LIMIT = 25; // mo
 }
 ?>
