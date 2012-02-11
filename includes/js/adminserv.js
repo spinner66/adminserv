@@ -304,21 +304,23 @@ $(document).ready(function(){
 				
 				$(this).addClass("selected");
 				
-				if( $(this).children("input").val() == "upload" ){
+				if( $(this).children("input").val() == "local" ){
 					$("input#GotoListMaps").attr("checked", false);
 				}
+				initializeUploader();
 				
-				uploader.setParams({
-					transfer: $(this).children("input").val(),
-				});
+				/*uploader.setParams({
+					type: $(this).children("input").val(),
+				});*/
 			});
 			
 			// Options
 			$(".options-checkbox input, .options-checkbox label").click(function(){
-				uploader.setParams({
-					saveMatchSet: $("#SaveCurrentMatchSettings").attr("checked"),
-					gotoListMaps: $("#GotoListMaps").attr("checked")
-				});
+				/*uploader.setParams({
+					mset: ( $("#SaveCurrentMatchSettings").attr("checked") ) ? true : false,
+					gtlm: ( $("#GotoListMaps").attr("checked") ) ? true : false
+				});*/
+				initializeUploader();
 			});
 			
 

@@ -407,7 +407,7 @@ abstract class AdminServ {
 			
 			// CONNEXION
 			$client = new IXR_Client_Gbx;
-			if( !$client->InitWithIp(SERVER_ADDR, SERVER_XMLRPC_PORT) ){
+			if( !$client->InitWithIp(SERVER_ADDR, SERVER_XMLRPC_PORT, (AdminServConfig::CONNECTION_TIMEOUT * 1000)) ){
 				Utils::redirection(false, '?error='.urlencode('Le serveur n\'est pas accessible.') );
 			}
 			else{

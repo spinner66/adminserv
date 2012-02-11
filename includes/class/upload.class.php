@@ -73,6 +73,52 @@ class UploadedFileXhr {
 	
 	
 	/**
+	* Enregistre le fichier sur un serveur FTP
+	*
+	* @param resource $ftp_stream -> La ressource de connexion FTP
+	* @param string   $path       -> Le chemin complet du dossier de destination
+	* @param string   $filename   -> Le nom du fichier
+	* @return true si réussi, sinon false
+	*/
+	public function saveMap($client, $path, $filename, $queries){
+		$out = null;
+		// Ouverture du flux "input" de PHP et création d'un fichier temp
+		$input = fopen("php://input", "r");
+		$temp = tmpfile();
+		$realSize = stream_copy_to_stream($input, $temp);
+		fclose($input);
+		if( $realSize != $this->getSize() ){
+			return false;
+		}
+		fseek($temp, 0, SEEK_SET);
+		$file = stream_get_contents($temp);
+		$str64 = new IXR_Base64($file);
+		if( !$client->queryIgnoreResult('WriteFile', $filename, $str64) ){
+			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		}
+		else{
+			// Insert
+			if($queries['type'] == 'insert'){
+				if( !$client->query($queries['insert'], $path.$filename) ){
+					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				}
+			}
+			// Add
+			else{
+				if( !$client->query($queries['add'], $path.$filename) ){
+					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				}
+			}
+		}
+		
+		if($out == null){
+			$out = true;
+		}
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère le nom du fichier
 	*/
 	public function getName(){
@@ -123,8 +169,43 @@ class UploadedFileForm {
 	* @return true si réussi, sinon false
 	*/
 	public function saveFTP($ftp_stream, $path, $filename){
-		// Enregistre le fichier du le FTP
+		// Enregistre le fichier sur le FTP
 		return ftp_put($ftp_stream, $path.$filename, $_FILES['qqfile']['tmp_name'], FTP_BINARY);
+	}
+	
+	
+	/**
+	* Enregistre le fichier sur un serveur FTP
+	*
+	* @param resource $ftp_stream -> La ressource de connexion FTP
+	* @param string   $path       -> Le chemin complet du dossier de destination
+	* @param string   $filename   -> Le nom du fichier
+	* @return true si réussi, sinon false
+	*/
+	public function saveMap($client, $path, $filename, $queries){
+		$out = null;
+		$str = file_get_contents($_FILES['qqfile']['tmp_name']);
+		$str64 = new IXR_Base64($str);
+		if( $client->query('WriteFile', $path.$filename, $str64) ){
+			$pathTofile = $path.$filename;
+			// Insert
+			if($queries['type'] == 'insert'){
+				if( !$client->query($queries['insert'], $filename) ){
+					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				}
+			}
+			// Add
+			else{
+				if( !$client->query($queries['add'], $filename) ){
+					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				}
+			}
+		}
+		
+		if($out == null){
+			$out = true;
+		}
+		return $out;
 	}
 	
 	
@@ -207,12 +288,12 @@ class FileUploader {
 	/**
 	* Enregistre le fichier envoyé dans un dossier
 	*
-	* @param string   $uploadDirectory   -> Le chemin du dossier de destination
-	* @param bool     $replaceOldFile    -> Remplacement des anciens fichiers qui ont le même nom ? Non par défaut
-	* @param function $filename_function -> La fonction de traitement du filename
+	* @param string   $uploadDirectory  -> Le chemin du dossier de destination
+	* @param bool     $replaceOldFile   -> Remplacement des anciens fichiers qui ont le même nom ? Non par défaut
+	* @param function $filenameFunction -> La fonction de traitement du filename
 	* @return array('success' => true) ou array('error' => 'error message')
 	*/
-	public function handleUpload($uploadDirectory, $replaceOldFile = false, $filename_function = null){
+	public function handleUpload($uploadDirectory, $replaceOldFile = false, $filenameFunction = null){
 		// Si on peut écrire dans le dossier de destination
 		if( !is_writable($uploadDirectory) ){
 			return array('error' => 'Erreur du serveur. Le dossier de destination des uploads n\'est pas écrivable.');
@@ -234,8 +315,8 @@ class FileUploader {
 		
 		// Récuperation du nom et de l'extension du fichier pour tester si l'extension est valide et si le nom du fichier n'existe pas déjà
 		$pathinfo = pathinfo( $this->file->getName() );
-		if($filename_function != null){
-			$filename = $filename_function($pathinfo['filename']);
+		if($filenameFunction != null){
+			$filename = $filenameFunction($pathinfo['filename']);
 		}else{
 			$filename = $pathinfo['filename'];
 		}
@@ -263,13 +344,13 @@ class FileUploader {
 	/**
 	* Enregistre le fichier envoyé dans un dossier sur un serveur FTP
 	*
-	* @param resource $ftp_stream        -> La ressource de connexion FTP
-	* @param string   $uploadDirectory   -> Le chemin du dossier de destination
-	* @param bool     $replaceOldFile    -> Remplacement des anciens fichiers qui ont le même nom ? Non par défaut
-	* @param function $filename_function -> La fonction de traitement du filename
+	* @param resource $ftp_stream       -> La ressource de connexion FTP
+	* @param string   $uploadDirectory  -> Le chemin du dossier de destination
+	* @param bool     $replaceOldFile   -> Remplacement des anciens fichiers qui ont le même nom ? Non par défaut
+	* @param function $filenameFunction -> La fonction de traitement du filename
 	* @return array('success' => true) ou array('error' => 'error message')
 	*/
-	public function handleUploadFTP($ftp_stream, $uploadDirectory, $replaceOldFile = false, $filename_function = null){
+	public function handleUploadFTP($ftp_stream, $uploadDirectory, $replaceOldFile = false, $filenameFunction = null){
 		// Si on peut écrire dans le dossier de destination
 		if( ! @ftp_chdir($ftp_stream, $uploadDirectory) ){
 			return array('error' => 'Erreur du serveur. Le dossier de destination des uploads n\'est pas écrivable.');
@@ -291,8 +372,8 @@ class FileUploader {
 		
 		// Récuperation du nom et de l'extension du fichier pour tester si l'extension est valide et si le nom du fichier n'existe pas déjà
 		$pathinfo = pathinfo( $this->file->getName() );
-		if($filename_function != null){
-			$filename = $filename_function($pathinfo['filename']);
+		if($filenameFunction != null){
+			$filename = $filenameFunction($pathinfo['filename']);
 		}else{
 			$filename = $pathinfo['filename'];
 		}
@@ -332,19 +413,70 @@ class FileUploader {
 	
 	
 	/**
+	* Enregistre le fichier envoyé dans un dossier sur un serveur FTP
+	*
+	* @param resource $client           -> La ressource du client XMLRPC
+	* @param string   $uploadDirectory  -> Le chemin du dossier de destination
+	* @param bool     $replaceOldFile   -> Remplacement des anciens fichiers qui ont le même nom ? Non par défaut
+	* @param function $filenameFunction -> La fonction de traitement du filename
+	* @return array('success' => true) ou array('error' => 'error message')
+	*/
+	public function handleUploadManiaPlanet($client, $uploadDirectory, $queries, $filenameFunction = null){
+		// Si le client est initialisé
+		if (!$client->socket || $client->protocol == 0) {
+			return array('error' => 'Client not initialized.');
+		}
+		
+		// Si il y a bien un fichier envoyé
+		if( !$this->file ){
+			return array('error' => 'Aucun fichier n\'a été uploadé.');
+		}
+		
+		// Récuperation de la taille du fichier et test si il n'est pas vide ou supérieur à la taille configurée
+		$size = $this->file->getSize();
+		if($size === 0){
+			return array('error' => 'Le fichier est vide.');
+		}
+		if($size > $this->sizeLimit){
+			return array('error' => 'La taille du fichier est supérieur à la limite autorisé.');
+		}
+		
+		// Récuperation du nom et de l'extension du fichier pour tester si l'extension est valide et si le nom du fichier n'existe pas déjà
+		$pathinfo = pathinfo( $this->file->getName() );
+		if($filenameFunction != null){
+			$filename = $filenameFunction($pathinfo['filename']);
+		}else{
+			$filename = $pathinfo['filename'];
+		}
+		$ext = $pathinfo['extension'];
+		if( $this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions) ){
+			$these = implode(', ', $this->allowedExtensions);
+			return array('error' => 'L\'extension du fichier est invalide (extension autorisées : '.$these.').');
+		}
+		
+		// Enregistrement du fichier
+		if( $out = $this->file->saveMap($client, $uploadDirectory, $filename.'.'.$ext, $queries) ){
+			return array('success' => true, 'out' => $out);
+		}else{
+			return array('error' => 'Le fichier n\'a pas été envoyé. L\'envoi a été annulé ou une erreur du serveur est survenue. ('.$out.')');
+		}
+	}
+	
+	
+	/**
 	* Enregistre le fichier envoyé en local
 	*
 	* @param string   $uploadDirectory   -> Le chemin du dossier de destination
 	* @param bool     $replaceOldFile    -> Remplacement des anciens fichiers qui ont le même nom ? Non par défaut
 	* @param array    $allowedExtensions -> Les extensions autorisées : array('jpg', 'png', 'gif');
 	* @param int      $sizeLimit         -> La taille limite d'envoi (égale ou inférieure à la configuration de PHP)
-	* @param function $filename_function -> La fonction de traitement du filename
+	* @param function $filenameFunction  -> La fonction de traitement du filename
 	* @return array('success' => true) ou array('error' => 'error message')
 	*/
-	public static function saveUploadedFile($uploadDirectory, $replaceOldFile = false, $allowedExtensions = array(), $sizeLimit = 10485760, $filename_function = null){
+	public static function saveUploadedFile($uploadDirectory, $replaceOldFile = false, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
 		// Initialisation de la classe et enregistrement du fichier
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
-		$result = $uploader->handleUpload($uploadDirectory, $replaceOldFile, $filename_function);
+		$result = $uploader->handleUpload($uploadDirectory, $replaceOldFile, $filenameFunction);
 		
 		// Retourne le résultat en json
 		return htmlspecialchars(json_encode($result), ENT_NOQUOTES);
@@ -352,19 +484,41 @@ class FileUploader {
 	
 	
 	/**
+	* Enregistre le fichier envoyé sur un serveur FTP
 	*
 	* @param resource $ftp_stream        -> La ressource de connexion FTP
 	* @param string   $uploadDirectory   -> Le chemin du dossier de destination
 	* @param bool     $replaceOldFile    -> Remplacement des anciens fichiers qui ont le même nom ? Non par défaut
 	* @param array    $allowedExtensions -> Les extensions autorisées : array('jpg', 'png', 'gif');
 	* @param int      $sizeLimit         -> La taille limite d'envoi (égale ou inférieure à la configuration de PHP)
-	* @param function $filename_function -> La fonction de traitement du filename
+	* @param function $filenameFunction  -> La fonction de traitement du filename
 	* @return array('success' => true) ou array('error' => 'error message')
 	*/
-	public static function saveUploadedFileToFTP($ftp_stream, $uploadDirectory, $replaceOldFile = false, $allowedExtensions = array(), $sizeLimit = 10485760, $filename_function = null){
+	public static function saveUploadedFileToFTP($ftp_stream, $uploadDirectory, $replaceOldFile = false, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
 		// Initialisation de la classe et enregistrement du fichier sur un serveur FTP
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
-		$result = $uploader->handleUploadFTP($ftp_stream, $uploadDirectory, $replaceOldFile, $filename_function);
+		$result = $uploader->handleUploadFTP($ftp_stream, $uploadDirectory, $replaceOldFile, $filenameFunction);
+		
+		// Retourne le résultat en json
+		return htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+	}
+	
+	
+	/**
+	* Enregistre le fichier envoyé sur un serveur dédié Maniaplanet
+	*
+	* @param resource $client            -> La ressource du client XMLRPC
+	* @param string   $uploadDirectory   -> Le chemin du dossier de destination
+	* @param array    $queries           -> Requêtes à executer et le type d'ajout à la liste: array('insert' => 'InsertMap', 'add' => 'AddMap', 'type' => 'add')
+	* @param array    $allowedExtensions -> Les extensions autorisées : array('jpg', 'png', 'gif');
+	* @param int      $sizeLimit         -> La taille limite d'envoi (égale ou inférieure à la configuration de PHP)
+	* @param function $filenameFunction  -> La fonction de traitement du filename
+	* @return array('success' => true) ou array('error' => 'error message')
+	*/
+	public static function saveUploadedFileToManiaPlanetDedicatedServer($client, $uploadDirectory, $queries, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
+		// Initialisation de la classe et enregistrement du fichier sur un serveur dédié Maniaplanet
+		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
+		$result = $uploader->handleUploadManiaPlanet($client, $uploadDirectory, $queries, $filenameFunction);
 		
 		// Retourne le résultat en json
 		return htmlspecialchars(json_encode($result), ENT_NOQUOTES);

@@ -227,9 +227,9 @@ function initializeUploader(){
 		maxConnections: 2,
 		params: {
 			path: getPath(),
-			transfer: $("#transferMode li.selected").children("input").val(),
-			saveMatchSet: $("#SaveCurrentMatchSettings").attr("checked"),
-			gotoListMaps: $("#GotoListMaps").attr("checked")
+			type: $(".transferMode li.selected input").val(),
+			mset: ( $("#SaveCurrentMatchSettings").attr("checked") ) ? true : false,
+			gtlm: ( $("#GotoListMaps").attr("checked") ) ? true : false
 		},
 		template:
 		'<div class="qq-uploader">' + 
@@ -262,10 +262,12 @@ function initializeUploader(){
 			});
 		},
 		onComplete: function(id, fileName, responseJSON){
-			if(responseJSON.success == true){
-				// OK
-			}
 			window.onbeforeunload = function(){}
+			if(responseJSON.success == true){
+				if(uploader._options.params.gtlm){
+					location.href = "?p=maps";
+				}
+			}
 		},
 		onCancel: function(id, fileName){
 			window.onbeforeunload = function(){}
@@ -326,7 +328,7 @@ function info(text, hide){
 }
 
 function getPath(){
-	return $(".path").text();
+	return $.trim( $(".path").text() );
 }
 
 

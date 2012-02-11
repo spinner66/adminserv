@@ -27,7 +27,7 @@
 			<ul>
 				<li class="selected"><input class="text" type="radio" name="transferMode" id="transferMode" value="add" checked="checked" /><div class="name"><span>Ajouter</span> à la fin de la liste</div></li>
 				<li><input class="text" type="radio" name="transferMode" id="transferMode" value="insert" /><div class="name"><span>Insérer</span> après la map en cours</div></li>
-				<li><input class="text" type="radio" name="transferMode" id="transferMode" value="upload" /><div class="name"><span>Envoyer</span> dans le dossier seulement</div></li>
+				<li><input class="text" type="radio" name="transferMode" id="transferMode" value="local" /><div class="name"><span>Envoyer</span> dans le dossier seulement</div></li>
 			</ul>
 		</div>
 		<div class="fclear"></div>
@@ -42,7 +42,7 @@
 				</li>
 			<?php } ?>
 				<li>
-					<input class="text inline" type="checkbox" name="GotoListMaps" id="GotoListMaps" value="maps" checked="checked" />
+					<input class="text inline" type="checkbox" name="GotoListMaps" id="GotoListMaps" value="maps" />
 					<label for="GotoListMaps">Aller à la liste des maps une fois l'upload terminé</label>
 				</li>
 			</ul>

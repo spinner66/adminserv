@@ -685,11 +685,11 @@ class IXR_Client_Gbx {
 		}
 
 		$request = new IXR_Request($method, $args);
-
+		
 		// Check if the request is greater than 512 Kbytes to avoid errors
 		// If the method is system.multicall, make two calls (possibly recursively)
 		if (($size = $request->getLength()) > 512*1024-8) {
-			if ($method = 'system.multicall' && isset($args[0])) {
+			if ($method == 'system.multicall' && isset($args[0])) {
 				$count = count($args[0]);
 				// If count is 1, query cannot be reduced
 				if ($count < 2) {
