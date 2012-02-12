@@ -160,7 +160,7 @@
 	<div class="title-detail">
 		<ul>
 			<li><a href="">Mode détail</a></li>
-			<li><input type="checkbox" name="checkAll" id="checkAll" value="" /></li>
+			<li><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($serverInfo['ply']) ){ echo ' disabled="disabled"'; } ?> /></li>
 		</ul>
 	</div>
 	

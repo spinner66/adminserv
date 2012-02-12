@@ -58,6 +58,9 @@
 		Added non-error (true) return status to IXR_Client_Gbx::queryIgnoreResult()
 		Updated status codes and messages for transport/endian errors
 		Prevented possible PHP warning in IXR_Client_Gbx::getErrorCode() and getErrorMessage()
+
+	Release 2011-12-04 - Xymph:
+		Prevented possible PHP warning in IXR_Value::calculateType
 */
 
 if (!defined('LF')) {
@@ -98,10 +101,10 @@ class IXR_Value {
 			return 'double';
 		}
 		// Deal with IXR object types base64 and date
-		if (is_object($this->data) && is_a($this->data, 'IXR_Date')) {
+		if (is_object($this->data) && ($this->data instanceof IXR_Date)) {
 			return 'date';
 		}
-		if (is_object($this->data) && is_a($this->data, 'IXR_Base64')) {
+		if (is_object($this->data) && ($this->data instanceof IXR_Base64)) {
 			return 'base64';
 		}
 		// If it is a normal PHP object convert it into a struct
@@ -685,11 +688,11 @@ class IXR_Client_Gbx {
 		}
 
 		$request = new IXR_Request($method, $args);
-		
+
 		// Check if the request is greater than 512 Kbytes to avoid errors
 		// If the method is system.multicall, make two calls (possibly recursively)
 		if (($size = $request->getLength()) > 512*1024-8) {
-			if ($method == 'system.multicall' && isset($args[0])) {
+			if ($method = 'system.multicall' && isset($args[0])) {
 				$count = count($args[0]);
 				// If count is 1, query cannot be reduced
 				if ($count < 2) {

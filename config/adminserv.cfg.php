@@ -44,5 +44,9 @@ class AdminServConfig {
 	/* UPLOAD */
 	public static $ALLOWED_EXTENSIONS = array('gbx', 'zip', 'rar', '7z', 'gzip');
 	public static $SIZE_LIMIT = 25; // mo
+	
+	/* LOCAL */
+	public static $MAP_EXTENSION = array('map.gbx', 'challenge.gbx');
+	public static $MATCHSET_EXTENSION = array('txt', 'xml');
 }
 ?>

@@ -4,9 +4,12 @@
 /**
  * GBXDataFetcher - Fetch GBX challenge/map/replay data for TrackMania tracks
  * Created by Xymph <tm@gamers.org>
+ * Thanks to Electron for additional input
  * Based on information at http://en.tm-wiki.org/index.php?title=GBX&oldid=5300
  * Inspired by TMNDataFetcher & "Extract GBX data"
  *
+ * v1.21: Add TM2C Map version 6 compatibility; add $unknown4 & $unknown5; add
+ *        track types Shortcut & Script
  * v1.20: Add TM2C Map/Replay compatibility; extract challenge $editor;
  *        rename $coppers to $cost and extract TM2C $azone, $exebld, $lightmap
  *        in GBXChallengeFetcher; extract TM2C $exebld in GBXReplayFetcher
@@ -42,8 +45,8 @@ class GBXChallengeFetcher {
 
 	public $filename, $parsexml, $tnimage,
 	       $uid, $version, $name, $author, $azone, $type, $envir, $mood,
-	       $pub, $authortm, $goldtm, $silvertm, $bronzetm,
-	       $cost, $multi, $unknown, $unknown2, $ascore, $editor, $password,
+	       $pub, $authortm, $goldtm, $silvertm, $bronzetm, $cost, $multi,
+	       $unknown, $unknown2, $unknown4, $unknown5, $ascore, $editor, $password,
 	       $xml, $parsedxml, $xmlver, $exever, $exebld, $lightmap, $nblaps,
 	       $songfile, $songurl, $modname, $modfile, $modurl, $thumbnail, $comment;
 
@@ -172,7 +175,7 @@ class GBXChallengeFetcher {
 		$r = unpack('Vversion', $data);
 		$this->version = $r['version'];
 		// check for unsupported versions
-		if ($this->version < 2 || $this->version > 5) {
+		if ($this->version < 2 || $this->version > 6) {
 			fclose($handle);
 			return false;
 		}
@@ -183,13 +186,13 @@ class GBXChallengeFetcher {
 			$r = unpack('Nmark'.$i . '/Vlen'.$i, $data);
 			$len[$i] = $r['len'.$i];
 		}
-		if ($this->version == 5) {  // clear high-bits
+		if ($this->version >= 5) {  // clear high-bits
 			$len[4] &= 0x7FFFFFFF;
 			$len[5] &= 0x7FFFFFFF;
 		}
 
 		// start of Times/info block:
-		// 0x25 (TM v2), 0x2D (TMPowerUp v3), 0x35 (TMO/TMS/TMN v4), 0x3D (TMU/TMF v5)
+		// 0x25 (TM v2), 0x2D (TMPowerUp v3), 0x35 (TMO/TMS/TMN v4), 0x3D (TMU/TMF v5), 0x45 (TM2C v6)
 		// get count of Times/info entries (well... sorta)
 		$data = fread($handle, 1);
 		// TM v2 tracks use 3, TMPowerUp v3 tracks use 4; actual count is 2 more
@@ -197,7 +200,8 @@ class GBXChallengeFetcher {
 		// older TMS tracks (exever="0.1.4.3-6") use 9; no author score
 		// newer TMO/TMS tracks (exever>="0.1.4.8") and TMN/TMU/TMF tracks (exever<="2.11.4") use 10
 		// TMF tracks (exever>="2.11.5") use 11; with editor
-		// TM2C tracks (exever>="3.0.0") use 12; with unknown3
+		// TM2C beta tracks (exever>="3.0.0") use 12; with unknown3
+		// TM2C release tracks (exever>="3.0.0") use 13; with unknown4 & unknown5
 		$count = ord($data);
 
 		fseek($handle, 0x04, SEEK_CUR);  // Unknown1: 00 00 00 00
@@ -234,7 +238,11 @@ class GBXChallengeFetcher {
 				        break;
 				case 3: $this->type = 'Crazy';
 				        break;
+				case 4: $this->type = 'Shortcut';
+				        break;
 				case 5: $this->type = 'Stunts';
+				        break;
+				case 6: $this->type = 'Script';
 				        break;
 				default: $this->type = 'unknown!';
 			}
@@ -263,6 +271,15 @@ class GBXChallengeFetcher {
 				$r = unpack('Vunknown3', $data);
 				$this->unknown2 = $r['unknown3'];
 			}
+			// check whether to fetch unknown4/5
+			if ($count >= 13) {
+				$data = fread($handle, 4);
+				$r = unpack('Vunknown4', $data);
+				$this->unknown4 = $r['unknown4'];
+				$data = fread($handle, 4);
+				$r = unpack('Vunknown5', $data);
+				$this->unknown5 = $r['unknown5'];
+			}
 		}
 
 		// start of Strings block in version 2 (0x3A, TM)
@@ -274,7 +291,7 @@ class GBXChallengeFetcher {
 		// 03 03 00 00 (TMO/TMS v4, exever="0.1.4.8", rare)
 		// 04 03 00 00 (TMO/TMS/TMN v4, exever>="0.1.4.8")
 		// 05 03 00 00 (TMU/TMF v5)
-		// 09 03 00 00 (TM2C v5)
+		// 09 03 00 00 (TM2C v5/v6)
 
 		// start of Strings block in versions >= 3
 		// 0x4A (TMPowerUp v3)
@@ -283,6 +300,8 @@ class GBXChallengeFetcher {
 		// 0x62 (TMO/TMS/TMN v4, exever>="0.1.4.8")
 		// 0x6A (TMU/TMF v5, exever<="2.11.4")
 		// 0x6E (TMF v5, exever>="2.11.5")
+		// 0x72 (TM2C v5, exever>="3.0.0")
+		// 0x82 (TM2C v6, exever>="3.0.0")
 		fseek($handle, 0x05, SEEK_CUR);  // 00 and 00 00 00 80
 		$this->uid = $this->ReadGBXString($handle);
 		$data = fread($handle, 4);  // if C0 00 00 00 no env, otherwise 00 00 00 40 and env
