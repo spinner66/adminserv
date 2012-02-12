@@ -96,8 +96,15 @@ function getCurrentServerInfo(){
 							+'<td class="checkbox"><input type="checkbox" name="player[]" value="'+player.Login+'" /></td>'
 						+'</tr>';
 					});
+					
+					if( $("input#checkAll").attr("disabled") ){
+						$("input#checkAll").attr("disabled", false);
+					}
 				}
 				else{
+					if( !$("input#checkAll").attr("disabled") ){
+						$("input#checkAll").attr("disabled", true);
+					}
 					out += '<tr class="no-line"><td class="center" colspan="4">'+data.ply+'</td></tr>';
 				}
 				

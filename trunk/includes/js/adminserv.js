@@ -81,9 +81,6 @@ $(document).ready(function(){
 			// Checkbox
 			$("input#checkAll").click(function(){
 				$("#playerlist").checkAll( $(this).attr("checked") );
-				if( $("#playerlist tr.current").hasClass("selected") ){
-					$("#playerlist tr.current").removeClass("selected");
-				}
 				
 				// Mise à jour du nb de lignes sélectionnées
 				$(".cadre.right").updateNbSelectedLines();
@@ -91,19 +88,21 @@ $(document).ready(function(){
 			
 			// Clic sur les lignes
 			$("#playerlist tr").live("click", function(){
-				// Si la ligne est déjà sélectionnée, on l'enlève
-				if( $(this).hasClass("selected") ){
-					$(this).removeClass("selected");
-					$(this).children("td.checkbox").children("input").attr("checked", false);
+				if( !$(this).hasClass("no-line") ){
+					// Si la ligne est déjà sélectionnée, on l'enlève
+					if( $(this).hasClass("selected") ){
+						$(this).removeClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", false);
+					}
+					// Sinon, on l'ajoute
+					else{
+						$(this).addClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", true);
+					}
+					
+					// Mise à jour du nb de lignes sélectionnées
+					$(".cadre.right").updateNbSelectedLines();
 				}
-				// Sinon, on l'ajoute
-				else{
-					$(this).addClass("selected");
-					$(this).children("td.checkbox").children("input").attr("checked", true);
-				}
-				
-				// Mise à jour du nb de lignes sélectionnées
-				$(".cadre.right").updateNbSelectedLines();
 			});
 		}
 		/**

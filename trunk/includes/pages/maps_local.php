@@ -4,7 +4,7 @@
 	$mapsDirectoryList = AdminServTemplate::getMapsDirectoryList($mapsDirectoryPath, $directory);
 	
 	// MAPLIST
-	$mapsList = AdminServ::getMapList();
+	$mapsList = AdminServ::getLocalMapList($mapsDirectoryPath.$directory);
 	
 	// HTML
 	$client->Terminate();
@@ -43,16 +43,16 @@
 				<?php
 					$showMapList = null;
 					
-					// Liste des joueurs
-					if( is_array($mapsList) && count($mapsList) > 0 ){
+					// Liste des maps local
+					if( is_array($mapsList['lst']) && count($mapsList['lst']) > 0 ){
 						$i = 0;
 						foreach($mapsList['lst'] as $id => $map){
 							// Ligne
-							$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($id == $mapsList['cid']){ $showMapList .= ' current'; } $showMapList .= '">'
+							$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } $showMapList .= '">'
 								.'<td class="imgleft"><img src="'.$mapsList['cfg']['path_rsc'].'images/16/map.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
 								.'<td class="imgcenter"><img src="'.$mapsList['cfg']['path_rsc'].'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
 								.'<td>'.$map['Author'].'</td>'
-								.'<td class="checkbox">'; if($id != $mapsList['cid']){ $showMapList .= '<input type="checkbox" name="map[]" value="'.$map['FileName'].'" />'; } $showMapList .= '</td>'
+								.'<td class="checkbox"><input type="checkbox" name="map[]" value="'.$map['FileName'].'" /></td>'
 							.'</tr>';
 							$i++;
 						}

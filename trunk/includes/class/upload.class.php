@@ -93,7 +93,7 @@ class UploadedFileXhr {
 		fseek($temp, 0, SEEK_SET);
 		$file = stream_get_contents($temp);
 		$str64 = new IXR_Base64($file);
-		if( !$client->queryIgnoreResult('WriteFile', $filename, $str64) ){
+		if( !$client->query('WriteFile', $filename, $str64) ){
 			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 		}
 		else{

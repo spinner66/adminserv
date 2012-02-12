@@ -1117,5 +1117,70 @@ abstract class AdminServ {
 		
 		return $out;
 	}
+	
+	
+	public static function getLocalMapList($path){
+		global $client;
+		$out = array();
+		
+		if( class_exists('Folder') && class_exists('GBXChallengeFetcher') ){
+			$directory = Folder::read($path, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+			if( is_array($directory) ){
+				$countMapList = count($directory['files']);
+				if($countMapList > 0){
+					$i = 0;
+					foreach($directory['files'] as $file => $values){
+						//if( in_array(self::, AdminServConfig::$MAP_EXTENSION){
+							// Données
+							$Gbx = new GBXChallengeFetcher($path.$file, true);
+							
+							// Name
+							$name = htmlspecialchars($Gbx->name, ENT_QUOTES, 'UTF-8');
+							$out['lst'][$i]['Name'] = TmNick::toHtml($name, 10, true);
+							
+							// Environnement
+							$env = $Gbx->envir;
+							if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
+							$out['lst'][$i]['Environnement'] = $env;
+							
+							// Autres
+							$out['lst'][$i]['FileName'] = $file;
+							$out['lst'][$i]['Author'] = $Gbx->author;
+							$out['lst'][$i]['Recent'] = $values['recent'];
+							$i++;
+						//}
+					}
+				}
+				else{
+					$out['lst'] = 'Aucune map';
+				}
+				
+				// Nombre de maps
+				if($countMapList > 1){
+					$out['nbm'] = $countMapList.' maps';
+				}
+				else{
+					$out['nbm'] = $countMapList.' map';
+				}
+				
+				// Config
+				$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
+			}
+			else{
+				// Retour des erreurs de la méthode read
+				$out = $directory;
+			}
+		}
+		else{
+			$out['error'] = 'class "Folder" or "GBXChallengeFetcher" not found';
+		}
+		
+		return $out;
+	}
+	
+	
+	public static function getLocalMatchSettingList(){
+		
+	}
 }
 ?>
