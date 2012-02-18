@@ -46,7 +46,6 @@
 			</ul>
 		</div>
 		
-		<!-- Liste des maps -->
 		<form method="post" action="?p=maps">
 		<div id="maplist">
 			<table>
