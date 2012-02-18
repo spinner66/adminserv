@@ -1,10 +1,96 @@
 <?php
+	// GAME
+	if(SERVER_VERSION_NAME == 'TmForever'){
+		$queries = array(
+			'insertMap' => 'RemoveChallengeList',
+			'addMap' => 'ChooseNextChallengeList'
+		);
+	}
+	else{
+		$queries = array(
+			'insertMap' => 'RemoveMapList',
+			'addMap' => 'ChooseNextMapList'
+		);
+	}
+	
+	
 	// LECTURE
 	$mapsDirectoryPath = AdminServ::getMapsDirectoryPath();
 	$mapsDirectoryList = AdminServTemplate::getMapsDirectoryList($mapsDirectoryPath, $directory);
 	
+	
+	// ACTIONS
+	if( isset($_POST['addMap']) && count($_POST['map']) > 0 ){
+		foreach($_POST['map'] as $map){
+			if( !$client->query($queries['addMap'], $mapsDirectoryPath.$map) ){
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+				break;
+			}
+		}
+	}
+	else if( isset($_POST['insertMap']) && count($_POST['map']) > 0 ){
+		foreach($_POST['map'] as $map){
+			if( !$client->query($queries['insertMap'], $mapsDirectoryPath.$map) ){
+				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+				break;
+			}
+		}
+	}
+	else if( isset($_POST['downloadMap']) && count($_POST['map']) > 0 ){
+		// Si on télécharge plusieurs fichiers, on envoi un zip
+		if( count($_POST['map']) > 1){
+			// archive
+		}
+		// Sinon on envoi le fichier seul
+		else{
+			// download
+		}
+	}
+	else if( isset($_POST['ApplyRenameChallenge']) && $_POST['RenameChallengeFileOLD'] != null && $_POST['RenameChallengeFile'] != null ){
+		for($i = 0; $i < count($_POST['RenameChallengeFile']); $i++){
+			if( ! @rename($tracksDirectory.$_POST['RenameChallengeFileOLD'][$i], $tracksDirectory.$_POST['RenameChallengeFile'][$i]) ){
+				AdminServ::error($lang[$i18n.'_impossible_renommer_fichier'].' <i>'.$_POST['RenameChallengeFileOLD'][$i].'</i>');
+				break;
+			}
+		}
+	}
+	else if( isset($_POST['ApplyMoveChallenge']) && $_POST['MoveChallengeFileName'] != null && $_POST['MoveChallengeFileDirectory'] != null ){
+		$moveChallengeFileNameList = explode(',', $_POST['MoveChallengeFileName']);
+		for($i = 0; $i < count($moveChallengeFileNameList); $i++){
+			// Si on a sélectionné "Dossier parent"
+			if($_POST['MoveChallengeFileDirectory'] == '../'){
+				$trackDirectoryExplode = explode('/', $tracksDirectory);
+				$trackDirectoryParent = null;
+				for($j = 0; $j < count($trackDirectoryExplode)-2; $j++){
+					$trackDirectoryParent .= $trackDirectoryExplode[$j].'/';
+				}
+				if( ! @rename($tracksDirectory.$moveChallengeFileNameList[$i], $trackDirectoryParent.$moveChallengeFileNameList[$i]) ){
+					AdminServ::error($lang[$i18n.'_impossible_deplacer_fichier'].' <i>'.$moveChallengeFileNameList[$i].'</i>');
+					break;
+				}
+			}
+			// Sinon on déplace vers le dossier choisit
+			else{
+				if( ! @rename($tracksDirectory.$moveChallengeFileNameList[$i], $tracksDirectory.$_POST['MoveChallengeFileDirectory'].'/'.$moveChallengeFileNameList[$i]) ){
+					AdminServ::error($lang[$i18n.'_impossible_deplacer_fichier'].' <i>'.$moveChallengeFileNameList[$i].'</i>');
+					break;
+				}
+			}
+		}
+	}
+	else if( isset($_POST['deleteMap']) && count($_POST['map']) > 0 ){
+		foreach($_POST['map'] as $map){
+			if( ! @unlink($mapsDirectoryPath.$map) ){
+				AdminServ::error('Impossible de supprimer la map : '.$map);
+				break;
+			}
+		}
+	}
+	
+	
 	// MAPLIST
 	$mapsList = AdminServ::getLocalMapList($mapsDirectoryPath.$directory);
+	
 	
 	// HTML
 	$client->Terminate();
@@ -24,7 +110,7 @@
 		<div class="title-detail">
 			<ul>
 				<li class="path"><?php echo $mapsDirectoryPath.$directory; ?></li>
-				<li><input type="checkbox" name="" id="" value="" /></li>
+				<li><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($mapsList['lst']) ){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		
@@ -77,8 +163,12 @@
 					<span class="selected-files-title">Pour la sélection</span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="button" name="rename" id="rename" value="Supprimer" />
-						<input class="button dark" type="button" name="move" id="move" value="Placer après la map en cours" />
+						<input class="button dark" type="button" name="deleteMap" id="deleteMap" value="Supprimer" />
+						<input class="button dark" type="button" name="moveMap" id="moveMap" value="Déplacer" />
+						<input class="button dark" type="button" name="renameMap" id="renameMap" value="Renommer" />
+						<input class="button dark" type="button" name="downloadMap" id="downloadMap" value="Télécharger" />
+						<input class="button dark" type="button" name="insertMap" id="insertMap" value="Insérer" />
+						<input class="button dark" type="button" name="addMap" id="addMap" value="Ajouter" />
 					</div>
 				</div>
 			</div>

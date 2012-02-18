@@ -321,8 +321,37 @@ $(document).ready(function(){
 				});*/
 				initializeUploader();
 			});
+		}
+		/**
+		* Maps-local
+		*/
+		else if( $("body").hasClass("section-maps-local") ){
+			// Checkbox
+			$("input#checkAll").click(function(){
+				$("#maplist").checkAll( $(this).attr("checked") );
+				
+				// Mise à jour du nb de lignes sélectionnées
+				$(".maps .local").updateNbSelectedLines();
+			});
 			
-
+			// Clic sur les lignes
+			$("#maplist tr").live("click", function(){
+				if( !$(this).hasClass("no-line") ){
+					// Si la ligne est déjà sélectionnée, on l'enlève
+					if( $(this).hasClass("selected") ){
+						$(this).removeClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", false);
+					}
+					// Sinon, on l'ajoute
+					else{
+						$(this).addClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", true);
+					}
+					
+					// Mise à jour du nb de lignes sélectionnées
+					$(".maps .local").updateNbSelectedLines();
+				}
+			});
 		}
 		/**
 		* Guest-Ban
