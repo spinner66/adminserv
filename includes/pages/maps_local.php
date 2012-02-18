@@ -1,17 +1,17 @@
 <?php
 	// GAME
-	if(SERVER_VERSION_NAME == 'TmForever'){
-		$queries = array(
-			'insertMap' => 'RemoveChallengeList',
-			'addMap' => 'ChooseNextChallengeList'
-		);
-	}
-	else{
-		$queries = array(
-			'insertMap' => 'RemoveMapList',
-			'addMap' => 'ChooseNextMapList'
-		);
-	}
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$queries = array(
+				'insert' => 'InsertChallenge',
+				'add' => 'AddChallenge'
+			);
+		}
+		else{
+			$queries = array(
+				'insert' => 'InsertMap',
+				'add' => 'AddMap'
+			);
+		}
 	
 	
 	// LECTURE
@@ -22,7 +22,7 @@
 	// ACTIONS
 	if( isset($_POST['addMap']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			if( !$client->query($queries['addMap'], $mapsDirectoryPath.$map) ){
+			if( !$client->query($queries['add'], $mapsDirectoryPath.$map) ){
 				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				break;
 			}
@@ -30,7 +30,7 @@
 	}
 	else if( isset($_POST['insertMap']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			if( !$client->query($queries['insertMap'], $mapsDirectoryPath.$map) ){
+			if( !$client->query($queries['insert'], $mapsDirectoryPath.$map) ){
 				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				break;
 			}
@@ -114,6 +114,7 @@
 			</ul>
 		</div>
 		
+		<form method="post" action="?p=maps-local">
 		<div id="maplist">
 			<table>
 				<thead>
@@ -163,16 +164,17 @@
 					<span class="selected-files-title">Pour la sélection</span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="button" name="deleteMap" id="deleteMap" value="Supprimer" />
-						<input class="button dark" type="button" name="moveMap" id="moveMap" value="Déplacer" />
-						<input class="button dark" type="button" name="renameMap" id="renameMap" value="Renommer" />
-						<input class="button dark" type="button" name="downloadMap" id="downloadMap" value="Télécharger" />
-						<input class="button dark" type="button" name="insertMap" id="insertMap" value="Insérer" />
-						<input class="button dark" type="button" name="addMap" id="addMap" value="Ajouter" />
+						<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="Supprimer" />
+						<input class="button dark" type="submit" name="moveMap" id="moveMap" value="Déplacer" />
+						<input class="button dark" type="submit" name="renameMap" id="renameMap" value="Renommer" />
+						<input class="button dark" type="submit" name="downloadMap" id="downloadMap" value="Télécharger" />
+						<input class="button dark" type="submit" name="insertMap" id="insertMap" value="Insérer" />
+						<input class="button dark" type="submit" name="addMap" id="addMap" value="Ajouter" />
 					</div>
 				</div>
 			</div>
 		</div>
+		</form>
 	</section>
 </section>
 <?php
