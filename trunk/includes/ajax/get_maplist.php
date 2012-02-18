@@ -11,7 +11,7 @@
 	AdminServTemplate::getClass();
 	
 	// DATA
-	if( AdminServ::initialize(false) ){
+	if( AdminServ::initialize() ){
 		$out = AdminServ::getMapList();
 	}
 	

@@ -17,7 +17,7 @@ function getServerAdminLevel(){
 			$("select#as_adminlevel").html(adminLevelList);
 		}
 		else{
-			alert("Aucun niveau admin configuré pour ce serveur.");
+			error("Aucun niveau admin configuré pour ce serveur.");
 		}
 	});
 }
@@ -31,11 +31,14 @@ function getServerAdminLevel(){
 function speedAdmin(cmd){
 	$.post("includes/ajax/speed_admin.php", {cmd: cmd}, function(response){
 		if(response != "null"){
-			alert("Error: "+response);
+			error("Error: "+response);
 		}
 		setTimeout(function(){
 			if( $("body").hasClass("section-index") ){
 				getCurrentServerInfo();
+			}
+			else if( $("body").hasClass("section-maps") ){
+				getMapList();
 			}
 			$(".speed-admin a.locked").removeClass("locked");
 		}, 2000);
@@ -111,9 +114,6 @@ function getCurrentServerInfo(){
 				// HTML
 				$("#playerlist table tbody").html(out);
 			}
-		}
-		else{
-			alert("Error");
 		}
 	});
 }
@@ -377,3 +377,43 @@ function getPath(){
 		$(this).find(".selected-files-count").text("("+nb+")");
 	};
 })(jQuery);
+
+
+
+/**
+* Récupère la liste des maps du serveur
+*/
+function getMapList(){
+	$.getJSON("includes/ajax/get_maplist.php", function(data){
+		if(data != null){
+			if(data.lst != null && !$("#maplist tbody .checkbox input").attr("checked") ){
+				var out = null;
+				
+				// Création du tableau
+				if( typeof(data.lst) == "object" && data.lst.length > 0 ){
+					$.each(data.lst, function(i, map){
+						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } if(data.cid == i){ out += ' current'; } out += '">'
+							+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/map.png" alt="" />'+map.Name+'</td>'
+							+'<td class="imgcenter"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
+							+'<td>'+map.Author+'</td>'
+							+'<td class="checkbox">'; if(data.cid != i){ out += '<input type="checkbox" name="map[]" value="'+map.FileName+'" />'; } out += '</td>'
+						+'</tr>';
+					});
+					
+					if( $("input#checkAll").attr("disabled") ){
+						$("input#checkAll").attr("disabled", false);
+					}
+				}
+				else{
+					if( !$("input#checkAll").attr("disabled") ){
+						$("input#checkAll").attr("disabled", true);
+					}
+					out += '<tr class="no-line"><td class="center" colspan="4">'+data.lst+'</td></tr>';
+				}
+				
+				// HTML
+				$("#maplist table tbody").html(out);
+			}
+		}
+	});
+}

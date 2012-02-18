@@ -255,6 +255,11 @@ $(document).ready(function(){
 		* Maps-list
 		*/
 		else if( $("body").hasClass("section-maps") ){
+			// Mise à jour de la liste
+			setInterval(function(){
+				getMapList();
+			}, 10000);
+			
 			// Checkbox
 			$("input#checkAll").click(function(){
 				$("#maplist").checkAll( $(this).attr("checked") );
