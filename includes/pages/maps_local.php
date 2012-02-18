@@ -20,7 +20,7 @@
 	
 	
 	// ACTIONS
-	if( isset($_POST['addMap']) && count($_POST['map']) > 0 ){
+	if( isset($_POST['addMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
 			if( !$client->query($queries['add'], $mapsDirectoryPath.$map) ){
 				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
@@ -28,7 +28,7 @@
 			}
 		}
 	}
-	else if( isset($_POST['insertMap']) && count($_POST['map']) > 0 ){
+	else if( isset($_POST['insertMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
 			if( !$client->query($queries['insert'], $mapsDirectoryPath.$map) ){
 				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
@@ -36,7 +36,7 @@
 			}
 		}
 	}
-	else if( isset($_POST['downloadMap']) && count($_POST['map']) > 0 ){
+	else if( isset($_POST['downloadMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		// Si on télécharge plusieurs fichiers, on envoi un zip
 		if( count($_POST['map']) > 1){
 			// archive
@@ -78,7 +78,7 @@
 			}
 		}
 	}
-	else if( isset($_POST['deleteMap']) && count($_POST['map']) > 0 ){
+	else if( isset($_POST['deleteMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
 			if( ! @unlink($mapsDirectoryPath.$map) ){
 				AdminServ::error('Impossible de supprimer la map : '.$map);
