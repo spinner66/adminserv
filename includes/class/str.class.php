@@ -57,5 +57,54 @@ abstract class Str {
 		
 		return $out;
 	}
+	
+	
+	/**
+	* Remplace ou supprime les caractères spéciaux
+	*
+	* @param string $str -> La chaine de caractères
+	*/
+	public static function replaceSpecialChars($str){
+		// Listes
+		$toRemove = array(
+			"'", '"', '&', '<', '>', '+', '=', '*', '/', '²', '~', '#', '{', '[', '(', '|', '`', '\\', '^', '@', ')', ']', '}', '¨', '$', '£', '¤',
+			'!', '%', '§', ':', ';', ',', '?', '«', '»', '“', '”', '„', '…', '¡', '¿', '‘', '’', 'ˆ', '˜', '¸', '·', '•', '¯', '‾', '—', '¦', '†',
+			'‡', '¶', '©', '®', '™', '◊', '♠', '♣', '♥', '♦', '←', '↑', '→', '↓', '↔', 'Γ', 'δ', 'Δ', 'ζ', 'θ', 'Θ', 'ι', 'Λ', 'ξ', 'Ξ', 'π', 'Π',
+			'σ', 'ς', 'Σ', 'φ', 'Φ', 'ψ', 'Ψ', 'ω', 'Ω', '°', '≤', '≥', '≈', '≠', '≡', '±', '×', '÷', '⁄', '‰', '¼', '½', '¾', '¹', '³', 'º', 'ª',
+			'′', '″', '∂', '∏', '∑', '√', '∞', '¬', '∩', '∫', '⇒', '⇔', '∀', '∃', '∇', '∈', '∋', '∝', '∠', '∧', '∨', '∴', '∼', '⊂', '⊃',
+			'⊆', '⊇', '⊥'
+		);
+		$toDash = array(
+			' ', '  '
+		);
+		
+		// Remplacement
+		$str = trim($str);
+		$str = str_replace($toRemove, '', $str);
+		$str = str_replace($toDash, '-', $str);
+		return $str;
+	}
+	
+	
+	/**
+	* Remplace les caractères accentués par leurs caractères normal
+	*
+	* @param string $str -> La chaine de caractères
+	*/
+	public static function replaceAccentChars($str){
+		$str = utf8_decode($str);
+		$str = strtr($str, utf8_decode('ÀÁÂÃÄÅΑλàáâãäåαβþÐÒÓÔÕÖØòóôõöøÈÉÊËèéêë€εƒÇç¢ÌÍÎÏìíîïÙÚÛÜ∪ùúûüµυÿýýŸÝ¥ÑñηŔŕρτ'), 'AAAAAAAAaaaaaaaBbDOOOOOOooooooEEEEeeeeEefCccIIIIiiiiUUUUUuuuuuuyyyYYYNnnRrpt');
+		return utf8_encode($str);
+	}
+	
+	
+	/**
+	* Remplace ou supprime les caractères spéciaux et remplace les caractères accentués
+	*
+	* @param string $str -> La chaine de caractères
+	*/
+	public static function replaceChars($str){
+		return self::replaceSpecialChars( self::replaceAccentChars($str) );
+	}
 }
 ?>
