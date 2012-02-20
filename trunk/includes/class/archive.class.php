@@ -5,10 +5,9 @@
 * Méthodes de traitement pour les archives
 */
 class Archive {
+	private $filename = null;
 	
-	public $filename;
-	
-	public function _construct(){
+	function __construct(){
 		$out = null;
 		if( class_exists('ZipArchive') ){
 			$out = true;
@@ -20,16 +19,22 @@ class Archive {
 		return $out;
 	}
 	
-	public static function create($filename, $data){
+	public function create($filename, $data){
 		$out = null;
 		$za = new ZipArchive();
-		if( File::getExtension($filename) != 'zip'){
+		if( !strstr($filename, '.zip') ){
 			$this->filename = $filename.'.zip';
 		}else{
 			$this->filename = $filename;
 		}
 		
-		if( !$result = $za->open($this->filename, ZIPARCHIVE::CREATE) ){
+		if( $result = $za->open($this->filename, ZIPARCHIVE::CREATE) ){
+			
+			
+			
+			$za->close();
+		}
+		else{
 			switch($result){
 				case ZIPARCHIVE::ER_EXISTS:
 					$out = 'Le fichier existe déjà.';
@@ -64,11 +69,11 @@ class Archive {
 		return $out;
 	}
 	
-	public static function addFiles($files){
+	public function addFiles($files){
 		
 	}
 	
-	public static function addFolders($folders){
+	public function addFolders($folders){
 		
 	}
 }

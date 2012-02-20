@@ -5,8 +5,8 @@
 ?>
 <section>
 	<?php
-		$test = $archive->create('test');
-		AdminServ::dsm($test);
+		$data = array();
+		$archive->create('./plugins/test.zip', $data);
 	?>
 </section>
 <?php
