@@ -413,8 +413,8 @@ abstract class AdminServ {
 			
 			// CONNEXION
 			$client = new IXR_Client_Gbx;
-			if( !$client->InitWithIp(SERVER_ADDR, SERVER_XMLRPC_PORT, (AdminServConfig::CONNECTION_TIMEOUT * 1000)) ){
-				Utils::redirection(false, '?error='.urlencode('Le serveur n\'est pas accessible.') );
+			if( !$client->InitWithIp(SERVER_ADDR, SERVER_XMLRPC_PORT, AdminServConfig::CONNECTION_TIMEOUT) ){
+				Utils::redirection(false, './?error='.urlencode('Le serveur n\'est pas accessible.') );
 			}
 			else{
 				if( !self::userAllowedInAdminLevel(SERVER_NAME, USER_ADMINLEVEL) ){
