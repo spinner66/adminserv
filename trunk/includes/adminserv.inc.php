@@ -101,7 +101,7 @@ abstract class AdminServTemplate {
 		require_once __DIR__ .'/class/file.class.php';
 		require_once __DIR__ .'/class/folder.class.php';
 		require_once __DIR__ .'/class/str.class.php';
-		require_once __DIR__ .'/class/archive.class.php';
+		require_once __DIR__ .'/class/zip.class.php';
 	}
 	
 	
