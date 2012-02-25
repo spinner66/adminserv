@@ -4,35 +4,17 @@
 *
 * Méthodes de traitement pour les archives
 */
-class Archive {
-	private $filename = null;
-	
-	function __construct(){
-		$out = null;
-		if( class_exists('ZipArchive') ){
-			$out = true;
-		}
-		else{
-			$out = 'Class ZipArchive no exists';
-		}
-		
-		return $out;
-	}
+class Zip extends ZipArchive {
 	
 	public function create($filename, $data){
 		$out = null;
-		$za = new ZipArchive();
-		if( !strstr($filename, '.zip') ){
-			$this->filename = $filename.'.zip';
-		}else{
-			$this->filename = $filename;
-		}
+		$zip = new ZipArchive();
 		
-		if( $result = $za->open($this->filename, ZIPARCHIVE::CREATE) ){
+		if( $result = $zip->open($filename, ZIPARCHIVE::CREATE) ){
 			
+			self::_checkStructure($filename, $data);
 			
-			
-			$za->close();
+			$zip->close();
 		}
 		else{
 			switch($result){
@@ -69,12 +51,22 @@ class Archive {
 		return $out;
 	}
 	
-	public function addFiles($files){
+	private function _checkStructure($filename, $struct){
+		$zip = new ZipArchive();
 		
-	}
-	
-	public function addFolders($folders){
-		
+		if( $zip->open($filename) ){
+			foreach($struct as $folder => $file){
+				
+				if( is_array($folder) ){
+					$zip->addEmptyDir($folder);
+					self::_checkStructure($struct);
+				}
+				else{
+					$zip->addFile($file);
+				}
+			}
+			$zip->close();
+		}
 	}
 }
 ?>

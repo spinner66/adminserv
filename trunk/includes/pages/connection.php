@@ -47,6 +47,9 @@
 	
 	
 	// HTML
+	if( isset($_GET['error']) ){
+		AdminServ::error($_GET['error']);
+	}
 	AdminServTemplate::getHeader();
 ?>
 <section>

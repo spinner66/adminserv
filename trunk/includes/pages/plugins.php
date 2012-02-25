@@ -1,12 +1,18 @@
 <?php
-	$archive = new Archive();
-	
 	AdminServTemplate::getHeader();
 ?>
 <section>
 	<?php
-		$data = array();
-		$archive->create('./plugins/test.zip', $data);
+		$data = array(
+			'dirname' => array(
+				'dirname2' => array(
+					'file1.txt'
+				),
+				'file2.txt'
+			),
+			'file3.txt'
+		);
+		Zip::create('test.zip', $data);
 	?>
 </section>
 <?php
