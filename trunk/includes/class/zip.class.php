@@ -20,13 +20,13 @@ class Zip extends ZipArchive {
 	*     ),
 	*     'file1.txt'
 	*  );
-	* @return object ZIP si réussi, sinon string erreur
+	* @return true si réussi, sinon false
 	*/
-	public function create($filename, $struct, &$errorMsg = null){
+	public function create($filename, $struct, $temporary = false, &$errorMsg = null){
 		$out = false;
 		
 		if( !file_exists($filename) ){
-			$out = self::add($filename, $struct, $errorMsg);
+			$out = self::add($filename, $struct, $temporary, $errorMsg);
 		}
 		else{
 			$errorMsg = self::_getErrorMsg(ZIPARCHIVE::ER_EXISTS);
@@ -41,9 +41,9 @@ class Zip extends ZipArchive {
 	*
 	* @param string $filename -> Nom de l'archive
 	* @param array  $struct   -> Tableau des données de l'archive
-	* @return object ZIP si réussi, sinon string erreur
+	* @return true si réussi, sinon false
 	*/
-	public function add($filename, $struct, &$errorMsg = null){
+	public function add($filename, $struct, $temporary = false, &$errorMsg = null){
 		$out = false;
 		$zip = new ZipArchive();
 		
@@ -99,7 +99,17 @@ class Zip extends ZipArchive {
 					self::_checkStructure($object, $struct[$folder], $path.$folder.'/');
 				}
 				else{
-					$object->addFile($file, $path.$file);
+					$filename = null;
+					if( strstr($file, '/') ){
+						$pathinfo = pathinfo($file);
+						$filename = $pathinfo['basename'];
+					}
+					
+					if($filename){
+						$object->addFile($path.$file, $filename);
+					}else{
+						$object->addFile($path.$file);
+					}
 				}
 			}
 		}

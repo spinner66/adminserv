@@ -39,7 +39,20 @@
 	else if( isset($_POST['downloadMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		// Si on télécharge plusieurs fichiers, on envoi un zip
 		if( count($_POST['map']) > 1){
-			// archive
+			$struct = array();
+			foreach($_POST['map'] as $map){
+				$struct[] = $mapsDirectoryPath.$map;
+			}
+			$zipError = null;
+			if( !Zip::create('maps.zip', $struct, true, $zipError) ){
+				AdminServ::error($zipError);
+			}
+			else{
+				File::download('maps.zip');
+				if( $result = File::delete('maps.zip') !== true ){
+					AdminServ::error($result);
+				}
+			}
 		}
 		// Sinon on envoi le fichier seul
 		else{

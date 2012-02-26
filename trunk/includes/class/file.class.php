@@ -17,6 +17,24 @@ abstract class File {
 		return strtolower($pathinfo['extension']);
 	}
 	
+	public static function delete($filename){
+		$out = null;
+		
+		if( file_exists($filename) ){
+			if( @unlink($filename) ){
+				$out = true;
+			}
+			else{
+				$out = 'Impossible de supprimer le fichier.';
+			}
+		}
+		else{
+			$out = 'Le fichier n\'existe pas.';
+		}
+		
+		return $out;
+	}
+	
 	
 	/**
 	* Envoi les headers pour télécharger un fichier
@@ -59,7 +77,6 @@ abstract class File {
 		self::sendDownloadHeaders($pathToFile, $fileSize);
 		flush();
 		readfile($pathToFile);
-		exit;
 	}
 }
 ?>
