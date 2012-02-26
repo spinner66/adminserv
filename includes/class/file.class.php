@@ -47,5 +47,19 @@ abstract class File {
 		}
 		header('Expires: 0');
 	}
+	
+	
+	/**
+	* Permet de télécharger un fichier
+	*
+	* @param string $pathToFile -> Le chemin du fichier à télécharger
+	* @param int    $fileSize   -> Taille du fichier, si null = automatique
+	*/
+	public static function download($pathToFile, $fileSize = null){
+		self::sendDownloadHeaders($pathToFile, $fileSize);
+		flush();
+		readfile($pathToFile);
+		exit;
+	}
 }
 ?>

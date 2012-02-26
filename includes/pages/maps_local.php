@@ -43,7 +43,7 @@
 		}
 		// Sinon on envoi le fichier seul
 		else{
-			// download
+			File::download($mapsDirectoryPath.$_POST['map'][0]);
 		}
 	}
 	else if( isset($_POST['ApplyRenameChallenge']) && $_POST['RenameChallengeFileOLD'] != null && $_POST['RenameChallengeFile'] != null ){
