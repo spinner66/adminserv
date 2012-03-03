@@ -393,12 +393,12 @@ abstract class AdminServ {
 	/**
 	* Intialise le client du serveur courant
 	*
-	* @param bool $full_init -> Intialisation complète ? oui par défaut.
+	* @param bool $fullInit -> Intialisation complète ? oui par défaut.
 	* Si non, ça ne recupère aucune info de base, seulement la connexion
 	* au serveur dédié et son authentication.
 	* @return true si réussi, sinon une erreur
 	*/
-	public static function initialize($full_init = true){
+	public static function initialize($fullInit = true){
 		global $client;
 		
 		if( isset($_SESSION['adminserv']) ){
@@ -425,9 +425,9 @@ abstract class AdminServ {
 						Utils::redirection(false, '?error='.urlencode('Mauvais mot de passe'));
 					}
 					else{
-						if($full_init){
+						if($fullInit){
 							if( !$client->query('GetSystemInfo') ){
-								return '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+								self::error('['.$client->getErrorCode().'] '.$client->getErrorMessage());
 							}
 							else{
 								$serverInfo =  $client->getResponse();
@@ -439,12 +439,12 @@ abstract class AdminServ {
 								define('IS_DEDICATED', $serverInfo['IsDedicated']);
 								
 								if( !$client->query('IsRelayServer') ){
-									return '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+									self::error('['.$client->getErrorCode().'] '.$client->getErrorMessage());
 								}
 								else{
 									define('IS_RELAY', $client->getResponse() );
 									if( !$client->query('GetVersion') ){
-										return '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+										self::error('['.$client->getErrorCode().'] '.$client->getErrorMessage());
 									}
 									else{
 										$getVersion = $client->getResponse();

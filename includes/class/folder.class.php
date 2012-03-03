@@ -183,8 +183,12 @@ abstract class Folder {
 		$pathLevel .= '&#9500;&nbsp;';
 		if( isset($struct['folders']) && count($struct['folders']) > 0 ){
 			foreach($struct['folders'] as $dir => $values){
-				$out[utf8_encode($path.$dir.'/')] = utf8_encode($pathLevel.$dir);
-				$out = array_merge($out, self::getArborescence($path.$dir.'/', $hiddenFolders, $hidePathLevel));
+				$out[] = array(
+					'path' => $path.$dir.'/',
+					'name' => $dir,
+					'level' => $pathLevel
+				);
+				$out = array_merge($out, self::getArborescence($path.$dir.'/', $hiddenFolders, $hidePathLevel) );
 			}
 		}
 		
