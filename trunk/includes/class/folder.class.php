@@ -160,5 +160,35 @@ abstract class Folder {
 		}
 		return $out;
 	}
+	
+	
+	/**
+	* Retourne l'arborescence complete du chemin avec un décalage du dossier
+	*
+	* @param string $path          -> Le chemin du dossier
+	* @param array  $hiddenFiles   -> Les fichiers ou extensions à ne pas prendre en compte
+	* @param int    $hidePathLevel -> Nombre de niveau du chemin à masquer pour l'affichage
+	* @return array
+	*/
+	public static function getArborescence($path = '.', $hiddenFolders = array(), $hidePathLevel = 0){
+		$out = array();
+		$struct = Folder::read($path, $hiddenFolders);
+		
+		// Décalage selon la profondeur de l'arborescence
+		$countSlash = substr_count($path, '/') - $hidePathLevel;
+		$pathLevel = null;
+		for($i = 0; $i < $countSlash; $i++){
+			$pathLevel .= '&#9474;&nbsp;';
+		}
+		$pathLevel .= '&#9500;&nbsp;';
+		if( isset($struct['folders']) && count($struct['folders']) > 0 ){
+			foreach($struct['folders'] as $dir => $values){
+				$out[utf8_encode($path.$dir.'/')] = utf8_encode($pathLevel.$dir);
+				$out = array_merge($out, self::getArborescence($path.$dir.'/', $hiddenFolders, $hidePathLevel));
+			}
+		}
+		
+		return $out;
+	}
 }
 ?>

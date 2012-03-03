@@ -451,3 +451,50 @@ function getMapList(){
 		$("#form-rename-map").html(out);
 	};
 })(jQuery);
+
+
+/**
+* Récupère la liste des fichiers map pour les renommer
+*/
+(function($){
+	$.fn.getMoveMapList = function(){
+		var out = "";
+		var list = $(this);
+		var nb = list.length;
+		if(nb > 1){
+			var nbName = nb + ' maps';
+		}else{
+			var nbName = '1 map';
+		}
+		
+		out += '<p>Déplacer '+nbName+' dans le dossier :</p>'
+		+ '<select name="moveDirectoryList" id="moveDirectoryList">'
+			+ '<option value=".">Racine</option>'
+			+ getMapsDirectoryOptionList()
+		+ '</select>';
+		
+		out += '<div class="form-input-submit">'
+			+'<input class="button dark" type="submit" id="moveMapValid" name="moveMapValid" value="Enregistrer" />'+"\n"
+			+ '<input class="button dark" type="button" id="moveMapCancel" name="moveMapCancel" value="Annuler" />'
+		+ '</div>';
+		
+		// HTML
+		$("#form-move-map").html(out);
+	};
+})(jQuery);
+
+
+function getMapsDirectoryOptionList(){
+	var out = "";
+	
+	$.getJSON("includes/ajax/get_directory_list.php", {path: getPath()}, function(data){
+		if(data != null){
+			alert("ok");
+			$.each(data, function(dirPath, dirName){
+				out += '<option value="'+dirPath+'">'+dirName+'</option>';
+			});
+		}
+	});
+	
+	return out;
+}
