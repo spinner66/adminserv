@@ -22,11 +22,11 @@ class Zip extends ZipArchive {
 	*  );
 	* @return true si réussi, sinon false
 	*/
-	public function create($filename, $struct, $temporary = false, &$errorMsg = null){
+	public function create($filename, $struct, &$errorMsg = null){
 		$out = false;
 		
 		if( !file_exists($filename) ){
-			$out = self::add($filename, $struct, $temporary, $errorMsg);
+			$out = self::add($filename, $struct, $errorMsg);
 		}
 		else{
 			$errorMsg = self::_getErrorMsg(ZIPARCHIVE::ER_EXISTS);
@@ -43,7 +43,7 @@ class Zip extends ZipArchive {
 	* @param array  $struct   -> Tableau des données de l'archive
 	* @return true si réussi, sinon false
 	*/
-	public function add($filename, $struct, $temporary = false, &$errorMsg = null){
+	public function add($filename, $struct, &$errorMsg = null){
 		$out = false;
 		$zip = new ZipArchive();
 		

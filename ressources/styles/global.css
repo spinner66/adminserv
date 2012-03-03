@@ -37,9 +37,6 @@ ul li {
 .fclear {
 	clear: both;
 }
-.displaynone {
-	display: none;
-}
 .alignleft {
 	text-align: left;
 }
@@ -100,10 +97,10 @@ header {
 	font-family: "Trebuchet MS", Arial, Sans-serif;
 	letter-spacing: -2px;
 	line-height: 45px;
-	-webkit-transition: color .2s ease-in-out;
-	-moz-transition: color .2s ease-in-out;
-	-o-transition: color .2s ease-in-out;
-	transition: color .2s ease-in-out;
+	-webkit-transition: color .2s ease;
+	-moz-transition: color .2s ease;
+	-o-transition: color .2s ease;
+	transition: color .2s ease;
 }
 #title .title-color {
 	color: #5e9cd5;
@@ -712,6 +709,9 @@ td.value {
 	-o-box-shadow: -4px 0 0 #444;
 	box-shadow: -4px 0 0 #444;
 }
+.options.form {
+	overflow: hidden;
+}
 .options input {
 	font-size: .9em;
 	margin-right: 5px;
@@ -740,11 +740,23 @@ td.value {
 .selected-files-label span.selected-files-count {
 	padding-left: 3px;
 }
+.selected-files-label.optHover span,
 .selected-files-label:hover span {
 	display: none;
 }
+.selected-files-label.optHover .selected-files-option,
 .selected-files-label:hover .selected-files-option {
 	display: block;
+}
+.selected-files-label.optHover .button.active {
+	-webkit-box-shadow: 0 8px 0 #ddd;
+	-moz-box-shadow: 0 8px 0 #ddd;
+	-o-box-shadow: 0 8px 0 #ddd;
+	box-shadow: 0 8px 0 #ddd;
+	-webkit-border-radius: 3px 3px 0 0;
+	-moz-border-radius: 3px 3px 0 0;
+	-o-border-radius: 3px 3px 0 0;
+	border-radius: 3px 3px 0 0;
 }
 .selected-files-label.locked:hover span {
 	display: inline;
@@ -767,6 +779,56 @@ td.value {
 }
 .options-checkbox ul li {
 	margin-bottom: 6px;
+}
+.option-form {
+	margin: 32px 0 10px;
+	padding: 5px;
+	background: rgba(255, 255, 255, 0.5);
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-o-border-radius: 4px;
+	border-radius: 4px;
+}
+.option-form ul li {
+	line-height: 32px;
+}
+.option-form ul li span {
+	display: block;
+	float: left;
+	margin-top: 6px;
+}
+.option-form ul li .rename-map-name {
+	color: #ddd;
+	background: #555;
+	height: 22px;
+	line-height: 22px;
+	padding: 0 5px;
+	width: 39%;
+	text-align: right;
+	-webkit-border-radius: 3px 0 0 3px;
+	-moz-border-radius: 3px 0 0 3px;
+	-o-border-radius: 3px 0 0 3px;
+	border-radius: 3px 0 0 3px;
+}
+.option-form ul li .rename-map-arrow {
+	width: 0;
+	height: 0;
+	border-top: 11px solid transparent;
+	border-bottom: 11px solid transparent;
+	border-left: 11px solid #555;
+	margin-right: 6px;
+}
+.option-form input.text {
+	height: 20px;
+	border: 0;
+	-webkit-border-radius: 3px 0 0 3px;
+	-moz-border-radius: 3px 0 0 3px;
+	-o-border-radius: 3px 0 0 3px;
+	border-radius: 3px 0 0 3px;
+}
+.option-form .form-input-submit {
+	text-align: right;
+	margin: 8px 0 4px;
 }
 
 

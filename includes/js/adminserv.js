@@ -153,11 +153,11 @@ $(document).ready(function(){
 				if( $(this).val() == "more" ){
 					$(this).hide();
 					$("#NextFinishTimeoutValue").fadeIn("fast");
-					$("#NextFinishTimeoutValue").removeClass("displaynone");
+					$("#NextFinishTimeoutValue").removeAttr("hidden");
 					$("#NextFinishTimeoutValue").val("15");
 					var defaultValueSelector = $("#NextFinishTimeoutValue").parent("td").parent("tr").children("td.preview").children("a.returnDefaultValue");
 					defaultValueSelector.fadeIn("fast");
-					defaultValueSelector.removeClass("displaynone");
+					defaultValueSelector.removeAttr("hidden");
 				}
 			});
 			
@@ -166,27 +166,27 @@ $(document).ready(function(){
 				if( $(this).val() == "more" ){
 					$(this).hide();
 					$("#NextForceShowAllOpponentsValue").fadeIn("fast");
-					$("#NextForceShowAllOpponentsValue").removeClass("displaynone");
+					$("#NextForceShowAllOpponentsValue").removeAttr("hidden");
 					$("#NextForceShowAllOpponentsValue").val("2");
 					var defaultValueSelector = $("#NextForceShowAllOpponentsValue").parent("td").parent("tr").children("td.preview").children("a.returnDefaultValue");
 					defaultValueSelector.fadeIn("fast");
-					defaultValueSelector.removeClass("displaynone");
+					defaultValueSelector.removeAttr("hidden");
 				}
 			});
 			
 			// Revenir à la valeur par défaut
 			$("a.returnDefaultValue").click(function(){
 				$(this).fadeOut();
-				$(this).addClass("displaynone");
+				$(this).attr("hidden", true);
 				var selectValueSelector = $(this).parent("td").parent("tr").children("td.next").children("select");
 				var inputValueSelector = $(this).parent("td").parent("tr").children("td.next").children("input");
 				inputValueSelector.hide();
-				inputValueSelector.addClass("displaynone");
+				inputValueSelector.attr("hidden", true);
 				inputValueSelector.val("");
 				selectValueSelector.fadeIn("fast");
 				selectValueSelector.children("option:first").removeAttr("selected");
 				selectValueSelector.children("option:first").select();
-				selectValueSelector.removeClass("displaynone");
+				selectValueSelector.removeAttr("hidden");
 				return false;
 			});
 			
@@ -371,6 +371,29 @@ $(document).ready(function(){
 					$(".maps .local").updateNbSelectedLines();
 				}
 			});
+			
+			// Renommer
+			$("#renameMap").click(function(){
+				if( $(this).hasClass("active") ){
+					$("#form-rename-map").slideUp("fast");
+					$("#renameMap").removeClass("active");
+					$(".options").removeClass("form");
+					$(".options .selected-files-label").removeClass("optHover");
+				}
+				else{
+					$("#form-rename-map").slideDown("fast");
+					$(this).addClass("active");
+					$(".options").addClass("form");
+					$(".options .selected-files-label").addClass("optHover");
+					$("#maplist table tbody tr.selected td.checkbox input").getMapRenameList();
+				}
+			});
+			$("#renameMapCancel").live("click", function(){
+				$("#form-rename-map").slideUp("fast");
+				$("#renameMap").removeClass("active");
+				$(".options").removeClass("form");
+				$(".options .selected-files-label").removeClass("optHover");
+			});
 		}
 		/**
 		* Guest-Ban
@@ -457,9 +480,9 @@ $(document).ready(function(){
 			$("#addPlayerList").change(function(){
 				if( $(this).val() == "more" ){
 					$(this).hide();
-					$(this).addClass("displaynone");
+					$(this).attr("hidden", true);
 					$("#addPlayerLogin").fadeIn("fast");
-					$("#addPlayerLogin").removeClass("displaynone");
+					$("#addPlayerLogin").removeAttr("hidden");
 				}
 			});
 			$("#addPlayerLogin").click(function(){

@@ -364,11 +364,11 @@
 	<div class="content last addPlayer">
 		<form method="post" action="?p=guestban">
 			<div>
-				<select class="width2<?php if($playerList == null){ echo ' displaynone'; } ?>" name="addPlayerList" id="addPlayerList">
+				<select class="width2" name="addPlayerList" id="addPlayerList"<?php if($playerList == null){ echo ' hidden="hidden"'; } ?>>
 					<option value="none">Sélectionnez un joueur</option>
 					<option value="more">Entrez un autre login</option>
 				</select>
-				<input class="text width2<?php if($playerList != null){ echo ' displaynone'; } ?>" type="text" name="addPlayerLogin" id="addPlayerLogin" data-default-value="Login joueur" value="Login joueur" />
+				<input class="text width2" type="text" name="addPlayerLogin" id="addPlayerLogin" data-default-value="Login joueur" value="Login joueur"<?php if($playerList != null){ echo ' hidden="hidden"'; } ?> />
 				<select class="addPlayerTypeList" name="addPlayerTypeList" id="addPlayerTypeList">
 					<option value="none">Ajouter à la</option>
 					<option value="guestlist">Guestlist</option>

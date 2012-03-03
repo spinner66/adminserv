@@ -144,20 +144,20 @@ function getCurrentGameModeConfig(){
 	// Fermeture de tous les modes par défaut
 	$.each( $(".section-gameinfos .content fieldset"), function(i, n){
 		if( !$(this).hasClass("gameinfos_general") ){
-			if( $(this).hasClass("displaynone") ){
+			if( $(this).attr("hidden") ){
 				$(this).hide();
 			}
 			else{
 				$(this).hide();
-				$(this).addClass("displaynone");
+				$(this).attr("hidden", true);
 			}
 		}
 	});
 	
 	// Affichage du mode de jeu sélectionné
-	if( selector.hasClass("displaynone") ){
+	if( selector.attr("hidden") ){
 		selector.slideDown("fast");
-		selector.removeClass("displaynone");
+		selector.removeAttr("hidden");
 	}
 }
 
@@ -302,14 +302,14 @@ function t(text){
 */
 function error(text, hide){
 	$("#error").fadeIn("fast");
-	if( $("#error").hasClass("displaynone") ){
-		$("#error").removeClass("displaynone");
+	if( $("#error").attr("hidden") ){
+		$("#error").removeAttr("hidden");
 	}
 	$("#error").text(text);
 	
 	if(hide){
 		setTimeout(function(){
-			$("#error").addClass("displaynone");
+			$("#error").attr("hidden", true);
 			$("#error").fadeOut("fast");
 		}, 4000);
 	}
@@ -321,14 +321,14 @@ function error(text, hide){
 */
 function info(text, hide){
 	$("#info").fadeIn("fast");
-	if( $("#info").hasClass("displaynone") ){
-		$("#info").removeClass("displaynone");
+	if( $("#info").attr("hidden") ){
+		$("#info").removeAttr("hidden");
 	}
 	$("#info").text(text);
 	
 	if(hide){
 		setTimeout(function(){
-			$("#info").addClass("displaynone");
+			$("#info").attr("hidden", true);
 			$("#info").fadeOut("fast");
 		}, 4000);
 	}
@@ -417,3 +417,37 @@ function getMapList(){
 		}
 	});
 }
+
+
+/**
+* Récupère la liste des fichiers map pour les renommer
+*/
+(function($){
+	$.fn.getMapRenameList = function(){
+		var out = "";
+		var list = $(this);
+		if( list.length > 0 ){
+			out += '<ul>';
+			$.each(list, function(i, n){
+				if(n.value.length > 36){
+					var title = ' title="'+n.value+'"';
+				}else{
+					var title = "";
+				}
+				out += '<li>'
+					+ '<span class="rename-map-name"'+title+'>'+n.value+'</span>'
+					+ '<span class="rename-map-arrow">&nbsp;</span>'
+					+ '<input class="text width3" type="text" name="renameMapList[]" value="'+n.value+'" />'
+				+ '</li>';
+			});
+			out += '</ul>';
+		}
+		
+		// HTML
+		out += '<div class="form-input-submit">'
+			+'<input class="button dark" type="submit" id="renameMapValid" name="renameMapValid" value="Enregistrer" />'+"\n"
+			+ '<input class="button dark" type="button" id="renameMapCancel" name="renameMapCancel" value="Annuler" />'
+		+ '</div>';
+		$("#form-rename-map").html(out);
+	};
+})(jQuery);
