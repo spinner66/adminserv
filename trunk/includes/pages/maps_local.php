@@ -44,12 +44,13 @@
 				$struct[] = $mapsDirectoryPath.$map;
 			}
 			$zipError = null;
-			if( !Zip::create('maps.zip', $struct, true, $zipError) ){
+			$zipFileName = 'maps.zip';
+			if( !Zip::create($zipFileName, $struct, $zipError) ){
 				AdminServ::error($zipError);
 			}
 			else{
-				File::download('maps.zip');
-				if( $result = File::delete('maps.zip') !== true ){
+				File::download($zipFileName);
+				if( $result = File::delete($zipFileName) !== true ){
 					AdminServ::error($result);
 				}
 			}
@@ -179,13 +180,15 @@
 					<div class="selected-files-option">
 						<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="Supprimer" />
 						<input class="button dark" type="submit" name="moveMap" id="moveMap" value="Déplacer" />
-						<input class="button dark" type="submit" name="renameMap" id="renameMap" value="Renommer" />
+						<input class="button dark" type="button" name="renameMap" id="renameMap" value="Renommer" />
 						<input class="button dark" type="submit" name="downloadMap" id="downloadMap" value="Télécharger" />
 						<input class="button dark" type="submit" name="insertMap" id="insertMap" value="Insérer" />
 						<input class="button dark" type="submit" name="addMap" id="addMap" value="Ajouter" />
 					</div>
 				</div>
 			</div>
+			<div id="form-rename-map" class="option-form" hidden="hidden"></div>
+			<div id="form-move-map" class="option-form" hidden="hidden"></div>
 		</div>
 		</form>
 	</section>

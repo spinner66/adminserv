@@ -214,14 +214,14 @@
 							<input class="text width2" type="text" name="CurrFinishTimeout" id="CurrFinishTimeout" readonly="readonly" value="<?php if($curtGamInf['FinishTimeout'] == 0){ echo 'Par défaut (15sec)'; }else if($curtGamInf['FinishTimeout'] == 1){ echo 'Auto (en fonction de la map)'; }else{ echo TimeDate::millisecToSec($curtGamInf['FinishTimeout']); } ?>" />
 						</td>
 						<td class="value next">
-							<select class="width2<?php if($nextGamInf['FinishTimeout'] > 1){ echo ' displaynone'; } ?>" name="NextFinishTimeout" id="NextFinishTimeout">
+							<select class="width2" name="NextFinishTimeout" id="NextFinishTimeout"<?php if($nextGamInf['FinishTimeout'] > 1){ echo ' hidden="hidden"'; } ?>>
 								<option value="0"<?php if($nextGamInf['FinishTimeout'] == 0){ echo ' selected="selected"'; } ?>>Par défaut (15sec)</option>
 								<option value="1"<?php if($nextGamInf['FinishTimeout'] == 1){ echo ' selected="selected"'; } ?>>Auto (en fonction de la map)</option>
 								<option value="more">Choisir le temps</option>
 							</select>
-							<input class="text width2<?php if($nextGamInf['FinishTimeout'] < 2){ echo ' displaynone'; } ?>" type="text" name="NextFinishTimeoutValue" id="NextFinishTimeoutValue" value="<?php if($nextGamInf['FinishTimeout'] > 1){ echo TimeDate::millisecToSec($nextGamInf['FinishTimeout']); } ?>" />
+							<input class="text width2" type="text" name="NextFinishTimeoutValue" id="NextFinishTimeoutValue" value="<?php if($nextGamInf['FinishTimeout'] > 1){ echo TimeDate::millisecToSec($nextGamInf['FinishTimeout']); } ?>"<?php if($nextGamInf['FinishTimeout'] < 2){ echo ' hidden="hidden"'; } ?> />
 						</td>
-						<td class="preview"><a class="returnDefaultValue<?php if($nextGamInf['FinishTimeout'] < 2){ echo ' displaynone'; } ?>" href="?p=gameinfos">Revenir à la valeur par défaut</a></td>
+						<td class="preview"><a class="returnDefaultValue" href="?p=gameinfos"<?php if($nextGamInf['FinishTimeout'] < 2){ echo ' hidden="hidden"'; } ?>>Revenir à la valeur par défaut</a></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="NextAllWarmUpDuration">Nombre de WarmUp</label></td>
@@ -249,19 +249,19 @@
 							<input class="text width2" type="text" name="CurrForceShowAllOpponents" id="CurrForceShowAllOpponents" readonly="readonly" value="<?php if($curtGamInf['ForceShowAllOpponents'] == 0){ echo 'Laisser le choix au joueur'; }else if($curtGamInf['ForceShowAllOpponents'] == 1){ echo 'Tous les adversaires'; }else{ echo $curtGamInf['ForceShowAllOpponents'].' adversaires minimum'; } ?>" />
 						</td>
 						<td class="value next">
-							<select class="width2<?php if($nextGamInf['ForceShowAllOpponents'] > 1){ echo ' displaynone'; } ?>" name="NextForceShowAllOpponents" id="NextForceShowAllOpponents">
+							<select class="width2" name="NextForceShowAllOpponents" id="NextForceShowAllOpponents"<?php if($nextGamInf['ForceShowAllOpponents'] > 1){ echo ' hidden="hidden"'; } ?>>
 								<option value="0"<?php if($nextGamInf['ForceShowAllOpponents'] == 0){ echo ' selected="selected"'; } ?>>Laisser le choix au joueur</option>
 								<option value="1"<?php if($nextGamInf['ForceShowAllOpponents'] == 1){ echo ' selected="selected"'; } ?>>Tous les adversaires</option>
 								<option value="more">Choisir le nombre d'adversaires</option>
 							</select>
-							<input class="text width2<?php if($nextGamInf['ForceShowAllOpponents'] < 2){ echo ' displaynone'; } ?>" type="text" name="NextForceShowAllOpponentsValue" id="NextForceShowAllOpponentsValue" value="<?php if($nextGamInf['ForceShowAllOpponents'] > 1){ echo $nextGamInf['ForceShowAllOpponents']; } ?>" />
+							<input class="text width2" type="text" name="NextForceShowAllOpponentsValue" id="NextForceShowAllOpponentsValue" value="<?php if($nextGamInf['ForceShowAllOpponents'] > 1){ echo $nextGamInf['ForceShowAllOpponents']; } ?>"<?php if($nextGamInf['ForceShowAllOpponents'] < 2){ echo ' hidden="hidden"'; } ?> />
 						</td>
-						<td class="preview"><a class="returnDefaultValue<?php if($nextGamInf['ForceShowAllOpponents'] < 2){ echo ' displaynone'; } ?>" href="?p=gameinfos">Revenir à la valeur par défaut</a></td>
+						<td class="preview"><a class="returnDefaultValue" href="?p=gameinfos"<?php if($nextGamInf['ForceShowAllOpponents'] < 2){ echo ' hidden="hidden"'; } ?>>Revenir à la valeur par défaut</a></td>
 					</tr>
 				</table>
 			</fieldset>
 			
-			<fieldset id="gameMode-script" class="gameinfos_script displaynone">
+			<fieldset id="gameMode-script" class="gameinfos_script" hidden="hidden">
 				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/options.png" alt="" /><?php echo ExtensionConfig::$GAMEMODES[0]; ?></legend>
 				<table class="game_infos">
 					<tr>
@@ -277,7 +277,7 @@
 				</table>
 			</fieldset>
 			
-			<fieldset id="gameMode-rounds" class="gameinfos_round displaynone">
+			<fieldset id="gameMode-rounds" class="gameinfos_round" hidden="hidden">
 				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/rt_rounds.png" alt="" /><?php echo ExtensionConfig::$GAMEMODES[1]; ?></legend>
 				<table class="game_infos">
 					<tr>
@@ -323,7 +323,7 @@
 				</table>
 			</fieldset>
 			
-			<fieldset id="gameMode-timeattack" class="gameinfos_timeattack displaynone">
+			<fieldset id="gameMode-timeattack" class="gameinfos_timeattack" hidden="hidden">
 				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/rt_timeattack.png" alt="" /><?php echo ExtensionConfig::$GAMEMODES[2]; ?></legend>
 				<table class="game_infos">
 					<tr>
@@ -349,7 +349,7 @@
 				</table>
 			</fieldset>
 			
-			<fieldset id="gameMode-team" class="gameinfos_team displaynone">
+			<fieldset id="gameMode-team" class="gameinfos_team" hidden="hidden">
 				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/rt_team.png" alt="" /><?php echo ExtensionConfig::$GAMEMODES[3]; ?></legend>
 				<table class="game_infos">
 					<tr>
@@ -385,7 +385,7 @@
 				</table>
 			</fieldset>
 			
-			<fieldset id="gameMode-laps" class="gameinfos_laps displaynone">
+			<fieldset id="gameMode-laps" class="gameinfos_laps" hidden="hidden">
 				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/rt_laps.png" alt="" /><?php echo ExtensionConfig::$GAMEMODES[4]; ?></legend>
 				<table class="game_infos">
 					<tr>
@@ -411,7 +411,7 @@
 				</table>
 			</fieldset>
 			
-			<fieldset id="gameMode-cup" class="gameinfos_cup displaynone">
+			<fieldset id="gameMode-cup" class="gameinfos_cup" hidden="hidden">
 				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/rt_cup.png" alt="" /><?php echo ExtensionConfig::$GAMEMODES[6]; ?></legend>
 				<table class="game_infos">
 					<tr>
@@ -456,7 +456,6 @@
 					</tr>
 				</table>
 			</fieldset>
-			
 		</div>
 		<?php if(SERVER_MATCHSET){ ?>
 			<div class="fleft options-checkbox">
