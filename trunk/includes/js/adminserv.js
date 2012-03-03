@@ -408,7 +408,7 @@ $(document).ready(function(){
 					$(this).addClass("active");
 					$(".options").addClass("form");
 					$(".options .selected-files-label").addClass("optHover");
-					$("#maplist table tbody tr.selected td.checkbox input").getMoveMapList();
+					$("#maplist table tbody tr.selected td.checkbox input").getMoveFolderList();
 				}
 			});
 			$("#moveMapCancel").live("click", function(){
