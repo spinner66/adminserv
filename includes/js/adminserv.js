@@ -376,7 +376,7 @@ $(document).ready(function(){
 			$("#renameMap").click(function(){
 				if( $(this).hasClass("active") ){
 					$("#form-rename-map").slideUp("fast");
-					$("#renameMap").removeClass("active");
+					$(this).removeClass("active");
 					$(".options").removeClass("form");
 					$(".options .selected-files-label").removeClass("optHover");
 				}
@@ -391,6 +391,29 @@ $(document).ready(function(){
 			$("#renameMapCancel").live("click", function(){
 				$("#form-rename-map").slideUp("fast");
 				$("#renameMap").removeClass("active");
+				$(".options").removeClass("form");
+				$(".options .selected-files-label").removeClass("optHover");
+			});
+			
+			// Déplacer
+			$("#moveMap").click(function(){
+				if( $(this).hasClass("active") ){
+					$("#form-move-map").slideUp("fast");
+					$(this).removeClass("active");
+					$(".options").removeClass("form");
+					$(".options .selected-files-label").removeClass("optHover");
+				}
+				else{
+					$("#form-move-map").slideDown("fast");
+					$(this).addClass("active");
+					$(".options").addClass("form");
+					$(".options .selected-files-label").addClass("optHover");
+					$("#maplist table tbody tr.selected td.checkbox input").getMoveMapList();
+				}
+			});
+			$("#moveMapCancel").live("click", function(){
+				$("#form-move-map").slideUp("fast");
+				$("#moveMap").removeClass("active");
 				$(".options").removeClass("form");
 				$(".options .selected-files-label").removeClass("optHover");
 			});

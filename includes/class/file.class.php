@@ -17,6 +17,37 @@ abstract class File {
 		return strtolower($pathinfo['extension']);
 	}
 	
+	
+	/**
+	* Renomme un fichier
+	*
+	* @param string $filename    -> Chemin du fichier à renommer
+	* @param string $newfilename -> Chemin du nouveau fichier renommé
+	*/
+	public static function rename($filename, $newfilename){
+		$out = null;
+		
+		if( file_exists($filename) ){
+			if( @rename($filename, $newfilename) ){
+				$out = true;
+			}
+			else{
+				$out = 'Impossible de renommer le fichier.';
+			}
+		}
+		else{
+			$out = 'Le fichier n\'existe pas.';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Supprime un fichier
+	*
+	* @param string $filename -> Chemin du fichier à supprimer
+	*/
 	public static function delete($filename){
 		$out = null;
 		

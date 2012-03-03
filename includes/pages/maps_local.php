@@ -60,12 +60,14 @@
 			File::download($mapsDirectoryPath.$_POST['map'][0]);
 		}
 	}
-	else if( isset($_POST['ApplyRenameChallenge']) && $_POST['RenameChallengeFileOLD'] != null && $_POST['RenameChallengeFile'] != null ){
-		for($i = 0; $i < count($_POST['RenameChallengeFile']); $i++){
-			if( ! @rename($tracksDirectory.$_POST['RenameChallengeFileOLD'][$i], $tracksDirectory.$_POST['RenameChallengeFile'][$i]) ){
-				AdminServ::error($lang[$i18n.'_impossible_renommer_fichier'].' <i>'.$_POST['RenameChallengeFileOLD'][$i].'</i>');
+	else if( isset($_POST['renameMapValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
+		$i = 0;
+		foreach($_POST['renameMapList'] as $newMapName){
+			if( !File::rename($mapsDirectoryPath.$_POST['map'][$i], $mapsDirectoryPath.$newMapName) ){
+				AdminServ::error('Impossible de renommer la map : '.$newMapName);
 				break;
 			}
+			$i++;
 		}
 	}
 	else if( isset($_POST['ApplyMoveChallenge']) && $_POST['MoveChallengeFileName'] != null && $_POST['MoveChallengeFileDirectory'] != null ){
@@ -94,7 +96,7 @@
 	}
 	else if( isset($_POST['deleteMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			if( ! @unlink($mapsDirectoryPath.$map) ){
+			if( !File::delete($mapsDirectoryPath.$map) ){
 				AdminServ::error('Impossible de supprimer la map : '.$map);
 				break;
 			}
@@ -179,7 +181,7 @@
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
 						<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="Supprimer" />
-						<input class="button dark" type="submit" name="moveMap" id="moveMap" value="Déplacer" />
+						<input class="button dark" type="button" name="moveMap" id="moveMap" value="Déplacer" />
 						<input class="button dark" type="button" name="renameMap" id="renameMap" value="Renommer" />
 						<input class="button dark" type="submit" name="downloadMap" id="downloadMap" value="Télécharger" />
 						<input class="button dark" type="submit" name="insertMap" id="insertMap" value="Insérer" />
