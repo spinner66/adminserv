@@ -456,34 +456,62 @@ function getMapList(){
 /**
 * Récupère l'arboréscence des dossiers pour déplacer
 */
-(function($){
-	$.fn.getMoveFolderList = function(){
-		$.getJSON("includes/ajax/get_directory_list.php", {path: getPath()}, function(data){
-			if(data != null){
-				var out = "";
-				var list = $(this);
-				var nb = list.length;
-				if(nb > 1){
-					var nbName = nb + ' maps';
-				}else{
-					var nbName = '1 map';
-				}
-				
-				out += '<p>Déplacer '+nbName+' dans le dossier :</p>'
-				+ '<select name="moveDirectoryList" id="moveDirectoryList">'
-					+ '<option value=".">Racine</option>';
-					$.each(data, function(i, n){
-						out += '<option value="'+n.path+'">'+n.level+n.name+'</option>';
-					});
-				out += '</select>'
-				+ '<div class="form-input-submit">'
-					+'<input class="button dark" type="submit" id="moveMapValid" name="moveMapValid" value="Enregistrer" />'+"\n"
-					+ '<input class="button dark" type="button" id="moveMapCancel" name="moveMapCancel" value="Annuler" />'
-				+ '</div>';
-				
-				// HTML
-				$("#form-move-map").html(out);
+function getMoveFolderList(nbFiles){
+	$.getJSON("includes/ajax/get_directory_list.php", function(data){
+		if(data != null){
+			var out = "";
+			if( nbFiles > 1 ){
+				var nbName = nbFiles + ' maps';
+			}else{
+				var nbName = '1 map';
 			}
-		});
-	};
-})(jQuery);
+			out += '<label for="moveDirectoryList">Déplacer '+nbName+' dans le dossier :</label>'
+			+ '<select name="moveDirectoryList" id="moveDirectoryList">'
+				+ '<option value=".">Racine</option>';
+				$.each(data, function(i, n){
+					out += '<option value="'+n.path+'">'+n.level+n.name+'</option>';
+				});
+			out += '</select>'
+			+ '<div class="form-input-submit">'
+				+'<input class="button dark" type="submit" id="moveMapValid" name="moveMapValid" value="Enregistrer" />'+"\n"
+				+ '<input class="button dark" type="button" id="moveMapCancel" name="moveMapCancel" value="Annuler" />'
+			+ '</div>';
+			
+			// HTML
+			$("#form-move-map").html(out);
+		}
+	});
+}
+
+/**
+* Fonctions d'affichage des formulaires Renommer/Déplacer
+*/
+function slideDownRenameForm(){
+	$("#form-rename-map").slideDown("fast");
+	$("#renameMap").addClass("active");
+	$(".options").addClass("form");
+	$(".options .selected-files-label").addClass("optHover");
+	$("#maplist table tbody tr.selected td.checkbox input").getMapRenameList();
+}
+function slideUpRenameForm(){
+	$("#form-rename-map").slideUp("fast");
+	$("#renameMap").removeClass("active");
+	$(".options").removeClass("form");
+	$(".options .selected-files-label").removeClass("optHover");
+}
+function slideDownMoveForm(){
+	$("#form-move-map").slideDown("fast");
+	$("#moveMap").addClass("active");
+	$(".options").addClass("form");
+	$(".options .selected-files-label").addClass("optHover");
+	if( $("#form-move-map").text() == "" ){
+		var list = $("#maplist table tbody tr.selected td.checkbox input");
+		getMoveFolderList(list.length);
+	}
+}
+function slideUpMoveForm(){
+	$("#form-move-map").slideUp("fast");
+	$("#moveMap").removeClass("active");
+	$(".options").removeClass("form");
+	$(".options .selected-files-label").removeClass("optHover");
+}

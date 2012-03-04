@@ -45,13 +45,13 @@ abstract class AdminServTemplate {
 	public static function getThemeList(){
 		$i = 0;
 		$out = null;
-		$count_themes = count(ExtensionConfig::$THEMES);
+		$countThemes = count(ExtensionConfig::$THEMES);
 		
-		if($count_themes > 0){
+		if($countThemes > 0){
 			$out .= '<ul>';
 			foreach(ExtensionConfig::$THEMES as $name => $color){
 				if($i == 0){ $class = ' class="first"'; }
-				else if($i == $count_themes-1){ $class = ' class="last"'; }
+				else if($i == $countThemes-1){ $class = ' class="last"'; }
 				else{ $class = null; }
 				$out .= '<li'.$class.'><a class="theme-color" style="background-color: '.$color.';" href=""></a></li>';
 				$i++;
@@ -69,13 +69,13 @@ abstract class AdminServTemplate {
 	public static function getLangList(){
 		$i = 0;
 		$out = null;
-		$count_lang = count(ExtensionConfig::$LANG);
+		$countLang = count(ExtensionConfig::$LANG);
 		
-		if($count_lang > 0){
+		if($countLang > 0){
 			$out .= '<ul>';
 			foreach(ExtensionConfig::$LANG as $code){
 				if($i == 0){ $class = ' class="first"'; }
-				else if($i == $count_lang-1){ $class = ' class="last"'; }
+				else if($i == $countLang-1){ $class = ' class="last"'; }
 				else{ $class = null; }
 				$out .= '<li'.$class.'><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="."></a></li>';
 				$i++;
@@ -270,10 +270,15 @@ abstract class AdminServTemplate {
 		}
 		else{
 			$playerList = $client->getResponse();
-			foreach($playerList as $player){
-				if($currentPlayerLogin == $player['Login']){ $selected = ' selected="selected"'; }
-				else{ $selected = null; }
-				$out .= '<option value="'.$player['Login'].'"'.$selected.'>'.TmNick::toText($player['NickName']).'</option>';
+			if( count($playerList) > 0 ){
+				foreach($playerList as $player){
+					if($currentPlayerLogin == $player['Login']){ $selected = ' selected="selected"'; }
+					else{ $selected = null; }
+					$out .= '<option value="'.$player['Login'].'"'.$selected.'>'.TmNick::toText($player['NickName']).'</option>';
+				}
+			}
+			else{
+				$out = -1;
 			}
 		}
 		
@@ -481,19 +486,22 @@ abstract class AdminServ {
 	public static function getServerId($serverName){
 		$id = 0;
 		$servers = ServerConfig::$SERVERS;
+		$countServers = count($servers);
 		
 		// On cherche la position du serveur à partir de son nom
-		foreach($servers as $server_name => $server_values){
-			if($server_name == $serverName){
-				break;
-			}
-			else{
-				$id++;
+		if( $countServers > 0 ){
+			foreach($servers as $server_name => $server_values){
+				if($server_name == $serverName){
+					break;
+				}
+				else{
+					$id++;
+				}
 			}
 		}
 		
 		// Si l'id = le nb total de serveur -> pas trouvé
-		if($id == count($servers) ){
+		if($id == $countServers ){
 			return -1;
 		}else{
 			return $id;
@@ -607,6 +615,26 @@ abstract class AdminServ {
 		if($out === -1){
 			$out = 'Aucun mode de jeu disponible';
 		}
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère l'extension d'un fichier Nadeo
+	*
+	* @param string $filename -> Le fichier à extraire l'extension
+	* @return string "map.gbx"
+	*/
+	public static function getNadeoExtension($filename){
+		$out = null;
+		$filenameEx = explode('.', $filename);
+		
+		if( count($filenameEx) > 2 ){
+			$ext = $filenameEx[count($filenameEx)-2];
+			$ext .= '.'.$filenameEx[count($filenameEx)-1];
+			$out = strtolower($ext);
+		}
+		
 		return $out;
 	}
 	
@@ -734,12 +762,12 @@ abstract class AdminServ {
 		
 		// Méthode en fonction du jeu
 		if($cmd != 'ForceEndRound'){
-			if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-				$methodRestart = 'RestartMap';
-				$methodNext = 'NextMap';
-			}else{
+			if(SERVER_VERSION_NAME == 'TmForever'){
 				$methodRestart = 'RestartChallenge';
 				$methodNext = 'NextChallenge';
+			}else{
+				$methodRestart = 'RestartMap';
+				$methodNext = 'NextMap';
 			}
 		}
 		
@@ -1136,7 +1164,7 @@ abstract class AdminServ {
 				if($countMapList > 0){
 					$i = 0;
 					foreach($directory['files'] as $file => $values){
-						//if( in_array(self::, AdminServConfig::$MAP_EXTENSION){
+						if( in_array(self::getNadeoExtension($file), AdminServConfig::$MAP_EXTENSION) ){
 							// Données
 							$Gbx = new GBXChallengeFetcher($path.$file, true);
 							
@@ -1154,7 +1182,12 @@ abstract class AdminServ {
 							$out['lst'][$i]['Author'] = $Gbx->author;
 							$out['lst'][$i]['Recent'] = $values['recent'];
 							$i++;
-						//}
+						}
+						else{
+							if( !isset($out['lst']) ){
+								$out['lst'] = 'Aucune map';
+							}
+						}
 					}
 				}
 				else{
@@ -1162,11 +1195,16 @@ abstract class AdminServ {
 				}
 				
 				// Nombre de maps
-				if($countMapList > 1){
+				if( is_array($out['lst']) ){
+					if( count($out['lst']) > 1){
 					$out['nbm'] = $countMapList.' maps';
+					}
+					else{
+						$out['nbm'] = $countMapList.' map';
+					}
 				}
 				else{
-					$out['nbm'] = $countMapList.' map';
+					$out['nbm'] = '0 map';
 				}
 				
 				// Config
