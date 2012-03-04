@@ -63,34 +63,27 @@
 	else if( isset($_POST['renameMapValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
 		$i = 0;
 		foreach($_POST['renameMapList'] as $newMapName){
-			if( !File::rename($mapsDirectoryPath.$_POST['map'][$i], $mapsDirectoryPath.$newMapName) ){
+			if( File::rename($mapsDirectoryPath.$_POST['map'][$i], $mapsDirectoryPath.$newMapName) !== true ){
 				AdminServ::error('Impossible de renommer la map : '.$newMapName);
 				break;
 			}
 			$i++;
 		}
 	}
-	else if( isset($_POST['ApplyMoveChallenge']) && $_POST['MoveChallengeFileName'] != null && $_POST['MoveChallengeFileDirectory'] != null ){
-		$moveChallengeFileNameList = explode(',', $_POST['MoveChallengeFileName']);
-		for($i = 0; $i < count($moveChallengeFileNameList); $i++){
-			// Si on a sélectionné "Dossier parent"
-			if($_POST['MoveChallengeFileDirectory'] == '../'){
-				$trackDirectoryExplode = explode('/', $tracksDirectory);
-				$trackDirectoryParent = null;
-				for($j = 0; $j < count($trackDirectoryExplode)-2; $j++){
-					$trackDirectoryParent .= $trackDirectoryExplode[$j].'/';
-				}
-				if( ! @rename($tracksDirectory.$moveChallengeFileNameList[$i], $trackDirectoryParent.$moveChallengeFileNameList[$i]) ){
-					AdminServ::error($lang[$i18n.'_impossible_deplacer_fichier'].' <i>'.$moveChallengeFileNameList[$i].'</i>');
-					break;
-				}
-			}
-			// Sinon on déplace vers le dossier choisit
-			else{
-				if( ! @rename($tracksDirectory.$moveChallengeFileNameList[$i], $tracksDirectory.$_POST['MoveChallengeFileDirectory'].'/'.$moveChallengeFileNameList[$i]) ){
-					AdminServ::error($lang[$i18n.'_impossible_deplacer_fichier'].' <i>'.$moveChallengeFileNameList[$i].'</i>');
-					break;
-				}
+	else if( isset($_POST['moveMapValid']) && isset($_POST['moveDirectoryList']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
+		// Chemin
+		if($_POST['moveDirectoryList'] == '.'){
+			$newPath = $mapsDirectoryPath;
+		}
+		else{
+			$newPath = $_POST['moveDirectoryList'];
+		}
+		
+		// Déplacement
+		foreach($_POST['map'] as $map){
+			if( File::rename($mapsDirectoryPath.$directory.$map, $newPath.$map) !== true ){
+				AdminServ::error('Impossible de déplacer la map : '.$map);
+				break;
 			}
 		}
 	}
@@ -130,7 +123,7 @@
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=maps-local">
+		<form method="post" action="?p=maps-local<?php if($directory){ echo '&amp;d='.$directory; } ?>">
 		<div id="maplist">
 			<table>
 				<thead>
