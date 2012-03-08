@@ -5,7 +5,7 @@
 ?>
 <section class="maps">
 	<section class="cadre left menu">
-		<?php include_once AdminServConfig::PATH_INCLUDES .'pages/maps_menu.inc.php'; ?>
+		<?php echo $mapsMenu; ?>
 	</section>
 	
 	<section class="cadre right order">

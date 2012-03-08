@@ -303,7 +303,7 @@ abstract class AdminServTemplate {
 		$out = null;
 		
 		if( class_exists('Folder') ){
-			$out .= '<form id="createFolderForm" method="post" action="?p=maps-local&amp;d='.$currentPath.'">'
+			$out .= '<form id="createFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
 				.'<h1>Dossiers'
 					.'<div id="form-new-folder" hidden="hidden">'
 						.'<input class="text" type="text" name="newFolderName" id="newFolderName" value="" />'
