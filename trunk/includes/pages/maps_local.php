@@ -95,6 +95,19 @@
 			}
 		}
 	}
+	else if( isset($_POST['newFolderValid']) && $_POST['newFolderName'] != null || isset($_POST['newFolderName']) ){
+		if( Folder::create($mapsDirectoryPath.$directory.Str::replaceChars($_POST['newFolderName'])) !== true ){
+			AdminServ::error('Impossible de créer le dossier : '.$_POST['newFolderName']);
+		}
+		else{
+			if($directory){
+				Utils::redirection(false, '?p='. USER_PAGE .'&d='.$directory);
+			}
+			else{
+				Utils::redirection(false, '?p='. USER_PAGE);
+			}
+		}
+	}
 	
 	
 	// MAPLIST
