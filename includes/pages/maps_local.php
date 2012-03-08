@@ -173,7 +173,7 @@
 					<span class="selected-files-title">Pour la sélection</span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="Supprimer" />
+						<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="Supprimer" data-confirm="Voulez-vous vraiment supprimer cette sélection ?" />
 						<input class="button dark" type="button" name="moveMap" id="moveMap" value="Déplacer" />
 						<input class="button dark" type="button" name="renameMap" id="renameMap" value="Renommer" />
 						<input class="button dark" type="submit" name="downloadMap" id="downloadMap" value="Télécharger" />
@@ -182,8 +182,8 @@
 					</div>
 				</div>
 			</div>
-			<div id="form-rename-map" class="option-form" hidden="hidden"></div>
-			<div id="form-move-map" class="option-form" hidden="hidden"></div>
+			<div id="form-rename-map" class="option-form" hidden="hidden" data-cancel="Annuler" data-rename="Renommer"></div>
+			<div id="form-move-map" class="option-form" hidden="hidden" data-cancel="Annuler" data-move="Déplacer" data-inthefolder="dans le dossier :" data-root="Racine"></div>
 		</div>
 		</form>
 	</section>

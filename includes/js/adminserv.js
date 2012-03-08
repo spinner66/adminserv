@@ -215,16 +215,16 @@ $(document).ready(function(){
 			// Clique sur "Masquer les lignes du serveur"
 			$(".title-detail a").click(function(){
 				// Valeur
-				hideServerLines = $(this).attr("data-val");
+				hideServerLines = $(this).data("val");
 				if(hideServerLines == "0"){ hideServerLines = "1"; }
 				else{ hideServerLines = "0"; }
 				getChatServerLines(hideServerLines);
-				$(this).attr("data-val", hideServerLines);
+				$(this).data("val", hideServerLines);
 				
 				// Texte
 				var text = $(this).text();
-				$(this).text( $(this).attr("data-txt") );
-				$(this).attr("data-txt", text);
+				$(this).text( $(this).data("txt") );
+				$(this).data("txt", text);
 				return false;
 			});
 			
@@ -236,7 +236,7 @@ $(document).ready(function(){
 			// Ajout d'un message
 			$("#chatNickname, #chatMessage").click(function(){
 				var text = $(this).val();
-				var defaultText = $(this).attr("data-default-value");
+				var defaultText = $(this).data("default-value");
 				
 				if(text == defaultText){
 					$(this).val("");
@@ -244,7 +244,7 @@ $(document).ready(function(){
 			});
 			$("#chatNickname, #chatMessage").blur(function(){
 				var text = $(this).val();
-				var defaultText = $(this).attr("data-default-value");
+				var defaultText = $(this).data("default-value");
 				
 				if(text == ""){
 					$(this).val(defaultText);
@@ -252,13 +252,13 @@ $(document).ready(function(){
 			});
 			$("#chatSend").click(function(){
 				var msg = $("#chatMessage").val();
-				if( msg != $("#chatMessage").attr("data-default-value") && msg != "" ){
+				if( msg != $("#chatMessage").data("default-value") && msg != "" ){
 					addChatServerLine();
 				}
 			});
 			$("#chatMessage").keypress(function(event){
 				var msg = $(this).val();
-				if( msg != $(this).attr("data-default-value") && msg != "" ){
+				if( msg != $(this).data("default-value") && msg != "" ){
 					if( event.keyCode == 13 ){
 						addChatServerLine();
 					}
@@ -403,6 +403,11 @@ $(document).ready(function(){
 			$("#moveMapCancel").live("click", function(){
 				slideUpMoveForm();
 			});
+			
+			// Supprimer
+			$("#deleteMap").click(function(){
+				return confirm( $(this).data("confirm") );
+			});
 		}
 		/**
 		* Guest-Ban
@@ -416,7 +421,7 @@ $(document).ready(function(){
 				if(lines.length > 0){
 					$.each(lines, function(id, line){
 						if(line.className == "no-line"){
-							error("La liste est déjà vide.", true);
+							error( $(this).data("empty"), true);
 						}
 						else{
 							out = true;
@@ -495,13 +500,13 @@ $(document).ready(function(){
 				}
 			});
 			$("#addPlayerLogin").click(function(){
-				if( $(this).val() == $(this).attr("data-default-value") ){
+				if( $(this).val() == $(this).data("default-value") ){
 					$(this).val("");
 				}
 			});
 			$("#addPlayerLogin").blur(function(){
 				if( $(this).val() == "" ){
-					$(this).val( $(this).attr("data-default-value") );
+					$(this).val( $(this).data("default-value") );
 				}
 			});
 		}
