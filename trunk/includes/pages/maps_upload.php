@@ -25,12 +25,20 @@
 		<h2>Mode de transfert</h2>
 		<div class="transferMode">
 			<ul>
-				<li class="selected"><input class="text" type="radio" name="transferMode" id="transferMode" value="add" checked="checked" /><div class="name"><span>Ajouter</span> à la fin de la liste</div></li>
-				<li><input class="text" type="radio" name="transferMode" id="transferMode" value="insert" /><div class="name"><span>Insérer</span> après la map en cours</div></li>
-				<li><input class="text" type="radio" name="transferMode" id="transferMode" value="local" /><div class="name"><span>Envoyer</span> dans le dossier seulement</div></li>
+				<li class="selected">
+					<input class="text" type="radio" name="transferMode" id="transferMode" value="add" checked="checked" />
+					<div class="name"><span>Ajouter</span> à la fin de la liste</div>
+				</li>
+				<li>
+					<input class="text" type="radio" name="transferMode" id="transferMode" value="insert" />
+						<div class="name"><span>Insérer</span> après la map en cours</div>
+					</li>
+				<li>
+					<input class="text" type="radio" name="transferMode" id="transferMode" value="local" />
+					<div class="name"><span>Envoyer</span> dans le dossier seulement</div>
+				</li>
 			</ul>
 		</div>
-		<div class="fclear"></div>
 		
 		<h2>Options</h2>
 		<div class="options-checkbox">
@@ -49,7 +57,7 @@
 		</div>
 		
 		<h2>Upload</h2>
-		<div id="formUpload" class="loader"></div>
+		<div id="formUpload" class="loader" data-cancel="Annuler" data-failed="Échoué" data-uploadfile="Upload a file" data-dropfiles="Drop files here to upload" data-uploadnotfinish="L'upload n'est pas terminé" data-from="de" data-kb="Ko" data-mb="Mo" data-type-error="{file} has invalid extension. Only {extensions} are allowed." data-size-error="{file} is too large, maximum file size is {sizeLimit}." data-minsize-error="{file} is too small, minimum file size is {minSizeLimit}." data-empty-error="{file} is empty, please select files again without it." data-onleave="The files are being uploaded, if you leave now the upload will be cancelled."></div>
 	</section>
 </section>
 <?php

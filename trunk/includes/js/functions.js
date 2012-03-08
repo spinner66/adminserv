@@ -63,7 +63,7 @@ function getCurrentServerInfo(){
 				$("#map_gamemode").addClass("value");
 				$("#map_gamemode").addClass( data.srv.game_mode.toLowerCase() );
 				if(data.map.thumb != ""){
-					$("#map_thumbnail").html('<img src="data:image/jpeg;base64,'+data.map.thumb+'" alt="No thumbnail" />');
+					$("#map_thumbnail").html('<img src="data:image/jpeg;base64,'+data.map.thumb+'" alt="'+$("#map_thumbnail").data("text-thumbnail")+'" />');
 				}
 			}
 			
@@ -207,13 +207,13 @@ function getChatServerLines(hideServerLines){
 */
 function addChatServerLine(){
 	var nickname = $("#chatNickname").val();
-	if( nickname == $("#chatNickname").attr("data-default-value") ){
+	if( nickname == $("#chatNickname").data("default-value") ){
 		nickname = "";
 	}
 	var color = $("#chatColor").val();
 	var message = $("#chatMessage").val();
 	var destination = $("#chatDestination").val();
-	var hideServerLines = $("#checkServerLines").attr("data-val");
+	var hideServerLines = $("#checkServerLines").data("val");
 	
 	$.post("includes/ajax/add_chatserverline.php", {nic: nickname, clr: color, msg: message, dst: destination}, function(response){
 		if(response != null){
@@ -240,8 +240,8 @@ function initializeUploader(){
 		},
 		template:
 		'<div class="qq-uploader">' + 
-			'<div class="qq-upload-drop-area"><span>'+ t('Drop files here to upload') +'</span></div>' +
-			'<div class="qq-upload-button">'+ t('Upload a file') +'</div>' +
+			'<div class="qq-upload-drop-area"><span>'+ $("#formUpload").data('dropfiles') +'</span></div>' +
+			'<div class="qq-upload-button">'+ $("#formUpload").data('uploadfile') +'</div>' +
 			'<ul class="qq-upload-list"></ul>' + 
 		'</div>',
 		fileTemplate:
@@ -249,12 +249,12 @@ function initializeUploader(){
 			'<span class="qq-upload-file"></span>' +
 			'<span class="qq-upload-spinner"><span class="qq-upload-bar"></span></span>' +
 			'<span class="qq-upload-size"></span>' +
-			'<a class="qq-upload-cancel" href="./">'+ t('Cancel') +'</a>' +
-			'<span class="qq-upload-failed-text">'+ t('Failed') +'</span>' +
+			'<a class="qq-upload-cancel" href="./">'+ $("#formUpload").data('cancel') +'</a>' +
+			'<span class="qq-upload-failed-text">'+ $("#formUpload").data('failed') +'</span>' +
 		'</li>',
 		onProgress: function(id, fileName, loaded, total){
 			window.onbeforeunload = function(){
-				return "L'upload n'est pas terminé";
+				return $("#formUpload").data('uploadnotfinish');
 			}
 			$.each( $(".qq-upload-list li"), function(key, value){
 				// Récupèration des données
@@ -280,20 +280,16 @@ function initializeUploader(){
 			window.onbeforeunload = function(){}
 		},
 		messages: {
-			typeError: t("{file} has invalid extension. Only {extensions} are allowed."),
-			sizeError: t("{file} is too large, maximum file size is {sizeLimit}."),
-			minSizeError: t("{file} is too small, minimum file size is {minSizeLimit}."),
-			emptyError: t("{file} is empty, please select files again without it."),
-			onLeave: t("The files are being uploaded, if you leave now the upload will be cancelled.")
+			typeError: $("#formUpload").data("type-error"),
+			sizeError: $("#formUpload").data("size-error"),
+			minSizeError: $("#formUpload").data("minsize-error"),
+			emptyError: $("#formUpload").data("empty-error"),
+			onLeave: $("#formUpload").data("onleave")
 		},
 		showMessage: function(message){
 			error(message);
 		}
 	});
-}
-
-function t(text){
-	return text;
 }
 
 
@@ -336,6 +332,12 @@ function info(text, hide){
 
 function getPath(){
 	return $.trim( $(".path").text() );
+}
+function t(text){
+	text = text.replace('from', $("#formUpload").data("from") );
+	text = text.replace('Kb', $("#formUpload").data("kb") );
+	text = text.replace('Mb', $("#formUpload").data("mb") );
+	return text;
 }
 
 
@@ -425,6 +427,7 @@ function getMapList(){
 (function($){
 	$.fn.getMapRenameList = function(){
 		var out = "";
+		var formSelector = $("#form-rename-map");
 		var list = $(this);
 		if( list.length > 0 ){
 			out += '<ul>';
@@ -445,10 +448,10 @@ function getMapList(){
 		
 		// HTML
 		out += '<div class="form-input-submit">'
-			+'<input class="button dark" type="submit" id="renameMapValid" name="renameMapValid" value="Enregistrer" />'+"\n"
-			+ '<input class="button dark" type="button" id="renameMapCancel" name="renameMapCancel" value="Annuler" />'
+			+'<input class="button dark" type="submit" id="renameMapValid" name="renameMapValid" value="'+formSelector.data("rename")+'" />'+"\n"
+			+ '<input class="button dark" type="button" id="renameMapCancel" name="renameMapCancel" value="'+formSelector.data("cancel")+'" />'
 		+ '</div>';
-		$("#form-rename-map").html(out);
+		formSelector.html(out);
 	};
 })(jQuery);
 
@@ -460,25 +463,26 @@ function getMoveFolderList(nbFiles){
 	$.getJSON("includes/ajax/get_directory_list.php", function(data){
 		if(data != null){
 			var out = "";
+			var formSelector = $("#form-move-map");
 			if( nbFiles > 1 ){
 				var nbName = nbFiles + ' maps';
 			}else{
 				var nbName = '1 map';
 			}
-			out += '<label for="moveDirectoryList">Déplacer '+nbName+' dans le dossier :</label>'
+			out += '<label for="moveDirectoryList">'+formSelector.data("move")+' '+nbName+' '+formSelector.data("inthefolder")+'</label>'
 			+ '<select name="moveDirectoryList" id="moveDirectoryList">'
-				+ '<option value=".">Racine</option>';
+				+ '<option value=".">'+formSelector.data("root")+'</option>';
 				$.each(data, function(i, n){
 					out += '<option value="'+n.path+'">'+n.level+n.name+'</option>';
 				});
 			out += '</select>'
 			+ '<div class="form-input-submit">'
-				+'<input class="button dark" type="submit" id="moveMapValid" name="moveMapValid" value="Enregistrer" />'+"\n"
-				+ '<input class="button dark" type="button" id="moveMapCancel" name="moveMapCancel" value="Annuler" />'
+				+'<input class="button dark" type="submit" id="moveMapValid" name="moveMapValid" value="'+formSelector.data("move")+'" />'+"\n"
+				+ '<input class="button dark" type="button" id="moveMapCancel" name="moveMapCancel" value="'+formSelector.data("cancel")+'" />'
 			+ '</div>';
 			
 			// HTML
-			$("#form-move-map").html(out);
+			formSelector.html(out);
 		}
 	});
 }
@@ -505,8 +509,7 @@ function slideDownMoveForm(){
 	$(".options").addClass("form");
 	$(".options .selected-files-label").addClass("optHover");
 	if( $("#form-move-map").text() == "" ){
-		var list = $("#maplist table tbody tr.selected td.checkbox input");
-		getMoveFolderList(list.length);
+		getMoveFolderList( $("#maplist table tbody tr.selected td.checkbox input").length );
 	}
 }
 function slideUpMoveForm(){

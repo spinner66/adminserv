@@ -80,8 +80,8 @@
 		</table>
 		<?php
 			if($serverInfo['map']['thumb'] != null){
-				echo '<div id="map_thumbnail">'
-					.'<img src="data:image/jpeg;base64,'.$serverInfo['map']['thumb'].'" alt="No thumbnail" />'
+				echo '<div id="map_thumbnail" data-text-thumbnail="Pas de miniature">'
+					.'<img src="data:image/jpeg;base64,'.$serverInfo['map']['thumb'].'" alt="Pas de miniature" />'
 				.'</div>';
 			}
 		?>
