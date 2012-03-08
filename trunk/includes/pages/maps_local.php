@@ -1,22 +1,17 @@
 <?php
 	// GAME
-		if(SERVER_VERSION_NAME == 'TmForever'){
-			$queries = array(
-				'insert' => 'InsertChallenge',
-				'add' => 'AddChallenge'
-			);
-		}
-		else{
-			$queries = array(
-				'insert' => 'InsertMap',
-				'add' => 'AddMap'
-			);
-		}
-	
-	
-	// LECTURE
-	$mapsDirectoryPath = AdminServ::getMapsDirectoryPath();
-	$mapsDirectoryList = AdminServTemplate::getMapsDirectoryList($mapsDirectoryPath, $directory);
+	if(SERVER_VERSION_NAME == 'TmForever'){
+		$queries = array(
+			'insert' => 'InsertChallenge',
+			'add' => 'AddChallenge'
+		);
+	}
+	else{
+		$queries = array(
+			'insert' => 'InsertMap',
+			'add' => 'AddMap'
+		);
+	}
 	
 	
 	// ACTIONS
@@ -95,19 +90,6 @@
 			}
 		}
 	}
-	else if( isset($_POST['newFolderValid']) && $_POST['newFolderName'] != null || isset($_POST['newFolderName']) ){
-		if( Folder::create($mapsDirectoryPath.$directory.Str::replaceChars($_POST['newFolderName'])) !== true ){
-			AdminServ::error('Impossible de créer le dossier : '.$_POST['newFolderName']);
-		}
-		else{
-			if($directory){
-				Utils::redirection(false, '?p='. USER_PAGE .'&d='.$directory);
-			}
-			else{
-				Utils::redirection(false, '?p='. USER_PAGE);
-			}
-		}
-	}
 	
 	
 	// MAPLIST
@@ -120,7 +102,7 @@
 ?>
 <section class="maps hasFolders">
 	<section class="cadre left menu">
-		<?php include_once AdminServConfig::PATH_INCLUDES .'pages/maps_menu.inc.php'; ?>
+		<?php echo $mapsMenu; ?>
 	</section>
 	
 	<section class="cadre middle folders">

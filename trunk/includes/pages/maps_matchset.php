@@ -1,9 +1,4 @@
 <?php
-	// LECTURE
-	$mapsDirectoryPath = AdminServ::getMapsDirectoryPath();
-	$mapsDirectoryList = AdminServTemplate::getMapsDirectoryList($mapsDirectoryPath, $directory);
-	
-	
 	// MAPLIST
 	$mapsList = AdminServ::getMapList();
 	
@@ -14,7 +9,7 @@
 ?>
 <section class="maps hasFolders">
 	<section class="cadre left menu">
-		<?php include_once AdminServConfig::PATH_INCLUDES .'pages/maps_menu.inc.php'; ?>
+		<?php echo $mapsMenu; ?>
 	</section>
 	
 	<section class="cadre middle folders">

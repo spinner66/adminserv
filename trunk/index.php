@@ -59,19 +59,27 @@
 			include_once 'includes/pages/chat.php';
 		}
 		else if(USER_PAGE == 'maps'){
+			include_once 'includes/pages/maps.inc.php';
 			include_once 'includes/pages/maps_list.php';
 		}
 		else if(USER_PAGE == 'maps-local'){
+			include_once 'includes/pages/maps.inc.php';
 			include_once 'includes/pages/maps_local.php';
 		}
 		else if(USER_PAGE == 'maps-upload'){
+			include_once 'includes/pages/maps.inc.php';
 			include_once 'includes/pages/maps_upload.php';
 		}
 		else if(USER_PAGE == 'maps-matchset'){
+			include_once 'includes/pages/maps.inc.php';
 			include_once 'includes/pages/maps_matchset.php';
 		}
 		else if(USER_PAGE == 'maps-order'){
+			include_once 'includes/pages/maps.inc.php';
 			include_once 'includes/pages/maps_order.php';
+		}
+		else if(USER_PAGE == 'maps.inc'){
+			include_once 'includes/pages/maps.inc.php';
 		}
 		else if(USER_PAGE == 'plugins'){
 			include_once 'includes/pages/plugins.php';
