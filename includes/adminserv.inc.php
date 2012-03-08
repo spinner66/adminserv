@@ -303,8 +303,15 @@ abstract class AdminServTemplate {
 		$out = null;
 		
 		if( class_exists('Folder') ){
-			$out .= '<h1>Dossiers</h1>'
-			.'<div class="title-detail"><a href="">Nouveau</a></div>';
+			$out .= '<form id="createFolderForm" method="post" action="?p=maps-local&amp;d='.$currentPath.'">'
+				.'<h1>Dossiers'
+					.'<div id="form-new-folder" hidden="hidden">'
+						.'<input class="text" type="text" name="newFolderName" id="newFolderName" value="" />'
+						.'<input class="button light" type="submit" name="newFolderValid" id="newFolderValid" value="ok" />'
+					.'</div>'
+				.'</h1>'
+				.'<div class="title-detail"><a href="." id="newfolder" data-cancel="Annuler" data-new="Nouveau">Nouveau</a></div>'
+			.'</form>';
 			
 			if( file_exists($path) ){
 				$directory = Folder::read($path.$currentPath, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);

@@ -541,7 +541,6 @@ h1 {
 	color: #fff;
 	font-size: 1.2em;
 	font-variant: small-caps;
-	height: 22px;
 	line-height: 22px;
 	margin: 0 0 10px;
 	text-indent: 10px;
@@ -1132,6 +1131,19 @@ footer {
 	text-align: right;
 	color: #fff;
 	width: 400px;
+}
+/* Nouveau dossier */
+#form-new-folder {
+	margin: 6px 0;
+}
+#form-new-folder input.text {
+	width: 105px;
+	height: 17px;
+	margin-right: 8px;
+	vertical-align: top;
+}
+#form-new-folder input.button {
+	padding: 2px;
 }
 
 /* Page upload

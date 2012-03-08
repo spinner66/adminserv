@@ -80,6 +80,32 @@ abstract class Folder {
 	
 	
 	/**
+	* Créer un dossier
+	*
+	* @param string $dirname -> Chemin du dossier à créer
+	* @return true si réussi sinon message d'erreur
+	*/
+	public static function create($dirname){
+		$out = null;
+		
+		if( ! @file_exists($dirname) ){
+			umask(0000);
+			if( @mkdir($dirname, 0777, true) ){
+				$out = true;
+			}
+			else{
+				$out = 'Create folder failed';
+			}
+		}
+		else{
+			$out = 'Folder already exists';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Compte le nombre de fichier présent dans un dossier
 	*
 	* @param string $path        -> Le chemin du dossier

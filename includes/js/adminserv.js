@@ -24,6 +24,32 @@ $(document).ready(function(){
 		}
 	});
 	
+	/**
+	* Nouveau dossier
+	*/
+	$("a#newfolder").click(function(){
+		var formSelector = $("#form-new-folder");
+		
+		if( formSelector.attr("hidden") ){
+			formSelector.slideDown("fast");
+			formSelector.removeAttr("hidden");
+			$(this).text( $(this).data("cancel") );
+			$("#newFolderName").select();
+		}
+		else{
+			formSelector.slideUp("fast");
+			formSelector.attr("hidden", true);
+			$(this).text( $(this).data("new") );
+		}
+		
+		return false;
+	});
+	$("#newFolderName").keypress(function(event){
+		if(event.keyCode == 13){
+			$("form#createFolderForm").submit();
+		}
+	});
+	
 	
 	/**
 	* Front
