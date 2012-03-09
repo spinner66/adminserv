@@ -488,7 +488,7 @@ function getMoveFolderList(nbFiles){
 }
 
 /**
-* Fonctions d'affichage des formulaires Renommer/Déplacer
+* Fonctions d'affichage des formulaires
 */
 function slideDownRenameForm(){
 	$("#form-rename-map").slideDown("fast");
@@ -517,4 +517,15 @@ function slideUpMoveForm(){
 	$("#moveMap").removeClass("active");
 	$(".options").removeClass("form");
 	$(".options .selected-files-label").removeClass("optHover");
+}
+function slideDownNewFolderForm(){
+	$("#form-new-folder").slideDown("fast");
+	$("#form-new-folder").removeAttr("hidden");
+	$("#newfolder").text( $("#newfolder").data("cancel") );
+	$("#newFolderName").select();
+}
+function slideUpNewFolderForm(){
+	$("#form-new-folder").slideUp("fast");
+	$("#form-new-folder").attr("hidden", true);
+	$("#newfolder").text( $("#newfolder").data("new") );
 }

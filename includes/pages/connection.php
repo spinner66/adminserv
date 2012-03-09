@@ -50,11 +50,11 @@
 	if( isset($_GET['error']) ){
 		AdminServ::error($_GET['error']);
 	}
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
 <section>
 	<!-- TODO : displayServ -->
 </section>
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>

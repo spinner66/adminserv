@@ -132,7 +132,7 @@
 		}
 	}
 	// Liste des joueurs présent sur le serveur
-	$playerList = AdminServTemplate::getPlayerList();
+	$playerList = AdminServUI::getPlayerList();
 	
 	
 	// LECTURE
@@ -168,7 +168,7 @@
 	
 	// HTML
 	$client->Terminate();
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
 <section class="cadre left">
 	<form method="post" action="?p=guestban">
@@ -464,5 +464,5 @@
 	</div>
 </section>
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>

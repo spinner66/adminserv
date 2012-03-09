@@ -177,7 +177,7 @@
 	
 	// HTML
 	$client->Terminate();
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
 <section class="cadre">
 	<h1>Informations de jeu</h1>
@@ -193,7 +193,7 @@
 						</td>
 						<td class="value">
 							<select class="width2" name="NextGameMode" id="NextGameMode">
-								<?php echo AdminServTemplate::getGameModeList($nextGamInf['GameMode']); ?>
+								<?php echo AdminServUI::getGameModeList($nextGamInf['GameMode']); ?>
 							</select>
 						</td>
 						<td class="preview"></td>
@@ -469,5 +469,5 @@
 	</form>
 </section>
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>

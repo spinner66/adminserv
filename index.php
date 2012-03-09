@@ -7,7 +7,7 @@
 	require_once 'config/servers.cfg.php';
 	require_once 'config/extension.cfg.php';
 	require_once 'includes/adminserv.inc.php';
-	AdminServTemplate::getClass();
+	AdminServUI::getClass();
 	
 	
 	// ISSET

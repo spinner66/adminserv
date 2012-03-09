@@ -61,7 +61,7 @@
 	
 	// HTML
 	$client->Terminate();
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
 <section class="cadre">
 	<h1>Options du serveur</h1>
@@ -220,5 +220,5 @@
 	</form>
 </section>
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>

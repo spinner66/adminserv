@@ -3,7 +3,7 @@
 	session_start();
 	require_once '../../config/servers.cfg.php';
 	require_once '../adminserv.inc.php';
-	AdminServTemplate::getClass();
+	AdminServUI::getClass();
 	
 	// ISSET
 	if( isset($_GET['s']) ){ $hideServerLines = intval($_GET['s']); }else{ $hideServerLines = 0; }

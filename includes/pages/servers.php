@@ -3,7 +3,7 @@
 	$serverList = ServerConfig::$SERVERS;
 	
 	// HTML
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
 <section class="cadre">
 	<h1>Liste des serveurs</h1>
@@ -63,5 +63,5 @@
 	</table>
 </section>
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>

@@ -5,7 +5,7 @@
 	
 	// INCLUDES
 	require_once '../adminserv.inc.php';
-	AdminServTemplate::getClass();
+	AdminServUI::getClass();
 	
 	// ISSET
 	if( isset($_GET['t']) ){ $text = stripslashes($_GET['t']); }else{ $text = null; }
