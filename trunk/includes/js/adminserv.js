@@ -28,25 +28,32 @@ $(document).ready(function(){
 	* Nouveau dossier
 	*/
 	$("a#newfolder").click(function(){
-		var formSelector = $("#form-new-folder");
-		
-		if( formSelector.attr("hidden") ){
-			formSelector.slideDown("fast");
-			formSelector.removeAttr("hidden");
-			$(this).text( $(this).data("cancel") );
-			$("#newFolderName").select();
+		if( $("#form-new-folder").attr("hidden") ){
+			slideDownNewFolderForm();
 		}
 		else{
-			formSelector.slideUp("fast");
-			formSelector.attr("hidden", true);
-			$(this).text( $(this).data("new") );
+			slideUpNewFolderForm();
 		}
 		
 		return false;
 	});
 	$("#newFolderName").keypress(function(event){
 		if(event.keyCode == 13){
-			$("form#createFolderForm").submit();
+			if( $(this).val() != "" ){
+				$("form#createFolderForm").submit();
+			}
+			else{
+				slideUpNewFolderForm();
+			}
+		}
+	});
+	$("#newFolderValid").click(function(){
+		if( $("#newFolderName").val() != "" ){
+			return true;
+		}
+		else{
+			slideUpNewFolderForm();
+			return false;
 		}
 	});
 	

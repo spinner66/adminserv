@@ -3,7 +3,7 @@
 	session_start();
 	require_once '../../config/servers.cfg.php';
 	require_once '../adminserv.inc.php';
-	AdminServTemplate::getClass();
+	AdminServUI::getClass();
 	
 	// ISSET
 	if( isset($_POST['nic']) ){ $nickname = $_POST['nic']; }else{ $nickname = null; }

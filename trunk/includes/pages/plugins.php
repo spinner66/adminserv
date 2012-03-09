@@ -1,9 +1,9 @@
 <?php
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
 <section>
 	
 </section>
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>

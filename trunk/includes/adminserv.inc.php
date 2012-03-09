@@ -3,7 +3,7 @@
 /**
 * Classe pour l'interface d'AdminServ
 */
-abstract class AdminServTemplate {
+abstract class AdminServUI {
 	
 	/**
 	* Récupère le titre de l'application
@@ -303,6 +303,7 @@ abstract class AdminServTemplate {
 		$out = null;
 		
 		if( class_exists('Folder') ){
+			// Titre + nouveau dossier
 			$out .= '<form id="createFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
 				.'<h1>Dossiers'
 					.'<div id="form-new-folder" hidden="hidden">'
@@ -313,10 +314,12 @@ abstract class AdminServTemplate {
 				.'<div class="title-detail"><a href="." id="newfolder" data-cancel="Annuler" data-new="Nouveau">Nouveau</a></div>'
 			.'</form>';
 			
+			// Liste des dossiers
 			if( file_exists($path) ){
 				$directory = Folder::read($path.$currentPath, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
 				if( is_array($directory) ){
-					$out .= '<ul>';
+					$out .= '<div class="folder-list">'
+					.'<ul>';
 					
 					// Dossier parent
 					if($currentPath){
@@ -353,19 +356,30 @@ abstract class AdminServTemplate {
 							.'</li>';
 						}
 					}
-					$out .= '</ul>';
+					$out .= '</ul>'
+					.'</div>';
 				}
 				else{
-					// Retour des erreurs de la méthode read
-					$out = $directory;
+					AdminServ::error($directory);
 				}
 			}
 			else{
-				$out = 'Path not exists';
+				AdminServ::error('Path not exists');
 			}
+			
+			// Options de dossier
+			$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
+				.'<div class="option-folder-list">'
+					.'<h2>Options du dossier</h2>'
+					.'<ul>'
+						.'<li><a class="button light rename" href="">Renommer</a></li>'
+						.'<li><a class="button light move" href="">Déplacer</a></li>'
+						.'<li><a class="button light delete" href="">Supprimer</a></li>'
+				.'</div>'
+			.'</form>';
 		}
 		else{
-			$out = 'Class "Folder" not exists';
+			AdminServ::error('Class "Folder" not exists');
 		}
 		return $out;
 	}

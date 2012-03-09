@@ -1,5 +1,5 @@
 <?php
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
 <section class="cadre">
 	<h1>Ajouter un serveur</h1>
@@ -88,5 +88,5 @@
 	</form>
 </section>
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>

@@ -27,16 +27,16 @@
 		$chatColor .= '<option value="'.$colorCode.'"'.$selected.'>'.$colorName.'</option>';
 	}
 	if( isset($_SESSION['adminserv']['chat_dst']) ){
-		$playerList = AdminServTemplate::getPlayerList($_SESSION['adminserv']['chat_dst']);
+		$playerList = AdminServUI::getPlayerList($_SESSION['adminserv']['chat_dst']);
 	}
 	else{
-		$playerList = AdminServTemplate::getPlayerList();
+		$playerList = AdminServUI::getPlayerList();
 	}
 	
 	
 	// HTML
 	$client->Terminate();
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
 <section class="cadre">
 	<h1>Chat</h1>
@@ -62,5 +62,5 @@
 	</div>
 </section>
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>

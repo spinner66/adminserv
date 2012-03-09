@@ -5,11 +5,13 @@
 	
 	// HTML
 	$client->Terminate();
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
-<section class="maps hasFolders">
+<section class="maps hasMenu hasFolders">
 	<section class="cadre left menu">
-		<?php echo $mapsMenu; ?>
+		<nav class="vertical-nav">
+			<?php echo $mapsMenu; ?>
+		</nav>
 	</section>
 	
 	<section class="cadre middle folders">
@@ -81,5 +83,5 @@
 	</section>
 </section>
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>

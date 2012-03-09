@@ -51,7 +51,7 @@
 	
 	// HTML
 	$client->Terminate();
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
 <section class="cadre left">
 	<h1>Map en cours</h1>
@@ -227,5 +227,5 @@
 </section>
 
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>

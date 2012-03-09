@@ -30,11 +30,13 @@
 	
 	// HTML
 	$client->Terminate();
-	AdminServTemplate::getHeader();
+	AdminServUI::getHeader();
 ?>
-<section class="maps">
+<section class="maps hasMenu">
 	<section class="cadre left menu">
-		<?php echo $mapsMenu; ?>
+		<nav class="vertical-nav">
+			<?php echo $mapsMenu; ?>
+		</nav>
 	</section>
 	
 	<section class="cadre right list">
@@ -106,5 +108,5 @@
 	</section>
 </section>
 <?php
-	AdminServTemplate::getFooter();
+	AdminServUI::getFooter();
 ?>
