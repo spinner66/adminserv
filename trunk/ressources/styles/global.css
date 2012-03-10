@@ -568,6 +568,7 @@ h3 {
 	display: block;
 	color: #5e9cd5;
 	font-size: .9em;
+	text-indent: 2px;
 	margin: 10px 0 5px;
 	border-bottom: 1px dotted #ccc;
 }
@@ -1113,10 +1114,7 @@ footer {
 	font-size: .8em;
 }
 .folders .folder-list {
-	margin-bottom: 50px;
-}
-.folders .folder-list.optHover {
-	margin-bottom: 118px;
+	margin-bottom: 16px;
 }
 .folders .folder-list ul li a {
 	padding: 6px 10px;
@@ -1157,12 +1155,6 @@ footer {
 	padding: 2px;
 }
 /* Option de dossier */
-.folders .option-folder-list {
-	position: absolute;
-	bottom: 13px;
-	width: 86%;
-	background: #fefefe;
-}
 .folders .option-folder-list h3 {
 	cursor: pointer;
 }

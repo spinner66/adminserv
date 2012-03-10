@@ -316,7 +316,13 @@ abstract class AdminServUI {
 			
 			// Liste des dossiers
 			if( file_exists($path) ){
-				$directory = Folder::read($path.$currentPath, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+				if(USER_PAGE == 'maps-matchset'){
+					$directory = Folder::read($path.$currentPath, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, AdminServConfig::$MATCHSET_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+				}
+				else{
+					$directory = Folder::read($path.$currentPath, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+				}
+				
 				if( is_array($directory) ){
 					$out .= '<div class="folder-list">'
 					.'<ul>';
@@ -368,15 +374,17 @@ abstract class AdminServUI {
 			}
 			
 			// Options de dossier
-			$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
-				.'<div class="option-folder-list">'
-					.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
-					.'<ul hidden="hidden">'
-						.'<li><a class="button light rename" href="">Renommer</a></li>'
-						.'<li><a class="button light move" href="">Déplacer</a></li>'
-						.'<li><a class="button light delete" href="">Supprimer</a></li>'
-				.'</div>'
-			.'</form>';
+			if($currentPath){
+				$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
+					.'<div class="option-folder-list">'
+						.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
+						.'<ul hidden="hidden">'
+							.'<li><a class="button light rename" href="">Renommer</a></li>'
+							.'<li><a class="button light move" href="">Déplacer</a></li>'
+							.'<li><a class="button light delete" href="">Supprimer</a></li>'
+					.'</div>'
+				.'</form>';
+			}
 		}
 		else{
 			AdminServ::error('Class "Folder" not exists');
@@ -1175,7 +1183,6 @@ abstract class AdminServ {
 	
 	
 	public static function getLocalMapList($path){
-		global $client;
 		$out = array();
 		
 		if( class_exists('Folder') && class_exists('GBXChallengeFetcher') ){
@@ -1244,8 +1251,63 @@ abstract class AdminServ {
 	}
 	
 	
-	public static function getLocalMatchSettingList(){
+	public static function getLocalMatchSettingList($path){
+		$out = array();
 		
+		if( class_exists('Folder') && class_exists('File') ){
+			$directory = Folder::read($path, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, AdminServConfig::$MATCHSET_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+			if( is_array($directory) ){
+				$countMatchsetList = count($directory['files']);
+				if($countMatchsetList > 0){
+					$i = 0;
+					foreach($directory['files'] as $file => $values){
+						if( in_array(File::getExtension($file), AdminServConfig::$MATCHSET_EXTENSION) ){
+							// Données
+							//TOTO: extraire les données pour le nb de maps
+							
+							$out['lst'][$i]['Name'] = substr($file, 0, -4);
+							$out['lst'][$i]['FileName'] = $file;
+							$out['lst'][$i]['Mtime'] = $values['mtime'];
+							$out['lst'][$i]['Recent'] = $values['recent'];
+							$i++;
+						}
+						else{
+							if( !isset($out['lst']) ){
+								$out['lst'] = 'Aucun matchsetting';
+							}
+						}
+					}
+				}
+				else{
+					$out['lst'] = 'Aucun matchsetting';
+				}
+				
+				// Nombre de maps
+				if( is_array($out['lst']) ){
+					if( count($out['lst']) > 1){
+					$out['nbm'] = $countMatchsetList.' matchsettings';
+					}
+					else{
+						$out['nbm'] = $countMatchsetList.' matchsetting';
+					}
+				}
+				else{
+					$out['nbm'] = '0 matchsetting';
+				}
+				
+				// Config
+				$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
+			}
+			else{
+				// Retour des erreurs de la méthode read
+				$out = $directory;
+			}
+		}
+		else{
+			$out['error'] = 'class "Folder" or "File" not found';
+		}
+		
+		return $out;
 	}
 }
 ?>
