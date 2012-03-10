@@ -57,6 +57,25 @@ $(document).ready(function(){
 		}
 	});
 	
+	/**
+	* Option du dossier
+	*/
+	$(".folders .option-folder-list h3").click(function(){
+		var selector = $(this).parent().children("ul");
+		if( selector.attr("hidden") ){
+			selector.slideDown("fast");
+			selector.removeAttr("hidden");
+			$(this).children("span").removeClass("arrow-down");
+			$(this).children("span").addClass("arrow-up");
+		}
+		else{
+			selector.slideUp("fast");
+			selector.attr("hidden", true);
+			$(this).children("span").removeClass("arrow-up");
+			$(this).children("span").addClass("arrow-down");
+		}
+	});
+	
 	
 	/**
 	* Front
@@ -440,6 +459,37 @@ $(document).ready(function(){
 			// Supprimer
 			$("#deleteMap").click(function(){
 				return confirm( $(this).data("confirm") );
+			});
+		}
+		/**
+		* Maps-matchset
+		*/
+		else if( $("body").hasClass("section-maps-matchset") ){
+			// Checkbox
+			$("input#checkAll").click(function(){
+				$("#matchsetlist").checkAll( $(this).attr("checked") );
+				
+				// Mise à jour du nb de lignes sélectionnées
+				$(".maps .matchset").updateNbSelectedLines();
+			});
+			
+			// Clic sur les lignes
+			$("#matchsetlist tr").live("click", function(){
+				if( !$(this).hasClass("no-line") ){
+					// Si la ligne est déjà sélectionnée, on l'enlève
+					if( $(this).hasClass("selected") ){
+						$(this).removeClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", false);
+					}
+					// Sinon, on l'ajoute
+					else{
+						$(this).addClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", true);
+					}
+					
+					// Mise à jour du nb de lignes sélectionnées
+					$(".maps .matchset").updateNbSelectedLines();
+				}
 			});
 		}
 		/**
