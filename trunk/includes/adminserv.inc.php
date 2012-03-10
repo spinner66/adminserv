@@ -370,8 +370,8 @@ abstract class AdminServUI {
 			// Options de dossier
 			$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
 				.'<div class="option-folder-list">'
-					.'<h2>Options du dossier</h2>'
-					.'<ul>'
+					.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
+					.'<ul hidden="hidden">'
 						.'<li><a class="button light rename" href="">Renommer</a></li>'
 						.'<li><a class="button light move" href="">Déplacer</a></li>'
 						.'<li><a class="button light delete" href="">Supprimer</a></li>'
