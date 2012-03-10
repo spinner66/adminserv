@@ -564,7 +564,13 @@ h2 {
 	border-bottom: 1px solid #ddd;
 	margin: 20px 0 10px;
 }
-
+h3 {
+	display: block;
+	color: #5e9cd5;
+	font-size: .9em;
+	margin: 10px 0 5px;
+	border-bottom: 1px dotted #ccc;
+}
 .title-detail {
 	position: absolute;
 	top: 14px;
@@ -860,7 +866,6 @@ td.value {
 	padding: 10px;
 	background: #fff;
 	border: 1px solid #ddd;
-	/* min-height: 512px; */
 	margin-bottom: 25px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -1093,6 +1098,9 @@ footer {
 	-o-border-radius: 2px;
 	border-radius: 2px;
 }
+.menu .vertical-nav ul li:last-child a {
+	border: 0;
+}
 .menu .vertical-nav ul li a.active,
 .menu .vertical-nav ul li a:hover {
 	color: #fff;
@@ -1105,6 +1113,9 @@ footer {
 	font-size: .8em;
 }
 .folders .folder-list {
+	margin-bottom: 50px;
+}
+.folders .folder-list.optHover {
 	margin-bottom: 118px;
 }
 .folders .folder-list ul li a {
@@ -1151,6 +1162,26 @@ footer {
 	bottom: 13px;
 	width: 86%;
 	background: #fefefe;
+}
+.folders .option-folder-list h3 {
+	cursor: pointer;
+}
+.folders .option-folder-list .arrow-down,
+.folders .option-folder-list .arrow-up {
+	float: right;
+	display: block;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	margin: 5px 10px 0 0;
+}
+.folders .option-folder-list .arrow-down {
+	border-width: 5px 5px 0 5px;
+	border-color: #5e9cd5 transparent transparent transparent;
+}
+.folders .option-folder-list .arrow-up {
+	border-width: 0 5px 5px 5px;
+	border-color: transparent transparent #5e9cd5 transparent;
 }
 .folders .option-folder-list ul li {
 	margin-bottom: 1px;
@@ -1319,7 +1350,7 @@ footer {
 .tmnick_italic { font-style: italic; }
 .tmnick_bold { font-weight: bold; letter-spacing: 1px; }
 .tmnick_upper { text-transform: uppercase; }
-span.tmnick_shadow { text-shadow: 0 1px 1px #777; }
+span.tmnick_shadow { text-shadow: 0 1px 1px #555; }
 .tmnick_shadowed { position: relative; }
 .tmnick_shadowed span { position: relative; }
 span.tmnick_shadow { position: absolute; }
