@@ -592,6 +592,40 @@ $(document).ready(function(){
 					$(this).val( $(this).data("default-value") );
 				}
 			});
+			
+			// Créer une playlist
+			$("#clickNewPlaylist").click(function(){
+				var selector = $("#form-new-playlist");
+				if( selector.attr("hidden") ){
+					selector.slideDown("fast");
+					selector.removeAttr("hidden");
+					$(this).text( $(this).data("cancel") );
+				}
+				else{
+					selector.slideUp("fast");
+					selector.attr("hidden", true);
+					$(this).text( $(this).data("newplaylist") );
+				}
+				return false;
+			});
+			$("#createPlaylistName").click(function(){
+				if( $(this).val() == $(this).data("playlistname") ){
+					$(this).val("");
+				}
+			});
+			$("#createPlaylistName").blur(function(){
+				var val = $(this).val();
+				if( val == "" ){
+					$(this).val( $(this).data("playlistname") );
+				}
+				else{
+					var extTXT = val.indexOf(".txt");
+					var extXML = val.indexOf(".xml");
+					if(extTXT === -1 && extXML === -1){
+						$(this).val(val+".txt");
+					}
+				}
+			});
 		}
 	}
 });

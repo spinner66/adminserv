@@ -31,14 +31,14 @@
 		
 		// Requête
 		if( !$client->query('SetServerOptions', $struct) ){
-			AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+			AdminServ::error();
 		}
 	}
 	
 	
 	// LECTURE
 	if( !$client->query('GetServerOptions') ){
-		AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+		AdminServ::error();
 	}
 	else{
 		$srvOpt = $client->getResponse();
@@ -51,7 +51,7 @@
 		if($srvOpt['CurrentVehicleNetQuality'] !== 0){ $srvOpt['CurrentVehicleNetQualityName'] = 'Haute'; }
 		else{ $srvOpt['CurrentVehicleNetQualityName'] = 'Rapide'; }
 		if( !$client->query('GetBuddyNotification', '') ){
-			AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+			AdminServ::error();
 		}
 		else{
 			$srvOpt['BuddyNotification'] = $client->getResponse();

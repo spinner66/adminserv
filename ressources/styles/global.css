@@ -1294,7 +1294,25 @@ footer {
 	width: 90px;
 	margin: 0;
 }
-
+#form-new-playlist {
+	margin: 6px 0 8px;
+}
+#form-new-playlist select {
+	width: 120px;
+	margin-right: 12px;
+	padding: 3px 5px 2px;
+	vertical-align: top;
+}
+#form-new-playlist input.text {
+	width: 202px;
+	height: 17px;
+	margin-right: 12px;
+	vertical-align: top;
+}
+#form-new-playlist input.button {
+	width: 90px;
+	font-size: .9em;
+}
 
 /* Couleurs GameMode & Jeux
 ----------------------------- */

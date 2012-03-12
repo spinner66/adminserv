@@ -16,12 +16,12 @@
 	// ACTIONS
 	if( isset($_POST['removeMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		if( !$client->query($queries['removeMap'], $_POST['map']) ){
-			AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+			AdminServ::error();
 		}
 	}
 	else if( isset($_POST['chooseNextMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		if( !$client->query($queries['chooseNextMap'], $_POST['map']) ){
-			AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+			AdminServ::error();
 		}
 	}
 	

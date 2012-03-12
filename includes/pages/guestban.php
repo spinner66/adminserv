@@ -2,7 +2,7 @@
 	// GAMEDATA
 	if( AdminServ::isAdminLevel('Admin') ){
 		if( !$client->query('GameDataDirectory') ){
-			AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+			AdminServ::error();
 		}
 		else{
 			$gameDataDirectory = $client->getResponse();
@@ -16,22 +16,22 @@
 		$clean = strtolower($_GET['clean']);
 		if($clean == 'banlist'){
 			if( !$client->query('CleanBanList') ){
-				AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+				AdminServ::error();
 			}
 		}
 		else if($clean == 'ignorelist'){
 			if( !$client->query('CleanIgnoreList') ){
-				AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+				AdminServ::error();
 			}
 		}
 		else if($clean == 'guestlist'){
 			if( !$client->query('CleanGuestList') ){
-				AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+				AdminServ::error();
 			}
 		}
 		else if($clean == 'blacklist'){
 			if( !$client->query('CleanBlackList') ){
-				AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+				AdminServ::error();
 			}
 		}
 	}
@@ -54,7 +54,7 @@
 		if( count($blackListPlayer) > 0 ){
 			foreach($blackListPlayer as $player){
 				if( !$client->query('BlackList', $player) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 					break;
 				}
 			}
@@ -65,7 +65,7 @@
 		if( isset($_POST['banlist']) && count($_POST['banlist']) > 0 ){
 			foreach($_POST['banlist'] as $player){
 				if( !$client->query('UnBan', $player) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 					break;
 				}
 			}
@@ -73,7 +73,7 @@
 		else if( isset($_POST['blacklist']) && count($_POST['blacklist']) > 0 ){
 			foreach($_POST['blacklist'] as $player){
 				if( !$client->query('UnBlackList', $player) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 					break;
 				}
 			}
@@ -81,7 +81,7 @@
 		else if( isset($_POST['guestlist']) && count($_POST['guestlist']) > 0 ){
 			foreach($_POST['guestlist'] as $player){
 				if( !$client->query('RemoveGuest', $player) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 					break;
 				}
 			}
@@ -89,7 +89,7 @@
 		else if( isset($_POST['ignorelist']) && count($_POST['ignorelist']) > 0 ){
 			foreach($_POST['ignorelist'] as $player){
 				if( !$client->query('UnIgnore', $player) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 					break;
 				}
 			}
@@ -116,34 +116,34 @@
 			// Inviter
 			if($addPlayerTypeList == 'guestlist'){
 				if( !$client->query('AddGuest', $playerlogin) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 				}
 			}
 			// Blacklister
 			else if($addPlayerTypeList == 'blacklist'){
 				if( !$client->query('BlackList', $playerlogin) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 				}
 			}
 		}
 	}
 	
 	
-	// PLAYLISTS
+	// PLAYLISTS LOCAL
 	else if( isset($_POST['savePlaylist']) && isset($_POST['playlist']) && count($_POST['playlist'] > 0) ){
 		$i = 0;
 		foreach($_POST['playlist'] as $playlist){
 			// Guestlist
 			if($_POST['playlistType'][$i] == 'guestlist'){
 				if( !$client->query('SaveGuestList', $playlist) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 					break;
 				}
 			}
 			// BlackList
 			else{
 				if( !$client->query('SaveBlackList', $playlist) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 					break;
 				}
 			}
@@ -156,14 +156,14 @@
 			// Guestlist
 			if($_POST['playlistType'][$i] == 'guestlist'){
 				if( !$client->query('LoadGuestList', $playlist) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 					break;
 				}
 			}
 			// BlackList
 			else{
 				if( !$client->query('LoadBlackList', $playlist) ){
-					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error();
 					break;
 				}
 			}
@@ -178,31 +178,48 @@
 			}
 		}
 	}
+	else if( isset($_POST['createPlaylistValid']) && isset($_POST['createPlaylistName']) && $_POST['createPlaylistName'] != null ){
+		// Fichier
+		$filename = Str::replaceChars($_POST['createPlaylistName']);
+		
+		// Guestlist
+		if($_POST['createPlaylistType'] == 'guestlist'){
+			if( !$client->query('SaveGuestList', $filename) ){
+				AdminServ::error();
+			}
+		}
+		// Blacklist
+		else{
+			if( !$client->query('SaveBlackList', $filename) ){
+				AdminServ::error();
+			}
+		}
+	}
 	
 	// LECTURE
 	if( !$client->query('GetBanList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+		AdminServ::error();
 	}
 	else{
 		$banList = $client->getResponse();
 		$countBanList = count($banList);
 	}
 	if( !$client->query('GetBlackList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+		AdminServ::error();
 	}
 	else{
 		$blackList = $client->getResponse();
 		$countBlackList = count($blackList);
 	}
 	if( !$client->query('GetGuestList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+		AdminServ::error();
 	}
 	else{
 		$guestList = $client->getResponse();
 		$countGuestList = count($guestList);
 	}
 	if( !$client->query('GetIgnoreList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+		AdminServ::error();
 	}
 	else{
 		$ignoreList = $client->getResponse();
@@ -428,10 +445,22 @@
 	</div>
 	
 	<div id="playlists">
-		<h1>Playlists</h1>
+		<form method="post" action="?p=guestban">
+			<h1>Playlists
+				<div id="form-new-playlist" hidden="hidden">
+					<select name="createPlaylistType" id="createPlaylistType">
+						<option value="none">Type</option>
+						<option value="guestlist">Guestlist</option>
+						<option value="blacklist">Blacklist</option>
+					</select>
+					<input class="text" type="text" name="createPlaylistName" id="createPlaylistName" data-playlistname="Nom de la playlist" value="Nom de la playlist" />
+					<input class="button light" type="submit" name="createPlaylistValid" id="createPlaylistValid" value="Créer" />
+				</div>
+			</h1>
+		</form>
 		<div class="title-detail">
 			<ul>
-				<li><a href="">Nouvelle playlist</a></li>
+				<li><a id="clickNewPlaylist" href="" data-cancel="Annuler" data-newplaylist="Nouvelle playlist">Nouvelle playlist</a></li>
 				<li><input type="checkbox" name="checkAllPlaylists" id="checkAllPlaylists" value="" /></li>
 			</ul>
 		</div>

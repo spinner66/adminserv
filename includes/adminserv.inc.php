@@ -440,7 +440,12 @@ abstract class AdminServ {
 	/**
 	* Erreurs et infos
 	*/
-	public static function error($text){
+	public static function error($text = null){
+		global $client;
+		// Tente de récupérer le message d'erreur du dédié
+		if($text === null){
+			$text = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+		}
 		$GLOBALS['error'] = $text;
 	}
 	public static function info($text){
