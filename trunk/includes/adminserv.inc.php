@@ -291,6 +291,30 @@ abstract class AdminServUI {
 	
 	
 	/**
+	* Retourne une liste html pour un menu
+	*
+	* @param array $list -> array('Nom du lien' => 'nom_de_la_page')
+	* @return html
+	*/
+	public static function getMenuList($list){
+		global $directory;
+		$out = null;
+		
+		if( count($list) > 0 ){
+			$out = '<nav class="vertical-nav">'
+				.'<ul>';
+					foreach($list as $title => $page){
+						$out .= '<li><a '; if(USER_PAGE == $page){ $out .= 'class="active" '; } $out .= 'href="?p='.$page; if($directory){ $out .= '&amp;d='.$directory; } $out .= '">'.$title.'</a></li>';
+					}
+			$out .= '</ul>'
+			.'</nav>';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère la liset des dossiers du répertoire "Maps"
 	*
 	* @require class "Folder", "File", "Str"
