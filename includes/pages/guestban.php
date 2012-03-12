@@ -1,41 +1,37 @@
 <?php
 	// GAMEDATA
-	$localMode = false;
 	if( AdminServ::isAdminLevel('Admin') ){
 		if( !$client->query('GameDataDirectory') ){
 			AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 		}
 		else{
 			$gameDataDirectory = $client->getResponse();
-			$playlistDirectory = FileFolder::readDirectory($gameDataDirectory.'Config', array(), AdminServConfig::$PLAYLIST_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
-			if($playlistDirectory !== false){
-				$localMode = true;
-			}
+			$playlistDirectory = Folder::read($gameDataDirectory.'Config', array(), AdminServConfig::$PLAYLIST_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
 		}
 	}
 	
 	// ACTIONS
 	// Vider la liste
 	if( isset($_GET['clean']) ){
-		$clean = $_GET['clean'];
+		$clean = strtolower($_GET['clean']);
 		if($clean == 'banlist'){
 			if( !$client->query('CleanBanList') ){
-				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+				AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 			}
 		}
 		else if($clean == 'ignorelist'){
 			if( !$client->query('CleanIgnoreList') ){
-				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+				AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 			}
 		}
 		else if($clean == 'guestlist'){
 			if( !$client->query('CleanGuestList') ){
-				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+				AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 			}
 		}
 		else if($clean == 'blacklist'){
 			if( !$client->query('CleanBlackList') ){
-				AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+				AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 			}
 		}
 	}
@@ -58,7 +54,7 @@
 		if( count($blackListPlayer) > 0 ){
 			foreach($blackListPlayer as $player){
 				if( !$client->query('BlackList', $player) ){
-					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 					break;
 				}
 			}
@@ -69,7 +65,7 @@
 		if( isset($_POST['banlist']) && count($_POST['banlist']) > 0 ){
 			foreach($_POST['banlist'] as $player){
 				if( !$client->query('UnBan', $player) ){
-					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 					break;
 				}
 			}
@@ -77,7 +73,7 @@
 		else if( isset($_POST['blacklist']) && count($_POST['blacklist']) > 0 ){
 			foreach($_POST['blacklist'] as $player){
 				if( !$client->query('UnBlackList', $player) ){
-					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 					break;
 				}
 			}
@@ -85,7 +81,7 @@
 		else if( isset($_POST['guestlist']) && count($_POST['guestlist']) > 0 ){
 			foreach($_POST['guestlist'] as $player){
 				if( !$client->query('RemoveGuest', $player) ){
-					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 					break;
 				}
 			}
@@ -93,7 +89,7 @@
 		else if( isset($_POST['ignorelist']) && count($_POST['ignorelist']) > 0 ){
 			foreach($_POST['ignorelist'] as $player){
 				if( !$client->query('UnIgnore', $player) ){
-					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 					break;
 				}
 			}
@@ -102,7 +98,7 @@
 	
 	
 	// AJOUTER
-	if( isset($_POST['addPlayer']) ){
+	else if( isset($_POST['addPlayer']) ){
 		// Variables
 		$addPlayerList = $_POST['addPlayerList'];
 		$addPlayerLogin = strtolower( trim($_POST['addPlayerLogin']) );
@@ -120,20 +116,68 @@
 			// Inviter
 			if($addPlayerTypeList == 'guestlist'){
 				if( !$client->query('AddGuest', $playerlogin) ){
-					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				}
 			}
 			// Blacklister
 			else if($addPlayerTypeList == 'blacklist'){
 				if( !$client->query('BlackList', $playerlogin) ){
-					AdminServ::error( '['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
 				}
 			}
 		}
 	}
-	// Liste des joueurs présent sur le serveur
-	$playerList = AdminServUI::getPlayerList();
 	
+	
+	// PLAYLISTS
+	else if( isset($_POST['savePlaylist']) && isset($_POST['playlist']) && count($_POST['playlist'] > 0) ){
+		$i = 0;
+		foreach($_POST['playlist'] as $playlist){
+			// Guestlist
+			if($_POST['playlistType'][$i] == 'guestlist'){
+				if( !$client->query('SaveGuestList', $playlist) ){
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					break;
+				}
+			}
+			// BlackList
+			else{
+				if( !$client->query('SaveBlackList', $playlist) ){
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					break;
+				}
+			}
+			$i++;
+		}
+	}
+	else if( isset($_POST['loadPlaylist']) && isset($_POST['playlist']) && count($_POST['playlist'] > 0) ){
+		$i = 0;
+		foreach($_POST['playlist'] as $playlist){
+			// Guestlist
+			if($_POST['playlistType'][$i] == 'guestlist'){
+				if( !$client->query('LoadGuestList', $playlist) ){
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					break;
+				}
+			}
+			// BlackList
+			else{
+				if( !$client->query('LoadBlackList', $playlist) ){
+					AdminServ::error('['.$client->getErrorCode().'] '.$client->getErrorMessage() );
+					break;
+				}
+			}
+			$i++;
+		}
+	}
+	else if( isset($_POST['deletePlaylist']) && isset($_POST['playlist']) && count($_POST['playlist'] > 0) ){
+		foreach($_POST['playlist'] as $playlist){
+			if( !File::delete($gameDataDirectory.'Config/'.$playlist) ){
+				AdminServ::error('Impossible de supprimer la playlist : '.$playlist);
+				break;
+			}
+		}
+	}
 	
 	// LECTURE
 	if( !$client->query('GetBanList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
@@ -164,6 +208,9 @@
 		$ignoreList = $client->getResponse();
 		$countIgnoreList = count($ignoreList);
 	}
+	
+	// Liste des joueurs présent sur le serveur
+	$playerList = AdminServUI::getPlayerList();
 	
 	
 	// HTML
@@ -430,7 +477,10 @@
 									.'<td class="center">'.ucfirst($data['type']).'</td>'
 									.'<td class="center">'.$nbPlayers.'</td>'
 									.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'
-									.'<td class="checkbox"><input type="checkbox" name="playlistFile[]" value="'.$file['filename'].'" /></td>'
+									.'<td class="checkbox">'
+										.'<input type="checkbox" name="playlist[]" value="'.$file['filename'].'" />'
+										.'<input type="hidden" name="playlistType[]" value="'.$data['type'].'" />'
+									.'</td>'
 								.'</tr>';
 								$i++;
 							}
@@ -453,10 +503,9 @@
 					<span class="selected-files-title">Pour la sélection</span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="Bannir" />
-						<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="Kicker" />
-						<input class="button dark" type="submit" name="ForceSpectatorList" id="ForceSpectatorList" value="Spectateur" />
-						<input class="button dark" type="submit" name="ForcePlayerList" id="ForcePlayerList" value="Joueur" />
+						<input class="button dark" type="submit" name="deletePlaylist" id="deletePlaylist" value="Supprimer" />
+						<input class="button dark" type="submit" name="loadPlaylist" id="loadPlaylist" value="Charger" />
+						<input class="button dark" type="submit" name="savePlaylist" id="savePlaylist" value="Sauvegarder" />
 					</div>
 				</div>
 			</div>
