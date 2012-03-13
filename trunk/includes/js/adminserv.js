@@ -493,6 +493,29 @@ $(document).ready(function(){
 			});
 		}
 		/**
+		* Maps-order
+		*/
+		else if( $("body").hasClass("section-maps-order") ){
+			
+			$("#sortableMapList").sortable({
+				revert: true,
+				zIndex: 9999
+			});
+			$("#reset").click(function(){
+				$("#sortableMapList").sortable("cancel");
+			});
+			$("#save").click(function(){
+				var listStr = "";
+				var list = $("#sortableMapList li .order-map-name");
+				if( list.length > 0 ){
+					$.each(list, function(i, n){
+						listStr += n.title+",";
+					});
+				$("#list").val(listStr.substring(0, listStr.length-1));
+				}
+			});
+		}
+		/**
 		* Guest-Ban
 		*/
 		else if( $("body").hasClass("section-guestban") ){

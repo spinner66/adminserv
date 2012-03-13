@@ -855,6 +855,67 @@ td.value {
 	width: 99%;
 }
 
+/* Option de type radio en ligne
+---------------------------------*/
+.options-radio-inline {
+	margin-bottom: 30px;
+	overflow: hidden;
+}
+.options-radio-inline li {
+	display: block;
+	float: left;
+	width: 177px;
+	background: #eee;
+	padding: 5px;
+	cursor: pointer;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
+}
+.options-radio-inline li:hover,
+.options-radio-inline li.selected {
+	background: #d9e8ff;
+}
+.options-radio-inline li +li {
+	margin-left: 20px;
+}
+.options-radio-inline li input {
+	float: left;
+	height: 32px;
+	margin: 0 0 0 8px;
+}
+.options-radio-inline li .name {
+	float: left;
+	margin-left: 16px;
+	width: 132px;
+	font-size: .8em;
+}
+.options-radio-inline li .name span {
+	display: block;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+.options-radio-inline li .icon {
+	float: right;
+}
+.options-radio-inline li .icon .ui-icon {
+	width: 14px;
+	height: 14px;
+	border: 1px solid transparent;
+}
+.options-radio-inline li .icon .ui-icon.active,
+.options-radio-inline li .icon .ui-icon:hover {
+	background-color: #ddd;
+	border-color: #ccc;
+	border-radius: 3px;
+}
+
 
 /* Contenu
 -------------------------------*/
@@ -1210,51 +1271,52 @@ footer {
 .section-maps-upload .path {
 	margin-right: 5px;
 }
-.section-maps-upload .transferMode {
-	margin-bottom: 30px;
-	overflow: hidden;
-}
-.section-maps-upload .transferMode ul li {
-	display: block;
-	float: left;
-	width: 180px;
-	background: #eee;
-	padding: 5px;
-	cursor: pointer;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	border-radius: 5px;
-	-webkit-transition: all .2s ease;
-	-moz-transition: all .2s ease;
-	-o-transition: all .2s ease;
-	transition: all .2s ease;
-}
-.section-maps-upload .transferMode ul li:hover,
-.section-maps-upload .transferMode ul li.selected {
-	background: #d9e8ff;
-}
-.section-maps-upload .transferMode ul li +li {
-	margin-left: 20px;
-}
-.section-maps-upload .transferMode ul li input {
-	float: left;
-	height: 32px;
-	margin: 0 0 0 8px;
-}
-.section-maps-upload .transferMode ul li .name {
-	float: left;
-	margin-left: 16px;
-	width: 132px;
-	font-size: .8em;
-}
-.section-maps-upload .transferMode ul li .name span {
-	display: block;
-	font-size: 1.2em;
-	font-weight: bold;
-}
 .section-maps-upload .options-checkbox {
 	margin-bottom: 30px;
+}
+
+
+/* Page Maps-Order
+---------------------- */
+#sortableMapList li {
+	color: #666;
+	font-weight: normal;
+	cursor: pointer;
+	margin: 2px 0;
+	padding: 5px;
+	overflow: hidden;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+}
+#sortableMapList li:hover {
+	background: #D9E8FF;
+}
+#sortableMapList li div {
+	float: left;
+}
+#sortableMapList li .order-map-name {
+	width: 50%;
+	padding: 0 10px;
+}
+#sortableMapList li .order-map-env,
+#sortableMapList li .order-map-author {
+	width: 20%;
+	padding: 0 10px;
+}
+#sortableMapList li .order-map-env img,
+#sortableMapList li .order-map-author img {
+	margin: 0 5px -3px 0;
+}
+.autoSortMode.options-radio-inline li {
+	color: #666;
+	width: 174px;
+}
+.autoSortMode.options-radio-inline li .name {
+	font-size: .9em;
+	width: 100px;
+	margin-top: 8px;
 }
 
 
