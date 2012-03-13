@@ -19,18 +19,18 @@
 		</div>
 		
 		<h2>Mode de transfert</h2>
-		<div class="transferMode">
+		<div class="transferMode options-radio-inline">
 			<ul>
 				<li class="selected">
-					<input class="text" type="radio" name="transferMode" id="transferMode" value="add" checked="checked" />
+					<input class="text" type="radio" name="transferMode" id="transferModeAdd" value="add" checked="checked" />
 					<div class="name"><span>Ajouter</span> à la fin de la liste</div>
 				</li>
 				<li>
-					<input class="text" type="radio" name="transferMode" id="transferMode" value="insert" />
-						<div class="name"><span>Insérer</span> après la map en cours</div>
-					</li>
+					<input class="text" type="radio" name="transferMode" id="transferModeInsert" value="insert" />
+					<div class="name"><span>Insérer</span> après la map en cours</div>
+				</li>
 				<li>
-					<input class="text" type="radio" name="transferMode" id="transferMode" value="local" />
+					<input class="text" type="radio" name="transferMode" id="transferModeLocal" value="local" />
 					<div class="name"><span>Envoyer</span> dans le dossier seulement</div>
 				</li>
 			</ul>
