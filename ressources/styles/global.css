@@ -1284,6 +1284,7 @@ footer {
 	cursor: pointer;
 	margin: 2px 0;
 	padding: 5px;
+	min-height: 17px;
 	overflow: hidden;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;

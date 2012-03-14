@@ -367,17 +367,13 @@ $(document).ready(function(){
 			// Mode de transfert
 			$(".transferMode li").click(function(){
 				$(this).children("input").attr("checked", true);
-				
-				$.each( $(".transferMode li"), function(id, selector){
-					selector.className = "";
-				});
-				
+				$(".transferMode li").removeClass("selected");
 				$(this).addClass("selected");
 				
 				if( $(this).children("input").val() == "local" ){
 					$("input#GotoListMaps").attr("checked", false);
 				}
-				initializeUploader();
+				initializeUploader(); // TODO : plutot mettre à jour les paramères
 				
 				/*uploader.setParams({
 					type: $(this).children("input").val(),
@@ -390,7 +386,7 @@ $(document).ready(function(){
 					mset: ( $("#SaveCurrentMatchSettings").attr("checked") ) ? true : false,
 					gtlm: ( $("#GotoListMaps").attr("checked") ) ? true : false
 				});*/
-				initializeUploader();
+				initializeUploader(); // TODO : plutot mettre à jour les paramères
 			});
 		}
 		/**
@@ -496,13 +492,32 @@ $(document).ready(function(){
 		* Maps-order
 		*/
 		else if( $("body").hasClass("section-maps-order") ){
+			// Tri automatique
+			$(".autoSortMode li").click(function(){
+				$(this).children("input").attr("checked", true);
+				$(".autoSortMode li").removeClass("selected");
+				$(this).addClass("ui-state-default selected");
+			});
+			$(".autoSortMode li span.ui-icon").click(function(){
+				$(".autoSortMode li span.ui-icon").removeClass("active");
+				$(this).addClass("active");
+				
+				if( $(this).hasClass("ui-icon-arrowthick-1-n") ){
+					// asc
+				}
+				else{
+					// desc
+				}
+			});
 			
+			// Tri manuel
 			$("#sortableMapList").sortable({
+				placeholder: "ui-state-highlight",
 				revert: true,
 				zIndex: 9999
 			});
 			$("#reset").click(function(){
-				$("#sortableMapList").sortable("cancel");
+				location.href = $(".section-maps-order .cadre.order form").attr("action");
 			});
 			$("#save").click(function(){
 				var listStr = "";
