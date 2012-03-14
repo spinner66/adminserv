@@ -53,7 +53,7 @@
 		</div>
 		
 		<h2>Upload</h2>
-		<div id="formUpload" class="loader" data-cancel="Annuler" data-failed="Échoué" data-uploadfile="Upload a file" data-dropfiles="Drop files here to upload" data-uploadnotfinish="L'upload n'est pas terminé" data-from="de" data-kb="Ko" data-mb="Mo" data-type-error="{file} has invalid extension. Only {extensions} are allowed." data-size-error="{file} is too large, maximum file size is {sizeLimit}." data-minsize-error="{file} is too small, minimum file size is {minSizeLimit}." data-empty-error="{file} is empty, please select files again without it." data-onleave="The files are being uploaded, if you leave now the upload will be cancelled."></div>
+		<div id="formUpload" class="loader" data-mapspagename="maps" data-cancel="Annuler" data-failed="Échoué" data-uploadfile="Upload a file" data-dropfiles="Drop files here to upload" data-uploadnotfinish="L'upload n'est pas terminé" data-from="de" data-kb="Ko" data-mb="Mo" data-type-error="{file} has invalid extension. Only {extensions} are allowed." data-size-error="{file} is too large, maximum file size is {sizeLimit}." data-minsize-error="{file} is too small, minimum file size is {minSizeLimit}." data-empty-error="{file} is empty, please select files again without it." data-onleave="The files are being uploaded, if you leave now the upload will be cancelled."></div>
 	</section>
 </section>
 <?php

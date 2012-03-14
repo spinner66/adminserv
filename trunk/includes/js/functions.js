@@ -272,7 +272,7 @@ function initializeUploader(){
 			window.onbeforeunload = function(){}
 			if(responseJSON.success == true){
 				if(uploader._options.params.gtlm){
-					location.href = "?p=maps";
+					location.href = "?p="+$("#formUpload").data("mapspagename");
 				}
 			}
 		},
@@ -529,3 +529,40 @@ function slideUpNewFolderForm(){
 	$("#form-new-folder").attr("hidden", true);
 	$("#newfolder").text( $("#newfolder").data("new") );
 }
+
+/**
+*
+*/
+function mapsOrderSort(sort, order){
+	// Type de tri
+	if(sort == "name"){
+		
+	}
+	else if(sort == "env"){
+		
+	}
+	else if(sort == "author"){
+		
+	}
+	else{
+		//rand
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

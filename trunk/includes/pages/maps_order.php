@@ -42,7 +42,7 @@
 			<div class="autoSortMode options-radio-inline">
 				<ul>
 					<li class="ui-state-default">
-						<input class="text" type="radio" name="transferMode" id="transferModeAdd" value="add" />
+						<input class="text" type="radio" name="sortMode" id="sortModeName" value="name" />
 						<div class="name">Nom</div>
 						<div class="icon">
 							<span class="ui-icon ui-icon-arrowthick-1-n"></span>
@@ -50,7 +50,7 @@
 						</div>
 					</li>
 					<li class="ui-state-default">
-						<input class="text" type="radio" name="transferMode" id="transferModeInsert" value="insert" />
+						<input class="text" type="radio" name="sortMode" id="sortModeEnv" value="env" />
 						<div class="name">Environnement</div>
 						<div class="icon">
 							<span class="ui-icon ui-icon-arrowthick-1-n"></span>
@@ -58,7 +58,7 @@
 						</div>
 					</li>
 					<li class="ui-state-default">
-						<input class="text" type="radio" name="transferMode" id="transferModeLocal" value="local" />
+						<input class="text" type="radio" name="sortMode" id="sortModeAuthor" value="author" />
 						<div class="name">Auteur</div>
 						<div class="icon">
 							<span class="ui-icon ui-icon-arrowthick-1-n"></span>
@@ -66,12 +66,8 @@
 						</div>
 					</li>
 					<li class="ui-state-default">
-						<input class="text" type="radio" name="transferMode" id="transferModeLocal" value="local" />
+						<input class="text" type="radio" name="sortMode" id="sortModeRand" value="rand" />
 						<div class="name">Aléatoire</div>
-						<div class="icon">
-							<span class="ui-icon ui-icon-arrowthick-1-n"></span>
-							<span class="ui-icon ui-icon-arrowthick-1-s"></span>
-						</div>
 					</li>
 				</ul>
 			</div>
