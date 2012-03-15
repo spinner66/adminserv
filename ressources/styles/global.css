@@ -1423,7 +1423,7 @@ footer {
 .tmnick_italic { font-style: italic; }
 .tmnick_bold { font-weight: bold; letter-spacing: 1px; }
 .tmnick_upper { text-transform: uppercase; }
-span.tmnick_shadow { text-shadow: 0 1px 1px #555; }
+span.tmnick_shadow { text-shadow: 0 1px 1px #444; }
 .tmnick_shadowed { position: relative; }
 .tmnick_shadowed span { position: relative; }
 span.tmnick_shadow { position: absolute; }

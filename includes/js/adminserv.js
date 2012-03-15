@@ -9,73 +9,6 @@ $(document).ready(function(){
 		$(this).css("height", "12px");
 	});
 	
-	/**
-	* Scroll doux
-	*/
-	$("a[href*='#']").click(function(){
-		if(location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname){
-			var target = $(this.hash);
-			target = target.length && target || $('[name=' + this.hash.slice(1) +']');
-			if(target.length){
-				var targetOffset = target.offset().top;
-				$("html, body").animate({scrollTop: targetOffset}, 500);
-				return false;
-			}
-		}
-	});
-	
-	/**
-	* Nouveau dossier
-	*/
-	$("a#newfolder").click(function(){
-		if( $("#form-new-folder").attr("hidden") ){
-			slideDownNewFolderForm();
-		}
-		else{
-			slideUpNewFolderForm();
-		}
-		
-		return false;
-	});
-	$("#newFolderName").keypress(function(event){
-		if(event.keyCode == 13){
-			if( $(this).val() != "" ){
-				$("form#createFolderForm").submit();
-			}
-			else{
-				slideUpNewFolderForm();
-			}
-		}
-	});
-	$("#newFolderValid").click(function(){
-		if( $("#newFolderName").val() != "" ){
-			return true;
-		}
-		else{
-			slideUpNewFolderForm();
-			return false;
-		}
-	});
-	
-	/**
-	* Option du dossier
-	*/
-	$(".folders .option-folder-list h3").click(function(){
-		var selector = $(this).parent().children("ul");
-		if( selector.attr("hidden") ){
-			selector.slideDown("fast");
-			selector.removeAttr("hidden");
-			$(this).children("span").removeClass("arrow-down");
-			$(this).children("span").addClass("arrow-up");
-		}
-		else{
-			selector.slideUp("fast");
-			selector.attr("hidden", true);
-			$(this).children("span").removeClass("arrow-up");
-			$(this).children("span").addClass("arrow-down");
-		}
-	});
-	
 	
 	/**
 	* Front
@@ -98,6 +31,76 @@ $(document).ready(function(){
 	* Not front
 	*/
 	else{
+		/**
+		* Scroll doux
+		*/
+		$("a[href*='#']").click(function(){
+			if(location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname){
+				var target = $(this.hash);
+				target = target.length && target || $('[name=' + this.hash.slice(1) +']');
+				if(target.length){
+					var targetOffset = target.offset().top;
+					$("html, body").animate({scrollTop: targetOffset}, 500);
+					return false;
+				}
+			}
+		});
+		
+		
+		/**
+		* Nouveau dossier
+		*/
+		$("a#newfolder").click(function(){
+			if( $("#form-new-folder").attr("hidden") ){
+				slideDownNewFolderForm();
+			}
+			else{
+				slideUpNewFolderForm();
+			}
+			
+			return false;
+		});
+		$("#newFolderName").keypress(function(event){
+			if(event.keyCode == 13){
+				if( $(this).val() != "" ){
+					$("form#createFolderForm").submit();
+				}
+				else{
+					slideUpNewFolderForm();
+				}
+			}
+		});
+		$("#newFolderValid").click(function(){
+			if( $("#newFolderName").val() != "" ){
+				return true;
+			}
+			else{
+				slideUpNewFolderForm();
+				return false;
+			}
+		});
+		
+		
+		/**
+		* Option du dossier
+		*/
+		$(".folders .option-folder-list h3").click(function(){
+			var selector = $(this).parent().children("ul");
+			if( selector.attr("hidden") ){
+				selector.slideDown("fast");
+				selector.removeAttr("hidden");
+				$(this).children("span").removeClass("arrow-down");
+				$(this).children("span").addClass("arrow-up");
+			}
+			else{
+				selector.slideUp("fast");
+				selector.attr("hidden", true);
+				$(this).children("span").removeClass("arrow-up");
+				$(this).children("span").addClass("arrow-down");
+			}
+		});
+		
+		
 		/**
 		* SpeedAdmin
 		*/
@@ -497,17 +500,24 @@ $(document).ready(function(){
 				$(this).children("input").attr("checked", true);
 				$(".autoSortMode li").removeClass("selected");
 				$(this).addClass("ui-state-default selected");
+				
+				// Tri
+				mapsOrderSort($(this).children("input").val(), "asc");
 			});
 			$(".autoSortMode li span.ui-icon").click(function(){
 				$(".autoSortMode li span.ui-icon").removeClass("active");
 				$(this).addClass("active");
 				
 				if( $(this).hasClass("ui-icon-arrowthick-1-n") ){
-					// asc
+					var order = "asc";
 				}
 				else{
-					// desc
+					var order = "desc";
 				}
+				// Tri
+				mapsOrderSort($(this).parent(".icon").parent("li").children("input").val(), order);
+				
+				return false;
 			});
 			
 			// Tri manuel

@@ -534,19 +534,7 @@ function slideUpNewFolderForm(){
 *
 */
 function mapsOrderSort(sort, order){
-	// Type de tri
-	if(sort == "name"){
-		
-	}
-	else if(sort == "env"){
-		
-	}
-	else if(sort == "author"){
-		
-	}
-	else{
-		//rand
-	}
+	
 }
 
 
