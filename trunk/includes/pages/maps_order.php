@@ -90,6 +90,11 @@
 					?>
 				</ul>
 			</div>
+			<?php if(SERVER_MATCHSET){ ?>
+				<div class="fleft options-checkbox">
+					<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if(AdminServConfig::AUTOSAVE_MATCHSETTINGS === true){ echo ' checked="checked"'; } ?> value="" /><label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>">Sauvegarder le MatchSettings courant</label>
+				</div>
+			<?php } ?>
 			<div class="fright save">
 				<input class="button light" type="button" id="reset" name="reset" value="Réinitialiser" />
 				<input class="button light" type="submit" id="save" name="save" value="Enregistrer" />
