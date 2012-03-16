@@ -2,99 +2,44 @@
 abstract class TimeDate {
 	
 	/**
-	* Affiche la fonction date() en Français
+	* Retourne la date suivant la langue
 	*
-	* @param string $params -> Les paramètres de la fonction date()
-	* @param int    $time   -> Le temps de la fonction date() -> par défaut = time()
+	* @param string $format    -> Le format de la fonction strftime()
+	* @param int    $timestamp -> Le temps en sec
+	* @param string $lang      -> La langue de la date retournée
 	* @return string
 	*/
-	public static function dateFR($params, $time = null){
-		// On récupère la date
-		if($time){
-			$date = date($params, $time);
-		}else{
-			$date = date($params);
-		}
-		
-		// On modifie les valeurs
-		// Jour
-		if( strstr($params, 'D') ){
-			$date = str_replace('Mon', 'Lun', $date);
-			$date = str_replace('Tue', 'Mar', $date);
-			$date = str_replace('Wed', 'Mer', $date);
-			$date = str_replace('Thu', 'Jeu', $date);
-			$date = str_replace('Fri', 'Ven', $date);
-			$date = str_replace('Sat', 'Sam', $date);
-			$date = str_replace('Sun', 'Dim', $date);
-		}
-		else if( strstr($params, 'l') ){
-			$date = str_replace('Monday', 'Lundi', $date);
-			$date = str_replace('Tuesday', 'Mardi', $date);
-			$date = str_replace('Wednesday', 'Mercredi', $date);
-			$date = str_replace('Thursday', 'Jeudi', $date);
-			$date = str_replace('Friday', 'Vendredi', $date);
-			$date = str_replace('Saturday', 'Samedi', $date);
-			$date = str_replace('Sunday', 'Dimanche', $date);
-		}
-		// Mois
-		if( strstr($params, 'F') ){
-			$date = str_replace('January', 'Janvier', $date);
-			$date = str_replace('February', 'Février', $date);
-			$date = str_replace('March', 'Mars', $date);
-			$date = str_replace('April', 'Avril', $date);
-			$date = str_replace('May', 'Mai', $date);
-			$date = str_replace('June', 'Juin', $date);
-			$date = str_replace('July', 'Juillet', $date);
-			$date = str_replace('August', 'Août', $date);
-			$date = str_replace('September', 'Septembre', $date);
-			$date = str_replace('October', 'Octobre', $date);
-			$date = str_replace('November', 'Novembre', $date);
-			$date = str_replace('December', 'Décembre', $date);
-		}
-		else if( strstr($params, 'M') ){
-			$date = str_replace('Jan', 'Jan', $date);
-			$date = str_replace('Feb', 'Fév', $date);
-			$date = str_replace('Mar', 'Mar', $date);
-			$date = str_replace('Apr', 'Avr', $date);
-			$date = str_replace('May', 'Mai', $date);
-			$date = str_replace('Jun', 'Jun', $date);
-			$date = str_replace('Jul', 'Jul', $date);
-			$date = str_replace('Aug', 'Aoû', $date);
-			$date = str_replace('Sep', 'Sep', $date);
-			$date = str_replace('Oct', 'Oct', $date);
-			$date = str_replace('Nov', 'Nov', $date);
-			$date = str_replace('Dec', 'Déc', $date);
-		}
-		
-		return $date;
+	public static function date($format, $timestamp = time(), $lang = 'fr_FR'){
+		setlocale(LC_ALL, $lang);
+		return strftime($format, $timestamp);
 	}
 	
 	
 	/**
 	* Rentourne la date au format INT
 	*
-	* @param string $date         -> La date sous la forme JJ/MM/AAAA, JJ.MM.AAAA, JJ-MM-AAAA ou JJ MM AAAA sinon mettre $useStrToTime sur true
-	* @param bool   $useStrToTime -> Utiliser la méthode php strtotime pour une date d'un autre format
+	* @param string $date          -> La date sous la forme JJ/MM/AAAA, JJ.MM.AAAA, JJ-MM-AAAA ou JJ MM AAAA sinon mettre $use_strtotime sur true
+	* @param bool   $use_strtotime -> Utiliser la méthode php strtotime pour une date d'un autre format
 	* @return int
 	*/
-	public static function dateToTime($date, $useStrToTime = false){
+	public static function dateToTime($date, $use_strtotime = false){
 		$out = 0;
 		// Si le paramètre n'est pas vide
 		if($date){
 			$date = trim($date);
-			if( strstr($date, '/') && !$useStrToTime){
+			if( strstr($date, '/') && !$use_strtotime){
 				$date_ex = explode('/', $date);
 				$out = mktime(0, 0, 0, $date_ex[1], $date_ex[0], $date_ex[2]); 
 			}
-			else if( strstr($date_ex, '.')  && !$useStrToTime){
+			else if( strstr($date_ex, '.')  && !$use_strtotime){
 				$date_ex = explode('.', $date_ex);
 				$out = mktime(0, 0, 0, $date_ex[1], $date_ex[0], $date_ex[2]); 
 			}
-			else if( strstr($date_ex, '-')  && !$useStrToTime){
+			else if( strstr($date_ex, '-')  && !$use_strtotime){
 				$date_ex = explode('-', $date_ex);
 				$out = mktime(0, 0, 0, $date_ex[1], $date_ex[0], $date_ex[2]); 
 			}
-			else if( strstr($date_ex, ' ')  && !$useStrToTime){
+			else if( strstr($date_ex, ' ')  && !$use_strtotime){
 				$date_ex = explode(' ', $date_ex);
 				$out = mktime(0, 0, 0, $date_ex[1], $date_ex[0], $date_ex[2]); 
 			}
@@ -110,10 +55,11 @@ abstract class TimeDate {
 	/**
 	* Retourne un temps au format INT
 	*
-	* @param string $time -> Le temps sous la forme HH:MM:SS, HH:MM.SS, HH.MM.SS, HH-MM-SS ou HH MM SS
+	* @param string $time          -> Le temps sous la forme HH:MM:SS, HH:MM.SS, HH.MM.SS, HH-MM-SS ou HH MM SS sinon mettre $use_strtotime sur true
+	* @param bool   $use_strtotime -> Utiliser la méthode php strtotime pour un temps d'un autre format
 	* @return int
 	*/
-	public static function timeToSec($time){
+	public static function timeToSec($time, $use_strtotime){
 		$out = 0;
 		$h = 3600;
 		$m = 60;
@@ -121,26 +67,29 @@ abstract class TimeDate {
 		// Si le paramètre n'est pas vide
 		if($time){
 			$time = trim($time);
-			if( strstr($time, ':') && !strstr($time, '.') && !$useStrToTime){
+			if( strstr($time, ':') && !strstr($time, '.') && !$use_strtotime){
 				$time_ex = explode(':', $time);
 				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
 			}
-			else if( strstr($time, ':') && strstr($time, '.') && !$useStrToTime){
+			else if( strstr($time, ':') && strstr($time, '.') && !$use_strtotime){
 				$time_ex = explode(':', $time);
 				$time_ex2 = explode('.', $time_ex);
 				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
 			}
-			else if( strstr($time, '.') && !strstr($time, ':') && !$useStrToTime){
+			else if( strstr($time, '.') && !strstr($time, ':') && !$use_strtotime){
 				$time_ex = explode('.', $time);
 				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
 			}
-			else if( strstr($time, '-') && !$useStrToTime){
+			else if( strstr($time, '-') && !$use_strtotime){
 				$time_ex = explode('-', $time);
 				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
 			}
-			else if( strstr($time, ' ') && !$useStrToTime){
+			else if( strstr($time, ' ') && !$use_strtotime){
 				$time_ex = explode(' ', $time);
 				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
+			}
+			else{
+				$out = strtotime($time);
 			}
 		}
 		// Retour
@@ -151,25 +100,24 @@ abstract class TimeDate {
 	/**
 	* Formate une date pour une entrée MySQL
 	*
-	* @param string $type         -> Le type Mysql à retourner
-	* @param string $date         -> La date sous la forme JJ/MM/AAAA, JJ.MM.AAAA, JJ-MM-AAAA ou JJ MM AAAA sinon mettre $useStrToTime sur true
-	* @param string $time         -> Le temps sous la forme HH:MM:SS, HH:MM.SS, HH.MM.SS, HH-MM-SS ou HH MM SS
-	* @param bool   $useStrToTime -> Utiliser la méthode php strtotime pour une date d'un autre format
+	* @param string $type          -> Le type Mysql à retourner
+	* @param string $date          -> La date sous la forme JJ/MM/AAAA, JJ.MM.AAAA, JJ-MM-AAAA ou JJ MM AAAA sinon mettre $use_strtotime sur true
+	* @param string $time          -> Le temps sous la forme HH:MM:SS, HH:MM.SS, HH.MM.SS, HH-MM-SS ou HH MM SS
+	* @param bool   $use_strtotime -> Utiliser la méthode php strtotime pour une date d'un autre format
 	* @return string
 	*/
-	public static function formatDateForMySQL($type, $date, $time = null, $useStrToTime = false){
+	public static function formatDateForMySQL($type, $date, $time = '00:00:00', $use_strtotime = false){
 		// Variables
 		$out = '000-00-00 00:00:00';
 		$type = strtoupper($type);
-		if($date != null){ $date = trim($date); }
-		if($time == null){ $time = '00:00:00'; }
+		$date = trim($date);
 		
 		// Type MySQL
 		if($type == 'DATE'){
-			$out = date('Y-m-d', self::dateToTime($date, $useStrToTime));
+			$out = date('Y-m-d', self::dateToTime($date, $use_strtotime));
 		}
 		else if($type == 'DATETIME'){
-			$datetotime = self::dateToTime($date, $useStrToTime);
+			$datetotime = self::dateToTime($date, $use_strtotime);
 			$timetosec = self::timeToSec($time);
 			$out = date('Y-m-d H:i:s', $datetotime + $timetosec);
 		}
@@ -177,10 +125,10 @@ abstract class TimeDate {
 			$out = date('H:i:s', self::timeToSec($time));
 		}
 		else if($type == 'YEAR'){
-			$out = date('Y', self::dateToTime($date, $useStrToTime));
+			$out = date('Y', self::dateToTime($date, $use_strtotime));
 		}
 		else{
-			$out = self::formatDateForMySQL('DATETIME', $date, $time, $useStrToTime);
+			$out = self::formatDateForMySQL('DATETIME', $date, $time, $use_strtotime);
 		}
 		return $out;
 	}
