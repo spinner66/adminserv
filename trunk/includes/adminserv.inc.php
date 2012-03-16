@@ -97,10 +97,10 @@ abstract class AdminServUI {
 		require_once __DIR__ .'/class/tmnick.class.php';
 		require_once __DIR__ .'/class/upload.class.php';
 		require_once __DIR__ .'/class/timedate.class.php';
-		require_once __DIR__ .'/class/filefolder.class.php';
 		require_once __DIR__ .'/class/file.class.php';
 		require_once __DIR__ .'/class/folder.class.php';
 		require_once __DIR__ .'/class/str.class.php';
+		require_once __DIR__ .'/class/sort.class.php';
 		require_once __DIR__ .'/class/zip.class.php';
 	}
 	
@@ -413,6 +413,27 @@ abstract class AdminServUI {
 		else{
 			AdminServ::error('Class "Folder" not exists');
 		}
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère le template de liste pour la page Maps-order
+	*/
+	public static function getTemplateMapsOrderList($list){
+		$out = null;
+		
+		if( is_array($list) && count($list) > 0 ){
+			foreach($list['lst'] as $id => $map){
+				$out .= '<li class="ui-state-default">'
+					.'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
+					.'<div class="order-map-name" title="'.$map['FileName'].'">'.$map['Name'].'</div>'
+					.'<div class="order-map-env"><img src="'.$list['cfg']['path_rsc'].'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</div>'
+					.'<div class="order-map-author"><img src="'.$list['cfg']['path_rsc'].'images/16/challengeauthor.png" alt="" />'.$map['Author'].'</div>'
+				.'</li>';
+			}
+		}
+		
 		return $out;
 	}
 }

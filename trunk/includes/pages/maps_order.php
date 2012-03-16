@@ -75,19 +75,7 @@
 			<h2>Tri manuel</h2>
 			<div class="content">
 				<ul id="sortableMapList">
-					<?php
-						if( is_array($mapsList) && count($mapsList) > 0 ){
-							$i = 0;
-							foreach($mapsList['lst'] as $id => $map){
-								echo '<li class="ui-state-default">'
-									.'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
-									.'<div class="order-map-name" title="'.$map['FileName'].'">'.$map['Name'].'</div>'
-									.'<div class="order-map-env"><img src="'.$mapsList['cfg']['path_rsc'].'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</div>'
-									.'<div class="order-map-author"><img src="'.$mapsList['cfg']['path_rsc'].'images/16/challengeauthor.png" alt="" />'.$map['Author'].'</div>'
-								.'</li>';
-							}
-						}
-					?>
+					<?php echo AdminServUI::getTemplateMapsOrderList($mapsList); ?>
 				</ul>
 			</div>
 			<?php if(SERVER_MATCHSET){ ?>
@@ -99,6 +87,7 @@
 				<input class="button light" type="button" id="reset" name="reset" value="Réinitialiser" />
 				<input class="button light" type="submit" id="save" name="save" value="Enregistrer" />
 				<input type="hidden" id="list" name="list" value="" />
+				<input type="hidden" id="jsonlist" name="jsonlist" value="<?php echo htmlspecialchars(json_encode($mapsList)); ?>" />
 			</div>
 		</form>
 	</section>
