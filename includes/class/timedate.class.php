@@ -9,7 +9,10 @@ abstract class TimeDate {
 	* @param string $lang      -> La langue de la date retournée
 	* @return string
 	*/
-	public static function date($format, $timestamp = time(), $lang = 'fr_FR'){
+	public static function date($format, $timestamp = null, $lang = 'fr_FR'){
+		if($timestamp === null){
+			$timestamp = time();
+		}
 		setlocale(LC_ALL, $lang);
 		return strftime($format, $timestamp);
 	}
@@ -24,30 +27,32 @@ abstract class TimeDate {
 	*/
 	public static function dateToTime($date, $use_strtotime = false){
 		$out = 0;
-		// Si le paramètre n'est pas vide
+		
 		if($date){
+			// Parse
 			$date = trim($date);
 			if( strstr($date, '/') && !$use_strtotime){
 				$date_ex = explode('/', $date);
-				$out = mktime(0, 0, 0, $date_ex[1], $date_ex[0], $date_ex[2]); 
 			}
 			else if( strstr($date_ex, '.')  && !$use_strtotime){
 				$date_ex = explode('.', $date_ex);
-				$out = mktime(0, 0, 0, $date_ex[1], $date_ex[0], $date_ex[2]); 
 			}
 			else if( strstr($date_ex, '-')  && !$use_strtotime){
 				$date_ex = explode('-', $date_ex);
-				$out = mktime(0, 0, 0, $date_ex[1], $date_ex[0], $date_ex[2]); 
 			}
 			else if( strstr($date_ex, ' ')  && !$use_strtotime){
 				$date_ex = explode(' ', $date_ex);
+			}
+			
+			// Création du temps
+			if( !$use_strtotime ){
 				$out = mktime(0, 0, 0, $date_ex[1], $date_ex[0], $date_ex[2]); 
 			}
 			else{
 				$out = strtotime($date);
 			}
 		}
-		// Retour
+		
 		return $out;
 	}
 	
@@ -64,35 +69,37 @@ abstract class TimeDate {
 		$h = 3600;
 		$m = 60;
 		$s = 1;
-		// Si le paramètre n'est pas vide
+		
 		if($time){
+			// Parse
 			$time = trim($time);
 			if( strstr($time, ':') && !strstr($time, '.') && !$use_strtotime){
 				$time_ex = explode(':', $time);
-				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
 			}
 			else if( strstr($time, ':') && strstr($time, '.') && !$use_strtotime){
 				$time_ex = explode(':', $time);
-				$time_ex2 = explode('.', $time_ex);
-				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
+				$time_ex2 = explode('.', $time);
+				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex2[1] * $s); 
 			}
 			else if( strstr($time, '.') && !strstr($time, ':') && !$use_strtotime){
 				$time_ex = explode('.', $time);
-				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
 			}
 			else if( strstr($time, '-') && !$use_strtotime){
 				$time_ex = explode('-', $time);
-				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
 			}
 			else if( strstr($time, ' ') && !$use_strtotime){
 				$time_ex = explode(' ', $time);
+			}
+			
+			// Création du temps
+			if( !$use_strtotime && $out === 0){
 				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
 			}
 			else{
 				$out = strtotime($time);
 			}
 		}
-		// Retour
+		
 		return $out;
 	}
 	
@@ -118,11 +125,11 @@ abstract class TimeDate {
 		}
 		else if($type == 'DATETIME'){
 			$datetotime = self::dateToTime($date, $use_strtotime);
-			$timetosec = self::timeToSec($time);
+			$timetosec = self::timeToSec($time, $use_strtotime);
 			$out = date('Y-m-d H:i:s', $datetotime + $timetosec);
 		}
 		else if($type == 'TIME'){
-			$out = date('H:i:s', self::timeToSec($time));
+			$out = date('H:i:s', self::timeToSec($time, $use_strtotime));
 		}
 		else if($type == 'YEAR'){
 			$out = date('Y', self::dateToTime($date, $use_strtotime));
@@ -141,20 +148,25 @@ abstract class TimeDate {
 	* @param string $birthday -> Sous la forme jj/mm/aaaa ou autre
 	*/
 	public static function getYearOld($birthday){
+		$out = null;
 		$birthdayDate = getdate( self::dateToTime($birthday) );
 		$currentDate = getdate();
-		if( ($birthdayDate['mon'] < $currentDate['mon']) || ( ($birthdayDate['mon'] == $currentDate['mon']) && ($birthdayDate['mday'] <= $currentDate['mday']) ) ){
-			return $currentDate['year'] - $birthdayDate['year'].' ans';
-		}else{
-			return $currentDate['year'] - $birthdayDate['year'] - 1 .' ans';
+		
+		if( $birthdayDate['mon'] < $currentDate['mon'] || ($birthdayDate['mon'] == $currentDate['mon'] && $birthdayDate['mday'] <= $currentDate['mday']) ){
+			$out = $currentDate['year'] - $birthdayDate['year'];
 		}
+		else{
+			$out = $currentDate['year'] - $birthdayDate['year'] - 1;
+		}
+		
+		return $out;
 	}
 	
 	
 	/**
 	* Retourne une date relative sous la forme il y a x jours/heures/minutes/secondes
 	*
-	* @param int $time -> Temps à convertir en seconde
+	* @param int $time -> Temps en seconde
 	* @return string
 	*/
 	public static function relativeTime($time){
@@ -248,34 +260,39 @@ abstract class TimeDate {
 		// Retour
 		return $out;
 	}
+	
+	
+	/**
+	* Méthodes de convertion du temps (Min, sec, millisec)
+	*/
 	public static function secToMillisec($sec){
 		$sec = intval( round($sec) );
-		$millisec = $sec*1000;
+		$millisec = $sec * 1000;
 		if($millisec > 0){ return $millisec; }
 		else{ return 0; }
 	}
 	public static function millisecToSec($millisec){
 		$millisec = intval( round($millisec) );
-		$sec = $millisec/1000;
+		$sec = $millisec / 1000;
 		if($sec > 0){ return $sec; }
 		else{ return 0; }
 	}
 	public static function secToMin($sec){
 		$sec = intval( round($sec) );
-		$min = $sec/60;
+		$min = $sec / 60;
 		if($min > 0){ return $min; }
 		else{ return 0; }
 	}
 	public static function minToSec($min){
 		$min = intval( round($min) );
-		$sec = $min*60;
+		$sec = $min * 60;
 		if($sec > 0){ return $sec; }
 		else{ return 0; }
 	}
 	public static function millisecToMin($millisec){
 		$millisec = intval( round($millisec) );
-		$sec = $millisec/1000;
-		$min = $sec/60;
+		$sec = $millisec / 1000;
+		$min = $sec / 60;
 		if($min > 0){ return $min; }
 		else{ return 0; }
 	}
