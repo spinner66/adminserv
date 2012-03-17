@@ -86,8 +86,8 @@ function getCurrentServerInfo(){
 			}
 			
 			// Players
-			if(data.ply != null && !$("#playerlist tbody input").attr("checked") ){
-				var out = null;
+			if(data.ply != null && !$("#playerlist").isChecked() ){
+				var out = "";
 				
 				// Création du tableau
 				if( typeof(data.ply) == "object" && data.ply.length > 0 ){
@@ -381,6 +381,23 @@ function t(text){
 })(jQuery);
 
 
+/**
+* Renvoi le 
+*/
+(function($){
+	$.fn.isChecked = function(){
+		// On récupère le nombre d'élements sélectionnés;
+		var nb = $(this).find("tbody tr.selected").length;
+		if(nb > 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	};
+})(jQuery);
+
+
 
 /**
 * Récupère la liste des maps du serveur
@@ -388,8 +405,8 @@ function t(text){
 function getMapList(){
 	$.getJSON("includes/ajax/get_maplist.php", function(data){
 		if(data != null){
-			if(data.lst != null && !$("#maplist tbody .checkbox input").attr("checked") ){
-				var out = null;
+			if(data.lst != null && !$("#maplist").isChecked() ){
+				var out = "";
 				
 				// Création du tableau
 				if( typeof(data.lst) == "object" && data.lst.length > 0 ){

@@ -43,18 +43,12 @@ abstract class AdminServUI {
 	* Récupère la liste des thèmes
 	*/
 	public static function getThemeList(){
-		$i = 0;
 		$out = null;
-		$countThemes = count(ExtensionConfig::$THEMES);
 		
-		if($countThemes > 0){
+		if(count(ExtensionConfig::$THEMES) > 0){
 			$out .= '<ul>';
 			foreach(ExtensionConfig::$THEMES as $name => $color){
-				if($i == 0){ $class = ' class="first"'; }
-				else if($i == $countThemes-1){ $class = ' class="last"'; }
-				else{ $class = null; }
-				$out .= '<li'.$class.'><a class="theme-color" style="background-color: '.$color.';" href=""></a></li>';
-				$i++;
+				$out .= '<li><a class="theme-color" style="background-color: '.$color.';" href="." title="'.$name.'"></a></li>';
 			}
 			$out .= '</ul>';
 		}
@@ -67,18 +61,12 @@ abstract class AdminServUI {
 	* Récupère la liste des langues
 	*/
 	public static function getLangList(){
-		$i = 0;
 		$out = null;
-		$countLang = count(ExtensionConfig::$LANG);
 		
-		if($countLang > 0){
+		if(count(ExtensionConfig::$LANG) > 0){
 			$out .= '<ul>';
-			foreach(ExtensionConfig::$LANG as $code){
-				if($i == 0){ $class = ' class="first"'; }
-				else if($i == $countLang-1){ $class = ' class="last"'; }
-				else{ $class = null; }
-				$out .= '<li'.$class.'><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="."></a></li>';
-				$i++;
+			foreach(ExtensionConfig::$LANG as $code => $name){
+				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="." title="'.$name.'"></a></li>';
 			}
 			$out .= '</ul>';
 		}
