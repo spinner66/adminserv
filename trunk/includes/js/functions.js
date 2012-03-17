@@ -551,7 +551,13 @@ function slideUpNewFolderForm(){
 *
 */
 function mapsOrderSort(sort, order){
+	var list = $("#jsonlist").val();
 	
+	$.post("includes/ajax/mapsorder_sort.php", {tri: sort, ord: order, lst: list}, function(response){
+		if(response != null){
+			
+		}
+	});
 }
 
 

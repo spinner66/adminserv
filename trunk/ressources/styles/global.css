@@ -175,10 +175,10 @@ header {
 	-moz-border-radius: 0 0 5px 5px;
 	-o-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
-	-webkit-transition: height .2s linear;
-	-moz-transition: height .2s linear;
-	-o-transition: height .2s linear;
-	transition: height .2s linear;
+	-webkit-transition: height .2s ease;
+	-moz-transition: height .2s ease;
+	-o-transition: height .2s ease;
+	transition: height .2s ease;
 }
 #theme {
 	margin-right: 5px;
@@ -186,10 +186,6 @@ header {
 #theme ul li,
 #lang ul li {
 	margin-bottom: 5px;
-}
-#theme ul li.last,
-#lang ul li.last {
-	margin: 0;
 }
 #theme ul li a,
 #lang ul li a {

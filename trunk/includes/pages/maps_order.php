@@ -87,7 +87,7 @@
 				<input class="button light" type="button" id="reset" name="reset" value="Réinitialiser" />
 				<input class="button light" type="submit" id="save" name="save" value="Enregistrer" />
 				<input type="hidden" id="list" name="list" value="" />
-				<input type="hidden" id="jsonlist" name="jsonlist" value="<?php echo htmlspecialchars(json_encode($mapsList)); ?>" />
+				<input type="hidden" id="jsonlist" name="jsonlist" value="<?php echo htmlspecialchars( json_encode($mapsList) ); ?>" />
 			</div>
 		</form>
 	</section>

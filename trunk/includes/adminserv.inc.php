@@ -413,12 +413,14 @@ abstract class AdminServUI {
 		
 		if( is_array($list) && count($list) > 0 ){
 			foreach($list['lst'] as $id => $map){
-				$out .= '<li class="ui-state-default">'
-					.'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
-					.'<div class="order-map-name" title="'.$map['FileName'].'">'.$map['Name'].'</div>'
-					.'<div class="order-map-env"><img src="'.$list['cfg']['path_rsc'].'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</div>'
-					.'<div class="order-map-author"><img src="'.$list['cfg']['path_rsc'].'images/16/challengeauthor.png" alt="" />'.$map['Author'].'</div>'
-				.'</li>';
+				if($list['cid'] != $id){
+					$out .= '<li class="ui-state-default">'
+						.'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
+						.'<div class="order-map-name" title="'.$map['FileName'].'">'.$map['Name'].'</div>'
+						.'<div class="order-map-env"><img src="'.$list['cfg']['path_rsc'].'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</div>'
+						.'<div class="order-map-author"><img src="'.$list['cfg']['path_rsc'].'images/16/challengeauthor.png" alt="" />'.$map['Author'].'</div>'
+					.'</li>';
+				}
 			}
 		}
 		
