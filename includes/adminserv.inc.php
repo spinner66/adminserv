@@ -6,14 +6,6 @@
 abstract class AdminServUI {
 	
 	/**
-	*
-	*/
-	public static function includePages(){
-		
-		
-	}
-	
-	/**
 	* Récupère le titre de l'application
 	*
 	* @param string $type -> Retourner "str" ou "html"
