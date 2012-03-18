@@ -35,7 +35,7 @@ class ExtensionConfig {
 	
 	// Liste du menu des pages "maps"
 	public static $MAPSMENU = array(
-		'Liste' => 'maps',
+		'Liste' => 'maps-list',
 		'Local' => 'maps-local',
 		'Envoyer' => 'maps-upload',
 		'Ordonner' => 'maps-order',
