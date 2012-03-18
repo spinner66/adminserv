@@ -49,7 +49,8 @@
 		
 		
 		// PAGES
-		if(USER_PAGE == 'srvopts'){
+		AdminServUI::includePages();
+		/*if(USER_PAGE == 'srvopts'){
 			include_once 'includes/pages/srvopts.php';
 		}
 		else if(USER_PAGE == 'gameinfos'){
@@ -84,15 +85,12 @@
 		else if(USER_PAGE == 'plugins'){
 			include_once 'includes/pages/plugins.php';
 		}
-		else if(USER_PAGE == 'planets'){
-			include_once 'includes/pages/planets.php';
-		}
 		else if(USER_PAGE == 'guestban'){
 			include_once 'includes/pages/guestban.php';
 		}
 		else{
 			include_once 'includes/pages/general.php';
-		}
+		}*/
 	}
 	else{
 		// CONFIG
