@@ -156,6 +156,50 @@ abstract class Utils {
 	
 	
 	/**
+	* Récupère la langue du navigateur
+	*
+	* @param string $forceLang -> Forcer l'utilisation du langue
+	* @return $_SESSION['lang']
+	*/
+	public static function getLang($forceLang = null){
+		// Si on choisi une langue
+		if($forceLang){
+			$_SESSION['lang'] = $forceLang;
+		}
+		else{
+			if( !isset($_SESSION['lang']) ){
+				// On récupère la langue du navigateur
+				$_SESSION['lang'] = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+			}
+		}
+		
+		return $_SESSION['lang'];
+	}
+	
+	
+	/**
+	* Retourne la valeur du terme
+	*/
+	public static function t($key){
+		global $translate;
+		
+		if( isset($_SESSION['lang']) ){
+			if($_SESSION['lang'] == 'en'){
+				return $key;
+			}else{
+				if( isset($translate[$key]) ){
+					return $translate[$key];
+				}else{
+					return $key;
+				}
+			}
+		}else{
+			return $key;
+		}
+	}
+	
+	
+	/**
 	* Récupère le navigateur internet du visiteur
 	*/
 	public static function getBrowser(){
