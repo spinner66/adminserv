@@ -14,18 +14,44 @@ $(document).ready(function(){
 	* Front
 	*/
 	if( $("body").hasClass("front") ){
-		// Adminlevel
-		getServerAdminLevel();
-		$("select#as_server").change(function(){
+		/**
+		* Serveurs
+		*/
+		if( $("body").hasClass("section-servers") ){
+			// Clic sur les lignes
+			$("#serverList tr").live("click", function(){
+				if( !$(this).hasClass("no-line") ){
+					// Si la ligne est déjà sélectionnée, on l'enlève
+					if( $(this).hasClass("selected") ){
+						$("#serverList tr").removeClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", false);
+					}
+					// Sinon, on l'ajoute
+					else{
+						$("#serverList tr").removeClass("selected");
+						$(this).addClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", true);
+					}
+				}
+				
+				// Mise à jour du nb de lignes sélectionnées
+				$(".cadre").updateNbSelectedLines();
+			});
+		}
+		else{
+			// Adminlevel
 			getServerAdminLevel();
-		});
-		
-		// Connexion
-		$(document).keypress(function(event){
-			if(event.keyCode == 13){
-				$("#connexion form").submit();
-			}
-		});
+			$("select#as_server").change(function(){
+				getServerAdminLevel();
+			});
+			
+			// Connexion
+			$(document).keypress(function(event){
+				if(event.keyCode == 13){
+					$("#connexion form").submit();
+				}
+			});
+		}
 	}
 	/**
 	* Not front
