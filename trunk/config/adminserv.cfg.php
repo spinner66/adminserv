@@ -17,13 +17,13 @@ class AdminServConfig {
 	const SUBTITLE = 'For maniaplanet servers';
 	const LOGO = 'logo.png';
 	const DEFAULT_THEME = 'blue';
-	const DEFAULT_LANGUAGE = 'auto';
+	const DEFAULT_LANGUAGE = 'auto'; // Can be fr, en, de, es or auto = detect automaticaly
 	const AUTOSAVE_MATCHSETTINGS = true;
 	
 	/* ADVANCED */
-	const LIMIT_PLAYERS_LIST = 250;
-	const LIMIT_MAPS_LIST = 1000;
-	const RECENT_STATUS_PERIOD = 86400;
+	const LIMIT_PLAYERS_LIST = 250; //lignes
+	const LIMIT_MAPS_LIST = 1000; //lignes
+	const RECENT_STATUS_PERIOD = 86400; //sec
 	const COOKIE_EXPIRE = 15; // jours
 	const CONNECTION_TIMEOUT = 3; //sec
 	
