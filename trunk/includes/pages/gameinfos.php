@@ -465,7 +465,6 @@
 		<div class="fright save">
 			<input class="button light" type="submit" name="savegameinfos" id="savegameinfos" value="Enregistrer" />
 		</div>
-		<div class="fclear"></div>
 	</form>
 </section>
 <?php

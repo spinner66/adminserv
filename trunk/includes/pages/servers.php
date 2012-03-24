@@ -7,7 +7,7 @@
 ?>
 <section class="cadre">
 	<h1>Liste des serveurs</h1>
-	<table>
+	<table id="serverList">
 		<thead>
 			<tr>
 				<th class="thleft"><a href="?sort=">Nom du serveur</a></th>
@@ -25,18 +25,35 @@
 		<?php
 			$showServerList = null;
 			
-			// Liste des joueurs
+			// Liste des serveurs
 			if( is_array($serverList) && count($serverList) > 0 ){
 				$i = 0;
 				foreach($serverList as $serverName => $serverData){
 					// Données
-					if($serverData['matchsettings']){ $matchSettings = $serverData['matchsettings']; }else{ $matchSettings = 'Aucun'; }
-					$adminLevelSA = $serverData['adminlevel']['SuperAdmin'];
-					if( is_array($adminLevelSA) ){ $adminLevelSA = implode(', ', $adminLevelSA); }else if($adminLevelSA == null){ $adminLevelSA = 'Tous'; }
-					$adminLevelAD = $serverData['adminlevel']['Admin'];
-					if( is_array($adminLevelAD) ){ $adminLevelAD = implode(', ', $adminLevelAD); }else if($adminLevelAD == null){ $adminLevelAD = 'Tous'; }
-					$adminLevelUS = $serverData['adminlevel']['User'];
-					if( is_array($adminLevelUS) ){ $adminLevelUS = implode(', ', $adminLevelUS); }else if($adminLevelUS == null){ $adminLevelUS = 'Tous'; }
+					if($serverData['matchsettings']){
+						$matchSettings = $serverData['matchsettings'];
+					}
+					else{
+						$matchSettings = 'Aucun';
+					}
+					$adminLevels = array('SuperAdmin', 'Admin', 'User');
+					$adminLevelsStatus = array();
+					foreach($adminLevels as $level){
+						if( array_key_exists($level, $serverData['adminlevel']) ){
+							if( is_array($serverData['adminlevel'][$level]) ){
+								$adminLevelsStatus[] = 'Adresse IP';
+							}
+							else if($serverData['adminlevel'][$level] === 'local'){
+								$adminLevelsStatus[] = 'Réseau local';
+							}
+							else if($serverData['adminlevel'][$level] === null){
+								$adminLevelsStatus[] = 'Tous';
+							}
+						}
+						else{
+							$adminLevelsStatus[] = 'Manquant';
+						}
+					}
 					
 					// Ligne
 					$showServerList .= '<tr class="'; if($i%2){ $showServerList .= 'even'; }else{ $showServerList .= 'odd'; } $showServerList .= '">'
@@ -44,10 +61,10 @@
 						.'<td>'.$serverData['address'].'</td>'
 						.'<td>'.$serverData['port'].'</td>'
 						.'<td>'.$matchSettings.'</td>'
-						.'<td>'.$adminLevelSA.'</td>'
-						.'<td>'.$adminLevelAD.'</td>'
-						.'<td>'.$adminLevelUS.'</td>'
-						.'<td></td>'
+						.'<td>'.$adminLevelsStatus[0].'</td>'
+						.'<td>'.$adminLevelsStatus[1].'</td>'
+						.'<td>'.$adminLevelsStatus[2].'</td>'
+						.'<td class="checkbox"><input type="radio" name="server[]" value="'.$serverName.'" /></td>'
 					.'</tr>';
 					$i++;
 				}
@@ -61,6 +78,33 @@
 		?>
 		</tbody>
 	</table>
+	
+	<div class="options">
+		<div class="fleft">
+			<span class="nb-line">
+				<?php
+					if( is_array($serverList) && count($serverList) > 0 ){
+						$countServerList = count($serverList);
+						if($countServerList > 1 ){
+							echo $countServerList.' serveurs';
+						}
+						else{
+							echo $countServerList.' serveur';
+						}
+					}
+				?>
+			</span>
+		</div>
+		<div class="fright">
+			<div class="selected-files-label locked">
+				<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
+				<div class="selected-files-option">
+					<input class="button dark" type="submit" name="" id="" value="Supprimer" />
+					<input class="button dark" type="submit" name="" id="" value="Modifier" />
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 <?php
 	AdminServUI::getFooter();

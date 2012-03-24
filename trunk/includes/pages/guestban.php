@@ -439,7 +439,6 @@
 					<option value="blacklist">Blacklist</option>
 				</select>
 				<input class="button light" type="submit" name="addPlayer" id="addPlayer" value="Ajouter" />
-				<div class="fclear"></div>
 			</div>
 		</form>
 	</div>

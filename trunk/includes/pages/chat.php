@@ -28,9 +28,11 @@
 	}
 	if( isset($_SESSION['adminserv']['chat_dst']) ){
 		$playerList = AdminServUI::getPlayerList($_SESSION['adminserv']['chat_dst']);
+		$destTitle = 'Destination du message : '.$_SESSION['adminserv']['chat_dst'];
 	}
 	else{
 		$playerList = AdminServUI::getPlayerList();
+		$destTitle = 'Destination du message : serveur';
 	}
 	
 	
@@ -54,7 +56,7 @@
 			<?php echo $chatColor; ?>
 		</select>
 		<input class="text width4" type="text" name="chatMessage" id="chatMessage" value="Message" data-default-value="Message" />
-		<select name="chatDestination" id="chatDestination">
+		<select name="chatDestination" id="chatDestination" title="<?php echo $destTitle; ?>">
 			<option value="server">Destination</option>
 			<?php echo $playerList; ?>
 		</select>

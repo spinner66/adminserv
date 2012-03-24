@@ -11,7 +11,7 @@
 					<tr>
 						<td class="key"><label for="">Nom du serveur</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="" id="" value="" />
+							<input class="text width3" type="text" name="" id="" value="" />
 						</td>
 						<td class="help">
 							Nom du serveur sans couleur
@@ -20,7 +20,7 @@
 					<tr>
 						<td class="key"><label for="">Adresse</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="" id="" value="" />
+							<input class="text width3" type="text" name="" id="" value="" />
 						</td>
 						<td class="help">
 							Adresse IP ou nom de domaine
@@ -29,7 +29,7 @@
 					<tr>
 						<td class="key"><label for="">Port XMLRPC</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="" id="" value="" />
+							<input class="text width3" type="text" name="" id="" value="" />
 						</td>
 						<td class="help">
 							Port permettant le controle à distance
@@ -44,7 +44,7 @@
 					<tr>
 						<td class="key"><label for="">MatchSettings du serveur</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="" id="" value="" />
+							<input class="text width3" type="text" name="" id="" value="" />
 						</td>
 						<td class="help">
 							
@@ -53,7 +53,7 @@
 					<tr>
 						<td class="key"><label for="">Niveau "SuperAdmin"</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="" id="" value="" />
+							<input class="text width3" type="text" name="" id="" value="" />
 						</td>
 						<td class="help">
 							
@@ -62,7 +62,7 @@
 					<tr>
 						<td class="key"><label for="">Niveau "Admin"</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="" id="" value="" />
+							<input class="text width3" type="text" name="" id="" value="" />
 						</td>
 						<td class="help">
 							
@@ -71,7 +71,7 @@
 					<tr>
 						<td class="key"><label for="">Niveau "User"</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="" id="" value="" />
+							<input class="text width3" type="text" name="" id="" value="" />
 						</td>
 						<td class="help">
 							
@@ -82,9 +82,8 @@
 		</div>
 		
 		<div class="fright save">
-			<input class="button light" type="submit" name="savegameinfos" id="savegameinfos" value="Enregistrer" />
+			<input class="button light" type="submit" name="saveserver" id="saveserver" value="Enregistrer" />
 		</div>
-		<div class="fclear"></div>
 	</form>
 </section>
 <?php

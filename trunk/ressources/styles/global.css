@@ -925,6 +925,7 @@ td.value {
 	background: #fff;
 	border: 1px solid #ddd;
 	margin-bottom: 25px;
+	overflow: hidden;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	-o-border-radius: 5px;
@@ -973,6 +974,7 @@ td.value {
 	margin: 0 0 20px;
 	border: 2px solid #f6f6f6;
 	background: #f9f9f9;
+	overflow: hidden;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	-o-border-radius: 5px;
@@ -1009,6 +1011,26 @@ footer {
 	text-decoration: underline;
 }
 
+
+/* Page Config
+---------------------- */
+.section-addserver table .key {
+	width: 200px;
+}
+.section-addserver table .value {
+	width: 340px;
+}
+.section-addserver table .help {
+	text-align: left;
+	font-style: italic;
+	font-size: .9em;
+}
+.section-servers table tbody tr {
+	height: 22px;
+}
+.section-servers table tbody tr input {
+	margin-bottom: 4px;
+}
 
 
 /* Page General

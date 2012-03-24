@@ -85,7 +85,6 @@
 				.'</div>';
 			}
 		?>
-		<div class="fclear"></div>
 	</div>
 	
 	<h1><?php echo Utils::t('Server'); ?></h1>
