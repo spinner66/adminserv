@@ -17,6 +17,19 @@
 	if( isset($_GET['i']) ){ $index = intval($_GET['i']); }else{ $index = 0; }
 	if( isset($_GET['id']) ){ $id = intval($_GET['id']); }else{ $id = 0; }
 	if( isset($_GET['d']) ){ $directory = addslashes($_GET['d']); }else{ $directory = null; }
+	if( isset($_GET['th']) ){ $theme = addslashes($_GET['th']); }else{ $theme = null; }
+	if( isset($_GET['lg']) ){ $lang = addslashes($_GET['lg']); }else{ $lang = null; }
+	
+	
+	// THEME
+	define('USER_THEME', AdminServUI::getTheme($theme) );
+	
+	
+	// LANG
+	define('USER_LANG', AdminServUI::getLang($lang) );
+	if( file_exists('includes/lang/'. USER_LANG .'.php') ){
+		require_once 'includes/lang/'. USER_LANG .'.php';
+	}
 	
 	
 	// DÉCONNEXION
@@ -36,7 +49,8 @@
 		if( isset($_GET['switch']) && $_GET['switch'] != null ){
 			$_SESSION['adminserv']['sid'] = AdminServ::getServerId($_GET['switch']);
 			$_SESSION['adminserv']['name'] = $_GET['switch'];
-			Utils::addCookieData('adminserv', array($_SESSION['adminserv']['sid'], Utils::readCookieData('adminserv', 1), Utils::readCookieData('adminserv', 2), Utils::readCookieData('adminserv', 3), Utils::readCookieData('adminserv', 4), Utils::readCookieData('adminserv', 5) ), AdminServConfig::COOKIE_EXPIRE);
+			//Utils::addCookieData('adminserv', array($_SESSION['adminserv']['sid'], Utils::readCookieData('adminserv', 1), Utils::readCookieData('adminserv', 2), Utils::readCookieData('adminserv', 3), Utils::readCookieData('adminserv', 4), Utils::readCookieData('adminserv', 5) ), AdminServConfig::COOKIE_EXPIRE);
+			Utils::addCookieData('adminserv', array($_SESSION['adminserv']['sid'], Utils::readCookieData('adminserv', 1)), AdminServConfig::COOKIE_EXPIRE);
 			if(USER_PAGE){
 				Utils::redirection(false, '?p='.USER_PAGE);
 			}else{

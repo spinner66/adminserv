@@ -40,15 +40,55 @@ abstract class AdminServUI {
 	
 	
 	/**
+	* Récupère le thème courant
+	*
+	* @param string $forceTheme -> Forcer l'utilisation du thème
+	* @return $_SESSION['theme']
+	*/
+	public static function getTheme($forceTheme = null){
+		// Si on choisi un thème
+		if($forceTheme){
+			$_SESSION['theme'] = $forceTheme;
+		}
+		else{
+			if( !isset($_SESSION['theme']) ){
+				// On récupère le thème dans le cookie
+				if( isset($_COOKIE['adminserv_user']) ){
+					$_SESSION['theme'] = Utils::readCookieData($_COOKIE['adminserv_user'], 0);
+				}
+				// Sinon thème par défaut
+				else{
+					$_SESSION['theme'] = AdminServConfig::DEFAULT_THEME;
+					Utils::addCookieData('adminserv_user', array($_SESSION['theme'], self::getLang(), Utils::readCookieData('adminserv_user', 2), Utils::readCookieData('adminserv_user', 3)), AdminServConfig::COOKIE_EXPIRE);
+				}
+			}
+		}
+		
+		return $_SESSION['theme'];
+	}
+	
+	
+	/**
 	* Récupère la liste des thèmes
 	*/
-	public static function getThemeList(){
+	public static function getThemeList($currentTheme = array() ){
 		$out = null;
+		
+		// Thème courant
+		if( count($currentTheme) > 0 ){
+			$currentThemeName = key($currentTheme);
+			$currentThemeColor = current($currentTheme);
+			unset(ExtensionConfig::$THEMES[$currentThemeName]);
+		}
 		
 		if(count(ExtensionConfig::$THEMES) > 0){
 			$out .= '<ul>';
+			// Si il y a un thème courant, on le place en 1er
+			if( count($currentTheme) > 0 ){
+				$out .= '<li><a class="theme-color" style="background-color: '.$currentThemeColor.';" href="?th='.$currentThemeName.'" title="'.$currentThemeName.'"></a></li>';
+		}
 			foreach(ExtensionConfig::$THEMES as $name => $color){
-				$out .= '<li><a class="theme-color" style="background-color: '.$color.';" href="." title="'.$name.'"></a></li>';
+				$out .= '<li><a class="theme-color" style="background-color: '.$color.';" href="?th='.$name.'" title="'.ucfirst($name).'"></a></li>';
 			}
 			$out .= '</ul>';
 		}
@@ -58,15 +98,63 @@ abstract class AdminServUI {
 	
 	
 	/**
+	* Récupère la langue courante
+	*
+	* @param string $forceLang -> Forcer l'utilisation du langue
+	* @return $_SESSION['lang']
+	*/
+	public static function getLang($forceLang = null){
+		// Si on choisi une langue
+		if($forceLang){
+			$_SESSION['lang'] = $forceLang;
+		}
+		else{
+			if( !isset($_SESSION['lang']) ){
+				// On récupère la langue dans le cookie
+				if( isset($_COOKIE['adminserv_user']) ){
+					$_SESSION['lang'] = Utils::readCookieData($_COOKIE['adminserv_user'], 1);
+				}
+				else{
+					// On récupère la langue du navigateur
+					if( AdminServConfig::DEFAULT_LANGUAGE == 'auto' ){
+						$_SESSION['lang'] = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+					}
+					// Sinon langue par défaut
+					else{
+						$_SESSION['lang'] = AdminServConfig::DEFAULT_LANGUAGE;
+					}
+					
+					Utils::addCookieData('adminserv_user', array(self::getTheme(), $_SESSION['lang'], Utils::readCookieData('adminserv_user', 2), Utils::readCookieData('adminserv_user', 3)), AdminServConfig::COOKIE_EXPIRE);
+				}
+			}
+		}
+		
+		return $_SESSION['lang'];
+	}
+	
+	
+	/**
 	* Récupère la liste des langues
 	*/
-	public static function getLangList(){
+	public static function getLangList($currentLang = array() ){
 		$out = null;
 		
+		// Langue courante
+		if( count($currentLang) > 0 ){
+			$currentLangCode = key($currentLang);
+			$currentLangName = current($currentLang);
+			unset(ExtensionConfig::$LANG[$currentLangCode]);
+		}
+		
+		// Liste de toutes les langues
 		if(count(ExtensionConfig::$LANG) > 0){
 			$out .= '<ul>';
+			// Si il y a une langue courante, on la place en 1er
+			if( count($currentLang) > 0 ){
+				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$currentLangCode.'.png);" href="?lg='.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
+			}
 			foreach(ExtensionConfig::$LANG as $code => $name){
-				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="." title="'.$name.'"></a></li>';
+				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="?lg='.$code.'" title="'.$name.'"></a></li>';
 			}
 			$out .= '</ul>';
 		}

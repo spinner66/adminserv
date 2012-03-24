@@ -54,100 +54,100 @@
 	AdminServUI::getHeader();
 ?>
 <section class="cadre left">
-	<h1>Map en cours</h1>
+	<h1><?php echo Utils::t('Current map'); ?></h1>
 	<div class="content">
 		<table class="current_map">
 			<tr>
-				<td class="key">Nom</td>
+				<td class="key"><?php echo Utils::t('Name'); ?></td>
 				<td class="value" id="map_name"><?php echo $serverInfo['map']['name']; ?></td>
 			</tr>
 			<tr>
-				<td class="key">Auteur</td>
+				<td class="key"><?php echo Utils::t('Author'); ?></td>
 				<td class="value" id="map_author"><?php echo $serverInfo['map']['author']; ?></td>
 			</tr>
 			<tr>
-				<td class="key">Environnement</td>
+				<td class="key"><?php echo Utils::t('Environment'); ?></td>
 				<td class="value" id="map_enviro"><?php echo $serverInfo['map']['enviro']; ?><img src="<?php echo AdminServConfig::PATH_RESSOURCES .'images/env/'.strtolower($serverInfo['map']['enviro']); ?>.png" alt="" /></td>
 			</tr>
 			<tr>
-				<td class="key">Map UId</td>
+				<td class="key"><?php echo Utils::t('Map UId'); ?></td>
 				<td class="value" id="map_uid"><?php echo $serverInfo['map']['uid']; ?></td>
 			</tr>
 			<tr>
-				<td class="key">Mode de jeu</td>
+				<td class="key"><?php echo Utils::t('Game mode'); ?></td>
 				<td class="value<?php echo ' '.strtolower($serverInfo['srv']['game_mode']); ?>" id="map_gamemode"><?php echo $serverInfo['srv']['game_mode']; ?></td>
 			</tr>
 		</table>
 		<?php
 			if($serverInfo['map']['thumb'] != null){
-				echo '<div id="map_thumbnail" data-text-thumbnail="Pas de miniature">'
-					.'<img src="data:image/jpeg;base64,'.$serverInfo['map']['thumb'].'" alt="Pas de miniature" />'
+				echo '<div id="map_thumbnail" data-text-thumbnail="'.Utils::t('No thumbnail').'">'
+					.'<img src="data:image/jpeg;base64,'.$serverInfo['map']['thumb'].'" alt="'.Utils::t('No thumbnail').'" />'
 				.'</div>';
 			}
 		?>
 		<div class="fclear"></div>
 	</div>
 	
-	<h1>Serveur</h1>
+	<h1><?php echo Utils::t('Server'); ?></h1>
 	<div class="content">
 		<table>
 			<tr>
-				<td class="key">Nom du serveur</td>
+				<td class="key"><?php echo Utils::t('Server name'); ?></td>
 				<td class="value" id="server_name"><?php echo $serverInfo['srv']['name']; ?></td>
 			</tr>
 			<tr>
-				<td class="key">Statut</td>
+				<td class="key"><?php echo Utils::t('Status'); ?></td>
 				<td class="value" id="server_status"><?php echo $serverInfo['srv']['status']; ?></td>
 			</tr>
 			<tr>
-				<td class="key">Login serveur</td>
+				<td class="key"><?php echo Utils::t('Server login'); ?></td>
 				<td class="value"><?php echo SERVER_LOGIN; ?></td>
 			</tr>
 			<tr>
-				<td class="key">Connecté sur</td>
+				<td class="key"><?php echo Utils::t('Connected on'); ?></td>
 				<td class="value<?php echo ' '.strtolower(SERVER_VERSION_NAME); ?>" id="srv_version_name"><?php echo SERVER_VERSION_NAME; ?></td>
 			</tr>
 			<tr>
-				<td class="key">Version dédié</td>
+				<td class="key"><?php echo Utils::t('Dedicated version'); ?></td>
 				<td class="value"><?php echo SERVER_BUILD.' ('. SERVER_VERSION .')'; ?></td>
 			</tr>
 		</table>
 	</div>
 	
 	<?php if( AdminServ::isAdminLevel('SuperAdmin') ){ ?>
-		<h1>Statistiques</h1>
+		<h1><?php echo Utils::t('Statistics'); ?></h1>
 		<div class="content last">
 			<table>
 				<tr>
-					<td class="key">Démarré depuis</td>
+					<td class="key"><?php echo Utils::t('Uptime'); ?></td>
 					<td class="value" id="network_uptime"><?php echo $serverInfo['net']['uptime']; ?></td>
 				</tr>
 				<tr>
-					<td class="key">Nombre de connexions</td>
+					<td class="key"><?php echo Utils::t('Number of connections'); ?></td>
 					<td class="value" id="network_nbrconnection"><?php echo $serverInfo['net']['nbrconnection']; ?></td>
 				</tr>
 				<tr>
-					<td class="key">Temps de connexion moyen</td>
+					<td class="key"><?php echo Utils::t('Average connection time'); ?></td>
 					<td class="value" id="network_meanconnectiontime"><?php echo $serverInfo['net']['meanconnectiontime']; ?></td>
 				</tr>
 				<tr>
-					<td class="key">Nombre de joueurs moyen</td>
+					<td class="key"><?php echo Utils::t('Average number of player'); ?></td>
 					<td class="value" id="network_meannbrplayer"><?php echo $serverInfo['net']['meannbrplayer']; ?></td>
 				</tr>
 				<tr>
-					<td class="key">Taux de récéption</td>
-					<td class="value" id="network_recvnetrate"><?php echo $serverInfo['net']['meannbrplayer']; ?></td>
+					<td class="key"><?php echo Utils::t('Recv net rate'); ?></td>
+					<td class="value" id="network_recvnetrate"><?php echo $serverInfo['net']['recvnetrate']; ?></td>
 				</tr>
 				<tr>
-					<td class="key">Taux d'envoi</td>
+					<td class="key"><?php echo Utils::t('Send net rate'); ?></td>
 					<td class="value" id="network_sendnetrate"><?php echo $serverInfo['net']['sendnetrate']; ?></td>
 				</tr>
 				<tr>
-					<td class="key">Réception totale</td>
+					<td class="key"><?php echo Utils::t('Total receiving size'); ?></td>
 					<td class="value" id="network_totalreceivingsize"><?php echo $serverInfo['net']['totalreceivingsize']; ?></td>
 				</tr>
 				<tr>
-					<td class="key">Emission totale</td>
+					<td class="key"><?php echo Utils::t('Total sending size'); ?></td>
 					<td class="value" id="network_totalsendingsize"><?php echo $serverInfo['net']['totalsendingsize']; ?></td>
 				</tr>
 			</table>
@@ -156,10 +156,10 @@
 </section>
 
 <section class="cadre right">
-	<h1>Joueurs</h1>
+	<h1><?php echo Utils::t('Players'); ?></h1>
 	<div class="title-detail">
 		<ul>
-			<li><a href="">Mode détail</a></li>
+			<li><a href=""><?php echo Utils::t('Detail mode'); ?></a></li>
 			<li><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($serverInfo['ply']) ){ echo ' disabled="disabled"'; } ?> /></li>
 		</ul>
 	</div>
@@ -170,9 +170,9 @@
 		<table>
 			<thead>
 				<tr>
-					<th class="thleft"><a href="?sort=nickname">Pseudo</a></th>
-					<th><a href="?sort=login">Login</a></th>
-					<th><a href="?sort=status">Statut</a></th>
+					<th class="thleft"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
+					<th><a href="?sort=login"><?php echo Utils::t('Login'); ?></a></th>
+					<th><a href="?sort=status"><?php echo Utils::t('Status'); ?></a></th>
 					<th class="thright"></th>
 				</tr>
 				<tr class="table-separation"></tr>
@@ -212,13 +212,13 @@
 		</div>
 		<div class="fright">
 			<div class="selected-files-label locked">
-				<span class="selected-files-title">Pour la sélection</span>
+				<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 				<span class="selected-files-count">(0)</span>
 				<div class="selected-files-option">
-					<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="Bannir" />
-					<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="Kicker" />
-					<input class="button dark" type="submit" name="ForceSpectatorList" id="ForceSpectatorList" value="Spectateur" />
-					<input class="button dark" type="submit" name="ForcePlayerList" id="ForcePlayerList" value="Joueur" />
+					<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="<?php echo Utils::t('Ban'); ?>" />
+					<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="<?php echo Utils::t('Kick'); ?>" />
+					<input class="button dark" type="submit" name="ForceSpectatorList" id="ForceSpectatorList" value="<?php echo Utils::t('Spectator'); ?>" />
+					<input class="button dark" type="submit" name="ForcePlayerList" id="ForcePlayerList" value="<?php echo Utils::t('Player'); ?>" />
 				</div>
 			</div>
 		</div>

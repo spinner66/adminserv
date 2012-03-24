@@ -4,11 +4,11 @@ class ExtensionConfig {
 	
 	// Liste des thèmes de couleurs
 	public static $THEMES = array(
-		'Blue' => '#5e9cd5',
-		'Orange' => '#ffa600',
-		'Green' => '#8aca1b',
-		'Purple' => '#b15cd5',
-		'Black' => '#656267'
+		'blue' => '#5e9cd5',
+		'orange' => '#ffa600',
+		'green' => '#8aca1b',
+		'purple' => '#b15cd5',
+		'black' => '#656267'
 	);
 	
 	

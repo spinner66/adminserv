@@ -1,7 +1,7 @@
 <?php
 	// LECTURE
 	$chatServerLines = AdminServ::getChatServerLines();
-	$lastNicknameUsed = Utils::readCookieData('adminserv', 2);
+	$lastNicknameUsed = Utils::readCookieData('adminserv_user', 2);
 	if($lastNicknameUsed != null){
 		$chatNickname = $lastNicknameUsed;
 	}
@@ -20,7 +20,7 @@
 		'$fff' => 'Blanc'
 	);
 	$chatColor = null;
-	$lastColorUsed = Utils::readCookieData('adminserv', 3);
+	$lastColorUsed = Utils::readCookieData('adminserv_user', 3);
 	foreach($colorList as $colorCode => $colorName){
 		if($colorCode == $lastColorUsed){ $selected = ' selected="selected"'; }
 		else{ $selected = null; }
