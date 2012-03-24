@@ -46,22 +46,33 @@ abstract class AdminServUI {
 	* @return $_SESSION['theme']
 	*/
 	public static function getTheme($forceTheme = null){
+		$saveCookie = false;
 		// Si on choisi un thème
 		if($forceTheme){
 			$_SESSION['theme'] = $forceTheme;
+			$saveCookie = true;
 		}
 		else{
 			if( !isset($_SESSION['theme']) ){
 				// On récupère le thème dans le cookie
 				if( isset($_COOKIE['adminserv_user']) ){
-					$_SESSION['theme'] = Utils::readCookieData($_COOKIE['adminserv_user'], 0);
+					$_SESSION['theme'] = Utils::readCookieData('adminserv_user', 0);
 				}
 				// Sinon thème par défaut
 				else{
-					$_SESSION['theme'] = AdminServConfig::DEFAULT_THEME;
-					Utils::addCookieData('adminserv_user', array($_SESSION['theme'], self::getLang(), Utils::readCookieData('adminserv_user', 2), Utils::readCookieData('adminserv_user', 3)), AdminServConfig::COOKIE_EXPIRE);
+					if(AdminServConfig::DEFAULT_THEME){
+						$_SESSION['theme'] = AdminServConfig::DEFAULT_THEME;
+					}
+					else{
+						$_SESSION['theme'] = 'blue';
+					}
+					$saveCookie = true;
 				}
 			}
+		}
+		
+		if($saveCookie){
+			Utils::addCookieData('adminserv_user', array($_SESSION['theme'], self::getLang(), Utils::readCookieData('adminserv_user', 2), Utils::readCookieData('adminserv_user', 3)), AdminServConfig::COOKIE_EXPIRE);
 		}
 		
 		return $_SESSION['theme'];
@@ -85,8 +96,8 @@ abstract class AdminServUI {
 			$out .= '<ul>';
 			// Si il y a un thème courant, on le place en 1er
 			if( count($currentTheme) > 0 ){
-				$out .= '<li><a class="theme-color" style="background-color: '.$currentThemeColor.';" href="?th='.$currentThemeName.'" title="'.$currentThemeName.'"></a></li>';
-		}
+				$out .= '<li><a class="theme-color" style="background-color: '.$currentThemeColor.';" href="?th='.$currentThemeName.'" title="'.ucfirst($currentThemeName).'"></a></li>';
+			}
 			foreach(ExtensionConfig::$THEMES as $name => $color){
 				$out .= '<li><a class="theme-color" style="background-color: '.$color.';" href="?th='.$name.'" title="'.ucfirst($name).'"></a></li>';
 			}
@@ -104,15 +115,17 @@ abstract class AdminServUI {
 	* @return $_SESSION['lang']
 	*/
 	public static function getLang($forceLang = null){
+		$saveCookie = false;
 		// Si on choisi une langue
 		if($forceLang){
 			$_SESSION['lang'] = $forceLang;
+			$saveCookie = true;
 		}
 		else{
 			if( !isset($_SESSION['lang']) ){
 				// On récupère la langue dans le cookie
 				if( isset($_COOKIE['adminserv_user']) ){
-					$_SESSION['lang'] = Utils::readCookieData($_COOKIE['adminserv_user'], 1);
+					$_SESSION['lang'] = Utils::readCookieData('adminserv_user', 1);
 				}
 				else{
 					// On récupère la langue du navigateur
@@ -121,12 +134,20 @@ abstract class AdminServUI {
 					}
 					// Sinon langue par défaut
 					else{
-						$_SESSION['lang'] = AdminServConfig::DEFAULT_LANGUAGE;
+						if(AdminServConfig::DEFAULT_LANGUAGE){
+							$_SESSION['lang'] = AdminServConfig::DEFAULT_LANGUAGE;
+						}
+						else{
+							$_SESSION['lang'] = 'en';
+						}
 					}
-					
-					Utils::addCookieData('adminserv_user', array(self::getTheme(), $_SESSION['lang'], Utils::readCookieData('adminserv_user', 2), Utils::readCookieData('adminserv_user', 3)), AdminServConfig::COOKIE_EXPIRE);
+					$saveCookie = true;
 				}
 			}
+		}
+		
+		if($saveCookie){
+			Utils::addCookieData('adminserv_user', array(self::getTheme(), $_SESSION['lang'], Utils::readCookieData('adminserv_user', 2), Utils::readCookieData('adminserv_user', 3)), AdminServConfig::COOKIE_EXPIRE);
 		}
 		
 		return $_SESSION['lang'];
@@ -214,7 +235,11 @@ abstract class AdminServUI {
 			$out .= '<link rel="stylesheet" href="'.$path.'styles/fileuploader.css" />';
 		}
 		$out .= '<link rel="stylesheet" href="'.$path.'styles/global.css" />';
-		//TODO : theme courant à charger
+		if( defined('USER_THEME') ){
+			if( file_exists($path.'styles/'. USER_THEME .'.css') ){
+				$out .= '<link rel="stylesheet" href="'.$path.'styles/'. USER_THEME .'.css" />';
+			}
+		}
 		
 		return $out;
 	}
