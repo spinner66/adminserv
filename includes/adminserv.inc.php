@@ -641,6 +641,12 @@ abstract class AdminServ {
 										define('API_VERSION', $getVersion['ApiVersion']);
 										if(SERVER_VERSION_NAME == 'ManiaPlanet'){ TmNick::$linkProtocol = 'maniaplanet'; }
 										define('LINK_PROTOCOL', TmNick::$linkProtocol);
+										if( !isset($_SESSION['adminserv_mode']) ){
+											define('USER_MODE', 'simple');
+										}
+										else{
+											define('USER_MODE', $_SESSION['adminserv_mode']);
+										}
 										return true;
 									}
 								}
@@ -889,8 +895,7 @@ abstract class AdminServ {
 				$i = 0;
 				foreach($playerList as $player){
 					// Nickname et Playerlogin
-					$nickname = htmlspecialchars($player['NickName'], ENT_QUOTES, 'UTF-8');
-					$out['ply'][$i]['NickName'] = TmNick::toHtml($nickname, 10, true);
+					$out['ply'][$i]['NickName'] = TmNick::toHtml(htmlspecialchars($player['NickName'], ENT_QUOTES, 'UTF-8'), 10, true);
 					$out['ply'][$i]['Login'] = $player['Login'];
 					
 					// PlayerStatus

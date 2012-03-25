@@ -11,6 +11,12 @@
 	require_once '../adminserv.inc.php';
 	AdminServUI::getClass();
 	
+	// ISSET
+	if( isset($_GET['mode']) ){ $mode = addslashes($_GET['mode']); }else{ $mode = null; }
+	if($mode){
+		$_SESSION['adminserv_mode'] = $mode;
+	}
+	
 	// DATA
 	if( AdminServ::initialize(false) ){
 		$out = AdminServ::getCurrentServerInfo();

@@ -34,9 +34,6 @@ ul li {
 .fright {
 	float: right;
 }
-.fclear {
-	clear: both;
-}
 .alignleft {
 	text-align: left;
 }
@@ -45,6 +42,9 @@ ul li {
 }
 .alignright {
 	text-align: right;
+}
+.loading {
+	opacity: .5;
 }
 
 

@@ -48,7 +48,6 @@
 	// Info serveur
 	$serverInfo = AdminServ::getCurrentServerInfo();
 	
-	
 	// HTML
 	$client->Terminate();
 	AdminServUI::getHeader();
@@ -158,7 +157,7 @@
 	<h1><?php echo Utils::t('Players'); ?></h1>
 	<div class="title-detail">
 		<ul>
-			<li><a href=""><?php echo Utils::t('Detail mode'); ?></a></li>
+			<li><a id="detailMode" href="." data-statusmode="simple" data-textdetail="<?php echo Utils::t('Detail mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detail mode'); } ?></a></li>
 			<li><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($serverInfo['ply']) ){ echo ' disabled="disabled"'; } ?> /></li>
 		</ul>
 	</div>
@@ -170,6 +169,7 @@
 			<thead>
 				<tr>
 					<th class="thleft"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
+					<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=ladder">Ladder</a></th>
 					<th><a href="?sort=login"><?php echo Utils::t('Login'); ?></a></th>
 					<th><a href="?sort=status"><?php echo Utils::t('Status'); ?></a></th>
 					<th class="thright"></th>
@@ -187,6 +187,7 @@
 						// Ligne
 						$showPlayerList .= '<tr class="'; if($i%2){ $showPlayerList .= 'even'; }else{ $showPlayerList .= 'odd'; } $showPlayerList .= '">'
 							.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>'
+							.'<td class="detailModeTd imgleft"'; if(USER_MODE == 'simple'){ $showPlayerList .= ' hidden="hidden"'; } $showPlayerList .= '><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/leagueladder.png" alt="" />'.$player['LadderRanking'].'</td>'
 							.'<td>'.$player['Login'].'</td>'
 							.'<td>'.$player['PlayerStatus'].'</td>'
 							.'<td class="checkbox"><input type="checkbox" name="player[]" value="'.$player['Login'].'" /></td>'
