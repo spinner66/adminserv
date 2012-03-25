@@ -181,7 +181,7 @@
 ?>
 <section class="cadre">
 	<h1>Informations de jeu</h1>
-	<form method="post" action="?p=gameinfos">
+	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 		<div class="content">
 			<fieldset class="gameinfos_general">
 				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/restartrace.png" alt="" />Général</legend>

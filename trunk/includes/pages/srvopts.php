@@ -65,7 +65,7 @@
 ?>
 <section class="cadre">
 	<h1>Options du serveur</h1>
-	<form method="post" action="?p=srvopts">
+	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 		<div class="content">
 			<fieldset class="srvopts_general">
 				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/servers.png" alt="" />Général</legend>

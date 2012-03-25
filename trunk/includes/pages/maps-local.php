@@ -118,7 +118,7 @@
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=maps-local<?php if($directory){ echo '&amp;d='.$directory; } ?>">
+		<form method="post" action="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>">
 		<div id="maplist">
 			<table>
 				<thead>

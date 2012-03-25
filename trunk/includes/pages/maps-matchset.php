@@ -60,7 +60,7 @@
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=maps-matchset<?php if($directory){ echo '&amp;d='.$directory; } ?>">
+		<form method="post" action="?p=maps-<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>">
 		<div id="matchsetlist">
 			<table>
 				<thead>
