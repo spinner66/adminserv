@@ -28,9 +28,7 @@ class AdminServConfig {
 	const CONNECTION_TIMEOUT = 3; //sec
 	
 	/* PATH DIRECTORY */
-	const PATH_CONFIG = './config/';
 	const PATH_INCLUDES = './includes/';
-	const PATH_LOGS = './logs/';
 	const PATH_PLUGINS = './plugins/';
 	const PATH_RESSOURCES = './ressources/';
 	

@@ -37,7 +37,7 @@
 	
 	<section class="cadre right order">
 		<h1>Ordonner</h1>
-		<form method="post" action="?p=maps-order">
+		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 			<h2>Tri automatique</h2>
 			<div class="autoSortMode options-radio-inline">
 				<ul>

@@ -1,14 +1,12 @@
 <?php
 	// INCLUDES
 	session_start();
-	//TODO : define('ADMINSERV_PATH', __DIR__ .'/');
 	define('ADMINSERV_VERSION', '2.0');
 	require_once 'config/adminserv.cfg.php';
 	require_once 'config/servers.cfg.php';
 	require_once 'config/extension.cfg.php';
-	require_once 'includes/adminserv.inc.php';
+	require_once AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
 	AdminServUI::getClass();
-	
 	
 	// ISSET
 	if( isset($_GET['p']) ){ define('USER_PAGE', htmlspecialchars($_GET['p']) ); }else{ define('USER_PAGE', 'index'); }
@@ -49,7 +47,6 @@
 		if( isset($_GET['switch']) && $_GET['switch'] != null ){
 			$_SESSION['adminserv']['sid'] = AdminServ::getServerId($_GET['switch']);
 			$_SESSION['adminserv']['name'] = $_GET['switch'];
-			//Utils::addCookieData('adminserv', array($_SESSION['adminserv']['sid'], Utils::readCookieData('adminserv', 1), Utils::readCookieData('adminserv', 2), Utils::readCookieData('adminserv', 3), Utils::readCookieData('adminserv', 4), Utils::readCookieData('adminserv', 5) ), AdminServConfig::COOKIE_EXPIRE);
 			Utils::addCookieData('adminserv', array($_SESSION['adminserv']['sid'], Utils::readCookieData('adminserv', 1)), AdminServConfig::COOKIE_EXPIRE);
 			if(USER_PAGE){
 				Utils::redirection(false, '?p='.USER_PAGE);

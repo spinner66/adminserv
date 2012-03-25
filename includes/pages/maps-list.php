@@ -46,7 +46,7 @@
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=maps">
+		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 		<div id="maplist">
 			<table>
 				<thead>

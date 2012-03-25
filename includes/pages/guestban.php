@@ -235,12 +235,12 @@
 	AdminServUI::getHeader();
 ?>
 <section class="cadre left">
-	<form method="post" action="?p=guestban">
+	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 	<div id="banlist">
 		<h1>Banlist<?php if($countBanList > 0){ echo ' ('.$countBanList.')'; } ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li><a class="cleanList" href="?p=guestban&amp;clean=banlist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
+				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=banlist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
 				<li><input type="checkbox" name="checkAllBanlist" id="checkAllBanlist" value=""<?php if($countBanList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
@@ -286,7 +286,7 @@
 		<h1>Blacklist<?php if($countBlackList > 0){ echo ' ('.$countBlackList.')'; } ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li><a class="cleanList" href="?p=guestban&amp;clean=blacklist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
+				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=blacklist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
 				<li><input type="checkbox" name="checkAllBlacklist" id="checkAllBlacklist" value=""<?php if($countBlackList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
@@ -328,7 +328,7 @@
 		<h1>Guestlist<?php if($countGuestList > 0){ echo ' ('.$countGuestList.')'; } ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li><a class="cleanList" href="?p=guestban&amp;clean=guestlist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
+				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=guestlist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
 				<li><input type="checkbox" name="checkAllGuestlist" id="checkAllGuestlist" value=""<?php if($countGuestList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
@@ -370,7 +370,7 @@
 		<h1>Ignorelist<?php if($countIgnoreList > 0){ echo ' ('.$countIgnoreList.')'; } ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li><a class="cleanList" href="?p=guestban&amp;clean=ignorelist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
+				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=ignorelist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
 				<li><input type="checkbox" name="checkAllIgnorelist" id="checkAllIgnorelist" value=""<?php if($countIgnoreList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
@@ -426,7 +426,7 @@
 <section class="cadre right">
 	<h1>Ajouter</h1>
 	<div class="content last addPlayer">
-		<form method="post" action="?p=guestban">
+		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 			<div>
 				<select class="width2" name="addPlayerList" id="addPlayerList"<?php if($playerList == null){ echo ' hidden="hidden"'; } ?>>
 					<option value="none">Sélectionnez un joueur</option>
@@ -444,7 +444,7 @@
 	</div>
 	
 	<div id="playlists">
-		<form method="post" action="?p=guestban">
+		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 			<h1>Playlists
 				<div id="form-new-playlist" hidden="hidden">
 					<select name="createPlaylistType" id="createPlaylistType">
@@ -464,7 +464,7 @@
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=guestban">
+		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 			<table>
 				<thead>
 					<tr>

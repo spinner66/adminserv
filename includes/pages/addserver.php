@@ -3,7 +3,7 @@
 ?>
 <section class="cadre">
 	<h1>Ajouter un serveur</h1>
-	<form method="post" action="?p=addserver">
+	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 		<div class="content">
 			<fieldset>
 				<legend>Informations de connexion</legend>

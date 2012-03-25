@@ -355,7 +355,7 @@ $(document).ready(function(){
 		/**
 		* Maps-list
 		*/
-		else if( $("body").hasClass("section-maps") ){
+		else if( $("body").hasClass("section-maps-list") ){
 			// Mise à jour de la liste
 			setInterval(function(){
 				getMapList();
