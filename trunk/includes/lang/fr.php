@@ -35,6 +35,7 @@ $translate = array(
 	'Total sending size' => 'Emission totale',
 	'Players' => 'Joueurs',
 	'Detail mode' => 'Mode détail',
+	'Simple mode' => 'Mode simple',
 	'Nickname' => 'Pseudo',
 	'Login' => 'Login',
 	'For the selection' => 'Pour la sélection',

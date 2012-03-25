@@ -170,7 +170,7 @@ $(document).ready(function(){
 		if( $("body").hasClass("section-index") ){
 			// Infos serveur
 			setInterval(function(){
-				getCurrentServerInfo();
+				getCurrentServerInfo( $("#detailMode").data("statusmode") );
 			}, 10000);
 			
 			// Checkbox
@@ -198,6 +198,12 @@ $(document).ready(function(){
 					// Mise à jour du nb de lignes sélectionnées
 					$(".cadre.right").updateNbSelectedLines();
 				}
+			});
+			
+			// Mode détail
+			$("#detailMode").click(function(){
+				generalDetailMode();
+				return false;
 			});
 		}
 		/**

@@ -49,8 +49,11 @@ function speedAdmin(cmd){
 /**
 * Récupère les informations du serveur actuel (map, serveur, stats, joueurs)
 */
-function getCurrentServerInfo(){
-	$.getJSON("includes/ajax/get_current_serverinfo.php", function(data){
+function getCurrentServerInfo(mode){
+	if(!mode){
+		mode = "simple";
+	}
+	$.getJSON("includes/ajax/get_current_serverinfo.php", {mode: mode}, function(data){
 		if(data != null){
 			// Map
 			if(data.map != null){
@@ -93,8 +96,11 @@ function getCurrentServerInfo(){
 				if( typeof(data.ply) == "object" && data.ply.length > 0 ){
 					$.each(data.ply, function(i, player){
 						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
-							+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/solo.png" alt="" />'+player.NickName+'</td>'
-							+'<td>'+player.Login+'</td>'
+							+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/solo.png" alt="" />'+player.NickName+'</td>';
+							if(mode == "detail"){
+								out += '<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/leagueladder.png" alt="" />'+player.LadderRanking+'</td>';
+							}
+							out += '<td>'+player.Login+'</td>'
 							+'<td>'+player.PlayerStatus+'</td>'
 							+'<td class="checkbox"><input type="checkbox" name="player[]" value="'+player.Login+'" /></td>'
 						+'</tr>';
@@ -113,9 +119,33 @@ function getCurrentServerInfo(){
 				
 				// HTML
 				$("#playerlist table tbody").html(out);
+				if( $("#playerlist").hasClass("loading") ){
+					$("#playerlist").removeClass("loading");
+				}
 			}
 		}
 	});
+}
+
+
+/**
+* Gestion du mode détail de la page general
+*/
+function generalDetailMode(){
+	if( $("#detailMode").text() == $("#detailMode").data("textdetail") ){
+		$("#detailMode").text( $("#detailMode").data("textsimple") );
+		$("#playerlist table th.detailModeTh").attr("hidden", false);
+		$("#playerlist").addClass("loading");
+		$("#detailMode").data("statusmode", "detail");
+		getCurrentServerInfo("detail");
+	}
+	else{
+		$("#detailMode").text( $("#detailMode").data("textdetail") );
+		$("#playerlist table th.detailModeTh").attr("hidden", true);
+		$("#playerlist").addClass("loading");
+		$("#detailMode").data("statusmode", "simple");
+		getCurrentServerInfo("simple");
+	}
 }
 
 
