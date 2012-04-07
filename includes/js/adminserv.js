@@ -170,7 +170,7 @@ $(document).ready(function(){
 		if( $("body").hasClass("section-index") ){
 			// Infos serveur
 			setInterval(function(){
-				getCurrentServerInfo( $("#detailMode").data("statusmode") );
+				getCurrentServerInfo(getMode(), getCurrentSort() );
 			}, 10000);
 			
 			// Checkbox
@@ -203,6 +203,14 @@ $(document).ready(function(){
 			// Mode détail
 			$("#detailMode").click(function(){
 				generalDetailMode();
+				return false;
+			});
+			
+			// Tris
+			$("#playerlist table th a").click(function(){
+				var sort = $(this).attr("href");
+				sort = sort.split("=")[1];
+				getCurrentServerInfo(getMode(), sort);
 				return false;
 			});
 		}

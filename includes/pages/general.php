@@ -48,6 +48,7 @@
 	// Info serveur
 	$serverInfo = AdminServ::getCurrentServerInfo();
 	
+	
 	// HTML
 	$client->Terminate();
 	AdminServUI::getHeader();
@@ -74,7 +75,7 @@
 			</tr>
 			<tr>
 				<td class="key"><?php echo Utils::t('Game mode'); ?></td>
-				<td class="value<?php echo ' '.strtolower($serverInfo['srv']['game_mode']); ?>" id="map_gamemode"><?php echo $serverInfo['srv']['game_mode']; ?></td>
+				<td class="value<?php echo ' '.strtolower($serverInfo['srv']['gameModeName']); ?>" id="map_gamemode"><?php echo $serverInfo['srv']['gameModeName']; ?></td>
 			</tr>
 		</table>
 		<?php
@@ -157,7 +158,7 @@
 	<h1><?php echo Utils::t('Players'); ?></h1>
 	<div class="title-detail">
 		<ul>
-			<li><a id="detailMode" href="." data-statusmode="simple" data-textdetail="<?php echo Utils::t('Detail mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detail mode'); } ?></a></li>
+			<li><a id="detailMode" href="." data-statusmode="<?php echo USER_MODE; ?>" data-textdetail="<?php echo Utils::t('Detail mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detail mode'); } ?></a></li>
 			<li><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($serverInfo['ply']) ){ echo ' disabled="disabled"'; } ?> /></li>
 		</ul>
 	</div>
@@ -168,8 +169,13 @@
 		<table>
 			<thead>
 				<tr>
-					<th class="thleft"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
-					<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=ladder">Ladder</a></th>
+					<?php if( AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']) ){ ?>
+						<th class="detailModeTh thleft"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=team">Équipe</a></th>
+					<?php } ?>
+					<th class="<?php if(USER_MODE == 'simple'){ echo 'thleft'; } ?>"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
+					<?php if( !AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']) ){ ?>
+						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=ladder">Ladder</a></th>
+					<?php } ?>
 					<th><a href="?sort=login"><?php echo Utils::t('Login'); ?></a></th>
 					<th><a href="?sort=status"><?php echo Utils::t('Status'); ?></a></th>
 					<th class="thright"></th>
@@ -185,10 +191,16 @@
 					$i = 0;
 					foreach($serverInfo['ply'] as $player){
 						// Ligne
-						$showPlayerList .= '<tr class="'; if($i%2){ $showPlayerList .= 'even'; }else{ $showPlayerList .= 'odd'; } $showPlayerList .= '">'
-							.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>'
-							.'<td class="detailModeTd imgleft"'; if(USER_MODE == 'simple'){ $showPlayerList .= ' hidden="hidden"'; } $showPlayerList .= '><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/leagueladder.png" alt="" />'.$player['LadderRanking'].'</td>'
-							.'<td>'.$player['Login'].'</td>'
+						$showPlayerList .= '<tr class="'; if($i%2){ $showPlayerList .= 'even'; }else{ $showPlayerList .= 'odd'; } $showPlayerList .= '">';
+							if( AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']) && USER_MODE == 'detail'){
+								$showPlayerList .= '<td class="detailModeTd imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/team_'.strtolower($player['TeamName']).'.png" alt="" />'.$player['TeamName'].'</td>';
+							}
+							
+							$showPlayerList .= '<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>';
+							if( !AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']) ){
+								$showPlayerList .= '<td class="detailModeTd imgleft"'; if(USER_MODE == 'simple'){ $showPlayerList .= ' hidden="hidden"'; } $showPlayerList .= '><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/leagueladder.png" alt="" />'.$player['LadderRanking'].'</td>';
+							}
+							$showPlayerList .= '<td>'.$player['Login'].'</td>'
 							.'<td>'.$player['PlayerStatus'].'</td>'
 							.'<td class="checkbox"><input type="checkbox" name="player[]" value="'.$player['Login'].'" /></td>'
 						.'</tr>';
@@ -223,6 +235,9 @@
 			</div>
 		</div>
 	</div>
+	
+	<input type="hidden" id="currentSort" value="" />
+	<input type="hidden" id="isTeamGameMode" value="<?php echo AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']); ?>" />
 	</form>
 </section>
 

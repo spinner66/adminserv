@@ -197,7 +197,6 @@ abstract class AdminServUI {
 		require_once __DIR__ .'/class/file.class.php';
 		require_once __DIR__ .'/class/folder.class.php';
 		require_once __DIR__ .'/class/str.class.php';
-		require_once __DIR__ .'/class/sort.class.php';
 		require_once __DIR__ .'/class/zip.class.php';
 	}
 	
@@ -614,7 +613,7 @@ abstract class AdminServ {
 					else{
 						if($fullInit){
 							if( !$client->query('GetSystemInfo') ){
-								self::error('['.$client->getErrorCode().'] '.$client->getErrorMessage());
+								self::error();
 							}
 							else{
 								$serverInfo =  $client->getResponse();
@@ -626,12 +625,12 @@ abstract class AdminServ {
 								define('IS_DEDICATED', $serverInfo['IsDedicated']);
 								
 								if( !$client->query('IsRelayServer') ){
-									self::error('['.$client->getErrorCode().'] '.$client->getErrorMessage());
+									self::error();
 								}
 								else{
 									define('IS_RELAY', $client->getResponse() );
 									if( !$client->query('GetVersion') ){
-										self::error('['.$client->getErrorCode().'] '.$client->getErrorMessage());
+										self::error();
 									}
 									else{
 										$getVersion = $client->getResponse();
@@ -808,6 +807,25 @@ abstract class AdminServ {
 	
 	
 	/**
+	*
+	*/
+	public static function isTeamGameMode($currentGameMode){
+		// ID du mode
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$teamModeId = 2;
+		}else{
+			$teamModeId = 3;
+		}
+		
+		if($currentGameMode == $teamModeId){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	
+	/**
 	* Récupère l'extension d'un fichier Nadeo
 	*
 	* @param string $filename -> Le fichier à extraire l'extension
@@ -833,7 +851,7 @@ abstract class AdminServ {
 	* @global resource $client -> Le client doit être initialisé
 	* @return array
 	*/
-	public static function getCurrentServerInfo(){
+	public static function getCurrentServerInfo($sortBy = null){
 		global $client;
 		$out = array();
 		
@@ -858,7 +876,8 @@ abstract class AdminServ {
 			
 			// GameMode
 			$client->query('GetGameMode');
-			$out['srv']['game_mode'] = self::getGameModeName( $client->getResponse() );
+			$out['srv']['gameModeId'] = $client->getResponse();
+			$out['srv']['gameModeName'] = self::getGameModeName($out['srv']['gameModeId']);
 			
 			// ServerName
 			$client->query('GetServerName');
@@ -927,6 +946,32 @@ abstract class AdminServ {
 			
 			// Config
 			$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
+			
+			
+			// TRI
+			if( self::isTeamGameMode($out['srv']['gameModeId']) ){
+				// Si on est en mode équipe, on force en mode détail et on tri par équipe
+				$_SESSION['adminserv_mode'] = 'detail';
+				uasort($out['ply'], 'AdminServSort::sortByTeam');
+			}
+			else{
+				if($sortBy != null){
+					switch($sortBy){
+						case 'nickname':
+							uasort($out['ply'], 'AdminServSort::sortByNickName');
+							break;
+						case 'ladder':
+							uasort($out['ply'], 'AdminServSort::sortByLadderRanking');
+							break;
+						case 'login':
+							uasort($out['ply'], 'AdminServSort::sortByLogin');
+							break;
+						case 'status':
+							uasort($out['ply'], 'AdminServSort::sortByStatus');
+							break;
+					}
+				}
+			}
 		}
 		else{
 			$out['error'] = 'client not initialized';
@@ -1467,5 +1512,101 @@ abstract class AdminServ {
 		
 		return $out;
 	}
+}
+
+
+
+/**
+* Classe pour le traitement des tris AdminServ
+*/
+abstract class AdminServSort {
+	
+	public static function sortByNickName($a, $b){
+		// Modification
+		if(substr($a['NickName'], 0, 1) == '$'){
+			$a['NickName'] = TmNick::toText($a['NickName']);
+		}
+		if(substr($b['NickName'], 0, 1) == '$'){
+			$b['NickName'] = TmNick::toText($b['NickName']);
+		}
+		
+		// Comparaison
+		if($a['NickName'] == $b['NickName']){
+			return 0;
+		}
+		if($a['NickName'] < $b['NickName']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	
+	
+	public static function sortByLadderRanking($a, $b){
+		if($a['LadderRanking'] == $b['LadderRanking']){
+			return 0;
+		}
+		if($a['LadderRanking'] < $b['LadderRanking']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	
+	
+	public static function sortByLogin($a, $b){
+		if($a['Login'] == $b['Login']){
+			return 0;
+		}
+		if($a['Login'] < $b['Login']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	
+	
+	public static function sortByStatus($a, $b){
+		if($a['IsSpectator'] == $b['IsSpectator']){
+			return 0;
+		}
+		if($a['IsSpectator'] < $b['IsSpectator']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	
+	
+	public static function sortByTeam($a, $b){
+		// Modification
+		if($a['TeamId'] == 0){
+			$a['TeamId'] = 'blue';
+		}else if($a['TeamId'] == 1){
+			$a['TeamId'] = 'red';
+		}else{
+			$a['TeamId'] = 'spectator';
+		}
+		if($b['TeamId'] == 0){
+			$b['TeamId'] = 'blue';
+		}else if($b['TeamId'] == 1){
+			$b['TeamId'] = 'red';
+		}else{
+			$b['TeamId'] = 'spectator';
+		}
+		
+		// Comparaison
+		if($a['TeamId'] == $b['TeamId']){
+			return 0;
+		}
+		if($a['TeamId'] < $b['TeamId']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	
+	
+	
 }
 ?>
