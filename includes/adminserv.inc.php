@@ -924,7 +924,7 @@ abstract class AdminServ {
 					// Autres
 					$out['ply'][$i]['PlayerId'] = $player['PlayerId'];
 					$out['ply'][$i]['TeamId'] = $player['TeamId'];
-					if($player['TeamId'] == 0){ $teamName = 'Blue'; }else if($player['TeamId'] == 1){ $teamName = 'Red'; }else{ $teamName = 'Spectator'; }
+					if($player['TeamId'] == 0){ $teamName = Utils::t('Blue'); }else if($player['TeamId'] == 1){ $teamName = Utils::t('Red'); }else{ $teamName = Utils::t('Spectator'); }
 					$out['ply'][$i]['TeamName'] = $teamName;
 					$out['ply'][$i]['IsSpectator'] = $player['IsSpectator'];
 					$out['ply'][$i]['IsInOfficialMode'] = $player['IsInOfficialMode'];
@@ -949,26 +949,28 @@ abstract class AdminServ {
 			
 			
 			// TRI
-			if( self::isTeamGameMode($out['srv']['gameModeId']) ){
-				// Si on est en mode équipe, on force en mode détail et on tri par équipe
-				$_SESSION['adminserv_mode'] = 'detail';
-				uasort($out['ply'], 'AdminServSort::sortByTeam');
-			}
-			else{
-				if($sortBy != null){
-					switch($sortBy){
-						case 'nickname':
-							uasort($out['ply'], 'AdminServSort::sortByNickName');
-							break;
-						case 'ladder':
-							uasort($out['ply'], 'AdminServSort::sortByLadderRanking');
-							break;
-						case 'login':
-							uasort($out['ply'], 'AdminServSort::sortByLogin');
-							break;
-						case 'status':
-							uasort($out['ply'], 'AdminServSort::sortByStatus');
-							break;
+			if( is_array($out['ply']) && count($out['ply']) > 0 ){
+				if( self::isTeamGameMode($out['srv']['gameModeId']) ){
+					// Si on est en mode équipe, on force en mode détail et on tri par équipe
+					$_SESSION['adminserv_mode'] = 'detail';
+					uasort($out['ply'], 'AdminServSort::sortByTeam');
+				}
+				else{
+					if($sortBy != null){
+						switch($sortBy){
+							case 'nickname':
+								uasort($out['ply'], 'AdminServSort::sortByNickName');
+								break;
+							case 'ladder':
+								uasort($out['ply'], 'AdminServSort::sortByLadderRanking');
+								break;
+							case 'login':
+								uasort($out['ply'], 'AdminServSort::sortByLogin');
+								break;
+							case 'status':
+								uasort($out['ply'], 'AdminServSort::sortByStatus');
+								break;
+						}
 					}
 				}
 			}
