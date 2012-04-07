@@ -49,11 +49,16 @@ function speedAdmin(cmd){
 /**
 * Récupère les informations du serveur actuel (map, serveur, stats, joueurs)
 */
-function getCurrentServerInfo(mode){
+function getCurrentServerInfo(mode, sort){
 	if(!mode){
-		mode = "simple";
+		mode = getMode();
 	}
-	$.getJSON("includes/ajax/get_current_serverinfo.php", {mode: mode}, function(data){
+	if(sort){
+		setCurrentSort(sort);
+	}
+	var isTeamGameMode = $("#isTeamGameMode").val();
+	
+	$.getJSON("includes/ajax/get_current_serverinfo.php", {mode: mode, sort: sort}, function(data){
 		if(data != null){
 			// Map
 			if(data.map != null){
@@ -61,10 +66,10 @@ function getCurrentServerInfo(mode){
 				$("#map_author").html(data.map.author);
 				$("#map_enviro").html(data.map.enviro+'<img src="'+data.cfg.path_rsc+'images/env/'+data.map.enviro.toLowerCase()+'.png" alt="" />');
 				$("#map_uid").html(data.map.uid);
-				$("#map_gamemode").html(data.srv.game_mode);
+				$("#map_gamemode").html(data.srv.gameModeName);
 				$("#map_gamemode").attr("class", "");
 				$("#map_gamemode").addClass("value");
-				$("#map_gamemode").addClass( data.srv.game_mode.toLowerCase() );
+				$("#map_gamemode").addClass( data.srv.gameModeName.toLowerCase() );
 				if(data.map.thumb != ""){
 					$("#map_thumbnail").html('<img src="data:image/jpeg;base64,'+data.map.thumb+'" alt="'+$("#map_thumbnail").data("text-thumbnail")+'" />');
 				}
@@ -95,9 +100,12 @@ function getCurrentServerInfo(mode){
 				// Création du tableau
 				if( typeof(data.ply) == "object" && data.ply.length > 0 ){
 					$.each(data.ply, function(i, player){
-						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
-							+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/solo.png" alt="" />'+player.NickName+'</td>';
-							if(mode == "detail"){
+						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">';
+							if(isTeamGameMode && mode == "detail"){
+								out += '<td class="detailModeTd imgleft"><img src="'+data.cfg.path_rsc+'images/16/team_'+player.TeamName.toLowerCase()+'.png" alt="" />'+player.TeamName+'</td>';
+							}
+							out += '<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/solo.png" alt="" />'+player.NickName+'</td>';
+							if( !isTeamGameMode && mode == "detail" ){
 								out += '<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/leagueladder.png" alt="" />'+player.LadderRanking+'</td>';
 							}
 							out += '<td>'+player.Login+'</td>'
@@ -132,19 +140,20 @@ function getCurrentServerInfo(mode){
 * Gestion du mode détail de la page general
 */
 function generalDetailMode(){
+	var sort = getCurrentSort();
 	if( $("#detailMode").text() == $("#detailMode").data("textdetail") ){
+		getCurrentServerInfo("detail", sort);
 		$("#detailMode").text( $("#detailMode").data("textsimple") );
 		$("#playerlist table th.detailModeTh").attr("hidden", false);
 		$("#playerlist").addClass("loading");
 		$("#detailMode").data("statusmode", "detail");
-		getCurrentServerInfo("detail");
 	}
 	else{
+		getCurrentServerInfo("simple", sort);
 		$("#detailMode").text( $("#detailMode").data("textdetail") );
 		$("#playerlist table th.detailModeTh").attr("hidden", true);
 		$("#playerlist").addClass("loading");
 		$("#detailMode").data("statusmode", "simple");
-		getCurrentServerInfo("simple");
 	}
 }
 
@@ -360,8 +369,20 @@ function info(text, hide){
 	}
 }
 
+/**
+* Fonctions générales
+*/
 function getPath(){
 	return $.trim( $(".path").text() );
+}
+function getMode(){
+	return $.trim( $("#detailMode").data("statusmode") );
+}
+function getCurrentSort(){
+	return $("#currentSort").val();
+}
+function setCurrentSort(sort){
+	return $("#currentSort").val(sort);
 }
 function t(text){
 	text = text.replace('from', $("#formUpload").data("from") );
