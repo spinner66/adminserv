@@ -180,22 +180,23 @@ abstract class Utils {
 	/**
 	* Retourne la valeur du terme
 	*/
-	public static function t($key){
+	public static function t($key, $args = array()){
 		global $translate;
+		$out = $key;
 		
 		if( isset($_SESSION['lang']) ){
-			if($_SESSION['lang'] == 'en'){
-				return $key;
-			}else{
+			if($_SESSION['lang'] !== 'en'){
 				if( isset($translate[$key]) ){
-					return $translate[$key];
-				}else{
-					return $key;
+					$out = $translate[$key];
 				}
 			}
-		}else{
-			return $key;
 		}
+		
+		if( count($args) > 0 ){
+			$out = str_replace( array_keys($args), array_values($args), $out);
+		}
+		
+		return $out;
 	}
 	
 	

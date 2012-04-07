@@ -74,6 +74,28 @@
 			}
 		}
 	}
+	else if( isset($_POST['ForceScores']) && isset($_POST['ScoreTeamBlue']) && isset($_POST['ScoreTeamRed']) ){
+		$scoreTeamBlue = intval($_POST['ScoreTeamBlue']);
+		$scoreTeamRed = intval($_POST['ScoreTeamRed']);
+		$scores = array(
+			array(
+				'PlayerId' => 0,
+				'Score' => $scoreTeamBlue
+			),
+			array(
+				'PlayerId' => 1,
+				'Score' => $scoreTeamRed
+			)
+		);
+		if( !$client->query('ForceScores', $scores, true) ){
+			AdminServ::error();
+		}else{
+			if( !$client->query('ChatSendServerMessage', Utils::t('[Admin] The scores have been modified : $00fblue team $fffhas !scoreTeamBlue and $f00red team $fffhas !scoreTeamRed', array('!scoreTeamBlue' => $scoreTeamBlue, '!scoreTeamRed' => $scoreTeamRed)) ) ){
+				AdminServ::error();
+			}
+		}
+	}
+	
 	
 	// Info serveur
 	$serverInfo = AdminServ::getCurrentServerInfo();
@@ -85,6 +107,7 @@
 ?>
 <section class="cadre left">
 	<h1><?php echo Utils::t('Current map'); ?></h1>
+	<form method="post" action=".">
 	<div class="content">
 		<table class="current_map">
 			<tr>
@@ -105,8 +128,20 @@
 			</tr>
 			<tr>
 				<td class="key"><?php echo Utils::t('Game mode'); ?></td>
-				<td class="value<?php echo ' '.strtolower($serverInfo['srv']['gameModeName']); ?>" id="map_gamemode"><?php echo $serverInfo['srv']['gameModeName']; ?></td>
+				<td class="value <?php echo strtolower($serverInfo['srv']['gameModeName']); ?>" id="map_gamemode"><?php echo $serverInfo['srv']['gameModeName']; ?></td>
 			</tr>
+			<?php if( AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']) ){ ?>
+				<tr>
+					<td class="key"><?php echo Utils::t('Scores'); ?></td>
+					<td class="value" id="map_teamscore">
+						<img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/team_0.png" alt="" />
+						<input class="text" type="text" name="ScoreTeamBlue" id="ScoreTeamBlue" value="<?php echo $serverInfo['map']['scores']['blue']; ?>" />
+						<img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/team_1.png" alt="" />
+						<input class="text" type="text" name="ScoreTeamRed" id="ScoreTeamRed" value="<?php echo $serverInfo['map']['scores']['red']; ?>" />
+						<input class="button light" type="submit" name="ForceScores" id="ForceScores" value="Forcer les scores" />
+					</td>
+				</tr>
+			<?php } ?>
 		</table>
 		<?php
 			if($serverInfo['map']['thumb'] != null){
@@ -116,6 +151,7 @@
 			}
 		?>
 	</div>
+	</form>
 	
 	<h1><?php echo Utils::t('Server'); ?></h1>
 	<div class="content">

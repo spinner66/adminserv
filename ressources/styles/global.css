@@ -716,7 +716,7 @@ td.value {
 }
 .options input {
 	font-size: .9em;
-	margin: 10px 5px 0 0;
+	margin-right: 5px;
 }
 .options .nb-line {
 	color: #fff;
@@ -1063,8 +1063,32 @@ footer {
 	display: block;
 	width: 128px;
 }
+#map_teamscore {
+	height: 36px;
+}
+#map_teamscore .text {
+	float: left;
+	width: 50px;
+	text-align: center;
+}
+#ScoreTeamBlue {
+	margin-right: 30px;
+}
+#map_teamscore img {
+	display: block;
+	float: left;
+	margin: 3px 5px 0 0;
+}
+#ForceScores {
+	position: absolute;
+	top: 150px;
+	right: 15px;
+}
 #playerlist {
 	min-height: 433px;
+}
+.section-index .options input {
+	margin-top: 10px;
 }
 
 
