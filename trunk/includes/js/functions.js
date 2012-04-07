@@ -102,7 +102,7 @@ function getCurrentServerInfo(mode, sort){
 					$.each(data.ply, function(i, player){
 						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">';
 							if(isTeamGameMode && mode == "detail"){
-								out += '<td class="detailModeTd imgleft"><img src="'+data.cfg.path_rsc+'images/16/team_'+player.TeamName.toLowerCase()+'.png" alt="" />'+player.TeamName+'</td>';
+								out += '<td class="detailModeTd imgleft"><img src="'+data.cfg.path_rsc+'images/16/team_'+player.TeamId+'.png" alt="" />'+player.TeamName+'</td>';
 							}
 							out += '<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/solo.png" alt="" />'+player.NickName+'</td>';
 							if( !isTeamGameMode && mode == "detail" ){
@@ -145,6 +145,7 @@ function generalDetailMode(){
 		getCurrentServerInfo("detail", sort);
 		$("#detailMode").text( $("#detailMode").data("textsimple") );
 		$("#playerlist table th.detailModeTh").attr("hidden", false);
+		$("#playerlist table th.firstTh").removeClass("thleft");
 		$("#playerlist").addClass("loading");
 		$("#detailMode").data("statusmode", "detail");
 	}
@@ -152,6 +153,7 @@ function generalDetailMode(){
 		getCurrentServerInfo("simple", sort);
 		$("#detailMode").text( $("#detailMode").data("textdetail") );
 		$("#playerlist table th.detailModeTh").attr("hidden", true);
+		$("#playerlist table th.firstTh").addClass("thleft");
 		$("#playerlist").addClass("loading");
 		$("#detailMode").data("statusmode", "simple");
 	}

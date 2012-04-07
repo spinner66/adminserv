@@ -43,5 +43,12 @@ $translate = array(
 	'Kick' => 'Kicker',
 	'Spectator' => 'Spectateur',
 	'Player' => 'Joueur',
+	'Team' => 'Équipe',
+	'Guest' => 'Inviter',
+	'Ignore' => 'Ignorer',
+	'Red team' => 'Équipe rouge',
+	'Blue team' => 'Équipe bleue',
+	'Blue' => 'Bleue',
+	'Red' => 'Rouge',
 );
 ?>

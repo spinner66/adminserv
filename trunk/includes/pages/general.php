@@ -16,6 +16,22 @@
 			}
 		}
 	}
+	else if( isset($_POST['IgnoreLoginList']) && count($_POST['player']) > 0 ){
+		foreach($_POST['player'] as $player){
+			if( !$client->query('Ignore', $player) ){
+				AdminServ::error();
+				break;
+			}
+		}
+	}
+	else if( isset($_POST['GuestLoginList']) && count($_POST['player']) > 0 ){
+		foreach($_POST['player'] as $player){
+			if( !$client->query('AddGuest', $player) ){
+				AdminServ::error();
+				break;
+			}
+		}
+	}
 	else if( isset($_POST['ForcePlayerList']) && count($_POST['player']) > 0 ){
 		foreach($_POST['player'] as $player){
 			if( !$client->query('ForceSpectator', $player, 2) ){
@@ -41,6 +57,20 @@
 					AdminServ::error();
 					break;
 				}
+			}
+		}
+	}
+	else if( (isset($_POST['ForceBlueTeam']) || isset($_POST['ForceRedTeam'])) && count($_POST['player']) > 0 ){
+		if( isset($_POST['ForceBlueTeam']) ){
+			$teamId = 0;
+		}else{
+			$teamId = 1;
+		}
+		
+		foreach($_POST['player'] as $player){
+			if( !$client->query('ForcePlayerTeam', $player, $teamId) ){
+				AdminServ::error();
+				break;
 			}
 		}
 	}
@@ -170,11 +200,11 @@
 			<thead>
 				<tr>
 					<?php if( AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']) ){ ?>
-						<th class="detailModeTh thleft"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=team">Équipe</a></th>
+						<th class="detailModeTh thleft"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=team"><?php echo Utils::t('Team'); ?></a></th>
 					<?php } ?>
-					<th class="<?php if(USER_MODE == 'simple'){ echo 'thleft'; } ?>"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
+					<th class="firstTh <?php if(USER_MODE == 'simple'){ echo 'thleft'; } ?>"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
 					<?php if( !AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']) ){ ?>
-						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=ladder">Ladder</a></th>
+						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=ladder"><?php echo Utils::t('Ladder'); ?></a></th>
 					<?php } ?>
 					<th><a href="?sort=login"><?php echo Utils::t('Login'); ?></a></th>
 					<th><a href="?sort=status"><?php echo Utils::t('Status'); ?></a></th>
@@ -193,7 +223,7 @@
 						// Ligne
 						$showPlayerList .= '<tr class="'; if($i%2){ $showPlayerList .= 'even'; }else{ $showPlayerList .= 'odd'; } $showPlayerList .= '">';
 							if( AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']) && USER_MODE == 'detail'){
-								$showPlayerList .= '<td class="detailModeTd imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/team_'.strtolower($player['TeamName']).'.png" alt="" />'.$player['TeamName'].'</td>';
+								$showPlayerList .= '<td class="detailModeTd imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/team_'.$player['TeamId'].'.png" alt="" />'.$player['TeamName'].'</td>';
 							}
 							
 							$showPlayerList .= '<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>';
@@ -227,6 +257,12 @@
 				<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 				<span class="selected-files-count">(0)</span>
 				<div class="selected-files-option">
+					<?php if( AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']) ){ ?>
+						<input class="button dark" type="submit" name="ForceBlueTeam" id="ForceBlueTeam" value="<?php echo Utils::t('Blue team'); ?>" />
+						<input class="button dark" type="submit" name="ForceRedTeam" id="ForceRedTeam" value="<?php echo Utils::t('Red team'); ?>" />
+					<?php } ?>
+					<input class="button dark" type="submit" name="IgnoreLoginList" id="IgnoreLoginList" value="<?php echo Utils::t('Ignore'); ?>" />
+					<input class="button dark" type="submit" name="GuestLoginList" id="GuestLoginList" value="<?php echo Utils::t('Guest'); ?>" />
 					<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="<?php echo Utils::t('Ban'); ?>" />
 					<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="<?php echo Utils::t('Kick'); ?>" />
 					<input class="button dark" type="submit" name="ForceSpectatorList" id="ForceSpectatorList" value="<?php echo Utils::t('Spectator'); ?>" />
