@@ -879,6 +879,14 @@ abstract class AdminServ {
 			$out['srv']['gameModeId'] = $client->getResponse();
 			$out['srv']['gameModeName'] = self::getGameModeName($out['srv']['gameModeId']);
 			
+			// TeamScores
+			if( self::isTeamGameMode($out['srv']['gameModeId']) ){
+				$client->query('GetCurrentRanking', 2, 0);
+				$currentRanking = $client->getResponse();
+				$out['map']['scores']['blue'] = $currentRanking[0]['Score'];
+				$out['map']['scores']['red'] = $currentRanking[1]['Score'];
+			}
+			
 			// ServerName
 			$client->query('GetServerName');
 			$out['srv']['name'] = TmNick::toHtml($client->getResponse(), 10, true, false, '#999');

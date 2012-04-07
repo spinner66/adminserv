@@ -70,8 +70,12 @@ function getCurrentServerInfo(mode, sort){
 				$("#map_gamemode").attr("class", "");
 				$("#map_gamemode").addClass("value");
 				$("#map_gamemode").addClass( data.srv.gameModeName.toLowerCase() );
-				if(data.map.thumb != ""){
+				if(data.map.thumb){
 					$("#map_thumbnail").html('<img src="data:image/jpeg;base64,'+data.map.thumb+'" alt="'+$("#map_thumbnail").data("text-thumbnail")+'" />');
+				}
+				if(data.map.scores){
+					$("#ScoreTeamBlue").val(data.map.scores.blue);
+					$("#ScoreTeamRed").val(data.map.scores.red);
 				}
 			}
 			
