@@ -41,7 +41,7 @@
 		<h1>Liste</h1>
 		<div class="title-detail">
 			<ul>
-				<li><a href="">Mode détail</a></li>
+				<li><a id="detailMode" href="." data-statusmode="<?php echo USER_MODE; ?>" data-textdetail="<?php echo Utils::t('Detail mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detail mode'); } ?></a></li>
 				<li><input type="checkbox" name="checkAll" id="checkAll" value="" /></li>
 			</ul>
 		</div>
@@ -54,6 +54,8 @@
 						<th class="thleft"><a href="?sort=name">Map</a></th>
 						<th><a href="?sort=env">Environnement</a></th>
 						<th><a href="?sort=author">Auteur</a></th>
+						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=goldtime"><?php echo Utils::t('Gold time'); ?></a></th>
+						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=cost"><?php echo Utils::t('Cost'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
 					<tr class="table-separation"></tr>
@@ -68,10 +70,19 @@
 						foreach($mapsList['lst'] as $id => $map){
 							// Ligne
 							$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($id == $mapsList['cid']){ $showMapList .= ' current'; } $showMapList .= '">'
-								.'<td class="imgleft"><img src="'.$mapsList['cfg']['path_rsc'].'images/16/map.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
+								.'<td class="imgleft"><img src="'.$mapsList['cfg']['path_rsc'].'images/16/map.png" alt="" />'
+									.'<span title="'.$map['FileName'].'">'.$map['Name'].'</span>';
+									if(USER_MODE == 'detail'){
+										$showMapList .= '<span class="detailModeTd">'.$map['UId'].'</span>';
+									}
+								$showMapList .= '</td>'
 								.'<td class="imgcenter"><img src="'.$mapsList['cfg']['path_rsc'].'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
-								.'<td>'.$map['Author'].'</td>'
-								.'<td class="checkbox">'; if($id != $mapsList['cid']){ $showMapList .= '<input type="checkbox" name="map[]" value="'.$map['FileName'].'" />'; } $showMapList .= '</td>'
+								.'<td>'.$map['Author'].'</td>';
+								if(USER_MODE == 'detail'){
+									$showMapList .= '<td>'.$map['GoldTime'].'</td>'
+									.'<td>'.$map['CopperPrice'].'</td>';
+								}
+								$showMapList .= '<td class="checkbox">'; if($id != $mapsList['cid']){ $showMapList .= '<input type="checkbox" name="map[]" value="'.$map['FileName'].'" />'; } $showMapList .= '</td>'
 							.'</tr>';
 							$i++;
 						}
@@ -102,6 +113,8 @@
 				</div>
 			</div>
 		</div>
+		
+		<input type="hidden" id="currentSort" name="currentSort" value="" />
 		</form>
 	</section>
 </section>

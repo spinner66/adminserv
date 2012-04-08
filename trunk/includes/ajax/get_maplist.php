@@ -10,9 +10,16 @@
 	require_once '../adminserv.inc.php';
 	AdminServUI::getClass();
 	
+	// ISSET
+	if( isset($_GET['mode']) ){ $mode = addslashes($_GET['mode']); }else{ $mode = null; }
+	if( isset($_GET['sort']) ){ $sort = addslashes($_GET['sort']); }else{ $sort = null; }
+	if($mode){
+		$_SESSION['adminserv_mode'] = $mode;
+	}
+	
 	// DATA
 	if( AdminServ::initialize() ){
-		$out = AdminServ::getMapList();
+		$out = AdminServ::getMapList($sort);
 	}
 	
 	// OUT

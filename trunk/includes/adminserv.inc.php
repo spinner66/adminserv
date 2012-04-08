@@ -1330,7 +1330,7 @@ abstract class AdminServ {
 	* @global resource $client -> Le client doit être initialisé
 	* @return array
 	*/
-	public static function getMapList(){
+	public static function getMapList($sortBy = null){
 		global $client;
 		$out = array();
 		
@@ -1367,7 +1367,7 @@ abstract class AdminServ {
 					$out['lst'][$i]['UId'] = $map['UId'];
 					$out['lst'][$i]['FileName'] = $map['FileName'];
 					$out['lst'][$i]['Author'] = $map['Author'];
-					$out['lst'][$i]['GoldTime'] = $map['GoldTime'];
+					$out['lst'][$i]['GoldTime'] = TimeDate::format($map['GoldTime']);
 					$out['lst'][$i]['CopperPrice'] = $map['CopperPrice'];
 					$i++;
 				}
@@ -1386,6 +1386,31 @@ abstract class AdminServ {
 			
 			// Config
 			$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
+			
+			
+			// TRI
+			if($sortBy != null){
+				if( is_array($out['lst']) && count($out['lst']) > 0 ){
+					switch($sortBy){
+						case 'name':
+							uasort($out['lst'], 'AdminServSort::sortByName');
+							break;
+						case 'env':
+							uasort($out['lst'], 'AdminServSort::sortByEnviro');
+							break;
+						case 'author':
+							uasort($out['lst'], 'AdminServSort::sortByAuthor');
+							break;
+						case 'goldtime':
+							uasort($out['lst'], 'AdminServSort::sortByGoldTime');
+							break;
+						case 'cost':
+							uasort($out['lst'], 'AdminServSort::sortByPrice');
+							break;
+					}
+				}
+				$out['lst'] = array_values($out['lst']);
+			}
 		}
 		else{
 			$out['error'] = 'client not initialized';
@@ -1531,14 +1556,11 @@ abstract class AdminServ {
 */
 abstract class AdminServSort {
 	
+	/* General */
 	public static function sortByNickName($a, $b){
 		// Modification
-		if(substr($a['NickName'], 0, 1) == '$'){
-			$a['NickName'] = TmNick::toText($a['NickName']);
-		}
-		if(substr($b['NickName'], 0, 1) == '$'){
-			$b['NickName'] = TmNick::toText($b['NickName']);
-		}
+		$a['NickName'] = TmNick::toText($a['NickName']);
+		$b['NickName'] = TmNick::toText($b['NickName']);
 		
 		// Comparaison
 		if($a['NickName'] == $b['NickName']){
@@ -1550,8 +1572,6 @@ abstract class AdminServSort {
 			return 1;
 		}
 	}
-	
-	
 	public static function sortByLadderRanking($a, $b){
 		if($a['LadderRanking'] == $b['LadderRanking']){
 			return 0;
@@ -1562,8 +1582,6 @@ abstract class AdminServSort {
 			return 1;
 		}
 	}
-	
-	
 	public static function sortByLogin($a, $b){
 		if($a['Login'] == $b['Login']){
 			return 0;
@@ -1574,8 +1592,6 @@ abstract class AdminServSort {
 			return 1;
 		}
 	}
-	
-	
 	public static function sortByStatus($a, $b){
 		if($a['IsSpectator'] == $b['IsSpectator']){
 			return 0;
@@ -1586,8 +1602,6 @@ abstract class AdminServSort {
 			return 1;
 		}
 	}
-	
-	
 	public static function sortByTeam($a, $b){
 		// Modification
 		if($a['TeamId'] == 0){
@@ -1616,7 +1630,76 @@ abstract class AdminServSort {
 		}
 	}
 	
-	
-	
+	/* Maps-list */
+	public static function sortByName($a, $b){
+		// Modification
+		$a['Name'] = TmNick::toText($a['Name']);
+		$b['Name'] = TmNick::toText($b['Name']);
+		
+		// Comparaison
+		if($a['Name'] == $b['Name']){
+			return 0;
+		}
+		if($a['Name'] < $b['Name']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	public static function sortByEnviro($a, $b){
+		// Modification
+		if($a['Environnement'] == 'Speed'){
+			$a['Environnement'] = 'Desert';
+		}
+		if($b['Environnement'] == 'Speed'){
+			$b['Environnement'] = 'Desert';
+		}
+		if($a['Environnement'] == 'Alpine'){
+			$a['Environnement'] = 'Snow';
+		}
+		if($b['Environnement'] == 'Alpine'){
+			$b['Environnement'] = 'Snow';
+		}
+		
+		// Comparaison
+		if($a['Environnement'] == $b['Environnement']){
+			return 0;
+		}
+		if($a['Environnement'] < $b['Environnement']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	public static function sortByAuthor($a, $b){
+		if($a['Author'] == $b['Author']){
+			return 0;
+		}
+		if($a['Author'] < $b['Author']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	public static function sortByGoldTime($a, $b){
+		if($a['GoldTime'] == $b['GoldTime']){
+			return 0;
+		}
+		if($a['GoldTime'] < $b['GoldTime']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	public static function sortByPrice($a, $b){
+		if($a['CopperPrice'] == $b['CopperPrice']){
+			return 0;
+		}
+		if($a['CopperPrice'] < $b['CopperPrice']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
 }
 ?>

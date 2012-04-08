@@ -263,6 +263,30 @@ abstract class TimeDate {
 	
 	
 	/**
+	* Forme le temps millisecondes en 00:00:00
+	*
+	* @param  string $millisec -> Temps en millisecondes
+	* @return string
+	*/
+	public static function format($millisec){
+		$cen = intval( ($millisec % 1000) / 10 );
+		if($cen < 10){
+			$cen = '0'.$cen;
+		}
+		$sec = intval( ($millisec / 1000) % 60 );
+		if($sec < 10){
+			$sec = '0'.$sec;
+		}
+		$min = intval($millisec / 60000);
+		if($min < 10){
+			$min = '0'.$min;
+		}
+		
+		return $min.':'.$sec.':'.$cen;
+	}
+	
+	
+	/**
 	* Méthodes de convertion du temps (Min, sec, millisec)
 	*/
 	public static function secToMillisec($sec){

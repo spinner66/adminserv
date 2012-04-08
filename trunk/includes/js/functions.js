@@ -459,8 +459,15 @@ function t(text){
 /**
 * Récupère la liste des maps du serveur
 */
-function getMapList(){
-	$.getJSON("includes/ajax/get_maplist.php", function(data){
+function getMapList(mode, sort){
+	if(!mode){
+		mode = getMode();
+	}
+	if(sort){
+		setCurrentSort(sort);
+	}
+	
+	$.getJSON("includes/ajax/get_maplist.php", {mode: mode, sort: sort}, function(data){
 		if(data != null){
 			if(data.lst != null && !$("#maplist").isChecked() ){
 				var out = "";
@@ -469,10 +476,19 @@ function getMapList(){
 				if( typeof(data.lst) == "object" && data.lst.length > 0 ){
 					$.each(data.lst, function(i, map){
 						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } if(data.cid == i){ out += ' current'; } out += '">'
-							+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/map.png" alt="" />'+map.Name+'</td>'
+							+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/map.png" alt="" />'
+								+'<span title="'+map.FileName+'">'+map.Name+'</span>'
+								if(mode == "detail"){
+									out += '<span class="detailModeTd">'+map.UId+'</span>';
+								}
+							out += '</td>'
 							+'<td class="imgcenter"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
-							+'<td>'+map.Author+'</td>'
-							+'<td class="checkbox">'; if(data.cid != i){ out += '<input type="checkbox" name="map[]" value="'+map.FileName+'" />'; } out += '</td>'
+							+'<td>'+map.Author+'</td>';
+							if(mode == "detail"){
+								out += '<td>'+map.GoldTime+'</td>'
+								+'<td>'+map.CopperPrice+'</td>';
+							}
+							out += '<td class="checkbox">'; if(data.cid != i){ out += '<input type="checkbox" name="map[]" value="'+map.FileName+'" />'; } out += '</td>'
 						+'</tr>';
 					});
 					
@@ -484,14 +500,41 @@ function getMapList(){
 					if( !$("input#checkAll").attr("disabled") ){
 						$("input#checkAll").attr("disabled", true);
 					}
-					out += '<tr class="no-line"><td class="center" colspan="4">'+data.lst+'</td></tr>';
+					out += '<tr class="no-line"><td class="center" colspan="'; if(mode == "detail"){ out += '6'; }else{ out += '4'; } out +='">'+data.lst+'</td></tr>';
 				}
 				
 				// HTML
 				$("#maplist table tbody").html(out);
+				if( $("#maplist").hasClass("loading") ){
+					$("#maplist").removeClass("loading");
+				}
 			}
 		}
 	});
+}
+
+
+/**
+* Gestion du mode détail de la page maps-list
+*/
+function mapslistDetailMode(){
+	var sort = getCurrentSort();
+	if( $("#detailMode").text() == $("#detailMode").data("textdetail") ){
+		getMapList("detail", sort);
+		$("#detailMode").text( $("#detailMode").data("textsimple") );
+		$("#maplist table th.detailModeTh").attr("hidden", false);
+		//$("#maplist table th.firstTh").removeClass("thleft");
+		$("#maplist").addClass("loading");
+		$("#detailMode").data("statusmode", "detail");
+	}
+	else{
+		getMapList("simple", sort);
+		$("#detailMode").text( $("#detailMode").data("textdetail") );
+		$("#maplist table th.detailModeTh").attr("hidden", true);
+		//$("#maplist table th.firstTh").addClass("thleft");
+		$("#maplist").addClass("loading");
+		$("#detailMode").data("statusmode", "simple");
+	}
 }
 
 
