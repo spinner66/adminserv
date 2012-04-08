@@ -308,8 +308,8 @@
 		</div>
 	</div>
 	
-	<input type="hidden" id="currentSort" value="" />
-	<input type="hidden" id="isTeamGameMode" value="<?php echo AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']); ?>" />
+	<input type="hidden" id="currentSort" name="currentSort" value="" />
+	<input type="hidden" id="isTeamGameMode" name="isTeamGameMode" value="<?php echo AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']); ?>" />
 	</form>
 </section>
 

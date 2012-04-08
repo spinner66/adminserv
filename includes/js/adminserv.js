@@ -170,7 +170,7 @@ $(document).ready(function(){
 		if( $("body").hasClass("section-index") ){
 			// Infos serveur
 			setInterval(function(){
-				getCurrentServerInfo(getMode(), getCurrentSort() );
+				getCurrentServerInfo(getMode(), getCurrentSort());
 			}, 10000);
 			
 			// Checkbox
@@ -210,6 +210,7 @@ $(document).ready(function(){
 			$("#playerlist table th a").click(function(){
 				var sort = $(this).attr("href");
 				sort = sort.split("=")[1];
+				$("#playerlist").addClass("loading");
 				getCurrentServerInfo(getMode(), sort);
 				return false;
 			});
@@ -366,7 +367,7 @@ $(document).ready(function(){
 		else if( $("body").hasClass("section-maps-list") ){
 			// Mise à jour de la liste
 			setInterval(function(){
-				getMapList();
+				getMapList(getMode(), getCurrentSort());
 			}, 10000);
 			
 			// Checkbox
@@ -397,6 +398,21 @@ $(document).ready(function(){
 					// Mise à jour du nb de lignes sélectionnées
 					$(".maps .list").updateNbSelectedLines();
 				}
+			});
+			
+			// Mode détail
+			$("#detailMode").click(function(){
+				mapslistDetailMode();
+				return false;
+			});
+			
+			// Tris
+			$("#maplist table th a").click(function(){
+				var sort = $(this).attr("href");
+				sort = sort.split("=")[1];
+				$("#maplist").addClass("loading");
+				getMapList(getMode(), sort);
+				return false;
 			});
 		}
 		/**
