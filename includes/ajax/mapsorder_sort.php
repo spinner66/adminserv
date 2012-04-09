@@ -8,18 +8,38 @@
 	AdminServUI::getClass();
 	
 	// ISSET
-	if( isset($_POST['tri']) ){ $tri = $_POST['tri']; }else{ $tri = 'name'; }
-	if( isset($_POST['ord']) ){ $order = $_POST['ord']; }else{ $order = 'asc'; }
-	if( isset($_POST['lst']) ){ $list = $_POST['lst']; }else{ $list = null; }
+ 	if( isset($_GET['srt']) ){ $sort = $_GET['srt']; }else{ $sort = null; }
+	if( isset($_GET['ord']) ){ $order = $_GET['ord']; }else{ $order = 'asc'; }
+	if( isset($_GET['lst']) ){ $list = $_GET['lst']; }else{ $list = null; }
 	
 	// HTML
 	$out = null;
-	if($list != null){
+	if($sort != null && $list != null){
+		$list = json_decode($list, true);
 		
-		if($tri == 'name'){
-			
+		switch($sort){
+			case 'name':
+				usort($list['lst'], 'AdminServSort::sortByName');
+				break;
+			case 'env':
+				usort($list['lst'], 'AdminServSort::sortByEnviro');
+				break;
+			case 'author':
+				usort($list['lst'], 'AdminServSort::sortByAuthor');
+				break;
+			case 'rand':
+				shuffle($list['lst']);
+				break;
 		}
-		
+		if($order == 'desc'){
+			rsort($list['lst']);
+		}
+		$out = array(
+			'cid' => $list['cid'],
+			'lst' => $list['lst'],
+			'nbm' => $list['nbm'],
+			'cfg' => $list['cfg']
+		);
 	}
 	
 	// OUT

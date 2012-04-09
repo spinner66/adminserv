@@ -772,7 +772,7 @@ td .detailModeTd {
 .selected-files-option {
 	display: none;
 	position: absolute;
-	bottom: -25px;
+	top: -18px;
 	right: -25px;
 	padding: 25px;
 	text-align: right;
@@ -1094,6 +1094,8 @@ footer {
 }
 .section-index .selected-files-option {
 	width: 70%;
+	top: auto;
+	bottom: -25px;
 }
 .section-index .options input {
 	margin-top: 10px;
