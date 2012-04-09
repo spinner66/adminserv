@@ -560,15 +560,22 @@ $(document).ready(function(){
 		else if( $("body").hasClass("section-maps-order") ){
 			// Tri automatique
 			$(".autoSortMode li").click(function(){
+				$("#sortableMapList").addClass("loading");
 				$(this).children("input").attr("checked", true);
 				$(".autoSortMode li").removeClass("selected");
+				$(".autoSortMode li span.ui-icon").removeClass("active");
 				$(this).addClass("ui-state-default selected");
+				$(this).find(".icon .ui-icon-arrowthick-1-n").addClass("active");
 				
 				// Tri
 				mapsOrderSort($(this).children("input").val(), "asc");
 			});
 			$(".autoSortMode li span.ui-icon").click(function(){
+				$("#sortableMapList").addClass("loading");
+				$(".autoSortMode li").removeClass("selected");
 				$(".autoSortMode li span.ui-icon").removeClass("active");
+				$(this).parents("li").addClass("selected");
+				$(this).parents("li").children("input").attr("checked", true);
 				$(this).addClass("active");
 				
 				if( $(this).hasClass("ui-icon-arrowthick-1-n") ){

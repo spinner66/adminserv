@@ -653,9 +653,28 @@ function slideUpNewFolderForm(){
 function mapsOrderSort(sort, order){
 	var list = $("#jsonlist").val();
 	
-	$.post("includes/ajax/mapsorder_sort.php", {tri: sort, ord: order, lst: list}, function(response){
-		if(response != null){
+	$.getJSON("includes/ajax/mapsorder_sort.php", {srt: sort, ord: order, lst: list}, function(data){
+		if(data != null){
+			var out = "";
 			
+			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
+				$.each(data.lst, function(id, map){
+					if(data.cid != id){
+						out += '<li class="ui-state-default">'
+							+'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
+							+'<div class="order-map-name" title="'+map.FileName+'">'+map.Name+'</div>'
+							+'<div class="order-map-env"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
+							+'<div class="order-map-author"><img src="'+data.cfg.path_rsc+'images/16/challengeauthor.png" alt="" />'+map.Author+'</div>'
+						+'</li>';
+					}
+				});
+			}
+			
+			// HTML
+			$("#sortableMapList").html(out);
+			if( $("#sortableMapList").hasClass("loading") ){
+				$("#sortableMapList").removeClass("loading");
+			}
 		}
 	});
 }
