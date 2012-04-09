@@ -93,7 +93,11 @@
 	
 	
 	// MAPLIST
-	$mapsList = AdminServ::getLocalMapList($mapsDirectoryPath.$directory);
+	$sort = null;
+	if( isset($_GET['sort']) && $_GET['sort'] != null){
+		$sort = addslashes($_GET['sort']);
+	}
+	$mapsList = AdminServ::getLocalMapList($mapsDirectoryPath.$directory, $sort);
 	
 	
 	// HTML
@@ -123,9 +127,9 @@
 			<table>
 				<thead>
 					<tr>
-						<th class="thleft"><a href="?sort=name">Map</a></th>
-						<th><a href="?sort=env">Environnement</a></th>
-						<th><a href="?sort=author">Auteur</a></th>
+						<th class="thleft"><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=name">Map</a></th>
+						<th><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=env">Environnement</a></th>
+						<th><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=author">Auteur</a></th>
 						<th class="thright"></th>
 					</tr>
 					<tr class="table-separation"></tr>

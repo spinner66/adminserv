@@ -125,6 +125,13 @@ $(document).ready(function(){
 				$(this).children("span").addClass("arrow-down");
 			}
 		});
+		$("#deleteFolder").click(function(){
+			if( confirm( $(this).data("confirm-text") ) ){
+				$("#optionFolderHiddenField").val("delete");
+				$("#optionFolderForm").submit();
+			}
+			return false;
+		});
 		
 		
 		/**

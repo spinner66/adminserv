@@ -434,9 +434,11 @@ abstract class AdminServUI {
 						.'<input class="text" type="text" name="newFolderName" id="newFolderName" value="" />'
 						.'<input class="button light" type="submit" name="newFolderValid" id="newFolderValid" value="ok" />'
 					.'</div>'
-				.'</h1>'
-				.'<div class="title-detail"><a href="." id="newfolder" data-cancel="Annuler" data-new="Nouveau">Nouveau</a></div>'
-			.'</form>';
+				.'</h1>';
+				if(AdminServConfig::$FOLDERS_OPTIONS['new']){
+					$out .= '<div class="title-detail"><a href="." id="newfolder" data-cancel="Annuler" data-new="Nouveau">Nouveau</a></div>';
+				}
+			$out .= '</form>';
 			
 			// Liste des dossiers
 			if( file_exists($path) ){
@@ -499,15 +501,24 @@ abstract class AdminServUI {
 			
 			// Options de dossier
 			if($currentPath){
-				$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
-					.'<div class="option-folder-list">'
-						.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
-						.'<ul hidden="hidden">'
-							.'<li><a class="button light rename" href="">Renommer</a></li>'
-							.'<li><a class="button light move" href="">Déplacer</a></li>'
-							.'<li><a class="button light delete" href="">Supprimer</a></li>'
-					.'</div>'
-				.'</form>';
+				if( AdminServConfig::$FOLDERS_OPTIONS['rename'] || AdminServConfig::$FOLDERS_OPTIONS['move'] || AdminServConfig::$FOLDERS_OPTIONS['delete'] ){
+					$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
+						.'<div class="option-folder-list">'
+							.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
+							.'<ul hidden="hidden">';
+								if(AdminServConfig::$FOLDERS_OPTIONS['rename']){
+									$out .= '<li><a class="button light rename" id="renameFolder" href=".">Renommer</a></li>';
+								}
+								if(AdminServConfig::$FOLDERS_OPTIONS['move']){
+									$out .= '<li><a class="button light move" id="moveFolder" href=".">Déplacer</a></li>';
+								}
+								if(AdminServConfig::$FOLDERS_OPTIONS['delete']){
+									$out .= '<li><a class="button light delete" id="deleteFolder" href="." data-confirm-text="Voulez-vous vraiment supprimer ce dossier ?">Supprimer</a></li>';
+								}
+						$out .= '</div>'
+						.'<input type="hidden" name="optionFolderHiddenField" id="optionFolderHiddenField" value="" />'
+					.'</form>';
+				}
 			}
 		}
 		else{
@@ -1420,7 +1431,7 @@ abstract class AdminServ {
 	}
 	
 	
-	public static function getLocalMapList($path){
+	public static function getLocalMapList($path, $sortBy = null){
 		$out = array();
 		
 		if( class_exists('Folder') && class_exists('GBXChallengeFetcher') ){
@@ -1475,6 +1486,24 @@ abstract class AdminServ {
 				
 				// Config
 				$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
+				
+				
+				// TRIS
+				if($sortBy != null){
+					if( is_array($out['lst']) && count($out['lst']) > 0 ){
+						switch($sortBy){
+							case 'name':
+								uasort($out['lst'], 'AdminServSort::sortByName');
+								break;
+							case 'env':
+								uasort($out['lst'], 'AdminServSort::sortByEnviro');
+								break;
+							case 'author':
+								uasort($out['lst'], 'AdminServSort::sortByAuthor');
+								break;
+						}
+					}
+				}
 			}
 			else{
 				// Retour des erreurs de la méthode read

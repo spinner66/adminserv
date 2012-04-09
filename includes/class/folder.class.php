@@ -106,6 +106,33 @@ abstract class Folder {
 	
 	
 	/**
+	*
+	*/
+	public static function delete($dirname){
+		$out = null;
+		
+		if( @file_exists($dirname) ){
+			if( is_dir($dirname) ){
+				if( @rmdir($dirname) ){
+					$out = true;
+				}
+				else{
+					$out = 'Delete '.$dirname.' failed';
+				}
+			}
+			else{
+				$out = 'Not directory';
+			}
+		}
+		else{
+			$out = 'Folder no exists';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Compte le nombre de fichier présent dans un dossier
 	*
 	* @param string $path        -> Le chemin du dossier
