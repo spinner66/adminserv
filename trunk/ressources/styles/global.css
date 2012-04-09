@@ -776,7 +776,6 @@ td .detailModeTd {
 	right: -25px;
 	padding: 25px;
 	text-align: right;
-	width: 70%;
 }
 
 .options-checkbox {
@@ -914,6 +913,9 @@ td .detailModeTd {
 .options-radio-inline li .icon .ui-icon:hover {
 	background-color: #ddd;
 	border-color: #ccc;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
 	border-radius: 3px;
 }
 
@@ -1089,6 +1091,9 @@ footer {
 }
 #playerlist {
 	min-height: 433px;
+}
+.section-index .selected-files-option {
+	width: 70%;
 }
 .section-index .options input {
 	margin-top: 10px;
@@ -1288,11 +1293,13 @@ footer {
 }
 .folders .option-folder-list ul li a {
 	display: block;
-	width: 70%;
 	padding-left: 30px;
 	border: 0;
 	background-repeat: no-repeat;
 	background-position: 5px center;
+}
+.folders .option-folder-list ul li a:hover {
+	background-color: #999;
 }
 .folders .option-folder-list ul li a.button.light,
 .folders .option-folder-list ul li a.button.light:hover {
