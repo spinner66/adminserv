@@ -729,8 +729,8 @@ abstract class AdminServ {
 		}
 		// Sinon, c'est local ou null
 		else{
-			// Si c'est null -> autorisé à tous
-			if($serverLevel === null){
+			// Si c'est public -> autorisé à tous
+			if($serverLevel === 'public'){
 				return true;
 			}
 			// Sinon -> autorisé au réseau local

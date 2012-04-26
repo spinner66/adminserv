@@ -7,8 +7,11 @@
 	</section>
 	
 	<section class="cadre right creatematchset">
-		<h1>Créer un MatchSetting</h1>
+		<h1>Créer un MatchSettings</h1>
 		
+		<h2>Informations de jeu</h2>
+		
+		<h2>Maps</h2>
 	</section>
 </section>
 <?php
