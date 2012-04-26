@@ -1,1 +1,0 @@
-					</div><!-- #content-inner -->				</div><!-- #content -->								<footer>					<div id="footer-inner">						© 2006-<?php echo date('Y'); ?> <a href="http://www.zone-kev717.info"><strong>Kev717</strong></a> | AdminServ <?php echo ADMINSERV_VERSION; ?>					</div>				</footer>							</div><!-- #page-inner -->		</div><!-- #page -->	</body></html>
