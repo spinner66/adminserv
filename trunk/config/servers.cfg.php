@@ -7,14 +7,14 @@ class ServerConfig {
 			'address'		=> 'localhost',
 			'port'			=> 5000,
 			'matchsettings'	=> '',
-			'adminlevel'	=> array('SuperAdmin' => null, 'Admin' => null, 'User' => null)
+			'adminlevel'	=> array('SuperAdmin' => 'public', 'Admin' => 'public', 'User' => 'public')
 		),
 		/*
 		'new server name' => array(
 			'address'		=> 'localhost',
 			'port'			=> 5000,
 			'matchsettings'	=> '',
-			'adminlevel'	=> array('SuperAdmin' => null, 'Admin' => null, 'User' => null)
+			'adminlevel'	=> array('SuperAdmin' => 'public', 'Admin' => 'public', 'User' => 'public')
 		),
 		*/
 	);
