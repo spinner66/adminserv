@@ -244,7 +244,7 @@ $(document).ready(function(){
 		/**
 		* Game Infos
 		*/
-		else if( $("body").hasClass("section-gameinfos") ){
+		else if( $("body").hasClass("section-gameinfos") || $("body").hasClass("section-maps-creatematchset") ){
 			// GameMode
 			getCurrentGameModeConfig();
 			$("select#NextGameMode").change(function(){

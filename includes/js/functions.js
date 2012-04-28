@@ -187,7 +187,12 @@ function getCurrentGameModeConfig(){
 	var selector = $("#gameMode-"+gameMode.toLowerCase() );
 	
 	// Fermeture de tous les modes par défaut
-	$.each( $(".section-gameinfos .content fieldset"), function(i, n){
+	if( $("body").hasClass("section-maps-creatematchset") ){
+		var section = ".section-maps-creatematchset";
+	}else{
+		var section = ".section-gameinfos";
+	}
+	$.each( $(section+" .content fieldset"), function(i, n){
 		if( !$(this).hasClass("gameinfos_general") ){
 			if( $(this).attr("hidden") ){
 				$(this).hide();
