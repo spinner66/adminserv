@@ -1135,14 +1135,17 @@ footer {
 .section-gameinfos td.value {
 	width: 27%;
 }
-.section-gameinfos .preview {
+.section-gameinfos .preview,
+.section-maps-creatematchset .preview {
 	text-align: left;
 }
-.section-gameinfos .preview a {
+.section-gameinfos .preview a,
+.section-maps-creatematchset .preview a {
 	color: #aaa;
 	font-size: .85em;
 }
-.section-gameinfos .preview a:hover {
+.section-gameinfos .preview a:hover,
+.section-maps-creatematchset .preview a:hover {
 	color: #888;
 	text-decoration: none;
 }
@@ -1374,6 +1377,14 @@ footer {
 	font-size: .9em;
 	width: 100px;
 	margin-top: 8px;
+}
+
+
+/* Page Maps Create MatchSettings
+---------------------- */
+.section-maps-creatematchset td.key,
+.section-maps-creatematchset td.value {
+	width: 30%;
 }
 
 
