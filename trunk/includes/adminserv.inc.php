@@ -356,6 +356,223 @@ abstract class AdminServUI {
 	
 	
 	/**
+	* Récupère le formulaire pour un champ
+	*
+	* @param string $name -> Le nom du champ affiché dans un label
+	* @param string $id   -> L'id du champ du tableau GameInfos
+	* @return string HTML
+	*/
+	public static function getGameInfosField($name, $id){
+		global $currGamInf, $nextGamInf;
+		
+		$out = '<tr>'
+			.'<td class="key"><label for="Next'.$id.'">'.$name.'</label></td>';
+			if($currGamInf != null){
+				$out .= '<td class="value">'
+					.'<input class="text width2" type="text" name="Curr'.$id.'" id="Curr'.$id.'" readonly="readonly" value="'.$currGamInf[$id].'" />'
+				.'</td>';
+			}
+			$out .= '<td class="value">'
+				.'<input class="text width2" type="text" name="Next'.$id.'" id="Next'.$id.'" value="'.$nextGamInf[$id].'" />'
+			.'</td>'
+			.'<td class="preview"></td>'
+		.'</tr>';
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère le formulaire général aux informations de jeu
+	*
+	* @param array $currGamInf -> Les informations de jeu courantes
+	* @param array $nextGamInf -> Les informations de jeu suivantes
+	* @return string HTML
+	*/
+	public static function getGameInfosGeneralForm($currGamInf, $nextGamInf){
+		$out = '<fieldset class="gameinfos_general">'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/restartrace.png" alt="" />Général</legend>'
+			.'<table>'
+				.'<tr>'
+					.'<td class="key"><label for="NextGameMode">Mode de jeu</label></td>';
+					if($currGamInf != null){
+						$out .= '<td class="value">'
+							.'<input class="text width2" type="text" name="CurrGameMode" id="CurrGameMode" readonly="readonly" value="'.AdminServ::getGameModeName($currGamInf['GameMode']).'" />'
+						.'</td>';
+					}
+					$out .= '<td class="value">'
+						.'<select class="width2" name="NextGameMode" id="NextGameMode">'
+							.AdminServUI::getGameModeList($nextGamInf['GameMode'])
+						.'</select>'
+					.'</td>'
+					.'<td class="preview"></td>'
+				.'</tr>'
+				.'<tr>'
+					.'<td class="key"><label for="NextChatTime">Temps de fin de map <span>(sec)</span></label></td>';
+					if($currGamInf != null){
+						$out .= '<td class="value">'
+							.'<input class="text width2" type="text" name="CurrChatTime" id="CurrChatTime" readonly="readonly" value="'.TimeDate::millisecToSec($currGamInf['ChatTime'] + 8000).'" />'
+						.'</td>';
+					}
+					$out .= '<td class="value">'
+						.'<input class="text width2" type="text" name="NextChatTime" id="NextChatTime" value="'.TimeDate::millisecToSec($nextGamInf['ChatTime'] + 8000).'" />'
+					.'</td>'
+					.'<td class="preview"></td>'
+				.'</tr>'
+				.'<tr>'
+					.'<td class="key"><label for="NextFinishTimeout">Temps de fin de round/lap <span>(sec)</span></label></td>';
+					if($currGamInf != null){
+						$out .= '<td class="value">'
+							.'<input class="text width2" type="text" name="CurrFinishTimeout" id="CurrFinishTimeout" readonly="readonly" value="'; if($currGamInf['FinishTimeout'] == 0){ $out .= 'Par défaut (15sec)'; }else if($currGamInf['FinishTimeout'] == 1){ $out .= 'Auto (en fonction de la map)'; }else{ $out .= TimeDate::millisecToSec($currGamInf['FinishTimeout']); } $out .= '" />'
+						.'</td>';
+					}
+					$out .= '<td class="value next">'
+						.'<select class="width2" name="NextFinishTimeout" id="NextFinishTimeout"'; if($nextGamInf['FinishTimeout'] > 1){ $out .= ' hidden="hidden"'; } $out .= '>'
+							.'<option value="0"'; if($nextGamInf['FinishTimeout'] == 0){ $out .= ' selected="selected"'; } $out .= '>Par défaut (15sec)</option>'
+							.'<option value="1"'; if($nextGamInf['FinishTimeout'] == 1){ $out .= ' selected="selected"'; } $out .= '>Auto (en fonction de la map)</option>'
+							.'<option value="more">Choisir le temps</option>'
+						.'</select>'
+						.'<input class="text width2" type="text" name="NextFinishTimeoutValue" id="NextFinishTimeoutValue" value="'; if($nextGamInf['FinishTimeout'] > 1){ $out .= TimeDate::millisecToSec($nextGamInf['FinishTimeout']); } $out .= '"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= ' />'
+					.'</td>'
+					.'<td class="preview"><a class="returnDefaultValue" href="?p='. USER_PAGE .'"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= '>Revenir à la valeur par défaut</a></td>'
+				.'</tr>'
+				.self::getGameInfosField('Nombre de WarmUp', 'AllWarmUpDuration')
+				.'<tr>'
+					.'<td class="key"><label for="NextDisableRespawn">Respawn</label></td>';
+					if($currGamInf != null){
+						$out .= '<td class="value">'
+							.'<input class="text width2" type="text" name="CurrDisableRespawn" id="CurrDisableRespawn" readonly="readonly" value="'; if($currGamInf['DisableRespawn'] === false){ $out .= 'Activé'; }else{ $out .= 'Désactivé'; } $out .= '" />'
+						.'</td>';
+					}
+					$out .= '<td class="value">'
+						.'<input class="text" type="checkbox" name="NextDisableRespawn" id="NextDisableRespawn"'; if($nextGamInf['DisableRespawn'] === false){ $out .= ' checked="checked"'; } $out .= ' value="" />'
+					.'</td>'
+					.'<td class="preview"></td>'
+				.'</tr>'
+				.'<tr>'
+					.'<td class="key"><label for="NextForceShowAllOpponents">Forcer l\'affichage des adversaires</label></td>';
+					if($currGamInf != null){
+						$out .= '<td class="value">'
+							.'<input class="text width2" type="text" name="CurrForceShowAllOpponents" id="CurrForceShowAllOpponents" readonly="readonly" value="'; if($currGamInf['ForceShowAllOpponents'] == 0){ $out .= 'Laisser le choix au joueur'; }else if($currGamInf['ForceShowAllOpponents'] == 1){ $out .= 'Tous les adversaires'; }else{ $out .= $currGamInf['ForceShowAllOpponents'].' adversaires minimum'; } $out .= '" />'
+						.'</td>';
+					}
+					$out .= '<td class="value next">'
+						.'<select class="width2" name="NextForceShowAllOpponents" id="NextForceShowAllOpponents"'; if($nextGamInf['ForceShowAllOpponents'] > 1){ $out .= ' hidden="hidden"'; } $out .= '>'
+							.'<option value="0"'; if($nextGamInf['ForceShowAllOpponents'] == 0){ $out .= ' selected="selected"'; } $out .= '>Laisser le choix au joueur</option>'
+							.'<option value="1"'; if($nextGamInf['ForceShowAllOpponents'] == 1){ $out .= ' selected="selected"'; } $out .= '>Tous les adversaires</option>'
+							.'<option value="more">Choisir le nombre d\'adversaires</option>'
+						.'</select>'
+						.'<input class="text width2" type="text" name="NextForceShowAllOpponentsValue" id="NextForceShowAllOpponentsValue" value="'; if($nextGamInf['ForceShowAllOpponents'] > 1){ $out .= $nextGamInf['ForceShowAllOpponents']; } $out .= '"'; if($nextGamInf['ForceShowAllOpponents'] < 2){ $out .= ' hidden="hidden"'; } $out .= ' />'
+					.'</td>'
+					.'<td class="preview"><a class="returnDefaultValue" href="?p='. USER_PAGE .'"'; if($nextGamInf['ForceShowAllOpponents'] < 2){ $out .= ' hidden="hidden"'; } $out .= '>Revenir à la valeur par défaut</a></td>'
+				.'</tr>'
+			.'</table>'
+		.'</fieldset>';
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère les formulaires des modes de jeux
+	*
+	* @param array $currGamInf -> Les informations de jeu courantes
+	* @param array $nextGamInf -> Les informations de jeu suivantes
+	* @return string HTML
+	*/
+	public static function getGameInfosGameModeForm($currGamInf, $nextGamInf){
+		$out = null;
+		
+		$out .= '<fieldset id="gameMode-script" class="gameinfos_script" hidden="hidden">'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/options.png" alt="" />'.ExtensionConfig::$GAMEMODES[0].'</legend>'
+			.'<table class="game_infos">'
+				.self::getGameInfosField('Nom du script', 'ScriptName')
+			.'</table>'
+		.'</fieldset>';
+		
+		$out .= '<fieldset id="gameMode-rounds" class="gameinfos_round" hidden="hidden">'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_rounds.png" alt="" />'.ExtensionConfig::$GAMEMODES[1].'</legend>'
+			.'<table class="game_infos">'
+				.'<tr>'
+					.'<td class="key"><label for="NextRoundsUseNewRules">Utiliser les nouvelles règles</label></td>';
+					if($currGamInf != null){
+						$out .= '<td class="value">'
+							.'<input class="text width2" type="text" name="CurrRoundsUseNewRules" id="CurrRoundsUseNewRules" readonly="readonly" value="'; if($currGamInf['RoundsUseNewRules'] != null){ $out .= 'Activé'; }else{ $out .= 'Désactivé'; } $out .= '" />'
+						.'</td>';
+					}
+					$out .= '<td class="value">'
+						.'<input class="text" type="checkbox" name="NextRoundsUseNewRules" id="NextRoundsUseNewRules"'; if($nextGamInf['RoundsUseNewRules'] != null){ $out .= ' checked="checked"'; } $out .= ' value="" />'
+					.'</td>'
+					.'<td class="preview"></td>'
+				.'</tr>'
+				.self::getGameInfosField('Limite de points', 'RoundsPointsLimit')
+				.self::getGameInfosField('Limite de points personnalisée', 'RoundCustomPoints')
+				.self::getGameInfosField('ForcedLaps', 'RoundsForcedLaps')
+			.'</table>'
+		.'</fieldset>'
+		
+		.'<fieldset id="gameMode-timeattack" class="gameinfos_timeattack" hidden="hidden">'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_timeattack.png" alt="" />'.ExtensionConfig::$GAMEMODES[2].'</legend>'
+			.'<table class="game_infos">'
+				.'<tr>'
+					.'<td class="key"><label for="NextTimeAttackLimit">Limite de temps <span>(sec)</span></label></td>';
+					if($currGamInf != null){
+						$out .= '<td class="value">'
+							.'<input class="text width2" type="text" name="CurrTimeAttackLimit" id="CurrTimeAttackLimit" readonly="readonly" value="'.TimeDate::millisecToSec($currGamInf['TimeAttackLimit']).'" />'
+						.'</td>';
+					}
+					$out .= '<td class="value">'
+						.'<input class="text width2" type="text" name="NextTimeAttackLimit" id="NextTimeAttackLimit" value="'.TimeDate::millisecToSec($nextGamInf['TimeAttackLimit']).'" />'
+					.'</td>'
+					.'<td class="preview"></td>'
+				.'</tr>'
+				.self::getGameInfosField('Temps de synchronisation du départ', 'TimeAttackSynchStartPeriod')
+			.'</table>'
+		.'</fieldset>'
+		
+		.'<fieldset id="gameMode-team" class="gameinfos_team" hidden="hidden">'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_team.png" alt="" />'.ExtensionConfig::$GAMEMODES[3].'</legend>'
+			.'<table class="game_infos">'
+				.'<tr>'
+					.'<td class="key"><label for="NextTeamUseNewRules">Utiliser les nouvelles règles</label></td>';
+					if($currGamInf != null){
+						$out .= '<td class="value">'
+							.'<input class="text width2" type="text" name="CurrTeamUseNewRules" id="CurrTeamUseNewRules" readonly="readonly" value="'; if($currGamInf['TeamUseNewRules'] != null){ $out .= 'Activé'; }else{ $out .= 'Désactivé'; } $out .= '" />'
+						.'</td>';
+					}
+					$out .= '<td class="value">'
+						.'<input class="text" type="checkbox" name="NextTeamUseNewRules" id="NextTeamUseNewRules"'; if($nextGamInf['TeamUseNewRules'] != null){ $out .= ' checked="checked"'; } $out .= ' value="" />'
+					.'</td>'
+					.'<td class="preview"></td>'
+				.'</tr>'
+				.self::getGameInfosField('Limite de points', 'TeamPointsLimit')
+				.self::getGameInfosField('Points maximum', 'TeamMaxPoints')
+			.'</table>'
+		.'</fieldset>'
+		
+		.'<fieldset id="gameMode-laps" class="gameinfos_laps" hidden="hidden">'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_laps.png" alt="" />'.ExtensionConfig::$GAMEMODES[4].'</legend>'
+			.'<table class="game_infos">'
+				.self::getGameInfosField('Nombre de tours', 'LapsNbLaps')
+				.self::getGameInfosField('Limite de temps <span>(sec)</span>', 'LapsTimeLimit')
+			.'</table>'
+		.'</fieldset>'
+		
+		.'<fieldset id="gameMode-cup" class="gameinfos_cup" hidden="hidden">'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_cup.png" alt="" />'.ExtensionConfig::$GAMEMODES[6].'</legend>'
+			.'<table class="game_infos">'
+				.self::getGameInfosField('Limite de points', 'CupPointsLimit')
+				.self::getGameInfosField('Nombre de round par map', 'CupRoundsPerMap')
+				.self::getGameInfosField('Nombre de vainqueur', 'CupNbWinners')
+				.self::getGameInfosField('Nombre de WarmUp', 'CupWarmUpDuration')
+			.'</table>'
+		.'</fieldset>';
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère la liste des joueurs
 	*
 	* @param string $currentPlayerLogin -> Le login joueur à sélectionner
@@ -1043,6 +1260,173 @@ abstract class AdminServ {
 		else{
 			$out = 'command not recognized';
 		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère les informations de jeux
+	*
+	* @global resource $client -> Le client doit être initialisé
+	* @return array
+	*/
+	public static function getGameInfos(){
+		global $client;
+		$out = array();
+		
+		if( !$client->query('GetGameInfos') ){
+			self::error();
+		}
+		else{
+			$gamInf = $client->getResponse();
+			$currGamInf = $gamInf['CurrentGameInfos'];
+			$nextGamInf = $gamInf['NextGameInfos'];
+			
+			// Complétion du tableau gamInf pour ManiaPlanet
+			if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+				// Nb de WarmUp
+				if( !$client->query('GetAllWarmUpDuration') ){
+					AdminServ::error();
+				}
+				else{
+					$GetAllWarmUpDuration = $client->getResponse();
+					$currGamInf['AllWarmUpDuration'] = $GetAllWarmUpDuration['CurrentValue'];
+					$nextGamInf['AllWarmUpDuration'] = $GetAllWarmUpDuration['NextValue'];
+					
+					// Respawn
+					if( !$client->query('GetDisableRespawn') ){
+						AdminServ::error();
+					}
+					else{
+						$DisableRespawn = $client->getResponse();
+						$currGamInf['DisableRespawn'] = $DisableRespawn['CurrentValue'];
+						$nextGamInf['DisableRespawn'] = $DisableRespawn['NextValue'];
+						
+						// ForceShowAllOpponents
+						if( !$client->query('GetForceShowAllOpponents') ){
+							AdminServ::error();
+						}
+						else{
+							$ForceShowAllOpponents = $client->getResponse();
+							$currGamInf['ForceShowAllOpponents'] = $ForceShowAllOpponents['CurrentValue'];
+							$nextGamInf['ForceShowAllOpponents'] = $ForceShowAllOpponents['NextValue'];
+							
+							// ScriptName
+							if( !$client->query('GetScriptName') ){
+								AdminServ::error();
+							}
+							else{
+								$ScriptName = $client->getResponse();
+								$currGamInf['ScriptName'] = $ScriptName['CurrentValue'];
+								$nextGamInf['ScriptName'] = $ScriptName['NextValue'];
+							
+								// Mode Cup
+								if( !$client->query('GetCupPointsLimit') ){
+									AdminServ::error();
+								}
+								else{
+									$CupPointsLimit = $client->getResponse();
+									$currGamInf['CupPointsLimit'] = $CupPointsLimit['CurrentValue'];
+									$nextGamInf['CupPointsLimit'] = $CupPointsLimit['NextValue'];
+									if( !$client->query('GetCupRoundsPerMap') ){
+										AdminServ::error();
+									}
+									else{
+										$CupRoundsPerMap = $client->getResponse();
+										$currGamInf['CupRoundsPerMap'] = $CupRoundsPerMap['CurrentValue'];
+										$nextGamInf['CupRoundsPerMap'] = $CupRoundsPerMap['NextValue'];
+										if( !$client->query('GetCupNbWinners') ){
+											AdminServ::error();
+										}
+										else{
+											$CupNbWinners = $client->getResponse();
+											$currGamInf['CupNbWinners'] = $CupNbWinners['CurrentValue'];
+											$nextGamInf['CupNbWinners'] = $CupNbWinners['NextValue'];
+											if( !$client->query('GetCupWarmUpDuration') ){
+												AdminServ::error();
+											}
+											else{
+												$CupWarmUpDuration = $client->getResponse();
+												$currGamInf['CupWarmUpDuration'] = $CupWarmUpDuration['CurrentValue'];
+												$nextGamInf['CupWarmUpDuration'] = $CupWarmUpDuration['NextValue'];
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			// RoundCustomPoints
+			if( !$client->query('GetRoundCustomPoints') ){
+				AdminServ::error();
+			}
+			else{
+				$RoundCustomPoints = $client->getResponse();
+				$RoundCustomPointsList = null;
+				foreach($RoundCustomPoints as $point){
+					$RoundCustomPointsList .= $point.',';
+				}
+				$RoundCustomPointsList = substr($RoundCustomPointsList, 0, -1);
+				$currGamInf['RoundCustomPoints'] = $RoundCustomPointsList;
+				$nextGamInf['RoundCustomPoints'] = $RoundCustomPointsList;
+			}
+			
+			// Retour
+			$out['curr'] = $currGamInf;
+			$out['next'] = $nextGamInf;
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Retourne la structure pour l'enregistrement des informations de jeu
+	*
+	* @return array
+	*/
+	public static function getGameInfosStructFromPOST(){
+		// Mise en forme
+		if($_POST['NextFinishTimeoutValue'] < 2){
+			if($_POST['NextFinishTimeout'] == 0){ $FinishTimeout = 0; }
+			else if($_POST['NextFinishTimeout'] == 1){ $FinishTimeout = 1; }
+		}
+		else{ $FinishTimeout = TimeDate::secToMillisec( intval($_POST['NextFinishTimeoutValue']) ); }
+		if( array_key_exists('NextDisableRespawn', $_POST) === true ){ $DisableRespawn = false; }
+		else{ $DisableRespawn = true; }
+		if($_POST['NextForceShowAllOpponentsValue'] < 2){
+			if($_POST['NextForceShowAllOpponents'] == 0){ $NextForceShowAllOpponents = 0; }
+			else if($_POST['NextForceShowAllOpponents'] == 1){ $NextForceShowAllOpponents = 1; }
+		}
+		else{ $NextForceShowAllOpponents = intval($_POST['NextForceShowAllOpponentsValue']); }
+		$out = array(
+			'GameMode' => intval($_POST['NextGameMode']),
+			'ChatTime' => TimeDate::secToMillisec( intval($_POST['NextChatTime'] - 8) ),
+			'RoundsPointsLimit' => intval($_POST['NextRoundsPointsLimit']),
+			'RoundsUseNewRules' => array_key_exists('NextRoundsUseNewRules', $_POST),
+			'RoundsForcedLaps' => intval($_POST['NextRoundsForcedLaps']),
+			'TimeAttackLimit' => TimeDate::secToMillisec( intval($_POST['NextTimeAttackLimit']) ),
+			'TimeAttackSynchStartPeriod' => TimeDate::secToMillisec( intval($_POST['NextTimeAttackSynchStartPeriod']) ),
+			'TeamPointsLimit' => intval($_POST['NextTeamPointsLimit']),
+			'TeamMaxPoints' => intval($_POST['NextTeamMaxPoints']),
+			'TeamUseNewRules' => array_key_exists('NextTeamUseNewRules', $_POST),
+			'LapsNbLaps' => intval($_POST['NextLapsNbLaps']),
+			'LapsTimeLimit' => TimeDate::secToMillisec( intval($_POST['NextLapsTimeLimit']) ),
+			'FinishTimeout' => $FinishTimeout,
+			'AllWarmUpDuration' => intval($_POST['NextAllWarmUpDuration']),
+			'DisableRespawn' => $DisableRespawn,
+			'ForceShowAllOpponents' => $NextForceShowAllOpponents,
+			'RoundsPointsLimitNewRules' => intval($_POST['NextRoundsPointsLimit']),
+			'TeamPointsLimitNewRules' => $_POST['NextTeamPointsLimit'],
+			'CupPointsLimit' => intval($_POST['NextCupPointsLimit']),
+			'CupRoundsPerMap' => intval($_POST['NextCupRoundsPerMap']),
+			'CupNbWinners' => intval($_POST['NextCupNbWinners']),
+			'CupWarmUpDuration' => intval($_POST['NextCupWarmUpDuration'])
+		);
 		
 		return $out;
 	}
