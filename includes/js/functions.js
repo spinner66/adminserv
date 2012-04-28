@@ -192,7 +192,7 @@ function getCurrentGameModeConfig(){
 	}else{
 		var section = ".section-gameinfos";
 	}
-	$.each( $(section+" .content fieldset"), function(i, n){
+	$.each( $(section+" .content.gameinfos fieldset"), function(i, n){
 		if( !$(this).hasClass("gameinfos_general") ){
 			if( $(this).attr("hidden") ){
 				$(this).hide();

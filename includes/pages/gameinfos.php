@@ -49,7 +49,7 @@
 <section class="cadre">
 	<h1>Informations de jeu</h1>
 	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
-		<div class="content">
+		<div class="content gameinfos">
 			<?php
 				// Général
 				echo AdminServUI::getGameInfosGeneralForm($currGamInf, $nextGamInf);
