@@ -31,25 +31,25 @@
 			<fieldset>
 				<table>
 					<tr>
-						<td class="key"><label for="">Mode de jeu</label></td>
+						<td class="key"><label for="hotSeatGameMode">Mode de jeu</label></td>
 						<td class="value">
-							<select class="width2" name="" id="">
-								<?php echo AdminServUI::getGameModeList(); ?>
+							<select class="width2" name="hotSeatGameMode" id="hotSeatGameMode">
+								<?php echo AdminServUI::getGameModeList(1); ?>
 							</select>
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
-						<td class="key"><label for="">Limite de temps</label></td>
+						<td class="key"><label for="hotSeatTimeLimit">Limite de temps</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="" id="" value="" />
+							<input class="text width2" type="text" name="hotSeatTimeLimit" id="hotSeatTimeLimit" value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
-						<td class="key"><label for="">Nombre de tour</label></td>
+						<td class="key"><label for="hotSeatCountRound">Nombre de round</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="" id="" value="" />
+							<input class="text width2" type="text" name="hotSeatCountRound" id="hotSeatCountRound" value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
@@ -62,52 +62,52 @@
 			<fieldset>
 				<table>
 					<tr>
-						<td class="key"><label for="">Lan</label></td>
+						<td class="key"><label for="filterIsLan">Lan</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="" id=""<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="filterIsLan" id="filterIsLan"<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
-						<td class="key"><label for="">Internet</label></td>
+						<td class="key"><label for="filterIsInternet">Internet</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="" id=""<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="filterIsInternet" id="filterIsInternet"<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
-						<td class="key"><label for="">Solo</label></td>
+						<td class="key"><label for="filterIsSolo">Solo</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="" id=""<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="filterIsSolo" id="filterIsSolo"<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
-						<td class="key"><label for="">HotSeat</label></td>
+						<td class="key"><label for="filterIsHotSeat">HotSeat</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="" id=""<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="filterIsHotSeat" id="filterIsHotSeat"<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
-						<td class="key"><label for="">Index de tri</label></td>
+						<td class="key"><label for="filterSortIndex">Index de tri</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="" id="" value="" />
+							<input class="text width2" type="text" name="filterSortIndex" id="filterSortIndex" value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
-						<td class="key"><label for="">Ordre des maps aléatoire</label></td>
+						<td class="key"><label for="filterRandomMaps">Ordre des maps aléatoire</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="" id=""<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="filterRandomMaps" id="filterRandomMaps"<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
-						<td class="key"><label for="">Mode de jeu par défaut</label></td>
+						<td class="key"><label for="filterDefaultGameMode">Mode de jeu par défaut</label></td>
 						<td class="value">
-							<select class="width2" name="" id="">
-								<?php echo AdminServUI::getGameModeList(); ?>
+							<select class="width2" name="filterDefaultGameMode" id="filterDefaultGameMode">
+								<?php echo AdminServUI::getGameModeList(1); ?>
 							</select>
 						</td>
 						<td class="preview"></td>
