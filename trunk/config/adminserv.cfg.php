@@ -17,7 +17,7 @@ class AdminServConfig {
 	const SUBTITLE = 'For maniaplanet servers';
 	const LOGO = 'logo.png';
 	const DEFAULT_THEME = 'blue';
-	const DEFAULT_LANGUAGE = 'auto'; // Can be fr, en, de, es or auto = detect automaticaly
+	const DEFAULT_LANGUAGE = 'auto'; // Can be fr, en, de, es or auto = automaticaly detection
 	const AUTOSAVE_MATCHSETTINGS = true;
 	
 	/* ADVANCED */
