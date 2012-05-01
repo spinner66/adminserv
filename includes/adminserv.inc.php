@@ -434,7 +434,7 @@ abstract class AdminServUI {
 						.'</select>'
 						.'<input class="text width2" type="text" name="NextFinishTimeoutValue" id="NextFinishTimeoutValue" value="'; if($nextGamInf['FinishTimeout'] > 1){ $out .= TimeDate::millisecToSec($nextGamInf['FinishTimeout']); } $out .= '"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= ' />'
 					.'</td>'
-					.'<td class="preview"><a class="returnDefaultValue" href="?p='. USER_PAGE .'"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= '>Revenir à la valeur par défaut</a></td>'
+					.'<td class="preview"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= '><a class="returnDefaultValue" href="?p='. USER_PAGE .'">Revenir à la valeur par défaut</a></td>'
 				.'</tr>'
 				.self::getGameInfosField('Nombre de WarmUp', 'AllWarmUpDuration')
 				.'<tr>'
@@ -464,7 +464,7 @@ abstract class AdminServUI {
 						.'</select>'
 						.'<input class="text width2" type="text" name="NextForceShowAllOpponentsValue" id="NextForceShowAllOpponentsValue" value="'; if($nextGamInf['ForceShowAllOpponents'] > 1){ $out .= $nextGamInf['ForceShowAllOpponents']; } $out .= '"'; if($nextGamInf['ForceShowAllOpponents'] < 2){ $out .= ' hidden="hidden"'; } $out .= ' />'
 					.'</td>'
-					.'<td class="preview"><a class="returnDefaultValue" href="?p='. USER_PAGE .'"'; if($nextGamInf['ForceShowAllOpponents'] < 2){ $out .= ' hidden="hidden"'; } $out .= '>Revenir à la valeur par défaut</a></td>'
+					.'<td class="preview"'; if($nextGamInf['ForceShowAllOpponents'] < 2){ $out .= ' hidden="hidden"'; } $out .= '><a class="returnDefaultValue" href="?p='. USER_PAGE .'">Revenir à la valeur par défaut</a></td>'
 				.'</tr>'
 			.'</table>'
 		.'</fieldset>';
@@ -638,21 +638,24 @@ abstract class AdminServUI {
 	*
 	* @param string $path -> Le chemin du dossier "Maps"
 	* @param string $currentPath -> Le chemin à partir de "Maps"
+	* @param bool   $showOptions -> Afficher les options (nouveau, renommer, déplacer, supprimer)
 	* @return string
 	*/
-	public static function getMapsDirectoryList($path, $currentPath = null){
+	public static function getMapsDirectoryList($path, $currentPath = null, $showOptions = true){
 		$out = null;
 		
 		if( class_exists('Folder') ){
 			// Titre + nouveau dossier
 			$out .= '<form id="createFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
-				.'<h1>Dossiers'
-					.'<div id="form-new-folder" hidden="hidden">'
-						.'<input class="text" type="text" name="newFolderName" id="newFolderName" value="" />'
-						.'<input class="button light" type="submit" name="newFolderValid" id="newFolderValid" value="ok" />'
-					.'</div>'
-				.'</h1>';
-				if(AdminServConfig::$FOLDERS_OPTIONS['new']){
+				.'<h1>Dossiers';
+					if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new']){
+						$out .='<div id="form-new-folder" hidden="hidden">'
+							.'<input class="text" type="text" name="newFolderName" id="newFolderName" value="" />'
+							.'<input class="button light" type="submit" name="newFolderValid" id="newFolderValid" value="ok" />'
+						.'</div>';
+					}
+				$out .= '</h1>';
+				if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new']){
 					$out .= '<div class="title-detail"><a href="." id="newfolder" data-cancel="Annuler" data-new="Nouveau">Nouveau</a></div>';
 				}
 			$out .= '</form>';
@@ -717,7 +720,7 @@ abstract class AdminServUI {
 			}
 			
 			// Options de dossier
-			if($currentPath){
+			if($showOptions && $currentPath){
 				if( AdminServConfig::$FOLDERS_OPTIONS['rename'] || AdminServConfig::$FOLDERS_OPTIONS['move'] || AdminServConfig::$FOLDERS_OPTIONS['delete'] ){
 					$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
 						.'<div class="option-folder-list">'
