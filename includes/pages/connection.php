@@ -32,17 +32,11 @@
 			}
 		}
 		else{
-			// Si on autorise la configuration en ligne
-			if( OnlineConfig::ACTIVATE === true ){
-				Utils::redirection(false, '?p=addserver');
-			}
-			else{
-				AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
-			}
+			Utils::redirection(false, './config/');
 		}
 	}
 	else{
-		AdminServ::error('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.');
+		Utils::redirection(false, './config/');
 	}
 	
 	
@@ -51,10 +45,27 @@
 		AdminServ::error($_GET['error']);
 	}
 	AdminServUI::getHeader();
+	
+	// CONFIG PASSWORD
+	if( isset($_SESSION['adminserv']['check_password']) ){
+?>
+<section class="config-check-password">
+	<form method="post" action="./config/">
+		<fieldset>
+			<label for="checkPassword">Mot de passe :</label>
+			<input class="text" type="password" name="checkPassword" id="checkPassword" value="" />
+			<input class="button light" type="submit" name="configcheckpassword" id="configcheckpassword" value="OK" />
+		</fieldset>
+	</form>
+</section>
+<?php
+	}
+	else{
 ?>
 <section>
 	<!-- TODO : displayServ -->
 </section>
 <?php
+	}
 	AdminServUI::getFooter();
 ?>

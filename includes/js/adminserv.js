@@ -611,6 +611,12 @@ $(document).ready(function(){
 			});
 		}
 		/**
+		* Create MatchSettings
+		*/
+		else if( $("body").hasClass("section-maps-creatematchset") ){
+			
+		}
+		/**
 		* Guest-Ban
 		*/
 		else if( $("body").hasClass("section-guestban") ){

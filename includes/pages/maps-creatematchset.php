@@ -1,5 +1,7 @@
 <?php
 	// LECTURE
+	$mapsList = AdminServ::getLocalMapList($mapsDirectoryPath.$directory);
+	
 	$gameInfos = AdminServ::getGameInfos();
 	$currGamInf = null;
 	$nextGamInf = $gameInfos['next'];
@@ -19,14 +21,14 @@
 	
 	<section class="cadre right creatematchset">
 		<h1>Créer un MatchSettings</h1>
+		<div class="title-detail">
+			<ul>
+				<li class="last path"><?php echo $mapsDirectoryPath.$directory; ?></li>
+			</ul>
+		</div>
 		
 		<h2>Maps</h2>
-		<div class="maps">
-			
-		</div>
-		<div class="selection">
-			
-		</div>
+		
 		
 		<h2>Informations de jeu</h2>
 		<div class="content gameinfos">
