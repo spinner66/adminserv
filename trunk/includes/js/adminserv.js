@@ -260,7 +260,7 @@ $(document).ready(function(){
 					$("#NextFinishTimeoutValue").val("15");
 					var defaultValueSelector = $("#NextFinishTimeoutValue").parent("td").parent("tr").children("td.preview").children("a.returnDefaultValue");
 					defaultValueSelector.fadeIn("fast");
-					defaultValueSelector.removeAttr("hidden");
+					defaultValueSelector.parent("td").removeAttr("hidden");
 				}
 			});
 			
@@ -273,7 +273,7 @@ $(document).ready(function(){
 					$("#NextForceShowAllOpponentsValue").val("2");
 					var defaultValueSelector = $("#NextForceShowAllOpponentsValue").parent("td").parent("tr").children("td.preview").children("a.returnDefaultValue");
 					defaultValueSelector.fadeIn("fast");
-					defaultValueSelector.removeAttr("hidden");
+					defaultValueSelector.parent("td").removeAttr("hidden");
 				}
 			});
 			

@@ -8,13 +8,25 @@
 	
 	AdminServUI::getHeader();
 ?>
-<section class="maps hasMenu">
+<section class="maps hasMenu hasFolders">
 	<section class="cadre left menu">
 		<?php echo AdminServUI::getMenuList(ExtensionConfig::$MAPSMENU); ?>
 	</section>
 	
+	<section class="cadre middle folders">
+		<?php echo $mapsDirectoryList; ?>
+	</section>
+	
 	<section class="cadre right creatematchset">
 		<h1>Créer un MatchSettings</h1>
+		
+		<h2>Maps</h2>
+		<div class="maps">
+			
+		</div>
+		<div class="selection">
+			
+		</div>
 		
 		<h2>Informations de jeu</h2>
 		<div class="content gameinfos">
@@ -114,11 +126,6 @@
 					</tr>
 				</table>
 			</fieldset>
-		</div>
-		
-		<h2>Maps</h2>
-		<div class="content">
-			
 		</div>
 	</section>
 </section>

@@ -1142,8 +1142,10 @@ footer {
 }
 .section-gameinfos .preview a,
 .section-maps-creatematchset .preview a {
+	display: block;
 	color: #aaa;
 	font-size: .85em;
+	line-height: 12px;
 }
 .section-gameinfos .preview a:hover,
 .section-maps-creatematchset .preview a:hover {
@@ -1385,7 +1387,7 @@ footer {
 ---------------------- */
 .section-maps-creatematchset td.key,
 .section-maps-creatematchset td.value {
-	width: 30%;
+	width: 40%;
 }
 
 
