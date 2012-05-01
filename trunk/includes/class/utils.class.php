@@ -179,8 +179,10 @@ abstract class Utils {
 	
 	/**
 	* Retourne la valeur du terme
+	*
+	* @param array $args -> Arugments dans la clé. Ex: t('key word n°!numero', array('!numero' => $numero) );
 	*/
-	public static function t($key, $args = array()){
+	public static function t($key, $args = array() ){
 		global $translate;
 		$out = $key;
 		
@@ -234,6 +236,36 @@ abstract class Utils {
 		else if( strstr($http_user_agent, 'OS/2') ){ $out = 'OS/2'; }
 		else if( strstr($http_user_agent, 'AIX') ){ $out = 'AIX'; }
 		else{ $out = 'Others'; }
+		return $out;
+	}
+	
+	
+	/**
+	* Détermine si l'adresse ip du visiteur est dans le réseau local
+	*
+	* @param string $addr -> L'adresse IP à utiliser
+	* @return bool
+	*/
+	public static function isLocalhostIP($addr = null){
+		$out = false;
+		
+		// On récupère l'adresse IP du serveur, et on liste les 3 premières valeurs
+		$server_ip_list = explode('.', $_SERVER['SERVER_ADDR']);
+		$server_ip_substr = $server_ip_list[0].'.'.$server_ip_list[1].'.'.$server_ip_list[2];
+		
+		// De même pour l'utilisateur
+		if($addr){
+			$user_ip_list = explode('.', $addr);
+		}else{
+			$user_ip_list = explode('.', $_SERVER['REMOTE_ADDR']);
+		}
+		$user_ip_substr = $user_ip_list[0].'.'.$user_ip_list[1].'.'.$user_ip_list[2];
+		
+		// Si les valeurs sont identiques -> on est dans le réseau local
+		if($user_ip_substr === $server_ip_substr){
+			$out = true;
+		}
+		
 		return $out;
 	}
 }

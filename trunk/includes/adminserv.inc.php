@@ -951,43 +951,29 @@ abstract class AdminServ {
 	* @return true si autorisé, sinon false
 	*/
 	public static function userAllowedInAdminLevel($serverName, $level){
-		$userIP = $_SERVER['REMOTE_ADDR'];
+		$out = false;
 		$serverLevel = ServerConfig::$SERVERS[$serverName]['adminlevel'][$level];
 		
 		// Si la liste est un array
 		if( is_array($serverLevel) ){
 			// Si l'adresse ip est dans la liste des autorisées
-			if( in_array($userIP, $serverLevel) ){
-				return true;
-			}else{
-				return false;
+			if( in_array($_SERVER['REMOTE_ADDR'], $serverLevel) ){
+				$out = true;
 			}
 		}
 		// Sinon, c'est local ou null
 		else{
 			// Si c'est all -> autorisé à tous
 			if($serverLevel === 'all'){
-				return true;
+				$out = true;
 			}
 			// Sinon -> autorisé au réseau local
 			else{
-				// On récupère l'adresse IP du serveur, et on liste les 3 premières valeurs
-				$server_ip_list = explode('.', $_SERVER['SERVER_ADDR']);
-				$server_ip_substr = $server_ip_list[0].'.'.$server_ip_list[1].'.'.$server_ip_list[2];
-				
-				// De même pour l'utilisateur
-				$user_ip_list = explode('.', $userIP);
-				$user_ip_substr = $user_ip_list[0].'.'.$user_ip_list[1].'.'.$user_ip_list[2];
-				
-				// Si les valeurs sont identiques -> on est dans le réseau local
-				if($user_ip_substr == $server_ip_substr){
-					return true;
-				}else{
-					return false;
-				}
+				$out = Utils::isLocalhostIP();
 			}
 		}
-		return false;
+		
+		return $out;
 	}
 	
 	
