@@ -12,8 +12,8 @@
 	if( isset($_GET['p']) ){ define('USER_PAGE', htmlspecialchars($_GET['p']) ); }else{ define('USER_PAGE', 'index'); }
 	if( isset($_GET['c']) ){ $category = addslashes( htmlspecialchars($_GET['c']) ); }else{ $category = null; }
 	if( isset($_GET['view']) ){ $view = addslashes( htmlspecialchars($_GET['view']) ); }else{ $view = null; }
-	if( isset($_GET['i']) ){ $index = intval($_GET['i']); }else{ $index = 0; }
-	if( isset($_GET['id']) ){ $id = intval($_GET['id']); }else{ $id = 0; }
+	if( isset($_GET['i']) ){ $index = intval($_GET['i']); }else{ $index = -1; }
+	if( isset($_GET['id']) ){ $id = intval($_GET['id']); }else{ $id = -1; }
 	if( isset($_GET['d']) ){ $directory = addslashes($_GET['d']); }else{ $directory = null; }
 	if( isset($_GET['th']) ){ $theme = addslashes($_GET['th']); }else{ $theme = null; }
 	if( isset($_GET['lg']) ){ $lang = addslashes($_GET['lg']); }else{ $lang = null; }
@@ -68,44 +68,38 @@
 			}
 		}
 		// PAGES UNIQUES
-		if(USER_PAGE == 'srvopts'){
-			include_once 'includes/pages/srvopts.php';
-		}
-		else if(USER_PAGE == 'gameinfos'){
-			include_once 'includes/pages/gameinfos.php';
-		}
-		else if(USER_PAGE == 'chat'){
-			include_once 'includes/pages/chat.php';
-		}
-		else if(USER_PAGE == 'maps.inc'){
-			include_once 'includes/pages/maps.inc.php';
-		}
-		else if(USER_PAGE == 'maps-list'){
-			include_once 'includes/pages/maps-list.php';
-		}
-		else if(USER_PAGE == 'maps-local'){
-			include_once 'includes/pages/maps-local.php';
-		}
-		else if(USER_PAGE == 'maps-upload'){
-			include_once 'includes/pages/maps-upload.php';
-		}
-		else if(USER_PAGE == 'maps-matchset'){
-			include_once 'includes/pages/maps-matchset.php';
-		}
-		else if(USER_PAGE == 'maps-creatematchset'){
-			include_once 'includes/pages/maps-creatematchset.php';
-		}
-		else if(USER_PAGE == 'maps-order'){
-			include_once 'includes/pages/maps-order.php';
-		}
-		else if(USER_PAGE == 'plugins'){
-			include_once 'includes/pages/plugins.php';
-		}
-		else if(USER_PAGE == 'guestban'){
-			include_once 'includes/pages/guestban.php';
+		$pages = array(
+			'general',
+			'srvopts',
+			'gameinfos',
+			'chat',
+			'maps-list',
+			'maps-local',
+			'maps-upload',
+			'maps-matchset',
+			'maps-creatematchset',
+			'maps-order',
+			'plugins',
+			'guestban',
+		);
+		if( in_array(USER_PAGE, $pages) ){
+			unset($pages[0]);
+			foreach($pages as $page){
+				if(USER_PAGE === $page){
+					include_once 'includes/pages/'.$page.'.php';
+					break;
+				}
+			}
 		}
 		else{
-			include_once 'includes/pages/general.php';
+			if(USER_PAGE == 'servers' || USER_PAGE == 'addserver'){
+				session_unset();
+				session_destroy();
+				Utils::redirection(false, '?p='.USER_PAGE);
+			}
+			else{
+				include_once 'includes/pages/'.$pages[0].'.php';
+			}
 		}
 	}
 	else{

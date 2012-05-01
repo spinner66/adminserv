@@ -2,7 +2,7 @@
 	// On vérifie qu'une configuration existe, sinon on la créer
 	if( class_exists('ServerConfig') ){
 		// Si la configuration contient au moins 1 serveur et qu'il n'est pas l'exemple
-		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) && !isset(ServerConfig::$SERVERS['']) ){
+		if( AdminServ::hasServer() ){
 			// Connexion
 			if( isset($_POST['as_server']) && isset($_POST['as_password']) && isset($_POST['as_adminlevel']) ){
 				// Récupération des valeurs
@@ -34,7 +34,7 @@
 		else{
 			// Si on autorise la configuration en ligne
 			if( OnlineConfig::ACTIVATE === true ){
-				Utils::redirection(false, '?p=servers');
+				Utils::redirection(false, '?p=addserver');
 			}
 			else{
 				AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');

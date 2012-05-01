@@ -925,6 +925,22 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Détermine si il y a au moins un serveur disponible
+	*
+	* @return bool
+	*/
+	public static function hasServer(){
+		$out = false;
+		
+		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) && !isset(ServerConfig::$SERVERS['']) ){
+			$out = true;
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Vérifie si l'ip de l'utilisateur est autorisé dans le niveau admin
 	*
 	* @param string $serverName -> Le nom du serveur dans la config
@@ -946,8 +962,8 @@ abstract class AdminServ {
 		}
 		// Sinon, c'est local ou null
 		else{
-			// Si c'est public -> autorisé à tous
-			if($serverLevel === 'public'){
+			// Si c'est all -> autorisé à tous
+			if($serverLevel === 'all'){
 				return true;
 			}
 			// Sinon -> autorisé au réseau local
