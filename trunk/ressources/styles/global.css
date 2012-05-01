@@ -1028,6 +1028,7 @@ footer {
 	width: 340px;
 }
 .section-addserver table .help {
+	color: #aaa;
 	text-align: left;
 	font-style: italic;
 	font-size: .9em;
