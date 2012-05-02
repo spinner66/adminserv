@@ -16,14 +16,20 @@
 			else{
 				// Test adresse ip local
 				if(OnlineConfig::CHECK_IP != null){
-					if(OnlineConfig::CHECK_IP === 'local'){
+					if(OnlineConfig::CHECK_IP === 'localhost'){
 						if( Utils::isLocalhostIP() ){
 							$allowRedirect = true;
+						}
+						else{
+							$allowRedirect = false;
 						}
 					}
 					else{
 						if( $_SERVER['REMOTE_ADDR'] === OnlineConfig::CHECK_IP ){
 							$allowRedirect = true;
+						}
+						else{
+							$allowRedirect = false;
 						}
 					}
 				}
@@ -32,6 +38,9 @@
 					if( isset($_POST['configcheckpassword']) ){
 						if($_POST['checkPassword'] === OnlineConfig::CHECK_PASSWORD){
 							$allowRedirect = true;
+						}
+						else{
+							$allowRedirect = false;
 						}
 					}
 					else{
@@ -59,14 +68,15 @@
 					Utils::redirection(false, '../?p=servers');
 				}
 			}
+			else{
+				Utils::redirection(false, '../?error='.urlencode('Vous n\'êtes pas autorisé à configurer AdminServ.'));
+			}
 		}
 		else{
-			AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
-			Utils::redirection(false, '..');
+			Utils::redirection(false, '../?info='.urlencode('La configuration en ligne est désactivée. Utilisez le fichier "./config/servers.cfg.php".'));
 		}
 	}
 	else{
-		AdminServ::error('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.');
-		Utils::redirection(false, '..');
+		Utils::redirection(false, '../?error='.urlencode('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.'));
 	}
 ?>
