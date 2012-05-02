@@ -312,9 +312,27 @@ header {
 	padding: 0 5px 0 10px;
 	height: 38px;
 }
-#as_login {
+#connexion-inner .connexion-login input {
 	margin-top: 5px;
 }
+.config-check-password #connexion-inner {
+	width: 513px;
+	margin: 0;
+}
+.config-check-password #connexion-inner .connexion-label {
+	width: auto;
+}
+.config-check-password #connexion-inner .connexion-cancel {
+	float: left;
+	border-right: 1px solid #f5f5f5;
+	padding: 5px 20px 5px 0;
+	margin: 4px 15px 0 0;
+}
+.config-check-password #checkPassword {
+	width: 200px;
+	height: 20px;
+}
+
 
 
 
