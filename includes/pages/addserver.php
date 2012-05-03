@@ -95,7 +95,7 @@
 							Valeurs possibles pour les niveaux admins :<br />
 							all => accès à tous<br />
 							local => accès au réseau local<br />
-							192.168.0.1, 192.168.0.2 => accès à une ou plusieurs adresse IP
+							192.168.0.1, 192.168.0.2 => accès à une ou plusieurs adresses IP
 						</td>
 					</tr>
 					<tr>

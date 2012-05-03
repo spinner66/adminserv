@@ -1,4 +1,5 @@
 <?php
+	// Si on ne demande pas de mot de passe pour la config en ligne
 	if( !isset($_SESSION['adminserv']['check_password']) ){
 		// On vérifie qu'une configuration existe, sinon on la créer
 		if( class_exists('ServerConfig') ){
@@ -37,7 +38,7 @@
 					Utils::redirection(false, './config/');
 				}
 				else{
-					AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
+					AdminServ::info('Aucun serveur disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
 				}
 			}
 		}
@@ -50,6 +51,12 @@
 			}
 		}
 	}
+	else{
+		$hasServer = AdminServ::hasServer();
+		if( !$hasServer ){
+			AdminServ::info('Aucun serveur disponible. Entrez le mot de passe pour accédez à la configuration des serveurs.'); 
+		}
+	}
 	
 	// HTML
 	if( isset($_GET['error']) ){
@@ -60,27 +67,27 @@
 	}
 	AdminServUI::getHeader();
 	
+	
 	// CONFIG PASSWORD
 	if( isset($_SESSION['adminserv']['check_password']) ){
 ?>
-<section class="config-check-password">
+<section class="config-check-password<?php if($hasServer){ echo ' has-server'; } ?>">
 	<form method="post" action="./config/">
-		<div id="connexion">
-			<div id="connexion-inner">
-				<?php if( !AdminServ::hasServer() ){ ?>
-					<div class="connexion-cancel">
-						<a class="button light" href="./?logout">Annuler</a>
-					</div>
-				<?php } ?>
-				<div class="connexion-label">
-					<label for="checkPassword">Mot de passe :</label>
-					<input class="text" type="password" name="checkPassword" id="checkPassword" value="" />
+		<fieldset>
+			<legend>Configuration des serveurs</legend>
+			<?php if($hasServer){ ?>
+				<div class="connexion-cancel">
+					<a class="button light" href="./?logout">Annuler</a>
 				</div>
-				<div class="connexion-login">
-					<input class="button light" type="submit" name="configcheckpassword" id="configcheckpassword" value="Connexion" />
-				</div>
+			<?php } ?>
+			<div class="connexion-label">
+				<label for="checkPassword">Mot de passe :</label>
+				<input class="text" type="password" name="checkPassword" id="checkPassword" value="" />
 			</div>
-		</div>
+			<div class="connexion-login">
+				<input class="button light" type="submit" name="configcheckpassword" id="configcheckpassword" value="Connexion" />
+			</div>
+		</fieldset>
 	</form>
 </section>
 <?php
