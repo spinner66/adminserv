@@ -38,7 +38,7 @@ $(document).ready(function(){
 				$(".cadre").updateNbSelectedLines();
 			});
 		}
-		else{
+		else if( $("body").hasClass("section-index") ){
 			// Adminlevel
 			getServerAdminLevel();
 			$("select#as_server").change(function(){

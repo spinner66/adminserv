@@ -286,7 +286,8 @@ header {
 	height: 38px;
 	padding: 0 5px;
 }
-#connexion-inner .connexion-label {
+#connexion-inner .connexion-label,
+.section-check-password fieldset .connexion-label {
 	float: left;
 	padding: 5px 0;
 	width: 89%;
@@ -306,29 +307,37 @@ header {
 	width: 15%;
 	margin: 1px 0 0;
 }
-#connexion-inner .connexion-login {
+#connexion-inner .connexion-login,
+.section-check-password fieldset .connexion-login {
 	float: right;
 	border-left: 1px solid #f5f5f5;
 	padding: 0 5px 0 10px;
 	height: 38px;
 }
-#connexion-inner .connexion-login input {
+#connexion-inner .connexion-login input,
+.section-check-password fieldset .connexion-login input {
 	margin-top: 5px;
 }
-.config-check-password #connexion-inner {
-	width: 513px;
-	margin: 0;
+.section-check-password fieldset {
+	width: 416px;
+	margin: 30px 5px;
 }
-.config-check-password #connexion-inner .connexion-label {
+.section-check-password .has-server fieldset {
+	width: 513px;
+}
+.section-check-password fieldset legend {
+	margin-bottom: 5px;
+}
+.section-check-password fieldset .connexion-label {
 	width: auto;
 }
-.config-check-password #connexion-inner .connexion-cancel {
+.section-check-password  fieldset .connexion-cancel {
 	float: left;
 	border-right: 1px solid #f5f5f5;
 	padding: 5px 20px 5px 0;
 	margin: 4px 15px 0 0;
 }
-.config-check-password #checkPassword {
+.section-check-password #checkPassword {
 	width: 200px;
 	height: 20px;
 }

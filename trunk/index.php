@@ -9,7 +9,17 @@
 	AdminServUI::getClass();
 	
 	// ISSET
-	if( isset($_GET['p']) ){ define('USER_PAGE', htmlspecialchars($_GET['p']) ); }else{ define('USER_PAGE', 'index'); }
+	if( isset($_GET['p']) ){
+		define('USER_PAGE', htmlspecialchars($_GET['p']) );
+	}
+	else{
+		if( isset($_SESSION['adminserv']['check_password']) ){
+			define('USER_PAGE', 'check-password');
+		}
+		else{
+			define('USER_PAGE', 'index');
+		}
+	}
 	if( isset($_GET['c']) ){ $category = addslashes( htmlspecialchars($_GET['c']) ); }else{ $category = null; }
 	if( isset($_GET['view']) ){ $view = addslashes( htmlspecialchars($_GET['view']) ); }else{ $view = null; }
 	if( isset($_GET['i']) ){ $index = intval($_GET['i']); }else{ $index = -1; }

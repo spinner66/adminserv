@@ -61,7 +61,7 @@
 				session_unset();
 				session_destroy();
 				
-				if( OnlineConfig::ADD_ONLY === true ){
+				if( OnlineConfig::ADD_ONLY === true || AdminServ::hasServer() === false ){
 					Utils::redirection(false, '../?p=addserver');
 				}
 				else{

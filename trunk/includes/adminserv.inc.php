@@ -205,15 +205,17 @@ abstract class AdminServUI {
 	* Récupère le header/footer du site
 	*/
 	public static function getHeader(){
-		global $GLOBALS;
 		
 		// Classes CSS body
+		if( !isset($GLOBALS['body_class']) ){
+			$GLOBALS['body_class'] = null;
+		}
 		if( defined('SERVER_NAME') ){
 			$GLOBALS['page_title'] = SERVER_NAME;
-			$GLOBALS['body_class'] = ' not-front';
+			$GLOBALS['body_class'] .= ' not-front';
 		}
 		else{
-			$GLOBALS['body_class'] = ' front';
+			$GLOBALS['body_class'] .= ' front';
 		}
 		$GLOBALS['body_class'] .= ' section-'.USER_PAGE;
 		$GLOBALS['body_class'] = trim($GLOBALS['body_class']);
@@ -786,9 +788,20 @@ abstract class AdminServ {
 		print_r($val);
 		echo '</pre>';
 	}
-	public static function debug($val = null){
+	public static function debug($globalValue = null){
 		$const = get_defined_constants(true);
-		return self::dsm( array('ADMINSERV' => $const['user'], 'DEBUG' => $val) );
+		if($globalValue){
+			$globals = $GLOBALS[$globalValue];
+		}else{
+			$globals = $GLOBALS;
+		}
+		
+		return self::dsm(
+			array(
+				'GLOBALS' => $globals,
+				'ADMINSERV' => $const['user']
+			)
+		);
 	}
 	
 	/**
