@@ -813,10 +813,10 @@ abstract class AdminServ {
 		if($text === null){
 			$text = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 		}
-		$GLOBALS['error'] = $text;
+		$_SESSION['error'] = $text;
 	}
 	public static function info($text){
-		$GLOBALS['info'] = $text;
+		$_SESSION['info'] = $text;
 	}
 	
 	

@@ -60,6 +60,8 @@
 			if($allowRedirect){
 				session_unset();
 				session_destroy();
+				session_start();
+				$_SESSION['adminserv']['allow_config_servers'] = true;
 				
 				if( OnlineConfig::ADD_ONLY === true || AdminServ::hasServer() === false ){
 					Utils::redirection(false, '../?p=addserver');
@@ -69,14 +71,17 @@
 				}
 			}
 			else{
-				Utils::redirection(false, '../?error='.urlencode('Vous n\'êtes pas autorisé à configurer AdminServ.'));
+				AdminServ::error('Vous n\'êtes pas autorisé à configurer les serveurs.');
+				Utils::redirection(false, '..');
 			}
 		}
 		else{
-			Utils::redirection(false, '../?info='.urlencode('La configuration en ligne est désactivée. Utilisez le fichier "./config/servers.cfg.php".'));
+			AdminServ::info('La configuration en ligne est désactivée. Utilisez le fichier "./config/servers.cfg.php".');
+			Utils::redirection(false, '..');
 		}
 	}
 	else{
-		Utils::redirection(false, '../?error='.urlencode('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.'));
+		AdminServ::error('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.');
+		Utils::redirection(false, '..');
 	}
 ?>
