@@ -25,7 +25,8 @@ class AdminServConfig {
 	const LIMIT_MAPS_LIST = 1000; //lignes
 	const RECENT_STATUS_PERIOD = 86400; //sec
 	const COOKIE_EXPIRE = 15; // jours
-	const CONNECTION_TIMEOUT = 3; //sec
+	const SERVER_CONNECTION_TIMEOUT = 3; //sec
+	const MD5_PASSWORD = false;
 	
 	/* PATH DIRECTORY */
 	const PATH_INCLUDES = './includes/';

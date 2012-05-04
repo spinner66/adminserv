@@ -29,6 +29,16 @@
 	if( isset($_GET['lg']) ){ $lang = addslashes($_GET['lg']); }else{ $lang = null; }
 	
 	
+	// DÉCONNEXION
+	if( isset($_GET['error']) || isset($_GET['logout']) ){
+		session_unset();
+		session_destroy();
+		if( isset($_GET['logout']) ){
+			Utils::redirection(false);
+		}
+	}
+	
+	
 	// THEME
 	define('USER_THEME', AdminServUI::getTheme($theme) );
 	
@@ -37,16 +47,6 @@
 	define('USER_LANG', AdminServUI::getLang($lang) );
 	if( file_exists('includes/lang/'. USER_LANG .'.php') ){
 		require_once 'includes/lang/'. USER_LANG .'.php';
-	}
-	
-	
-	// DÉCONNEXION
-	if( isset($_GET['error']) || isset($_GET['logout']) ){
-		session_unset();
-		session_destroy();
-		if( isset($_GET['logout']) ){
-			Utils::redirection(false);
-		}
 	}
 	
 	
