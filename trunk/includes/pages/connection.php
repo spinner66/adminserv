@@ -10,6 +10,9 @@
 					// Récupération des valeurs
 					$serverName = $_POST['as_server'];
 					$password = addslashes( htmlspecialchars( trim($_POST['as_password']) ) );
+					if(AdminServConfig::MD5_PASSWORD){
+						$password = md5($password);
+					}
 					$adminLevel = addslashes( htmlspecialchars($_POST['as_adminlevel']) );
 					
 					// Vérification des valeurs

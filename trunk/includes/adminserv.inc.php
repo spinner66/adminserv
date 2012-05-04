@@ -843,8 +843,8 @@ abstract class AdminServ {
 			
 			// CONNEXION
 			$client = new IXR_Client_Gbx;
-			if( !$client->InitWithIp(SERVER_ADDR, SERVER_XMLRPC_PORT, AdminServConfig::CONNECTION_TIMEOUT) ){
-				Utils::redirection(false, './?error='.urlencode('Le serveur n\'est pas accessible.') );
+			if( !$client->InitWithIp(SERVER_ADDR, SERVER_XMLRPC_PORT, AdminServConfig::SERVER_CONNECTION_TIMEOUT) ){
+				Utils::redirection(false, '?error='.urlencode('Le serveur n\'est pas accessible.'));
 			}
 			else{
 				if( !self::userAllowedInAdminLevel(SERVER_NAME, USER_ADMINLEVEL) ){
@@ -852,7 +852,7 @@ abstract class AdminServ {
 				}
 				else{
 					if( !$client->query('Authenticate', USER_ADMINLEVEL, $_SESSION['adminserv']['password']) ){
-						Utils::redirection(false, '?error='.urlencode('Mauvais mot de passe'));
+						Utils::redirection(false, '?error='.urlencode('Le mot de passe ne correspond pas au serveur.'));
 					}
 					else{
 						if($fullInit){
