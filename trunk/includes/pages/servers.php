@@ -1,4 +1,10 @@
 <?php
+	// SESSION
+	if( !isset($_SESSION['adminserv']['allow_config_servers']) ){
+		AdminServ::error('Vous n\'êtes pas autorisé à configurer les serveurs.');
+		Utils::redirection(false);
+	}
+	
 	// VERIFICATION
 	if( class_exists('ServerConfig') ){
 		// Si la configuration contient au moins 1 serveur
