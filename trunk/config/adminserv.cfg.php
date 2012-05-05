@@ -33,6 +33,12 @@ class AdminServConfig {
 	const PATH_PLUGINS = './plugins/';
 	const PATH_RESSOURCES = './ressources/';
 	
+	/* LOGS */
+	public static $LOGS = array(
+		'access' => true,
+		'action' => true
+	);
+	
 	/* FILES AND FOLDERS */
 	public static $FOLDERS_OPTIONS = array(
 		'new' => true,

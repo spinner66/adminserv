@@ -465,65 +465,64 @@
 		</div>
 		
 		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
-			<table>
-				<thead>
-					<tr>
-						<th class="thleft">Playlist</th>
-						<th>Type</th>
-						<th>Contient</th>
-						<th>Modifié le</th>
-						<th class="thright"></th>
-					</tr>
-				</thead>
-				<tbody>
-				<?php
-					$showPlaylists = null;
-					
-					// Liste des playlists
-					if( isset($playlistDirectory['files']) && count($playlistDirectory['files']) > 0 ){
-						$i = 0;
-						foreach($playlistDirectory['files'] as $file){
-							$ext = File::getExtension($file['filename']);
-							if($ext == 'txt' || $ext = 'text' || $ext == 'xml'){
-								$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
-								if( isset($data['logins']) ){
-									$countDataLogins = count($data['logins']);
-									if($countDataLogins > 1){
-										$nbPlayers = $countDataLogins.' joueurs';
-									}
-									else{
-										$nbPlayers = '1 joueur';
-									}
+		<table>
+			<thead>
+				<tr>
+					<th class="thleft">Playlist</th>
+					<th>Type</th>
+					<th>Contient</th>
+					<th>Modifié le</th>
+					<th class="thright"></th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+				$showPlaylists = null;
+				
+				// Liste des playlists
+				if( isset($playlistDirectory['files']) && count($playlistDirectory['files']) > 0 ){
+					$i = 0;
+					foreach($playlistDirectory['files'] as $file){
+						$ext = File::getExtension($file['filename']);
+						if($ext == 'txt' || $ext = 'text' || $ext == 'xml'){
+							$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
+							if( isset($data['logins']) ){
+								$countDataLogins = count($data['logins']);
+								if($countDataLogins > 1){
+									$nbPlayers = $countDataLogins.' joueurs';
 								}
 								else{
-									$nbPlayers = '0 joueur';
+									$nbPlayers = '1 joueur';
 								}
-								
-								// Ligne
-								$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
-									.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.substr($file['filename'], 0, -4).'</span></td>'
-									.'<td class="center">'.ucfirst($data['type']).'</td>'
-									.'<td class="center">'.$nbPlayers.'</td>'
-									.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'
-									.'<td class="checkbox">'
-										.'<input type="checkbox" name="playlist[]" value="'.$file['filename'].'" />'
-										.'<input type="hidden" name="playlistType[]" value="'.$data['type'].'" />'
-									.'</td>'
-								.'</tr>';
-								$i++;
 							}
+							else{
+								$nbPlayers = '0 joueur';
+							}
+							
+							// Ligne
+							$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
+								.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.substr($file['filename'], 0, -4).'</span></td>'
+								.'<td class="center">'.ucfirst($data['type']).'</td>'
+								.'<td class="center">'.$nbPlayers.'</td>'
+								.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'
+								.'<td class="checkbox">'
+									.'<input type="checkbox" name="playlist[]" value="'.$file['filename'].'" />'
+									.'<input type="hidden" name="playlistType[]" value="'.$data['type'].'" />'
+								.'</td>'
+							.'</tr>';
+							$i++;
 						}
 					}
-					else{
-						$showPlaylists .= '<tr class="no-line"><td class="center" colspan="4">Aucune playlist</td></tr>';
-					}
-					
-					// Affichage
-					echo $showPlaylists;
-				?>
-				</tbody>
-			</table>
-		</form>
+				}
+				else{
+					$showPlaylists .= '<tr class="no-line"><td class="center" colspan="4">Aucune playlist</td></tr>';
+				}
+				
+				// Affichage
+				echo $showPlaylists;
+			?>
+			</tbody>
+		</table>
 		
 		<div class="options">
 			<div class="fright">
@@ -538,6 +537,7 @@
 				</div>
 			</div>
 		</div>
+		</form>
 	</div>
 </section>
 <?php

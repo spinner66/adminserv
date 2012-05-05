@@ -1,6 +1,6 @@
 <?php
 	// LECTURE
-	$mapsList = AdminServ::getLocalMapList($mapsDirectoryPath.$directory);
+	$directoryList = Folder::getArborescence($mapsDirectoryPath.$directory, AdminServConfig::$MAPS_HIDDEN_FOLDERS, substr_count($mapsDirectoryPath, '/'));
 	
 	$gameInfos = AdminServ::getGameInfos();
 	$currGamInf = null;
@@ -28,7 +28,29 @@
 		</div>
 		
 		<h2>Maps</h2>
-		
+		<div class="content">
+			<fieldset>
+				<div class="mapsSelection">
+					<?php
+						if( count($directoryList) > 0 ){
+							$mapsSelectList = '<select name="mapsDirectoryList" id="mapsDirectoryList">';
+							foreach($directoryList as $dir){
+								$mapsSelectList .= '<option value="'.$dir['path'].'">'.$dir['name'].'</option>';
+							}
+							$mapsSelectList .= '</select>';
+							echo $mapsSelectList;
+						}
+					?>
+					<input class="button light" type="button" name="mapsSelectionMake" id="mapsSelectionMake" value="Faire une sélection" />
+					<input class="button light" type="button" name="mapsSelectionImport" id="mapsSelectionImport" value="Importer tout le dossier" />
+				</div>
+				
+				<div class="mapsSelected">
+					<p>Maps sélectionnées pour le MatchSettings : 42</p>
+					<input class="button light" type="button" name="mapsSelectedView" id="mapsSelectedView" value="Voir la sélection du MatchSettings" />
+				</div>
+			</fieldset>
+		</div>
 		
 		<h2>Informations de jeu</h2>
 		<div class="content gameinfos">

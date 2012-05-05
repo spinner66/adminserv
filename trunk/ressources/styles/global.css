@@ -1416,6 +1416,34 @@ footer {
 .section-maps-creatematchset td.value {
 	width: 40%;
 }
+.section-maps-creatematchset .mapsSelection {
+	margin: 10px 0 20px;
+	overflow: hidden;
+	height: 30px;
+}
+.section-maps-creatematchset .mapsSelection select {
+	width: 200px;
+}
+.section-maps-creatematchset .mapsSelection input {
+	float: right;
+	margin-left: 10px;
+}
+.section-maps-creatematchset .mapsSelection input + input {
+	margin: 0;
+}
+.section-maps-creatematchset .mapsSelected {
+	border-top: 1px solid #ddd;
+	padding-top: 10px;
+	overflow: hidden;
+	height: 30px;
+}
+.section-maps-creatematchset .mapsSelected p {
+	float: left;
+	margin: 4px 0 0;
+}
+.section-maps-creatematchset .mapsSelected input {
+	float: right;
+}
 
 
 /* Page Guest-Ban
