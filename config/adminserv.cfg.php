@@ -36,7 +36,8 @@ class AdminServConfig {
 	/* LOGS */
 	public static $LOGS = array(
 		'access' => true,
-		'action' => true
+		'action' => true,
+		'error' => true
 	);
 	
 	/* FILES AND FOLDERS */
