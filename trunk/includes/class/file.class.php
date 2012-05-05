@@ -29,26 +29,21 @@ abstract class File {
 		$out = null;
 		
 		if( file_exists($filename) ){
-			if( $handle = fopen($filename, 'w') ){
-				if($data){
-					if( fwrite($handle, $data) ){
-						$out = true;
-					}
-					else{
-						$out = 'Impossible d\'écrire les données dans le fichier.';
-					}
-				}
-				else{
-					$out = true;
-				}
-				fclose($handle);
+			if( file_put_contents($filename, $data, FILE_APPEND) ){
+				$out = true;
 			}
 			else{
-				$out = 'Impossible d\'ouvrir le fichier.';
+				$out = 'Impossible d\'écrire les données dans le fichier.';
 			}
 		}
 		else{
-			$out = 'Le fichier n\'existe pas.';
+			if( $handle = fopen($filename, 'w') ){
+				$out = true;
+				fclose($handle);
+			}
+			else{
+				$out = 'Impossible de créer le fichier.';
+			}
 		}
 		
 		return $out;

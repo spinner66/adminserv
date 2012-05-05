@@ -2152,7 +2152,7 @@ abstract class AdminServLogs {
 	public static function initialize(){
 		$out = false;
 		
-		if( AdminServConfig::$LOGS['access'] || AdminServConfig::$LOGS['action'] ){
+		if( in_array(true, AdminServConfig::$LOGS) ){
 			if( file_exists(self::$LOGS_PATH) ){
 				if( is_writable(self::$LOGS_PATH) ){
 					$out = true;
@@ -2169,10 +2169,11 @@ abstract class AdminServLogs {
 		if($out){
 			if( count(AdminServConfig::$LOGS) > 0 ){
 				foreach(AdminServConfig::$LOGS as $file => $activate){
-					if($activate){
-						if( File::save(self::$LOGS_PATH.$file.'.log') !== true ){
-							$out = false;
+					$path = self::$LOGS_PATH.$file.'.log';
+					if($activate && !file_exists($path) ){
+						if( File::save($path) !== true ){
 							AdminServ::error('Impossible de créer le fichier de log : '.$file.'.');
+							$out = false;
 							break;
 						}
 					}
@@ -2194,12 +2195,16 @@ abstract class AdminServLogs {
 	public static function add($type, $str){
 		$out = false;
 		$type = strtolower($type);
+		$str = '['.date('d/m/Y H:i:s').'] ['. USER_PAGE .'] ['.$_SERVER['REMOTE_ADDR'].'] '.$str."\n";
+		$path = self::$LOGS_PATH.$type.'.log';
 		
-		if( File::save(self::$LOGS_PATH.$type.'.log', $str) !== true ){
-			AdminServ::error('Impossible d\'ajouter un log au fichier : '.$type.'.');
-		}
-		else{
-			$out = true;
+		if( file_exists($path) ){
+			if( File::save($path, $str) !== true ){
+				AdminServ::error('Impossible d\'ajouter un log au fichier : '.$type.'.');
+			}
+			else{
+				$out = true;
+			}
 		}
 		
 		return $out;
