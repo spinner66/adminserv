@@ -3,20 +3,24 @@ class ServerConfig {
 	public static $SERVERS = array(
 		/********************* SERVER CONFIGURATION *********************/
 		
-		'new server name' => array(
+		'ям Private' => array(
 			'address'		=> 'localhost',
-			'port'			=> 5000,
-			'matchsettings'	=> '',
+			'port'			=> 2086,
+			'matchsettings'	=> 'rmp',
+			'adminlevel'	=> array('SuperAdmin' => array('192.168.0.2', '192.168.0.3'), 'Admin' => 'local', 'User' => 'all')
+		),
+		'ям Private 2' => array(
+			'address'		=> 'localhost',
+			'port'			=> 2086,
+			'matchsettings'	=> 'rmp',
 			'adminlevel'	=> array('SuperAdmin' => 'all', 'Admin' => 'all', 'User' => 'all')
 		),
-		/*
-		'new server name' => array(
+		'ям Private 3' => array(
 			'address'		=> 'localhost',
-			'port'			=> 5000,
-			'matchsettings'	=> '',
+			'port'			=> 2086,
+			'matchsettings'	=> 'rmp',
 			'adminlevel'	=> array('SuperAdmin' => 'all', 'Admin' => 'all', 'User' => 'all')
 		),
-		*/
 	);
 }
 ?>
