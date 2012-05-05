@@ -19,6 +19,43 @@ abstract class File {
 	
 	
 	/**
+	* Créer ou ajoute des données à un fichier
+	*
+	* @param  string $filename -> Le chemin ou nom du fichier
+	* @param  string $data     -> Données à écrire
+	* @return true si réussi, sinon erreur string
+	*/
+	public static function save($filename, $data = null){
+		$out = null;
+		
+		if( file_exists($filename) ){
+			if( $handle = fopen($filename, 'w') ){
+				if($data){
+					if( fwrite($handle, $data) ){
+						$out = true;
+					}
+					else{
+						$out = 'Impossible d\'écrire les données dans le fichier.';
+					}
+				}
+				else{
+					$out = true;
+				}
+				fclose($handle);
+			}
+			else{
+				$out = 'Impossible d\'ouvrir le fichier.';
+			}
+		}
+		else{
+			$out = 'Le fichier n\'existe pas.';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Renomme un fichier
 	*
 	* @param string $filename    -> Chemin du fichier à renommer

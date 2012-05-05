@@ -39,6 +39,10 @@
 	}
 	
 	
+	// LOGS
+	AdminServLogs::initialize();
+	
+	
 	// THEME
 	define('USER_THEME', AdminServUI::getTheme($theme) );
 	

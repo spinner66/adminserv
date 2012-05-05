@@ -737,7 +737,8 @@ abstract class AdminServUI {
 								if(AdminServConfig::$FOLDERS_OPTIONS['delete']){
 									$out .= '<li><a class="button light delete" id="deleteFolder" href="." data-confirm-text="Voulez-vous vraiment supprimer ce dossier ?">Supprimer</a></li>';
 								}
-						$out .= '</div>'
+							$out .= '</ul>'
+						.'</div>'
 						.'<input type="hidden" name="optionFolderHiddenField" id="optionFolderHiddenField" value="" />'
 					.'</form>';
 				}
@@ -2131,6 +2132,77 @@ abstract class AdminServSort {
 		}else{
 			return 1;
 		}
+	}
+}
+
+
+/**
+* Classe pour le traitement des logs AdminServ
+*/
+abstract class AdminServLogs {
+	/**
+	* Globales
+	*/
+	public static $LOGS_PATH = './logs/';
+	
+	/**
+	* Initialise les logs (vérification des droits, création des fichiers)
+	* @return bool
+	*/
+	public static function initialize(){
+		$out = false;
+		
+		if( AdminServConfig::$LOGS['access'] || AdminServConfig::$LOGS['action'] ){
+			if( file_exists(self::$LOGS_PATH) ){
+				if( is_writable(self::$LOGS_PATH) ){
+					$out = true;
+				}
+				else{
+					AdminServ::error('Le dossier "logs" ne permet pas l\'écriture de log.');
+				}
+			}
+			else{
+				AdminServ::error('Le dossier "logs" n\'existe pas.');
+			}
+		}
+		
+		if($out){
+			if( count(AdminServConfig::$LOGS) > 0 ){
+				foreach(AdminServConfig::$LOGS as $file => $activate){
+					if($activate){
+						if( File::save(self::$LOGS_PATH.$file.'.log') !== true ){
+							$out = false;
+							AdminServ::error('Impossible de créer le fichier de log : '.$file.'.');
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Ajoute un log au fichier correspondant
+	*
+	* @param string $type -> Type de log : access, action, etc
+	* @param string $str  -> Ligne de log à écrire
+	* @return bool
+	*/
+	public static function add($type, $str){
+		$out = false;
+		$type = strtolower($type);
+		
+		if( File::save(self::$LOGS_PATH.$type.'.log', $str) !== true ){
+			AdminServ::error('Impossible d\'ajouter un log au fichier : '.$type.'.');
+		}
+		else{
+			$out = true;
+		}
+		
+		return $out;
 	}
 }
 ?>
