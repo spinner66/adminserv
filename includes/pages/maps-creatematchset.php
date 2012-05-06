@@ -7,7 +7,11 @@
 	$nextGamInf = $gameInfos['next'];
 	
 	
+	// ÉDITION
+	$mapsSelectedList = null;
 	
+	
+	// HTML
 	AdminServUI::getHeader();
 ?>
 <section class="maps hasMenu hasFolders">
@@ -34,6 +38,7 @@
 					<?php
 						if( count($directoryList) > 0 ){
 							$mapsSelectList = '<select name="mapsDirectoryList" id="mapsDirectoryList">';
+							$mapsSelectList .= '<option value="'.$mapsDirectoryPath.$directory.'">Racine</option>';
 							foreach($directoryList as $dir){
 								$mapsSelectList .= '<option value="'.$dir['path'].'">'.$dir['level'].$dir['name'].'</option>';
 							}
@@ -46,7 +51,7 @@
 				</div>
 				
 				<div class="mapsSelected">
-					<p>Maps sélectionnées pour le MatchSettings : 42</p>
+					<p>Maps sélectionnées pour le MatchSettings : <span id="nbMapsSelected">0</span></p>
 					<input class="button light" type="button" name="mapsSelectedView" id="mapsSelectedView" value="Voir la sélection du MatchSettings" />
 				</div>
 			</fieldset>

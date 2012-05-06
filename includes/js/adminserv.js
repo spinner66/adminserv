@@ -209,7 +209,7 @@ $(document).ready(function(){
 			
 			// Mode détail
 			$("#detailMode").click(function(){
-				generalDetailMode();
+				setGeneralDetailMode();
 				return false;
 			});
 			
@@ -230,14 +230,14 @@ $(document).ready(function(){
 			$("input#ServerName").keyup(function(event){
 				var key = event.keyCode;
 				if(key != 13 && key != 37 && key != 39){
-					previewSrvOpts($(this).val(), "#serverNameHtml");
+					getPreviewSrvOpts($(this).val(), "#serverNameHtml");
 				}
 			});
 			// ServerComment
 			$("textarea#ServerComment").keyup(function(event){
 				var key = event.keyCode;
 				if(key != 37 && key != 39){
-					previewSrvOpts("$i"+ $(this).val(), "#serverCommentHtml");
+					getPreviewSrvOpts("$i"+ $(this).val(), "#serverCommentHtml");
 				}
 			});
 		}
@@ -307,6 +307,17 @@ $(document).ready(function(){
 				var min = secToMin(sec);
 				$(this).parent("td").parent("tr").children("td.preview").html("["+min+" min]");
 			});
+			
+			
+			/**
+			* Create MatchSettings
+			*/
+			if( $("body").hasClass("section-maps-creatematchset") ){
+				// Importer tout le dossier
+				$("#mapsSelectionImport").click(function(){
+					matchset_getLocalMapList();
+				});
+			}
 		}
 		/**
 		* Chat
@@ -409,7 +420,7 @@ $(document).ready(function(){
 			
 			// Mode détail
 			$("#detailMode").click(function(){
-				mapslistDetailMode();
+				setMapslistDetailMode();
 				return false;
 			});
 			
@@ -568,7 +579,7 @@ $(document).ready(function(){
 				$(this).find(".icon .ui-icon-arrowthick-1-n").addClass("active");
 				
 				// Tri
-				mapsOrderSort($(this).children("input").val(), "asc");
+				setMapsOrderSort($(this).children("input").val(), "asc");
 			});
 			$(".autoSortMode li span.ui-icon").click(function(){
 				$("#sortableMapList").addClass("loading");
@@ -585,7 +596,7 @@ $(document).ready(function(){
 					var order = "desc";
 				}
 				// Tri
-				mapsOrderSort($(this).parent(".icon").parent("li").children("input").val(), order);
+				setMapsOrderSort($(this).parent(".icon").parent("li").children("input").val(), order);
 				
 				return false;
 			});
@@ -609,12 +620,6 @@ $(document).ready(function(){
 				$("#list").val(listStr.substring(0, listStr.length-1));
 				}
 			});
-		}
-		/**
-		* Create MatchSettings
-		*/
-		else if( $("body").hasClass("section-maps-creatematchset") ){
-			
 		}
 		/**
 		* Guest-Ban
