@@ -65,7 +65,7 @@
 ----------------------------------*/
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border: 1px solid #dddddd; background: #f6f6f6 url(../images/jqueryui/ui-bg_highlight-soft_100_f6f6f6_1x100.png) 50% 50% repeat-x; font-weight: bold; color: #5e9cd5; }
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #5e9cd5; text-decoration: none; }
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { border: 1px solid #5e9cd5; background: #5e9cd5 url(images/ui-bg_highlight-soft_25_5e9cd5_1x100.png) 50% 50% repeat-x; font-weight: bold; color: #ffffff; }
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { border: 1px solid #5e9cd5; background: #5e9cd5 url(../images/jqueryui/ui-bg_highlight-soft_25_5e9cd5_1x100.png) 50% 50% repeat-x; font-weight: bold; color: #ffffff; }
 .ui-state-hover a, .ui-state-hover a:hover { color: #ffffff; text-decoration: none; }
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #dddddd; background: #ffffff url(../images/jqueryui/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x; font-weight: bold; color: #5e9cd5; }
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #5e9cd5; text-decoration: none; }
@@ -86,7 +86,7 @@
 ----------------------------------*/
 
 /* states and images */
-.ui-icon { width: 16px; height: 16px; background-image: url../(images/ui-icons_5e9cd5_256x240.png); }
+.ui-icon { width: 16px; height: 16px; background-image: url(../images/jqueryui/ui-icons_5e9cd5_256x240.png); }
 .ui-widget-content .ui-icon {background-image: url(../images/jqueryui/ui-icons_5e9cd5_256x240.png); }
 .ui-widget-header .ui-icon {background-image: url(../images/jqueryui/ui-icons_5e9cd5_256x240.png); }
 .ui-state-default .ui-icon { background-image: url(../images/jqueryui/ui-icons_666666_256x240.png); }

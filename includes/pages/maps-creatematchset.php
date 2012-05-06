@@ -48,11 +48,13 @@
 					?>
 					<input class="button light" type="button" name="mapsSelectionMake" id="mapsSelectionMake" value="Faire une sélection" />
 					<input class="button light" type="button" name="mapsSelectionImport" id="mapsSelectionImport" value="Importer tout le dossier" />
+					<div id="mapsSelectionMakeDialog" data-select="Sélectionner" hidden="hidden"></div>
 				</div>
 				
 				<div class="mapsSelected">
 					<p>Maps sélectionnées pour le MatchSettings : <span id="nbMapsSelected">0</span></p>
 					<input class="button light" type="button" name="mapsSelectedView" id="mapsSelectedView" value="Voir la sélection du MatchSettings" />
+					<div id="mapsSelectedDialog" data-close="Fermer" hidden="hidden"></div>
 				</div>
 			</fieldset>
 		</div>
