@@ -21,24 +21,12 @@ class AdminServConfig {
 	const AUTOSAVE_MATCHSETTINGS = true;
 	
 	/* ADVANCED */
+	const MD5_PASSWORD = false;
 	const LIMIT_PLAYERS_LIST = 250; //lignes
 	const LIMIT_MAPS_LIST = 1000; //lignes
 	const RECENT_STATUS_PERIOD = 86400; //sec
 	const COOKIE_EXPIRE = 15; // jours
 	const SERVER_CONNECTION_TIMEOUT = 3; //sec
-	const MD5_PASSWORD = false;
-	
-	/* PATH DIRECTORY */
-	const PATH_INCLUDES = './includes/';
-	const PATH_PLUGINS = './plugins/';
-	const PATH_RESSOURCES = './ressources/';
-	
-	/* LOGS */
-	public static $LOGS = array(
-		'access' => true,
-		'action' => true,
-		'error' => true
-	);
 	
 	/* FILES AND FOLDERS */
 	public static $FOLDERS_OPTIONS = array(
@@ -60,5 +48,17 @@ class AdminServConfig {
 	/* LOCAL */
 	public static $MAP_EXTENSION = array('map.gbx', 'challenge.gbx');
 	public static $MATCHSET_EXTENSION = array('txt', 'xml');
+	
+	/* LOGS */
+	public static $LOGS = array(
+		'access' => true,
+		'action' => true,
+		'error' => true
+	);
+	
+	/* PATH DIRECTORY */
+	const PATH_INCLUDES = './includes/';
+	const PATH_PLUGINS = './plugins/';
+	const PATH_RESSOURCES = './ressources/';
 }
 ?>

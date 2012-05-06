@@ -1073,26 +1073,6 @@ abstract class AdminServ {
 	
 	
 	/**
-	* Récupère l'extension d'un fichier Nadeo
-	*
-	* @param string $filename -> Le fichier à extraire l'extension
-	* @return string "map.gbx"
-	*/
-	public static function getNadeoExtension($filename){
-		$out = null;
-		$filenameEx = explode('.', $filename);
-		
-		if( count($filenameEx) > 2 ){
-			$ext = $filenameEx[count($filenameEx)-2];
-			$ext .= '.'.$filenameEx[count($filenameEx)-1];
-			$out = strtolower($ext);
-		}
-		
-		return $out;
-	}
-	
-	
-	/**
 	* Récupère les informations du serveur actuel (map, serveur, stats, joueurs)
 	*
 	* @global resource $client -> Le client doit être initialisé
@@ -1844,7 +1824,7 @@ abstract class AdminServ {
 				if($countMapList > 0){
 					$i = 0;
 					foreach($directory['files'] as $file => $values){
-						if( in_array(self::getNadeoExtension($file), AdminServConfig::$MAP_EXTENSION) ){
+						if( in_array(File::getDoubleExtension($file), AdminServConfig::$MAP_EXTENSION) ){
 							// Données
 							$Gbx = new GBXChallengeFetcher($path.$file, true);
 							

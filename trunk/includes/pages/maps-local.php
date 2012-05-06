@@ -58,8 +58,20 @@
 	else if( isset($_POST['renameMapValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
 		$i = 0;
 		foreach($_POST['renameMapList'] as $newMapName){
-			if( File::rename($mapsDirectoryPath.$_POST['map'][$i], $mapsDirectoryPath.$newMapName) !== true ){
-				AdminServ::error('Impossible de renommer la map : '.$newMapName);
+			$result = File::rename($mapsDirectoryPath.$_POST['map'][$i], $mapsDirectoryPath.$newMapName);
+			if($result !== true ){
+				AdminServ::error('Impossible de renommer la map : '.$newMapName.' ('.$result.')');
+				break;
+			}
+			$i++;
+		}
+	}
+	else if( isset($_POST['renameAutoValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
+		$i = 0;
+		foreach($_POST['renameMapList'] as $newMapName){
+			$result = File::rename($mapsDirectoryPath.$_POST['map'][$i], $mapsDirectoryPath.Str::replaceChars($newMapName));
+			if($result !== true){
+				AdminServ::error('Impossible de renommer la map : '.$newMapName.' ('.$result.')');
 				break;
 			}
 			$i++;
@@ -76,16 +88,18 @@
 		
 		// Déplacement
 		foreach($_POST['map'] as $map){
-			if( File::rename($mapsDirectoryPath.$directory.$map, $newPath.$map) !== true ){
-				AdminServ::error('Impossible de déplacer la map : '.$map);
+			$result = File::rename($mapsDirectoryPath.$directory.$map, $newPath.$map);
+			if($result !== true ){
+				AdminServ::error('Impossible de déplacer la map : '.$map.' ('.$result.')');
 				break;
 			}
 		}
 	}
 	else if( isset($_POST['deleteMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			if( !File::delete($mapsDirectoryPath.$map) ){
-				AdminServ::error('Impossible de supprimer la map : '.$map);
+			$result = File::delete($mapsDirectoryPath.$map);
+			if($result !== true){
+				AdminServ::error('Impossible de supprimer la map : '.$map.' ('.$result.')');
 				break;
 			}
 		}
@@ -118,7 +132,7 @@
 		<div class="title-detail">
 			<ul>
 				<li class="path"><?php echo $mapsDirectoryPath.$directory; ?></li>
-				<li><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($mapsList['lst']) ){ echo ' disabled="disabled"'; } ?> /></li>
+				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($mapsList['lst']) ){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		
@@ -143,7 +157,7 @@
 						$i = 0;
 						foreach($mapsList['lst'] as $id => $map){
 							// Ligne
-							$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } $showMapList .= '">'
+							$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($map['Recent']){ $showMapList .= ' recent'; } $showMapList .= '">'
 								.'<td class="imgleft"><img src="'.$mapsList['cfg']['path_rsc'].'images/16/map.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
 								.'<td class="imgcenter"><img src="'.$mapsList['cfg']['path_rsc'].'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
 								.'<td>'.$map['Author'].'</td>'
@@ -181,7 +195,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="form-rename-map" class="option-form" hidden="hidden" data-cancel="Annuler" data-rename="Renommer"></div>
+			<div id="form-rename-map" class="option-form" hidden="hidden" data-cancel="Annuler" data-rename="Renommer" data-autorename="Remplacer les caractères spéciaux"></div>
 			<div id="form-move-map" class="option-form" hidden="hidden" data-cancel="Annuler" data-move="Déplacer" data-inthefolder="dans le dossier :" data-root="Racine"></div>
 		</div>
 		</form>
