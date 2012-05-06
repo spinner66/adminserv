@@ -1,25 +1,86 @@
 /**
-* Récupère la liste des niveaux admin suivant le serveur sélectionné
+* Fonctions générales
 */
-function getServerAdminLevel(){
-	var serverName = $("select#as_server").val();
-	var adminLevelList = "";
+function getPath(){
+	return $.trim( $(".path").text() );
+}
+function getMode(){
+	return $.trim( $("#detailMode").data("statusmode") );
+}
+function getCurrentSort(){
+	return $("#currentSort").val();
+}
+function setCurrentSort(sort){
+	return $("#currentSort").val(sort);
+}
+function t(text){
+	text = text.replace('from', $("#formUpload").data("from") );
+	text = text.replace('Kb', $("#formUpload").data("kb") );
+	text = text.replace('Mb', $("#formUpload").data("mb") );
+	return text;
+}
+
+
+/**
+* Affiche la valeur seconde -> minute
+*
+* @param int sec -> La valeur en seconde
+*/
+function secToMin(sec){
+	if(sec == "" || sec == undefined || isNaN(sec) ){
+		sec = 0;
+	}
+	return round( (parseInt(sec) / 60), 1);
+}
+
+
+/**
+* Math.round avec précision
+*
+* @param int value     -> Valeur à arrondir
+* @param int precision -> Nombre de caractère après la virgule
+*/
+function round(value, precision){
+	power = Math.pow(10, precision);
+	return (Math.ceil(value * power)) / power;
+}
+
+
+/**
+* Affichage du texte d'erreur
+*/
+function error(text, hide){
+	$("#error").fadeIn("fast");
+	if( $("#error").attr("hidden") ){
+		$("#error").removeAttr("hidden");
+	}
+	$("#error").text(text);
 	
-	$.getJSON("includes/ajax/get_server_adminlevel.php", {srv: serverName}, function(response){
-		if(response != null){
-			$.each(response.levels, function(i, n){
-				if(response.last != null && response.last == n){ var selected = ' selected="selected"'; }
-				else{ var selected = ""; }
-				adminLevelList += '<option value="'+n+'"'+selected+'>'+n+'</option>';
-			});
-			
-			// On met à jour la liste
-			$("select#as_adminlevel").html(adminLevelList);
-		}
-		else{
-			error("Aucun niveau admin configuré pour ce serveur.");
-		}
-	});
+	if(hide){
+		setTimeout(function(){
+			$("#error").attr("hidden", true);
+			$("#error").fadeOut("fast");
+		}, 4000);
+	}
+}
+
+
+/**
+* Affichage du texte d'erreur
+*/
+function info(text, hide){
+	$("#info").fadeIn("fast");
+	if( $("#info").attr("hidden") ){
+		$("#info").removeAttr("hidden");
+	}
+	$("#info").text(text);
+	
+	if(hide){
+		setTimeout(function(){
+			$("#info").attr("hidden", true);
+			$("#info").fadeOut("fast");
+		}, 4000);
+	}
 }
 
 
@@ -42,6 +103,31 @@ function speedAdmin(cmd){
 			}
 			$(".speed-admin a.locked").removeClass("locked");
 		}, 2000);
+	});
+}
+
+
+/**
+* Récupère la liste des niveaux admin suivant le serveur sélectionné
+*/
+function getServerAdminLevel(){
+	var serverName = $("select#as_server").val();
+	var adminLevelList = "";
+	
+	$.getJSON("includes/ajax/get_server_adminlevel.php", {srv: serverName}, function(response){
+		if(response != null){
+			$.each(response.levels, function(i, n){
+				if(response.last != null && response.last == n){ var selected = ' selected="selected"'; }
+				else{ var selected = ""; }
+				adminLevelList += '<option value="'+n+'"'+selected+'>'+n+'</option>';
+			});
+			
+			// On met à jour la liste
+			$("select#as_adminlevel").html(adminLevelList);
+		}
+		else{
+			error("Aucun niveau admin configuré pour ce serveur.");
+		}
 	});
 }
 
@@ -141,36 +227,12 @@ function getCurrentServerInfo(mode, sort){
 
 
 /**
-* Gestion du mode détail de la page general
-*/
-function generalDetailMode(){
-	var sort = getCurrentSort();
-	if( $("#detailMode").text() == $("#detailMode").data("textdetail") ){
-		getCurrentServerInfo("detail", sort);
-		$("#detailMode").text( $("#detailMode").data("textsimple") );
-		$("#playerlist table th.detailModeTh").attr("hidden", false);
-		$("#playerlist table th.firstTh").removeClass("thleft");
-		$("#playerlist").addClass("loading");
-		$("#detailMode").data("statusmode", "detail");
-	}
-	else{
-		getCurrentServerInfo("simple", sort);
-		$("#detailMode").text( $("#detailMode").data("textdetail") );
-		$("#playerlist table th.detailModeTh").attr("hidden", true);
-		$("#playerlist table th.firstTh").addClass("thleft");
-		$("#playerlist").addClass("loading");
-		$("#detailMode").data("statusmode", "simple");
-	}
-}
-
-
-/**
 * Récupère et affiche le nom du serveur et son commentaire
 *
 * @param string str  -> La chaine de caractère à transformer en HTML
 * @param string dest -> Selecteur Jquery pour afficher les données
 */
-function previewSrvOpts(str, dest){
+function getPreviewSrvOpts(str, dest){
 	$.getJSON("includes/ajax/preview_srvopts.php", {t: str}, function(data){
 		if(data != null){
 			$(dest).html('['+data.str+']');
@@ -209,31 +271,6 @@ function getCurrentGameModeConfig(){
 		selector.slideDown("fast");
 		selector.removeAttr("hidden");
 	}
-}
-
-
-/**
-* Affiche la valeur seconde -> minute
-*
-* @param int sec -> La valeur en seconde
-*/
-function secToMin(sec){
-	if(sec == "" || sec == undefined || isNaN(sec) ){
-		sec = 0;
-	}
-	return round( (parseInt(sec) / 60), 1);
-}
-
-
-/**
-* Math.round avec précision
-*
-* @param int value     -> Valeur à arrondir
-* @param int precision -> Nombre de caractère après la virgule
-*/
-function round(value, precision){
-	power = Math.pow(10, precision);
-	return (Math.ceil(value * power)) / power;
 }
 
 
@@ -344,124 +381,6 @@ function initializeUploader(){
 
 
 /**
-* Affichage du texte d'erreur
-*/
-function error(text, hide){
-	$("#error").fadeIn("fast");
-	if( $("#error").attr("hidden") ){
-		$("#error").removeAttr("hidden");
-	}
-	$("#error").text(text);
-	
-	if(hide){
-		setTimeout(function(){
-			$("#error").attr("hidden", true);
-			$("#error").fadeOut("fast");
-		}, 4000);
-	}
-}
-
-
-/**
-* Affichage du texte d'erreur
-*/
-function info(text, hide){
-	$("#info").fadeIn("fast");
-	if( $("#info").attr("hidden") ){
-		$("#info").removeAttr("hidden");
-	}
-	$("#info").text(text);
-	
-	if(hide){
-		setTimeout(function(){
-			$("#info").attr("hidden", true);
-			$("#info").fadeOut("fast");
-		}, 4000);
-	}
-}
-
-/**
-* Fonctions générales
-*/
-function getPath(){
-	return $.trim( $(".path").text() );
-}
-function getMode(){
-	return $.trim( $("#detailMode").data("statusmode") );
-}
-function getCurrentSort(){
-	return $("#currentSort").val();
-}
-function setCurrentSort(sort){
-	return $("#currentSort").val(sort);
-}
-function t(text){
-	text = text.replace('from', $("#formUpload").data("from") );
-	text = text.replace('Kb', $("#formUpload").data("kb") );
-	text = text.replace('Mb', $("#formUpload").data("mb") );
-	return text;
-}
-
-
-/**
-* Coche toutes les checkbox d'un selecteur
-*
-* @param string selector -> Le selecteur de la liste des checkbox à cocher
-*/
-(function($){
-	$.fn.checkAll = function(isChecked){
-		var lineSelector = $(this).find("tbody tr");
-		var checkboxSelector = $(this).find("tbody td.checkbox input[type=checkbox]");
-		if(isChecked){
-			checkboxSelector.attr("checked", true);
-			lineSelector.addClass("selected");
-		}
-		else{
-			checkboxSelector.attr("checked", false);
-			lineSelector.removeClass("selected");
-		}
-	};
-})(jQuery);
-
-
-/**
-* Met à jour le nombre de fichiers sélectionnés
-*/
-(function($){
-	$.fn.updateNbSelectedLines = function(){
-		// On récupère le nombre d'élements sélectionnés;
-		var nb = $(this).find("tbody tr.selected").length;
-		
-		// Mise à jour
-		if(nb > 0){
-			$(this).find(".selected-files-label").removeClass("locked");
-		}else{
-			$(this).find(".selected-files-label").addClass("locked");
-		}
-		$(this).find(".selected-files-count").text("("+nb+")");
-	};
-})(jQuery);
-
-
-/**
-* Renvoi le 
-*/
-(function($){
-	$.fn.isChecked = function(){
-		// On récupère le nombre d'élements sélectionnés;
-		var nb = $(this).find("tbody tr.selected").length;
-		if(nb > 0){
-			return true;
-		}
-		else{
-			return false;
-		}
-	};
-})(jQuery);
-
-
-
-/**
 * Récupère la liste des maps du serveur
 */
 function getMapList(mode, sort){
@@ -516,30 +435,6 @@ function getMapList(mode, sort){
 			}
 		}
 	});
-}
-
-
-/**
-* Gestion du mode détail de la page maps-list
-*/
-function mapslistDetailMode(){
-	var sort = getCurrentSort();
-	if( $("#detailMode").text() == $("#detailMode").data("textdetail") ){
-		getMapList("detail", sort);
-		$("#detailMode").text( $("#detailMode").data("textsimple") );
-		$("#maplist table th.detailModeTh").attr("hidden", false);
-		//$("#maplist table th.firstTh").removeClass("thleft");
-		$("#maplist").addClass("loading");
-		$("#detailMode").data("statusmode", "detail");
-	}
-	else{
-		getMapList("simple", sort);
-		$("#detailMode").text( $("#detailMode").data("textdetail") );
-		$("#maplist table th.detailModeTh").attr("hidden", true);
-		//$("#maplist table th.firstTh").addClass("thleft");
-		$("#maplist").addClass("loading");
-		$("#detailMode").data("statusmode", "simple");
-	}
 }
 
 
@@ -656,7 +551,7 @@ function slideUpNewFolderForm(){
 /**
 * Fait un tri sur la liste des maps pour la page "maps-order"
 */
-function mapsOrderSort(sort, order){
+function setMapsOrderSort(sort, order){
 	var list = $("#jsonlist").val();
 	
 	$.getJSON("includes/ajax/mapsorder_sort.php", {srt: sort, ord: order, lst: list}, function(data){
@@ -683,4 +578,141 @@ function mapsOrderSort(sort, order){
 			}
 		}
 	});
+}
+
+
+/**
+* Gestion du mode détail de la page general
+*/
+function setGeneralDetailMode(){
+	var sort = getCurrentSort();
+	if( $("#detailMode").text() == $("#detailMode").data("textdetail") ){
+		getCurrentServerInfo("detail", sort);
+		$("#detailMode").text( $("#detailMode").data("textsimple") );
+		$("#playerlist table th.detailModeTh").attr("hidden", false);
+		$("#playerlist table th.firstTh").removeClass("thleft");
+		$("#playerlist").addClass("loading");
+		$("#detailMode").data("statusmode", "detail");
+	}
+	else{
+		getCurrentServerInfo("simple", sort);
+		$("#detailMode").text( $("#detailMode").data("textdetail") );
+		$("#playerlist table th.detailModeTh").attr("hidden", true);
+		$("#playerlist table th.firstTh").addClass("thleft");
+		$("#playerlist").addClass("loading");
+		$("#detailMode").data("statusmode", "simple");
+	}
+}
+
+
+/**
+* Gestion du mode détail de la page maps-list
+*/
+function setMapslistDetailMode(){
+	var sort = getCurrentSort();
+	if( $("#detailMode").text() == $("#detailMode").data("textdetail") ){
+		getMapList("detail", sort);
+		$("#detailMode").text( $("#detailMode").data("textsimple") );
+		$("#maplist table th.detailModeTh").attr("hidden", false);
+		//$("#maplist table th.firstTh").removeClass("thleft");
+		$("#maplist").addClass("loading");
+		$("#detailMode").data("statusmode", "detail");
+	}
+	else{
+		getMapList("simple", sort);
+		$("#detailMode").text( $("#detailMode").data("textdetail") );
+		$("#maplist table th.detailModeTh").attr("hidden", true);
+		//$("#maplist table th.firstTh").addClass("thleft");
+		$("#maplist").addClass("loading");
+		$("#detailMode").data("statusmode", "simple");
+	}
+}
+
+
+/**
+* Coche toutes les checkbox d'un selecteur
+*
+* @param string selector -> Le selecteur de la liste des checkbox à cocher
+*/
+(function($){
+	$.fn.checkAll = function(isChecked){
+		var lineSelector = $(this).find("tbody tr");
+		var checkboxSelector = $(this).find("tbody td.checkbox input[type=checkbox]");
+		if(isChecked){
+			checkboxSelector.attr("checked", true);
+			lineSelector.addClass("selected");
+		}
+		else{
+			checkboxSelector.attr("checked", false);
+			lineSelector.removeClass("selected");
+		}
+	};
+})(jQuery);
+
+
+/**
+* Met à jour le nombre de fichiers sélectionnés
+*/
+(function($){
+	$.fn.updateNbSelectedLines = function(){
+		// On récupère le nombre d'élements sélectionnés;
+		var nb = $(this).find("tbody tr.selected").length;
+		
+		// Mise à jour
+		if(nb > 0){
+			$(this).find(".selected-files-label").removeClass("locked");
+		}else{
+			$(this).find(".selected-files-label").addClass("locked");
+		}
+		$(this).find(".selected-files-count").text("("+nb+")");
+	};
+})(jQuery);
+
+
+/**
+* Détermine si il y a au moins une ligne sélectionnée
+*/
+(function($){
+	$.fn.isChecked = function(){
+		// On récupère le nombre d'élements sélectionnés;
+		var nb = $(this).find("tbody tr.selected").length;
+		if(nb > 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	};
+})(jQuery);
+
+
+/**
+* MATCHSETTINGS
+*/
+
+/**
+* Récupère la liste des maps en local pour la création d'un matchSettings
+*/
+function matchset_getLocalMapList(){
+	var path = $("#mapsDirectoryList").val();
+	$.getJSON("includes/ajax/get_localmaplist.php", {path: path}, function(data){
+		if(data != null){
+			matchset_setNbMapsSelection(data.lst.length);
+		}
+	});
+}
+function matchset_viewLocalMapList(){
+
+}
+
+/**
+*
+*/
+function matchset_setNbMapsSelection(nb){
+	var currentNb = parseInt( $("#nbMapsSelected").text() );
+	var newNb = currentNb + nb;
+	$("#nbMapsSelected").text(newNb);
+}
+function matchset_viewMapsSelectionList(){
+	
 }
