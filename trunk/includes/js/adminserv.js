@@ -318,6 +318,33 @@ $(document).ready(function(){
 					$(".creatematchset .maps").addClass("loading");
 					matchset_getLocalMapList();
 				});
+				
+				// Faire une sélection
+				$("#mapsSelectionMake").click(function(){
+					$("#mapsSelectionMakeDialog").dialog({
+						modal: true,
+						buttons: [{
+							text: $("#mapsSelectionMakeDialog").data("select"),
+							click: function(){
+								$(this).dialog("close");
+							}
+						}]
+					});
+				});
+				
+				
+				// Voir la sélection du matchsettings
+				$("#mapsSelectedView").click(function(){
+					$("#mapsSelectedDialog").dialog({
+						modal: true,
+						buttons: [{
+							text: $("#mapsSelectedDialog").data("close"),
+							click: function(){
+								$(this).dialog("close");
+							}
+						}]
+					});
+				});
 			}
 		}
 		/**
