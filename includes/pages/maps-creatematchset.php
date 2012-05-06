@@ -32,7 +32,7 @@
 		</div>
 		
 		<h2>Maps</h2>
-		<div class="content">
+		<div class="content maps">
 			<fieldset>
 				<div class="mapsSelection">
 					<?php

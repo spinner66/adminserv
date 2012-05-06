@@ -315,6 +315,7 @@ $(document).ready(function(){
 			if( $("body").hasClass("section-maps-creatematchset") ){
 				// Importer tout le dossier
 				$("#mapsSelectionImport").click(function(){
+					$(".creatematchset .maps").addClass("loading");
 					matchset_getLocalMapList();
 				});
 			}

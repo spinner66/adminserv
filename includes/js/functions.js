@@ -695,9 +695,10 @@ function setMapslistDetailMode(){
 */
 function matchset_getLocalMapList(){
 	var path = $("#mapsDirectoryList").val();
-	$.getJSON("includes/ajax/get_localmaplist.php", {path: path}, function(data){
+	$.getJSON("includes/ajax/get_matchset_localmaplist.php", {path: path}, function(data){
 		if(data != null){
-			matchset_setNbMapsSelection(data.lst.length);
+			matchset_setNbMapsSelection(data.nb);
+			$(".creatematchset .maps").removeClass("loading");
 		}
 	});
 }
