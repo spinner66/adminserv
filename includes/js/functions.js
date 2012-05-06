@@ -570,8 +570,9 @@ function mapslistDetailMode(){
 		
 		// HTML
 		out += '<div class="form-input-submit">'
-			+'<input class="button dark" type="submit" id="renameMapValid" name="renameMapValid" value="'+formSelector.data("rename")+'" />'+"\n"
-			+ '<input class="button dark" type="button" id="renameMapCancel" name="renameMapCancel" value="'+formSelector.data("cancel")+'" />'
+			+ '<input class="button dark" type="button" id="renameMapCancel" name="renameMapCancel" value="'+formSelector.data("cancel")+'" />'+"\n"
+			+ '<input class="button dark" type="submit" id="renameMapValid" name="renameAutoValid" value="'+formSelector.data("autorename")+'" />'
+			+ '<input class="button dark" type="submit" id="renameMapValid" name="renameMapValid" value="'+formSelector.data("rename")+'" />'
 		+ '</div>';
 		formSelector.html(out);
 	};
@@ -599,8 +600,8 @@ function getMoveFolderList(nbFiles){
 				});
 			out += '</select>'
 			+ '<div class="form-input-submit">'
-				+'<input class="button dark" type="submit" id="moveMapValid" name="moveMapValid" value="'+formSelector.data("move")+'" />'+"\n"
-				+ '<input class="button dark" type="button" id="moveMapCancel" name="moveMapCancel" value="'+formSelector.data("cancel")+'" />'
+				+ '<input class="button dark" type="button" id="moveMapCancel" name="moveMapCancel" value="'+formSelector.data("cancel")+'" />'+"\n"
+				+ '<input class="button dark" type="submit" id="moveMapValid" name="moveMapValid" value="'+formSelector.data("move")+'" />'
 			+ '</div>';
 			
 			// HTML
@@ -653,7 +654,7 @@ function slideUpNewFolderForm(){
 }
 
 /**
-*
+* Fait un tri sur la liste des maps pour la page "maps-order"
 */
 function mapsOrderSort(sort, order){
 	var list = $("#jsonlist").val();
@@ -683,21 +684,3 @@ function mapsOrderSort(sort, order){
 		}
 	});
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -19,6 +19,26 @@ abstract class File {
 	
 	
 	/**
+	* Récupère l'extension d'un fichier Nadeo
+	*
+	* @param string $filename -> Le chemin ou nom du fichier
+	* @return string "class.php"
+	*/
+	public static function getDoubleExtension($filename){
+		$out = null;
+		$filenameEx = explode('.', $filename);
+		
+		if( count($filenameEx) > 2 ){
+			$ext = $filenameEx[count($filenameEx)-2];
+			$ext .= '.'.$filenameEx[count($filenameEx)-1];
+			$out = strtolower($ext);
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Créer ou ajoute des données à un fichier
 	*
 	* @param  string $filename -> Le chemin ou nom du fichier

@@ -1,6 +1,6 @@
 <?php
 	// LECTURE
-	$directoryList = Folder::getArborescence($mapsDirectoryPath.$directory, AdminServConfig::$MAPS_HIDDEN_FOLDERS, substr_count($mapsDirectoryPath, '/'));
+	$directoryList = Folder::getArborescence($mapsDirectoryPath.$directory, AdminServConfig::$MAPS_HIDDEN_FOLDERS, substr_count($mapsDirectoryPath.$directory, '/'));
 	
 	$gameInfos = AdminServ::getGameInfos();
 	$currGamInf = null;
@@ -35,7 +35,7 @@
 						if( count($directoryList) > 0 ){
 							$mapsSelectList = '<select name="mapsDirectoryList" id="mapsDirectoryList">';
 							foreach($directoryList as $dir){
-								$mapsSelectList .= '<option value="'.$dir['path'].'">'.$dir['name'].'</option>';
+								$mapsSelectList .= '<option value="'.$dir['path'].'">'.$dir['level'].$dir['name'].'</option>';
 							}
 							$mapsSelectList .= '</select>';
 							echo $mapsSelectList;
