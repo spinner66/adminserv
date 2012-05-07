@@ -269,7 +269,7 @@ abstract class AdminServUI {
 		if( class_exists('ServerConfig') ){
 			
 			// Si la configuration contient au moins 1 serveur et qu'il n'est pas l'exemple
-			if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) && !isset(ServerConfig::$SERVERS['']) ){
+			if( AdminServServerConfig::hasServer() ){
 				
 				if( isset($_GET['server']) && $_GET['server'] != null ){
 					$currentServerId = intval($_GET['server']);
@@ -2154,14 +2154,8 @@ abstract class AdminServServerConfig {
 	*/
 	private static $CONFIG_PATH = './config/';
 	private static $CONFIG_FILENAME = 'servers.cfg.php';
-	private static $CONFIG_PATTERN = array(
-		'new server name' => array(
-			'address' => 'localhost',
-			'port' => 5000,
-			'matchsettings' => '',
-			'adminlevel' => array('SuperAdmin' => 'all', 'Admin' => 'all', 'User' => 'all')
-		)
-	);
+	private static $CONFIG_START_TEMPLATE = "<?php\nclass ServerConfig {\n\tpublic static \$SERVERS = array(\n\t\t/********************* SERVER CONFIGURATION *********************/\n\t\t\n";
+	private static $CONFIG_END_TEMPLATE =  "\t);\n}\n?>";
 	
 	
 	/**
@@ -2234,23 +2228,115 @@ abstract class AdminServServerConfig {
 	}
 	
 	
-	
+	/**
+	* Récupère les données d'un serveur
+	*
+	* @param string $serverName -> Le nom du serveur dans la config
+	* @return array
+	*/
 	public static function getServer($serverName){
-		return ServerConfig::$SERVERS[$serverName];
+		$out = null;
+		
+		if( self::hasServer() ){
+			if( isset(ServerConfig::$SERVERS[$serverName]) ){
+				$out = ServerConfig::$SERVERS[$serverName];
+			}
+			else{
+				$out = 'Ce serveur n\'existe pas';
+			}
+		}
+		else{
+			$out = 'Aucun serveur disponible';
+		}
+		
+		return $out;
 	}
 	
-	public static function saveServer($serverData){
-		$SERVERS_LIST = "\t\tici sera inséré les serveurs\n";
-		$fileTemplate = "<?php\n"
-		."class ServerConfig {\n"
-			."\tpublic static \$SERVERS = array(\n"
-				."\t\t/********************* SERVER CONFIGURATION *********************/\n"
-				."\t\t\n"
-				."$SERVERS_LIST"
-			."\t);\n"
-		."}\n"
-		."?>";
+	
+	/**
+	* Créer le template d'un serveur
+	*
+	* @param array $serverData -> assoc array(name, address, port, matchsettings, adminlevel => array(SuperAdmin, Admin, User));
+	*/
+	public static function getServerTemplate($serverData){
+		$out = "\t\t'".$serverData['name']."' => array(\n"
+			."\t\t\t'address'\t\t=> '".$serverData['address']."',\n"
+			."\t\t\t'port'\t\t\t=> ".$serverData['port'].",\n"
+			."\t\t\t'matchsettings'\t=> '".$serverData['matchsettings']."',\n"
+			."\t\t\t'adminlevel'\t=> array('SuperAdmin' => ";
+			if( is_array($serverData['adminlevel']['SuperAdmin']) ){
+				$out .= "array('".implode("', '", $serverData['adminlevel']['SuperAdmin'])."')";
+			}else{
+				$out .= "'".$serverData['adminlevel']['SuperAdmin']."'";
+			}
+			$out .= ", 'Admin' => ";
+			if( is_array($serverData['adminlevel']['Admin']) ){
+				$out .= "array('".implode("', '", $serverData['adminlevel']['Admin'])."')";
+			}else{
+				$out .= "'".$serverData['adminlevel']['Admin']."'";
+			}
+			$out .= ", 'User' => ";
+			if( is_array($serverData['adminlevel']['User']) ){
+				$out .= "array('".implode("', '", $serverData['adminlevel']['User'])."')";
+			}else{
+				$out .= "'".$serverData['adminlevel']['User']."'";
+			}
+		$out .= ")\n\t\t),\n";
 		
+		return $out;
+	}
+	
+	
+	/**
+	* Sauvegarde le fichier de configuration des serveurs
+	*
+	* @param array $serverData -> assoc array(name, address, port, matchsettings, adminlevel => array(SuperAdmin, Admin, User));
+	* @param int   $editServer -> Id du serveur à éditer
+	* @param array $serverList -> Liste des serveurs de la config
+	* @return bool or string error
+	*/
+	public static function saveServerConfig($serverData = array(), $editServer = -1, $serverList = array() ){
+		// Liste des serveurs
+		if( isset($serverList) && count($serverList) > 0 ){
+			$servers = $serverList;
+		}else{
+			$servers = ServerConfig::$SERVERS;
+		}
+		
+		// Template
+		$fileTemplate = self::$CONFIG_START_TEMPLATE;
+			$i = 0;
+			foreach($servers as $serverName => $serverValues){
+				// Édition
+				if($i == $editServer && isset($serverData) && count($serverData) > 0 ){
+					$fileTemplate .= self::getServerTemplate($serverData);
+				}
+				else{
+					// Liste des serveurs existant
+					$fileTemplate .= self::getServerTemplate(
+						array(
+							'name' => $serverName,
+							'address' => $serverValues['address'],
+							'port' => $serverValues['port'],
+							'matchsettings' => $serverValues['matchsettings'],
+							'adminlevel' => array(
+								'SuperAdmin' => $serverValues['adminlevel']['SuperAdmin'],
+								'Admin' => $serverValues['adminlevel']['Admin'],
+								'User' => $serverValues['adminlevel']['User']
+							)
+						)
+					);
+				}
+				$i++;
+			}
+			
+			// Ajout d'un nouveau
+			if($editServer === -1 && isset($serverData) && count($serverData) > 0 ){
+				$fileTemplate .= self::getServerTemplate($serverData);
+			}
+		$fileTemplate .= self::$CONFIG_END_TEMPLATE;
+		
+		// Enregistrement
 		return File::save(self::$CONFIG_PATH.self::$CONFIG_FILENAME, $fileTemplate, false);
 	}
 }

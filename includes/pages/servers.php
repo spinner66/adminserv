@@ -46,11 +46,46 @@
 	}
 	
 	
+	// DUPLIQUER
+	if( isset($_POST['duplicateserver']) ){
+		// GET
+		$getServerData = AdminServServerConfig::getServer($_POST['server'][0]);
+		$serverAdmLvl_SA = $getServerData['adminlevel']['SuperAdmin'];
+		$serverAdmLvl_ADM = $getServerData['adminlevel']['Admin'];
+		$serverAdmLvl_USR = $getServerData['adminlevel']['User'];
+		if( is_array($serverAdmLvl_SA) ){ $serverAdmLvl_SA = implode(', ', $serverAdmLvl_SA); }
+		if( is_array($serverAdmLvl_ADM) ){ $serverAdmLvl_ADM = implode(', ', $serverAdmLvl_ADM); }
+		if( is_array($serverAdmLvl_USR) ){ $serverAdmLvl_USR = implode(', ', $serverAdmLvl_USR); }
+		
+		// SET
+		$setServerData = array(
+			'name' => $_POST['server'][0] . ' - copie',
+			'address' => $getServerData['address'],
+			'port' => $getServerData['port'],
+			'matchsettings' => $getServerData['matchsettings'],
+			'adminlevel' => array(
+				'SuperAdmin' => $serverAdmLvl_SA,
+				'Admin' => $serverAdmLvl_ADM,
+				'User' => $serverAdmLvl_USR,
+			)
+		);
+		if( AdminServServerConfig::saveServerConfig($setServerData) ){
+			AdminServ::info('Le serveur a bien été dupliqué.');
+			Utils::redirection(false, '?p=servers');
+		}
+		else{
+			AdminServ::error('Impossible de dupliquer le serveur.');
+		}
+	}
+	
+	
 	// SUPPRESSION
 	if( isset($_POST['deleteserver']) ){
 		$servers = ServerConfig::$SERVERS;
 		unset($servers[$_POST['server'][0]]);
-		// TODO: réecrire le fichier de config avec $servers
+		AdminServServerConfig::saveServerConfig(array(), -1, $servers);
+		AdminServ::info('Le serveur "'.$_POST['server'][0].'" a été supprimé.');
+		Utils::redirection(false, '?p=servers');
 	}
 	
 	
@@ -106,6 +141,9 @@
 							else if($serverData['adminlevel'][$level] === 'all'){
 								$adminLevelsStatus[] = 'Tous';
 							}
+							else if($serverData['adminlevel'][$level] === 'none'){
+								$adminLevelsStatus[] = 'Enlevé';
+							}
 							else{
 								$adminLevelsStatus[] = 'Manquant';
 							}
@@ -160,6 +198,7 @@
 				<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 				<div class="selected-files-option">
 					<input class="button dark" type="submit" name="deleteserver" id="deleteserver" value="Supprimer" />
+					<input class="button dark" type="submit" name="duplicateserver" id="duplicateserver" value="Dupliquer" />
 					<input class="button dark" type="submit" name="editserver" id="editserver" value="Modifier" />
 				</div>
 			</div>
