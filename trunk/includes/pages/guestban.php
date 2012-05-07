@@ -241,7 +241,7 @@
 		<div class="title-detail">
 			<ul>
 				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=banlist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
-				<li><input type="checkbox" name="checkAllBanlist" id="checkAllBanlist" value=""<?php if($countBanList == 0){ echo ' disabled="disabled"'; } ?> /></li>
+				<li class="last"><input type="checkbox" name="checkAllBanlist" id="checkAllBanlist" value=""<?php if($countBanList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		<table>
@@ -287,7 +287,7 @@
 		<div class="title-detail">
 			<ul>
 				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=blacklist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
-				<li><input type="checkbox" name="checkAllBlacklist" id="checkAllBlacklist" value=""<?php if($countBlackList == 0){ echo ' disabled="disabled"'; } ?> /></li>
+				<li class="last"><input type="checkbox" name="checkAllBlacklist" id="checkAllBlacklist" value=""<?php if($countBlackList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		<table>
@@ -329,7 +329,7 @@
 		<div class="title-detail">
 			<ul>
 				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=guestlist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
-				<li><input type="checkbox" name="checkAllGuestlist" id="checkAllGuestlist" value=""<?php if($countGuestList == 0){ echo ' disabled="disabled"'; } ?> /></li>
+				<li class="last"><input type="checkbox" name="checkAllGuestlist" id="checkAllGuestlist" value=""<?php if($countGuestList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		<table>
@@ -371,7 +371,7 @@
 		<div class="title-detail">
 			<ul>
 				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=ignorelist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
-				<li><input type="checkbox" name="checkAllIgnorelist" id="checkAllIgnorelist" value=""<?php if($countIgnoreList == 0){ echo ' disabled="disabled"'; } ?> /></li>
+				<li class="last"><input type="checkbox" name="checkAllIgnorelist" id="checkAllIgnorelist" value=""<?php if($countIgnoreList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		<table>
@@ -460,7 +460,7 @@
 		<div class="title-detail">
 			<ul>
 				<li><a id="clickNewPlaylist" href="" data-cancel="Annuler" data-newplaylist="Nouvelle playlist">Nouvelle playlist</a></li>
-				<li><input type="checkbox" name="checkAllPlaylists" id="checkAllPlaylists" value="" /></li>
+				<li class="last"><input type="checkbox" name="checkAllPlaylists" id="checkAllPlaylists" value="" /></li>
 			</ul>
 		</div>
 		
