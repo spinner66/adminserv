@@ -8,7 +8,7 @@
 	// VERIFICATION
 	if( class_exists('ServerConfig') ){
 		// Si la configuration contient au moins 1 serveur
-		if( AdminServ::hasServer() ){
+		if( AdminServServerConfig::hasServer() ){
 			// Si on n'autorise pas la configuration en ligne
 			if( OnlineConfig::ACTIVATE !== true ){
 				AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
@@ -41,7 +41,7 @@
 	
 	// EDITION
 	if( isset($_POST['editserver']) ){
-		$serverId = AdminServ::getServerId($_POST['server'][0]);
+		$serverId = AdminServServerConfig::getServerId($_POST['server'][0]);
 		Utils::redirection(false, '?p=addserver&id='.$serverId);
 	}
 	
