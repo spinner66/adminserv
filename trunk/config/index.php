@@ -1,7 +1,9 @@
 <?php
 	session_start();
 	require_once './adminserv.cfg.php';
-	require_once './servers.cfg.php';
+	if( file_exists('./servers.cfg.php') ){
+		require_once './servers.cfg.php';
+	}
 	require_once '.'. AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
 	AdminServUI::getClass();
 	
@@ -81,7 +83,6 @@
 		}
 	}
 	else{
-		AdminServ::error('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.');
-		Utils::redirection(false, '..');
+		Utils::redirection(false, '../?error='.urlencode('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.'));
 	}
 ?>
