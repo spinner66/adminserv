@@ -2265,19 +2265,19 @@ abstract class AdminServServerConfig {
 			."\t\t\t'matchsettings'\t=> '".$serverData['matchsettings']."',\n"
 			."\t\t\t'adminlevel'\t=> array('SuperAdmin' => ";
 			if( is_array($serverData['adminlevel']['SuperAdmin']) ){
-				$out .= "array('".implode("', '", $serverData['adminlevel']['SuperAdmin'])."')";
+				$out .= "array('".implode("', '", str_replace(' ', '', $serverData['adminlevel']['SuperAdmin']))."')";
 			}else{
 				$out .= "'".$serverData['adminlevel']['SuperAdmin']."'";
 			}
 			$out .= ", 'Admin' => ";
 			if( is_array($serverData['adminlevel']['Admin']) ){
-				$out .= "array('".implode("', '", $serverData['adminlevel']['Admin'])."')";
+				$out .= "array('".implode("', '",  str_replace(' ', '', $serverData['adminlevel']['Admin']))."')";
 			}else{
 				$out .= "'".$serverData['adminlevel']['Admin']."'";
 			}
 			$out .= ", 'User' => ";
 			if( is_array($serverData['adminlevel']['User']) ){
-				$out .= "array('".implode("', '", $serverData['adminlevel']['User'])."')";
+				$out .= "array('".implode("', '",  str_replace(' ', '', $serverData['adminlevel']['User']))."')";
 			}else{
 				$out .= "'".$serverData['adminlevel']['User']."'";
 			}

@@ -39,9 +39,10 @@
 		$serverAdmLvl_SA = $_POST['addServerAdmLvlSA'];
 		$serverAdmLvl_ADM = $_POST['addServerAdmLvlADM'];
 		$serverAdmLvl_USR = $_POST['addServerAdmLvlUSR'];
-		if( is_array($serverAdmLvl_SA) ){ $serverAdmLvl_SA = explode(',', trim($serverAdmLvl_SA)); }else{ $serverAdmLvl_SA = trim($serverAdmLvl_SA); }
-		if( is_array($serverAdmLvl_ADM) ){ $serverAdmLvl_ADM = explode(',', trim($serverAdmLvl_ADM)); }else{ $serverAdmLvl_ADM = trim($serverAdmLvl_ADM); }
-		if( is_array($serverAdmLvl_USR) ){ $serverAdmLvl_USR = explode(',', trim($serverAdmLvl_USR)); }else{ $serverAdmLvl_USR = trim($serverAdmLvl_USR); }
+		$isNotAnArray = array('all', 'local', 'none');
+		if( !in_array($serverAdmLvl_SA, $isNotAnArray) ){ $serverAdmLvl_SA = explode(',', $serverAdmLvl_SA); }else{ $serverAdmLvl_SA = trim($serverAdmLvl_SA); }
+		if( !in_array($serverAdmLvl_ADM, $isNotAnArray) ){ $serverAdmLvl_ADM = explode(',', $serverAdmLvl_ADM); }else{ $serverAdmLvl_ADM = trim($serverAdmLvl_ADM); }
+		if( !in_array($serverAdmLvl_USR, $isNotAnArray) ){ $serverAdmLvl_USR = explode(',', $serverAdmLvl_USR); }else{ $serverAdmLvl_USR = trim($serverAdmLvl_USR); }
 		$serverData = array(
 			'name' => $serverName,
 			'address' => $serverAddress,
