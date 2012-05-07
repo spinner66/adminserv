@@ -198,7 +198,7 @@
 							<input class="text" type="checkbox" name="AllowMapDownload" id="AllowMapDownload"<?php if($srvOpt['AllowChallengeDownload'] != 0){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 					</tr>
-					<tr>
+					<tr<?php if( AdminServ::isAdminLevel('Admin') && !AdminServ::isAdminLevel('SuperAdmin') ){ echo ' hidden="hidden"'; } ?>>
 						<td class="key"><label for="AutoSaveReplays">Sauvegarde auto des replays</label></td>
 						<td class="value" colspan="4">
 							<input class="text" type="checkbox" name="AutoSaveReplays" id="AutoSaveReplays"<?php if($srvOpt['AutoSaveReplays'] != 0){ echo ' checked="checked"'; } ?> value="" />

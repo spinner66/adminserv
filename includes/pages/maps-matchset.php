@@ -56,7 +56,7 @@
 		<div class="title-detail">
 			<ul>
 				<li class="path"><?php echo $mapsDirectoryPath.$directory; ?></li>
-				<li><input type="checkbox" name="checkAll" id="checkAll" value="" /></li>
+				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value="" /></li>
 			</ul>
 		</div>
 		
