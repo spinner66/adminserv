@@ -21,16 +21,9 @@
 		// Niveaux
 		foreach($servers[$serverName]['adminlevel'] as $levelName => $levelValues){
 			if($levelName != null){
-				if( in_array($levelName, $authenticate) ){
+				if( in_array($levelName, $authenticate) && $levelValues != 'none' ){
 					if( AdminServ::userAllowedInAdminLevel($serverName, $levelName) ){
 						$out['levels'][] = $levelName;
-					}
-				}
-			}
-			if($levelValues != null){
-				if( in_array($levelValues, $authenticate) ){
-					if( AdminServ::userAllowedInAdminLevel($serverName, $levelValues) ){
-						$out['levels'][] = $levelValues;
 					}
 				}
 			}

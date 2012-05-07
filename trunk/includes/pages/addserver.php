@@ -31,7 +31,6 @@
 	
 	// ENREGISTREMENT
 	if( isset($_POST['saveserver']) ){
-		echo 1;
 		// Variables
 		$serverName = trim( htmlspecialchars( addslashes($_POST['addServerName']) ) );
 		$serverAddress = trim($_POST['addServerAddress']);
@@ -55,12 +54,28 @@
 			)
 		);
 		
-		
-		AdminServServerConfig::saveServer($serverData);
+		// Édition
+		if($id !== -1){
+			if( AdminServServerConfig::saveServerConfig($serverData, $id) ){
+				AdminServ::info('Le serveur a bien été modifié.');
+				Utils::redirection(false, '?p=servers');
+			}
+			else{
+				AdminServ::error('Impossible de modifier le serveur.');
+			}
+		}
+		else{
+			if( AdminServServerConfig::saveServerConfig($serverData) ){
+				AdminServ::info('Le serveur a bien été ajouté.');
+			}
+			else{
+				AdminServ::error('Impossible d\'ajouter le serveur.');
+			}
+		}
 	}
 	
 	
-	// ÉDITION
+	// LECTURE
 	$serverName = null;
 	$serverAddress = 'localhost';
 	$serverPort = 5000;
@@ -91,7 +106,7 @@
 ?>
 <section class="cadre">
 	<h1><?php if( defined('IS_SERVER_EDITION') ){ echo 'Éditer un serveur'; }else{ echo Utils::t('Add server'); } ?></h1>
-	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
+	<form method="post" action="?p=<?php echo USER_PAGE; if($id !== -1){ echo '&id='.$id; } ?>">
 		<div class="content">
 			<fieldset>
 				<legend>Informations de connexion</legend>
@@ -147,7 +162,8 @@
 							Valeurs possibles pour les niveaux admins :<br />
 							all => accès à tous<br />
 							local => accès au réseau local<br />
-							192.168.0.1, 192.168.0.2 => accès à une ou plusieurs adresses IP
+							192.168.0.1, 192.168.0.2 => accès à une ou plusieurs adresses IP<br />
+							none => accès enlevé de la liste
 						</td>
 					</tr>
 					<tr>
