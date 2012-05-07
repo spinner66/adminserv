@@ -50,23 +50,17 @@
 	if( isset($_POST['duplicateserver']) ){
 		// GET
 		$getServerData = AdminServServerConfig::getServer($_POST['server'][0]);
-		$serverAdmLvl_SA = $getServerData['adminlevel']['SuperAdmin'];
-		$serverAdmLvl_ADM = $getServerData['adminlevel']['Admin'];
-		$serverAdmLvl_USR = $getServerData['adminlevel']['User'];
-		if( is_array($serverAdmLvl_SA) ){ $serverAdmLvl_SA = implode(', ', $serverAdmLvl_SA); }
-		if( is_array($serverAdmLvl_ADM) ){ $serverAdmLvl_ADM = implode(', ', $serverAdmLvl_ADM); }
-		if( is_array($serverAdmLvl_USR) ){ $serverAdmLvl_USR = implode(', ', $serverAdmLvl_USR); }
 		
 		// SET
 		$setServerData = array(
-			'name' => $_POST['server'][0] . ' - copie',
-			'address' => $getServerData['address'],
-			'port' => $getServerData['port'],
-			'matchsettings' => $getServerData['matchsettings'],
+			'name' => trim( htmlspecialchars( addslashes($_POST['server'][0] . ' - copie') ) ),
+			'address' => trim($getServerData['address']),
+			'port' => intval($getServerData['port']),
+			'matchsettings' => trim($getServerData['matchsettings']),
 			'adminlevel' => array(
-				'SuperAdmin' => $serverAdmLvl_SA,
-				'Admin' => $serverAdmLvl_ADM,
-				'User' => $serverAdmLvl_USR,
+				'SuperAdmin' => $getServerData['adminlevel']['SuperAdmin'],
+				'Admin' => $getServerData['adminlevel']['Admin'],
+				'User' => $getServerData['adminlevel']['User'],
 			)
 		);
 		if( AdminServServerConfig::saveServerConfig($setServerData) ){
