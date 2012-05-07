@@ -3,7 +3,9 @@
 	session_start();
 	define('ADMINSERV_VERSION', '2.0');
 	require_once 'config/adminserv.cfg.php';
-	require_once 'config/servers.cfg.php';
+	if( file_exists('config/servers.cfg.php') ){
+		require_once 'config/servers.cfg.php';
+	}
 	require_once 'config/extension.cfg.php';
 	require_once AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
 	AdminServUI::getClass();

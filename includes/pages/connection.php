@@ -46,7 +46,7 @@
 			}
 		}
 		else{
-			if(OnlineConfig::ACTIVATE === true){
+			if(OnlineConfig::ACTIVATE === true && !isset($_GET['error']) ){
 				Utils::redirection(false, './config/');
 			}
 			else{
