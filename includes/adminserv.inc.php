@@ -281,7 +281,7 @@ abstract class AdminServUI {
 				
 				// Liste des serveurs
 				foreach(ServerConfig::$SERVERS as $server => $values){
-					if( AdminServ::getServerId($server) == $currentServerId ){
+					if( AdminServServerConfig::getServerId($server) == $currentServerId ){
 						$selected = ' selected="selected"';
 					}else{
 						$selected = null;
@@ -906,54 +906,6 @@ abstract class AdminServ {
 		else{
 			return 'no session';
 		}
-	}
-	
-	
-	/**
-	* Retourne l'identifiant du serveur dans la config au format int
-	*
-	* @param string $serverName -> Le nom du serveur dans la config
-	* @return int
-	*/
-	public static function getServerId($serverName){
-		$id = 0;
-		$servers = ServerConfig::$SERVERS;
-		$countServers = count($servers);
-		
-		// On cherche la position du serveur à partir de son nom
-		if( $countServers > 0 ){
-			foreach($servers as $server_name => $server_values){
-				if($server_name == $serverName){
-					break;
-				}
-				else{
-					$id++;
-				}
-			}
-		}
-		
-		// Si l'id = le nb total de serveur -> pas trouvé
-		if($id == $countServers ){
-			return -1;
-		}else{
-			return $id;
-		}
-	}
-	
-	
-	/**
-	* Détermine si il y a au moins un serveur disponible
-	*
-	* @return bool
-	*/
-	public static function hasServer(){
-		$out = false;
-		
-		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) && !isset(ServerConfig::$SERVERS['']) ){
-			$out = true;
-		}
-		
-		return $out;
 	}
 	
 	
@@ -2188,6 +2140,118 @@ abstract class AdminServLogs {
 		}
 		
 		return $out;
+	}
+}
+
+
+/**
+* Classe pour la gestion de la configuration serveur
+*/
+abstract class AdminServServerConfig {
+	
+	/**
+	* Globales
+	*/
+	private static $CONFIG_PATH = './config/';
+	private static $CONFIG_FILENAME = 'servers.cfg.php';
+	private static $CONFIG_PATTERN = array(
+		'new server name' => array(
+			'address' => 'localhost',
+			'port' => 5000,
+			'matchsettings' => '',
+			'adminlevel' => array('SuperAdmin' => 'all', 'Admin' => 'all', 'User' => 'all')
+		)
+	);
+	
+	
+	/**
+	* Retourne l'identifiant du serveur dans la config
+	*
+	* @param  string $serverName -> Le nom du serveur dans la config
+	* @return int
+	*/
+	public static function getServerId($serverName){
+		$id = 0;
+		$servers = ServerConfig::$SERVERS;
+		$countServers = count($servers);
+		
+		// On cherche la position du serveur à partir de son nom
+		if( $countServers > 0 ){
+			foreach($servers as $server_name => $server_values){
+				if($server_name == $serverName){
+					break;
+				}
+				else{
+					$id++;
+				}
+			}
+		}
+		
+		// Si l'id = le nb total de serveur -> pas trouvé
+		if($id == $countServers ){
+			return -1;
+		}else{
+			return $id;
+		}
+	}
+	
+	
+	public static function getServerName($serverId){
+		$out = null;
+		$servers = ServerConfig::$SERVERS;
+		$countServers = count($servers);
+		
+		if( $countServers > 0 ){
+			$i = 0;
+			foreach($servers as $serverName => $serverValues){
+				if($i == $serverId){
+					$out = $serverName;
+					break;
+				}
+				else{
+					$i++;
+				}
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Détermine si il y a au moins un serveur disponible
+	*
+	* @return bool
+	*/
+	public static function hasServer(){
+		$out = false;
+		
+		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) && !isset(ServerConfig::$SERVERS['']) ){
+			$out = true;
+		}
+		
+		return $out;
+	}
+	
+	
+	
+	public static function getServer($serverName){
+		return ServerConfig::$SERVERS[$serverName];
+	}
+	
+	public static function saveServer($serverData){
+		$SERVERS_LIST = "\t\tici sera inséré les serveurs\n";
+		$fileTemplate = "<?php\n"
+		."class ServerConfig {\n"
+			."\tpublic static \$SERVERS = array(\n"
+				."\t\t/********************* SERVER CONFIGURATION *********************/\n"
+				."\t\t\n"
+				."$SERVERS_LIST"
+			."\t);\n"
+		."}\n"
+		."?>";
+		
+		return File::save(self::$CONFIG_PATH.self::$CONFIG_FILENAME, $fileTemplate, false);
 	}
 }
 ?>

@@ -4,7 +4,7 @@
 		// On vérifie qu'une configuration existe, sinon on la créer
 		if( class_exists('ServerConfig') ){
 			// Si la configuration contient au moins 1 serveur et qu'il n'est pas l'exemple
-			if( AdminServ::hasServer() ){
+			if( AdminServServerConfig::hasServer() ){
 				// Connexion
 				if( isset($_POST['as_server']) && isset($_POST['as_password']) && isset($_POST['as_adminlevel']) ){
 					// Récupération des valeurs
@@ -21,7 +21,7 @@
 					}
 					else{
 						// Sessions & Cookies
-						$_SESSION['adminserv']['sid'] = AdminServ::getServerId($serverName);
+						$_SESSION['adminserv']['sid'] = AdminServServerConfig::getServerId($serverName);
 						$_SESSION['adminserv']['name'] = $serverName;
 						$_SESSION['adminserv']['password'] = $password;
 						$_SESSION['adminserv']['adminlevel'] = $adminLevel;
@@ -55,7 +55,7 @@
 		}
 	}
 	else{
-		$hasServer = AdminServ::hasServer();
+		$hasServer = AdminServServerConfig::hasServer();
 		if( !$hasServer ){
 			AdminServ::info('Aucun serveur disponible. Entrez le mot de passe pour accédez à la configuration des serveurs.'); 
 		}

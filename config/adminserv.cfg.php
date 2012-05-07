@@ -3,7 +3,7 @@ class OnlineConfig {
 	/********************* ONLINE CONFIGURATION *********************/
 	
 	const ACTIVATE = true;
-	const CHECK_PASSWORD = 'SuperAdmin';
+	const CHECK_PASSWORD = null;
 	const CHECK_IP = 'localhost';
 	const ADD_ONLY = false;
 }

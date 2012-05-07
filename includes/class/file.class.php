@@ -45,11 +45,12 @@ abstract class File {
 	* @param  string $data     -> Données à écrire
 	* @return true si réussi, sinon erreur string
 	*/
-	public static function save($filename, $data = null){
+	public static function save($filename, $data = null, $appendData = true){
 		$out = null;
 		
 		if( file_exists($filename) ){
-			if( file_put_contents($filename, $data, FILE_APPEND) ){
+			if($appendData){ $append = FILE_APPEND; }else{ $append = 0; }
+			if( file_put_contents($filename, $data, $append) ){
 				$out = true;
 			}
 			else{

@@ -8,7 +8,7 @@
 	// VERIFICATION
 	if( class_exists('ServerConfig') ){
 		// Si la configuration contient au moins 1 serveur et qu'il n'est pas l'exemple
-		if( AdminServ::hasServer() ){
+		if( AdminServServerConfig::hasServer() ){
 			// Si on autorise la configuration en ligne
 			if( OnlineConfig::ACTIVATE !== true ){
 				AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
@@ -31,14 +31,60 @@
 	
 	// ENREGISTREMENT
 	if( isset($_POST['saveserver']) ){
-	
+		echo 1;
+		// Variables
+		$serverName = trim( htmlspecialchars( addslashes($_POST['addServerName']) ) );
+		$serverAddress = trim($_POST['addServerAddress']);
+		$serverPort = intval($_POST['addServerPort']);
+		$serverMatchSet = trim($_POST['addServerMatchSet']);
+		$serverAdmLvl_SA = $_POST['addServerAdmLvlSA'];
+		$serverAdmLvl_ADM = $_POST['addServerAdmLvlADM'];
+		$serverAdmLvl_USR = $_POST['addServerAdmLvlUSR'];
+		if( is_array($serverAdmLvl_SA) ){ $serverAdmLvl_SA = explode(',', trim($serverAdmLvl_SA)); }else{ $serverAdmLvl_SA = trim($serverAdmLvl_SA); }
+		if( is_array($serverAdmLvl_ADM) ){ $serverAdmLvl_ADM = explode(',', trim($serverAdmLvl_ADM)); }else{ $serverAdmLvl_ADM = trim($serverAdmLvl_ADM); }
+		if( is_array($serverAdmLvl_USR) ){ $serverAdmLvl_USR = explode(',', trim($serverAdmLvl_USR)); }else{ $serverAdmLvl_USR = trim($serverAdmLvl_USR); }
+		$serverData = array(
+			'name' => $serverName,
+			'address' => $serverAddress,
+			'port' => $serverPort,
+			'matchsettings' => $serverMatchSet,
+			'adminlevel' => array(
+				'SuperAdmin' => $serverAdmLvl_SA,
+				'Admin' => $serverAdmLvl_ADM,
+				'User' => $serverAdmLvl_USR,
+			)
+		);
+		
+		
+		AdminServServerConfig::saveServer($serverData);
 	}
 	
 	
-	// LECTURE
+	// ÉDITION
+	$serverName = null;
+	$serverAddress = 'localhost';
+	$serverPort = 5000;
+	$serverMatchSet = null;
+	$serverAdmLvl_SA = 'all';
+	$serverAdmLvl_ADM = 'all';
+	$serverAdmLvl_USR = 'all';
 	if($id !== -1){
 		define('IS_SERVER_EDITION', true);
+		$serverName = AdminServServerConfig::getServerName($id);
+		if($serverName){
+			$serverData = AdminServServerConfig::getServer($serverName);
+			$serverAddress = $serverData['address'];
+			$serverPort = $serverData['port'];
+			$serverMatchSet = $serverData['matchsettings'];
+			$serverAdmLvl_SA = $serverData['adminlevel']['SuperAdmin'];
+			$serverAdmLvl_ADM = $serverData['adminlevel']['Admin'];
+			$serverAdmLvl_USR = $serverData['adminlevel']['User'];
+			if( is_array($serverAdmLvl_SA) ){ $serverAdmLvl_SA = implode(', ', $serverAdmLvl_SA); }
+			if( is_array($serverAdmLvl_ADM) ){ $serverAdmLvl_ADM = implode(', ', $serverAdmLvl_ADM); }
+			if( is_array($serverAdmLvl_USR) ){ $serverAdmLvl_USR = implode(', ', $serverAdmLvl_USR); }
+		}
 	}
+	
 	
 	// HTML
 	AdminServUI::getHeader();
@@ -53,7 +99,7 @@
 					<tr>
 						<td class="key"><label for="addServerName">Nom du serveur</label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerName" id="addServerName" value="" />
+							<input class="text width3" type="text" name="addServerName" id="addServerName" value="<?php echo $serverName; ?>" />
 						</td>
 						<td class="help">
 							Nom du serveur sans couleur
@@ -62,7 +108,7 @@
 					<tr>
 						<td class="key"><label for="addServerAddress">Adresse</label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAddress" id="addServerAddress" value="" />
+							<input class="text width3" type="text" name="addServerAddress" id="addServerAddress" value="<?php echo $serverAddress; ?>" />
 						</td>
 						<td class="help">
 							Adresse IP ou nom de domaine
@@ -71,7 +117,7 @@
 					<tr>
 						<td class="key"><label for="addServerPort">Port XMLRPC</label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerPort" id="addServerPort" value="" />
+							<input class="text width3" type="text" name="addServerPort" id="addServerPort" value="<?php echo $serverPort; ?>" />
 						</td>
 						<td class="help">
 							Port permettant le contrôle à distance
@@ -86,7 +132,7 @@
 					<tr>
 						<td class="key"><label for="addServerMatchSet">MatchSettings du serveur</label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerMatchSet" id="addServerMatchSet" value="" />
+							<input class="text width3" type="text" name="addServerMatchSet" id="addServerMatchSet" value="<?php echo $serverMatchSet; ?>" />
 						</td>
 						<td class="help">
 							Nom du MatchSettings courant du serveur
@@ -95,7 +141,7 @@
 					<tr>
 						<td class="key"><label for="addServerAdmLvlSA">Niveau "SuperAdmin"</label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAdmLvlSA" id="addServerAdmLvlSA" value="all" />
+							<input class="text width3" type="text" name="addServerAdmLvlSA" id="addServerAdmLvlSA" value="<?php echo $serverAdmLvl_SA; ?>" />
 						</td>
 						<td rowspan="3" class="help">
 							Valeurs possibles pour les niveaux admins :<br />
@@ -107,13 +153,13 @@
 					<tr>
 						<td class="key"><label for="addServerAdmLvlADM">Niveau "Admin"</label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAdmLvlADM" id="addServerAdmLvlADM" value="all" />
+							<input class="text width3" type="text" name="addServerAdmLvlADM" id="addServerAdmLvlADM" value="<?php echo $serverAdmLvl_ADM; ?>" />
 						</td>
 					</tr>
 					<tr>
 						<td class="key"><label for="addServerAdmLvlUSR">Niveau "User"</label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAdmLvlUSR" id="addServerAdmLvlUSR" value="all" />
+							<input class="text width3" type="text" name="addServerAdmLvlUSR" id="addServerAdmLvlUSR" value="<?php echo $serverAdmLvl_USR; ?>" />
 						</td>
 					</tr>
 				</table>
