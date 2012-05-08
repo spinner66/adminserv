@@ -14,6 +14,5 @@
 	
 	// DATA
 	$_SESSION['adminserv']['matchset_maps_selected'] = AdminServ::getLocalMapList($path);
-	$nb = explode(' ', $_SESSION['adminserv']['matchset_maps_selected']['nbm']);
-	echo json_encode(array('nb' => $nb[0]));
+	echo json_encode($_SESSION['adminserv']['matchset_maps_selected']);
 ?>

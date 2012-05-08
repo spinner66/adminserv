@@ -697,12 +697,15 @@ function matchset_getLocalMapList(){
 	var path = $("#mapsDirectoryList").val();
 	$.getJSON("includes/ajax/get_matchset_localmaplist.php", {path: path}, function(data){
 		if(data != null){
-			matchset_setNbMapsSelection(data.nb);
+			var nb = data.nbm.split(" ")[0];
+			matchset_setNbMapsSelection(nb);
 			$(".creatematchset .maps").removeClass("loading");
 		}
 	});
 }
 function matchset_viewLocalMapList(){
+	var path = $("#mapsDirectoryList").val();
+	
 
 }
 
@@ -710,10 +713,7 @@ function matchset_viewLocalMapList(){
 *
 */
 function matchset_setNbMapsSelection(nb){
-	var currentNb = parseInt( $("#nbMapsSelected").text() );
-	var newNb = currentNb + nb;
+	var currentNb = $("#nbMapsSelected").text();
+	var newNb = parseInt(currentNb) + parseInt(nb);
 	$("#nbMapsSelected").text(newNb);
-}
-function matchset_viewMapsSelectionList(){
-	
 }
