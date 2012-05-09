@@ -4,11 +4,13 @@ class DisplayServConfig {
 	
 	/* GENERAL */
 	const DEFAULT_THEME = 'blue';
-	const DEFAULT_LANGUAGE = 'fr';
+	const DEFAULT_LANGUAGE = 'auto';
 	const REFRESH_TIME = 30;
 	
+	/* SERVERS */
+	const USE_ADMINSERV_SERVER_CONFIG = null;
+	
 	/* PATH DIRECTORY */
-	const PATH_CONFIG = './config/';
 	const PATH_INCLUDES = './includes/';
 	const PATH_RESSOURCES = './ressources/';
 }
