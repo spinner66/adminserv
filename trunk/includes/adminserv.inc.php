@@ -830,7 +830,7 @@ abstract class AdminServ {
 	* @return true si réussi, sinon une erreur
 	*/
 	public static function initialize($fullInit = true){
-		global $client;
+		global $client, $client_multicall;
 		
 		if( isset($_SESSION['adminserv']) ){
 			// CONSTANTS
@@ -2338,6 +2338,31 @@ abstract class AdminServServerConfig {
 		
 		// Enregistrement
 		return File::save(self::$CONFIG_PATH.self::$CONFIG_FILENAME, $fileTemplate, false);
+	}
+}
+
+
+
+/**
+* Classe pour la gestion des plugins
+*/
+abstract class AdminServPlugin {
+	
+	/**
+	* Détermine si il y a au moins un plugin disponible
+	*
+	* @return bool
+	*/
+	public static function hasPlugin(){
+		$out = false;
+		
+		if( class_exists('ExtensionConfig') ){
+			if( isset(ExtensionConfig::$PLUGINS) && count(ExtensionConfig::$PLUGINS) > 0 ){
+				$out = true;
+			}
+		}
+		
+		return $out;
 	}
 }
 ?>
