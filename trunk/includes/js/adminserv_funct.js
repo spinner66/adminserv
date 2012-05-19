@@ -537,15 +537,24 @@ function slideUpMoveForm(){
 	$(".options .selected-files-label").removeClass("optHover");
 }
 function slideDownNewFolderForm(){
-	$("#form-new-folder").slideDown("fast");
+	$("#form-new-folder").animate({
+		height: "25px",
+		marginTop: "6px",
+		marginBottom: "6px"
+	}, "fast");
 	$("#form-new-folder").removeAttr("hidden");
 	$("#newfolder").text( $("#newfolder").data("cancel") );
 	$("#newFolderName").select();
 }
 function slideUpNewFolderForm(){
-	$("#form-new-folder").slideUp("fast");
-	$("#form-new-folder").attr("hidden", true);
-	$("#newfolder").text( $("#newfolder").data("new") );
+	$("#form-new-folder").animate({
+		height: "0",
+		marginTop: "0",
+		marginBottom: "0"
+	}, "fast", function(){
+		$("#form-new-folder").attr("hidden", true);
+		$("#newfolder").text( $("#newfolder").data("new") );
+	});
 }
 
 /**
@@ -695,7 +704,7 @@ function setMapslistDetailMode(){
 */
 function matchset_getLocalMapList(){
 	var path = $("#mapsDirectoryList").val();
-	$.getJSON("includes/ajax/get_matchset_localmaplist.php", {path: path}, function(data){
+	$.getJSON("includes/ajax/get_matchset_mapimport.php", {path: path}, function(data){
 		if(data != null){
 			var nb = data.nbm.split(" ")[0];
 			matchset_setNbMapsSelection(nb);

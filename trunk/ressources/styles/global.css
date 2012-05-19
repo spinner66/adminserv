@@ -27,6 +27,9 @@ ul {
 ul li {
 	list-style: none;
 }
+*[hidden="hidden"] {
+	display: none !important;
+}
 
 .fleft {
 	float: left;
@@ -1293,6 +1296,7 @@ footer {
 }
 /* Nouveau dossier */
 #form-new-folder {
+	display: block;
 	margin: 6px 0;
 }
 #form-new-folder input.text {

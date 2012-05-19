@@ -26,7 +26,7 @@
 	if( isset($_GET['view']) ){ $view = addslashes( htmlspecialchars($_GET['view']) ); }else{ $view = null; }
 	if( isset($_GET['i']) ){ $index = intval($_GET['i']); }else{ $index = -1; }
 	if( isset($_GET['id']) ){ $id = intval($_GET['id']); }else{ $id = -1; }
-	if( isset($_GET['d']) ){ $directory = addslashes($_GET['d']); }else{ $directory = null; }
+	if( isset($_GET['d']) ){ $directory = addslashes( urldecode($_GET['d']) ); }else{ $directory = null; }
 	if( isset($_GET['th']) ){ $theme = addslashes($_GET['th']); }else{ $theme = null; }
 	if( isset($_GET['lg']) ){ $lang = addslashes($_GET['lg']); }else{ $lang = null; }
 	
