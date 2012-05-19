@@ -1,6 +1,7 @@
 <?php
 	// LECTURE
 	$directoryList = Folder::getArborescence($mapsDirectoryPath.$directory, AdminServConfig::$MAPS_HIDDEN_FOLDERS, substr_count($mapsDirectoryPath.$directory, '/'));
+	unset($_SESSION['adminserv']['matchset_maps_selected']);
 	
 	$gameInfos = AdminServ::getGameInfos();
 	$currGamInf = null;
@@ -46,15 +47,43 @@
 							echo $mapsSelectList;
 						}
 					?>
-					<input class="button light" type="button" name="mapsSelectionMake" id="mapsSelectionMake" value="Faire une sélection" />
-					<input class="button light" type="button" name="mapsSelectionImport" id="mapsSelectionImport" value="Importer tout le dossier" />
-					<div id="mapsSelectionMakeDialog" data-select="Sélectionner" hidden="hidden"></div>
+					<input class="button light" type="button" name="mapImportSelection" id="mapImportSelection" value="Faire une sélection" />
+					<input class="button light" type="button" name="mapImport" id="mapImport" value="Importer tout le dossier" />
+					<div id="mapImportSelectionDialog" data-title="Faire une sélection" data-select="Sélectionner" hidden="hidden">
+						<table>
+							<thead>
+								<tr>
+									<th class="thleft">Map</th>
+									<th>Environnement</th>
+									<th>Auteur</th>
+									<th class="thright"><input type="checkbox" name="checkAllMapImport" id="checkAllMapImport" value="" /></th>
+								</tr>
+								<tr class="table-separation"></tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
 				</div>
 				
 				<div class="mapsSelected">
-					<p>Maps sélectionnées pour le MatchSettings : <span id="nbMapsSelected">0</span></p>
-					<input class="button light" type="button" name="mapsSelectedView" id="mapsSelectedView" value="Voir la sélection du MatchSettings" />
-					<div id="mapsSelectedDialog" data-close="Fermer" hidden="hidden"></div>
+					<p>Maps sélectionnées pour le MatchSettings : <span id="nbMapSelected">0</span></p>
+					<input class="button light" type="button" name="mapSelection" id="mapSelection" value="Voir la sélection du MatchSettings" />
+					<div id="mapSelectionDialog" data-title="Sélection du MatchSettings" data-close="Fermer" hidden="hidden">
+						<table>
+							<thead>
+								<tr>
+									<th class="thleft">Map</th>
+									<th>Environnement</th>
+									<th>Auteur</th>
+									<th class="thright"></th>
+								</tr>
+								<tr class="table-separation"></tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</fieldset>
 		</div>

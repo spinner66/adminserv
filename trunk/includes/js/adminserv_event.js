@@ -204,6 +204,7 @@ $(document).ready(function(){
 					
 					// Mise à jour du nb de lignes sélectionnées
 					$(".cadre.right").updateNbSelectedLines();
+					$(".cadre.right").updateCheckAll( $("input#checkAll") );
 				}
 			});
 			
@@ -314,36 +315,45 @@ $(document).ready(function(){
 			*/
 			if( $("body").hasClass("section-maps-creatematchset") ){
 				// Importer tout le dossier
-				$("#mapsSelectionImport").click(function(){
+				$("#mapImport").click(function(){
 					$(".creatematchset .maps").addClass("loading");
-					matchset_getLocalMapList();
+					matchset_mapImport();
 				});
 				
 				// Faire une sélection
-				$("#mapsSelectionMake").click(function(){
-					$("#mapsSelectionMakeDialog").dialog({
-						modal: true,
-						buttons: [{
-							text: $("#mapsSelectionMakeDialog").data("select"),
-							click: function(){
-								$(this).dialog("close");
-							}
-						}]
-					});
+				$("#mapImportSelection").click(function(){
+					$(".creatematchset .maps").addClass("loading");
+					matchset_mapImportSelection();
+				});
+				// Checkbox
+				$("input#checkAllMapImport").click(function(){
+					$("#mapImportSelectionDialog").checkAll( $(this).attr("checked") );
+					if( $("#mapImportSelectionDialog tr.current").hasClass("selected") ){
+						$("#mapImportSelectionDialog tr.current").removeClass("selected");
+					}
+				});
+				
+				// Clic sur les lignes
+				$("#mapImportSelectionDialog tr").live("click", function(){
+					// Si la ligne est déjà sélectionnée, on l'enlève
+					if( $(this).hasClass("selected") ){
+						$(this).removeClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", false);
+					}
+					// Sinon, on l'ajoute
+					else{
+						$(this).addClass("selected");
+						$(this).children("td.checkbox").children("input").attr("checked", true);
+					}
+					// Mise à jour du CheckAll
+					$("#mapImportSelectionDialog").updateCheckAll( $("input#checkAllMapImport") );
 				});
 				
 				
 				// Voir la sélection du matchsettings
-				$("#mapsSelectedView").click(function(){
-					$("#mapsSelectedDialog").dialog({
-						modal: true,
-						buttons: [{
-							text: $("#mapsSelectedDialog").data("close"),
-							click: function(){
-								$(this).dialog("close");
-							}
-						}]
-					});
+				$("#mapSelection").click(function(){
+					$(".creatematchset .maps").addClass("loading");
+					matchset_mapSelection();
 				});
 			}
 		}
@@ -443,6 +453,7 @@ $(document).ready(function(){
 					
 					// Mise à jour du nb de lignes sélectionnées
 					$(".maps .list").updateNbSelectedLines();
+					$(".maps .list").updateCheckAll( $("input#checkAll") );
 				}
 			});
 			
@@ -522,6 +533,7 @@ $(document).ready(function(){
 					
 					// Mise à jour du nb de lignes sélectionnées
 					$(".maps .local").updateNbSelectedLines();
+					$(".maps .local").updateCheckAll( $("input#checkAll") );
 				}
 			});
 			
@@ -590,6 +602,7 @@ $(document).ready(function(){
 					
 					// Mise à jour du nb de lignes sélectionnées
 					$(".maps .matchset").updateNbSelectedLines();
+					$(".maps .matchset").updateCheckAll( $("input#checkAll") );
 				}
 			});
 		}
@@ -710,6 +723,7 @@ $(document).ready(function(){
 					
 					// Mise à jour du nb de lignes sélectionnées
 					$(".cadre.left").updateNbSelectedLines();
+					$(".cadre.left").updateCheckAll( $(this).parent("tbody").parent("table").parent("div").find("input[type=checkbox]") );
 				}
 			});
 			$("#playlists tr").live("click", function(){
@@ -727,6 +741,7 @@ $(document).ready(function(){
 					
 					// Mise à jour du nb de lignes sélectionnées
 					$("#playlists").updateNbSelectedLines();
+					$("#playlists").updateCheckAll( $("#playlists input#checkAllPlaylists") );
 				}
 			});
 			

@@ -641,7 +641,7 @@ function setMapslistDetailMode(){
 /**
 * Coche toutes les checkbox d'un selecteur
 *
-* @param string selector -> Le selecteur de la liste des checkbox à cocher
+* @param bool isChecked -> Si la checkbox "checkAll" est cochée
 */
 (function($){
 	$.fn.checkAll = function(isChecked){
@@ -658,13 +658,38 @@ function setMapslistDetailMode(){
 	};
 })(jQuery);
 
+/**
+* Met à jour la checkbox "checkAll" si toutes les lignes sont cochées ou non
+*
+* @param string checkAllSelector -> Selecteur de l'input "checkAll"
+*/
+(function($){
+	$.fn.updateCheckAll = function(checkAllSelector){
+		// On récupère le nombre d'élements sélectionnés
+		var nbSelected = $(this).find("tbody tr.selected").length;
+		var nbAll = $(this).find("tbody tr").length;
+		if( $("body").hasClass("section-maps-list") ){
+			nbAll--;
+		}
+		
+		if(nbSelected == nbAll){
+			checkAllSelector.attr("checked", true);
+		}
+		else if(nbSelected == 0){
+			if( checkAllSelector.attr("checked") ){
+				checkAllSelector.attr("checked", false);
+			}
+		}
+	};
+})(jQuery);
+
 
 /**
 * Met à jour le nombre de fichiers sélectionnés
 */
 (function($){
 	$.fn.updateNbSelectedLines = function(){
-		// On récupère le nombre d'élements sélectionnés;
+		// On récupère le nombre d'élements sélectionnés
 		var nb = $(this).find("tbody tr.selected").length;
 		
 		// Mise à jour
@@ -702,27 +727,115 @@ function setMapslistDetailMode(){
 /**
 * Récupère la liste des maps en local pour la création d'un matchSettings
 */
-function matchset_getLocalMapList(){
+function matchset_mapImport(){
 	var path = $("#mapsDirectoryList").val();
 	$.getJSON("includes/ajax/get_matchset_mapimport.php", {path: path}, function(data){
 		if(data != null){
 			var nb = data.nbm.split(" ")[0];
-			matchset_setNbMapsSelection(nb);
+			matchset_setNbMapSelection(nb);
 			$(".creatematchset .maps").removeClass("loading");
 		}
 	});
 }
-function matchset_viewLocalMapList(){
+function matchset_mapImportSelection(){
 	var path = $("#mapsDirectoryList").val();
-	
-
+	$.getJSON("includes/ajax/get_matchset_mapimportselection.php", {path: path}, function(data){
+		if(data != null){
+			var out = "";
+			
+			// Création du tableau
+			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
+				$.each(data.lst, function(i, map){
+					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
+						+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/map.png" alt="" />'
+							+'<span title="'+map.FileName+'">'+map.Name+'</span>'
+						out += '</td>'
+						+'<td class="imgcenter"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
+						+'<td>'+map.Author+'</td>';
+						out += '<td class="checkbox">'; if(data.cid != i){ out += '<input type="checkbox" name="map[]" value="'+map.FileName+'" />'; } out += '</td>'
+					+'</tr>';
+				});
+				
+				if( $("input#checkAllMapImport").attr("disabled") ){
+					$("input#checkAllMapImport").attr("disabled", false);
+				}
+			}
+			else{
+				if( !$("input#checkAllMapImport").attr("disabled") ){
+					$("input#checkAllMapImport").attr("disabled", true);
+				}
+				out += '<tr class="no-line"><td class="center" colspan="4">'+data.lst+'</td></tr>';
+			}
+			
+			// HTML
+			$("#mapImportSelectionDialog").removeAttr("hidden");
+			$("#mapImportSelectionDialog table tbody").html(out);
+			$(".creatematchset .maps").removeClass("loading");
+			$("#mapImportSelectionDialog").dialog({
+				title: $("#mapImportSelectionDialog").data("title"),
+				modal: true,
+				minWidth: 650,
+				minHeight: 400,
+				buttons: [{
+					text: $("#mapImportSelectionDialog").data("select"),
+					click: function(){
+						$(this).dialog("close");
+					}
+				}]
+			});
+		}
+	});
 }
 
+
 /**
+* Met à jour le nombre de maps sélectionnées
 *
+* @param int nb
 */
-function matchset_setNbMapsSelection(nb){
-	var currentNb = $("#nbMapsSelected").text();
+function matchset_setNbMapSelection(nb){
+	var currentNb = $("#nbMapSelected").text();
 	var newNb = parseInt(currentNb) + parseInt(nb);
-	$("#nbMapsSelected").text(newNb);
+	$("#nbMapSelected").text(newNb);
+}
+function matchset_mapSelection(){
+	$.getJSON("includes/ajax/get_matchset_mapselection.php", function(data){
+		if(data != null){
+			var out = "";
+			
+			// Création du tableau
+			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
+				$.each(data.lst, function(i, map){
+					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
+						+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/map.png" alt="" />'
+							+'<span title="'+map.FileName+'">'+map.Name+'</span>'
+						out += '</td>'
+						+'<td class="imgcenter"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
+						+'<td>'+map.Author+'</td>';
+						out += '<td class="checkbox"></td>'
+					+'</tr>';
+				});
+			}
+			else{
+				out += '<tr class="no-line"><td class="center" colspan="4">'+data.lst+'</td></tr>';
+			}
+			
+			// HTML
+			$("#mapSelectionDialog").removeAttr("hidden");
+			$("#mapSelectionDialog table tbody").html(out);
+			$(".creatematchset .maps").removeClass("loading");
+			$("#mapSelectionDialog").dialog({
+				title: $("#mapSelectionDialog").data("title"),
+				modal: true,
+				minWidth: 650,
+				minHeight: 400,
+				buttons: [{
+					text: $("#mapSelectionDialog").data("close"),
+					click: function(){
+						$(this).dialog("close");
+					}
+				}]
+			});
+		}
+	});
 }
