@@ -250,8 +250,8 @@ abstract class AdminServUI {
 		if(USER_PAGE == 'maps-upload'){
 			$out .= '<script src="'.$path.'js/fileuploader.js"></script>';
 		}
-		$out .= '<script src="'.$path.'js/functions.js"></script>'
-		.'<script src="'.$path.'js/adminserv.js"></script>';
+		$out .= '<script src="'.$path.'js/adminserv_funct.js"></script>'
+		.'<script src="'.$path.'js/adminserv_event.js"></script>';
 		
 		return $out;
 	}
@@ -651,10 +651,10 @@ abstract class AdminServUI {
 			$out .= '<form id="createFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
 				.'<h1>Dossiers';
 					if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new']){
-						$out .='<div id="form-new-folder" hidden="hidden">'
+						$out .='<span id="form-new-folder" hidden="hidden">'
 							.'<input class="text" type="text" name="newFolderName" id="newFolderName" value="" />'
 							.'<input class="button light" type="submit" name="newFolderValid" id="newFolderValid" value="ok" />'
-						.'</div>';
+						.'</span>';
 					}
 				$out .= '</h1>';
 				if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new']){
@@ -703,7 +703,7 @@ abstract class AdminServUI {
 					if( count($directory['folders']) > 0 ){
 						foreach($directory['folders'] as $dir => $values){
 							$out .= '<li>'
-								.'<a href="./?p='. USER_PAGE .'&amp;d='.$currentPath.$dir.'/">'
+								.'<a href="./?p='. USER_PAGE .'&amp;d='.urlencode($currentPath.$dir).'/">'
 									.'<span class="dir-name">'.$dir.'</span>'
 									.'<span class="dir-info">'.$values['nb_file'].'</span>'
 								.'</a>'
@@ -724,7 +724,7 @@ abstract class AdminServUI {
 			// Options de dossier
 			if($showOptions && $currentPath){
 				if( AdminServConfig::$FOLDERS_OPTIONS['rename'] || AdminServConfig::$FOLDERS_OPTIONS['move'] || AdminServConfig::$FOLDERS_OPTIONS['delete'] ){
-					$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
+					$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.urlencode($currentPath).'&amp;goto='. USER_PAGE .'">'
 						.'<div class="option-folder-list">'
 							.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
 							.'<ul hidden="hidden">';
