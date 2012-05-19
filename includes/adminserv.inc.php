@@ -22,12 +22,12 @@ abstract class AdminServUI {
 		
 		// Si il y a une séparation
 		if( strstr($title, ',') ){
-			if($type == 'str'){
-				$out = str_replace(',', '', $title);
-			}
-			else if($type == 'html'){
+			if($type == 'html'){
 				$titleEx = explode(',', $title);
 				$out = $titleEx[0].'<span class="title-color">'.$titleEx[1].'</span>';
+			}
+			else{
+				$out = str_replace(',', '', $title);
 			}
 		}
 		// Sinon, on renvoi le titre simple
@@ -830,7 +830,7 @@ abstract class AdminServ {
 	* @return true si réussi, sinon une erreur
 	*/
 	public static function initialize($fullInit = true){
-		global $client, $client_multicall;
+		global $client;
 		
 		if( isset($_SESSION['adminserv']) ){
 			// CONSTANTS
@@ -1006,7 +1006,10 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Détermine si le mode de jeu fourni en paramètre est le mode par équipe
 	*
+	* @param int $currentGameMode -> ID du mode de jeu
+	* @return bool
 	*/
 	public static function isTeamGameMode($currentGameMode){
 		// ID du mode
@@ -1175,11 +1178,11 @@ abstract class AdminServ {
 	*
 	* @global resource $client -> Le client doit être initialisé
 	* @param  string   $cmd    -> Le nom de la méthode ManiaPlanet à utiliser
-	* @return null si réussi, sinon un message d'erreur
+	* @return true si réussi, sinon un message d'erreur
 	*/
 	public static function speedAdmin($cmd){
 		global $client;
-		$out = null;
+		$out = true;
 		
 		// Méthode en fonction du jeu
 		if($cmd != 'ForceEndRound'){
