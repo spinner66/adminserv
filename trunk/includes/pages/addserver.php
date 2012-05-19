@@ -66,6 +66,7 @@
 			}
 		}
 		else{
+			// Ajout
 			if( AdminServServerConfig::saveServerConfig($serverData) ){
 				AdminServ::info('Le serveur a bien été ajouté.');
 			}
