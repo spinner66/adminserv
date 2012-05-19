@@ -13,6 +13,6 @@
 	if( isset($_GET['path']) ){ $path = addslashes($_GET['path']); }else{ $path = null; }
 	
 	// DATA
-	$_SESSION['adminserv']['matchset_maps_selected'] = AdminServ::getLocalMapList($path);
-	echo json_encode($_SESSION['adminserv']['matchset_maps_selected']);
+	$out = AdminServ::getLocalMapList($path);
+	echo json_encode($out);
 ?>

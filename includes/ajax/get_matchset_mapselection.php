@@ -5,14 +5,13 @@
 	
 	// INCLUDES
 	session_start();
-	require_once '../../config/adminserv.cfg.php';
-	require_once '../adminserv.inc.php';
-	AdminServUI::getClass();
-	
-	// ISSET
-	if( isset($_GET['path']) ){ $path = addslashes($_GET['path']); }else{ $path = null; }
 	
 	// DATA
-	$_SESSION['adminserv']['matchset_maps_selected'] = AdminServ::getLocalMapList($path);
+	if( !isset($_SESSION['adminserv']['matchset_maps_selected']) ){
+		$out = array();
+		$out['lst'] = 'Aucune map';
+		$out['nbm'] = '0 map';
+		$_SESSION['adminserv']['matchset_maps_selected'] = $out;
+	}
 	echo json_encode($_SESSION['adminserv']['matchset_maps_selected']);
 ?>
