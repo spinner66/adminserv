@@ -1360,6 +1360,7 @@ abstract class AdminServ {
 		$out = array(
 			'GameMode' => intval($_POST['NextGameMode']),
 			'ChatTime' => TimeDate::secToMillisec( intval($_POST['NextChatTime'] - 8) ),
+			'ScriptName' => Str::replaceChars($_POST['NextScriptName']),
 			'RoundsPointsLimit' => intval($_POST['NextRoundsPointsLimit']),
 			'RoundsUseNewRules' => array_key_exists('NextRoundsUseNewRules', $_POST),
 			'RoundsForcedLaps' => intval($_POST['NextRoundsForcedLaps']),
@@ -1597,6 +1598,7 @@ abstract class AdminServ {
 							
 							// Autres
 							$out['lst'][$i]['FileName'] = $file;
+							$out['lst'][$i]['UId'] = $Gbx->uid;
 							$out['lst'][$i]['Author'] = $Gbx->author;
 							$out['lst'][$i]['Recent'] = $values['recent'];
 							$i++;
@@ -1724,23 +1726,25 @@ abstract class AdminServ {
 	*
 	* @param array $mapsImport -> Le tableau de maps à ajouter à la sélection
 	*/
-	public static function saveMatchSetSelection($mapsImport){
+	public static function saveMatchSettingSelection($mapsImport = array() ){
+		// Liste des maps
 		$maps['lst'] = array();
 		if( isset($_SESSION['adminserv']['matchset_maps_selected']) ){
 			$mapsSelected = $_SESSION['adminserv']['matchset_maps_selected'];
-			if( count($mapsSelected) > 0 ){
+			if( isset($mapsSelected['lst']) && is_array($mapsSelected['lst']) && count($mapsSelected['lst']) > 0 ){
 				foreach($mapsSelected['lst'] as $id => $values){
 					$maps['lst'][] = $values;
 				}
 			}
 		}
-		if( count($mapsImport) > 0 ){
+		if( isset($mapsImport['lst']) && is_array($mapsImport['lst']) && count($mapsImport['lst']) > 0 ){
 			foreach($mapsImport['lst'] as $id => $values){
 				$maps['lst'][] = $values;
 			}
 		}
 		
 		// Nombre de maps
+		
 		$nbm = count($maps['lst']);
 		if($nbm > 1){
 			$maps['nbm'] = $nbm.' maps';
@@ -1748,7 +1752,12 @@ abstract class AdminServ {
 		else{
 			$maps['nbm'] = $nbm.' map';
 		}
-		$maps['cfg'] = $mapsImport['cfg'];
+		if($nbm === 0){
+			$maps['lst'] = 'Aucune map';
+		}
+		
+		// Config
+		$maps['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
 		
 		// Mise à jour de la session
 		$_SESSION['adminserv']['matchset_maps_selected'] = $maps;
@@ -1756,7 +1765,7 @@ abstract class AdminServ {
 	
 	
 	/**
-	* Création d'un MatchSettings
+	* Enregistre un MatchSettings
 	*
 	* @param string $filename -> L'url du dossier dans lequel le MatchSettings sera crée
 	* @param array  $struct   -> La structure du MatchSettings avec ses données
@@ -1770,62 +1779,70 @@ abstract class AdminServ {
 	*  [hotseat] => Array()
 	*  [filter] => Array()
 	*  [startindex] => 1
-	*  [challenge] => Array
+	*  [map] => Array
 	*   (
-	*    [name.Challenge.Gbx] => 8bDoQMwzUllV0D9eu7hSth3rQs6
+	*    [name.Map.Gbx] => 8bDoQMwzUllV0D9eu7hSth3rQs6
 	*    etc...
 	*   )
 	* )
-	* @return true si le MatchSettings a été crée, sinon false
+	* @return true si réussi, sinon une erreur
 	*/
-	public static function createMatchSettings($filename, $struct){
+	public static function saveMatchSettings($filename, $struct){
+		$out = false;
+		
+		// Jeu
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$mapField = 'challenge';
+		}
+		else{
+			$mapField = 'map';
+		}
+		
 		// Génération du XML
-		$matchSettings = '<?xml version="1.0" encoding="utf-8" ?>'."\n"
+		$out = '<?xml version="1.0" encoding="utf-8" ?>'."\n"
 		."<playlist>\n";
-			// Gameinfos
-			if($struct['gameinfos']){
-				$matchSettings .= "\t<gameinfos>\n";
-					foreach($struct['gameinfos'] as $name => $data){
-						$matchSettings .= "\t\t<$name>$data</$name>\n";
-					}
-				$matchSettings .= "\t</gameinfos>\n\n";
-			}
-			// Hotseat
-			if($struct['hotseat']){
-				$matchSettings .= "\t<hotseat>\n";
-					foreach($struct['hotseat'] as $name => $data){
-						$matchSettings .= "\t\t<$name>$data</$name>\n";
-					}
-				$matchSettings .= "\t</hotseat>\n\n";
-			}
-			// Filter
-			if($struct['filter']){
-				$matchSettings .= "\t<filter>\n";
-					foreach($struct['filter'] as $name => $data){
-						$matchSettings .= "\t\t<$name>$data</$name>\n";
-					}
-				$matchSettings .= "\t</filter>\n\n";
-			}
-			// Challenges
-			$matchSettings .= "\t<startindex>".$struct['startindex']."</startindex>\n";
-			if($struct['challenge']){
-				foreach($struct['challenge'] as $file => $ident){
-					$matchSettings .= "\t<challenge>\n"
-						."\t\t<file>$file</file>\n"
-						."\t\t<ident>$ident</ident>\n"
-					."\t</challenge>\n";
+			// GameInfos, Hotseat, Filter
+			$structFields = array(
+				'gameinfos',
+				'hotseat',
+				'filter'
+			);
+			foreach($structFields as $strucField){
+				if( isset($struct[$strucField]) && count($struct[$strucField]) > 0 ){
+					$out .= "\t<$strucField>\n";
+						foreach($struct[$strucField] as $field => $value){
+							$out .= "\t\t<$field>$value</$field>\n";
+						}
+					$out .= "\t</$strucField>\n\n";
 				}
 			}
-		$matchSettings .= "</playlist>\n";
+			
+			// Maps
+			$out .= "\t<startindex>".$struct['startindex']."</startindex>\n";
+			if( isset($struct[$mapField]) && count($struct[$mapField]) > 0 ){
+				foreach($struct[$mapField] as $file => $ident){
+					$out .= "\t<$mapField>\n"
+						."\t\t<file>$file</file>\n"
+						."\t\t<ident>$ident</ident>\n"
+					."\t</$mapField>\n";
+				}
+			}
+		$out .= "</playlist>\n";
+		
 		// Création XML
-		if( @!$newXMLObject = simplexml_load_string($matchSettings) ){
-			return false;
+		if( ! @$newXMLObject = simplexml_load_string($out) ){
+			$out = 'Erreur de conversion texte->XML';
 		}
-		if( !$newXMLObject->asXML($filename) ){
-			return false;
-		}else{
-			return true;
+		else{
+			if( !$newXMLObject->asXML($filename) ){
+				$out = 'Erreur d\'entregistrement du fichier XML';
+			}
+			else{
+				$out = true;
+			}
 		}
+		
+		return $out;
 	}
 	
 	

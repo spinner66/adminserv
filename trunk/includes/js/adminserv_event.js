@@ -295,15 +295,15 @@ $(document).ready(function(){
 			});
 			
 			// Affichage sec -> min
-			$("#NextTimeAttackLimit, #NextLapsTimeLimit").click(function(){
+			$("#NextTimeAttackLimit, #NextLapsTimeLimit, #hotSeatTimeLimit").click(function(){
 				var sec = $(this).val();
 				var min = secToMin(sec);
 				$(this).parent("td").parent("tr").children("td.preview").html("["+min+" min]");
 			});
-			$("#NextTimeAttackLimit, #NextLapsTimeLimit").blur(function(){
+			$("#NextTimeAttackLimit, #NextLapsTimeLimit, #hotSeatTimeLimit").blur(function(){
 				$(this).parent("td").parent("tr").children("td.preview").html("");
 			});
-			$("#NextTimeAttackLimit, #NextLapsTimeLimit").keyup(function(){
+			$("#NextTimeAttackLimit, #NextLapsTimeLimit, #hotSeatTimeLimit").keyup(function(){
 				var sec = $(this).val();
 				var min = secToMin(sec);
 				$(this).parent("td").parent("tr").children("td.preview").html("["+min+" min]");
@@ -354,6 +354,21 @@ $(document).ready(function(){
 				$("#mapSelection").click(function(){
 					$(".creatematchset .maps").addClass("loading");
 					matchset_mapSelection();
+				});
+				// Enlever une map de la sélection
+				$("#mapSelectionDialog tr a").live("click", function(){
+					matchset_mapSelection( $(this).parent("td").parent("tr")[0].sectionRowIndex );
+					return false;
+				});
+				
+				// Nom du MatchSettings
+				$("#matchSettingName").click(function(){
+					$(this).select();
+				});
+				$("#matchSettingName").blur(function(){
+					if( $(this).val() == "" ){
+						$(this).val("match_settings");
+					}
 				});
 			}
 		}

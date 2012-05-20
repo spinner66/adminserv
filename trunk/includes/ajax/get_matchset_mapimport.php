@@ -29,7 +29,7 @@
 			}
 		}
 		// Enregistrement de la sélection du MatchSettings
-		AdminServ::saveMatchSetSelection($maps);
+		AdminServ::saveMatchSettingSelection($maps);
 	}
 	
 	// Récupérer le tableau pour faire une sélection
@@ -41,7 +41,7 @@
 	else{
 		// Import du dossier + enregistrement de la sélection
 		$mapsImport = AdminServ::getLocalMapList($path);
-		AdminServ::saveMatchSetSelection($mapsImport);
+		AdminServ::saveMatchSettingSelection($mapsImport);
 	}
 	
 	
