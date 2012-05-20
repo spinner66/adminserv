@@ -69,7 +69,7 @@
 				<div class="mapsSelected">
 					<p>Maps sélectionnées pour le MatchSettings : <span id="nbMapSelected">0</span></p>
 					<input class="button light" type="button" name="mapSelection" id="mapSelection" value="Voir la sélection du MatchSettings" />
-					<div id="mapSelectionDialog" data-title="Sélection du MatchSettings" data-close="Fermer" hidden="hidden">
+					<div id="mapSelectionDialog" data-title="Sélection du MatchSettings" data-remove="Enlever cette map de la sélection" data-close="Fermer" hidden="hidden">
 						<table>
 							<thead>
 								<tr>

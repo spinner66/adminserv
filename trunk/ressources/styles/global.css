@@ -1450,6 +1450,9 @@ footer {
 .section-maps-creatematchset .mapsSelected input {
 	float: right;
 }
+.section-maps-creatematchset #mapSelectionDialog tr {
+	cursor: default;
+}
 
 
 /* Page Guest-Ban
