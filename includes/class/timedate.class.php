@@ -120,26 +120,31 @@ abstract class TimeDate {
 		$date = trim($date);
 		
 		// Type MySQL
-		if($type == 'DATE'){
-			$out = date('Y-m-d', self::dateToTime($date, $use_strtotime));
-		}
-		else if($type == 'DATETIME'){
-			$datetotime = self::dateToTime($date, $use_strtotime);
-			$timetosec = self::timeToSec($time, $use_strtotime);
-			$out = date('Y-m-d H:i:s', $datetotime + $timetosec);
-		}
-		else if($type == 'TIME'){
-			$out = date('H:i:s', self::timeToSec($time, $use_strtotime));
-		}
-		else if($type == 'YEAR'){
-			$out = date('Y', self::dateToTime($date, $use_strtotime));
-		}
-		else{
-			$out = self::formatDateForMySQL('DATETIME', $date, $time, $use_strtotime);
+		switch($type){
+			case 'DATE':
+				$out = date('Y-m-d', self::dateToTime($date, $use_strtotime));
+				break;
+				
+			case 'DATETIME':
+				$datetotime = self::dateToTime($date, $use_strtotime);
+				$timetosec = self::timeToSec($time, $use_strtotime);
+				$out = date('Y-m-d H:i:s', $datetotime + $timetosec);
+				break;
+				
+			case 'TIME':
+				$out = date('H:i:s', self::timeToSec($time, $use_strtotime));
+				break;
+				
+			case 'YEAR':
+				$out = date('Y', self::dateToTime($date, $use_strtotime));
+				break;
+				
+			default:
+				$out = self::formatDateForMySQL('DATETIME', $date, $time, $use_strtotime);
+				break;
 		}
 		return $out;
 	}
-	
 	
 	
 	/**

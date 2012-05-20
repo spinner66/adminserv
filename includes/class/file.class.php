@@ -13,8 +13,14 @@ abstract class File {
 	* @return string
 	*/
 	public static function getExtension($filename){
-		$pathinfo = pathinfo($filename);
-		return strtolower($pathinfo['extension']);
+		$out = null;
+		
+		if( strstr($filename, '.') ){
+			$pathinfo = pathinfo($filename);
+			$out = strtolower($pathinfo['extension']);
+		}
+		
+		return $out;
 	}
 	
 	

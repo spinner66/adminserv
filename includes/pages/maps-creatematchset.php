@@ -1,15 +1,109 @@
 <?php
 	// LECTURE
 	$directoryList = Folder::getArborescence($mapsDirectoryPath.$directory, AdminServConfig::$MAPS_HIDDEN_FOLDERS, substr_count($mapsDirectoryPath.$directory, '/'));
-	unset($_SESSION['adminserv']['matchset_maps_selected']);
 	
 	$gameInfos = AdminServ::getGameInfos();
 	$currGamInf = null;
 	$nextGamInf = $gameInfos['next'];
 	
 	
-	// ÉDITION
-	$mapsSelectedList = null;
+	// ENREGISTREMENT
+	if( isset($_POST['savematchsetting']) ){
+		// Jeu
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$CupRoundsPerMap = 'cup_roundsperchallenge';
+			$StructMap = 'challenge';
+		}
+		else{
+			$CupRoundsPerMap = 'CupRoundsPerMap';
+			$StructMap = 'map';
+		}
+		
+		// Filename
+		$matchSettingName = Str::replaceChars($_POST['matchSettingName']);
+		$matchSettingExtension = File::getExtension($matchSettingName);
+		if($matchSettingExtension == 'txt' || $matchSettingExtension == 'xml'){
+			$filename = $mapsDirectoryPath.$matchSettingName;
+		}
+		else{
+			$filename = $mapsDirectoryPath.$matchSettingName.'.txt';
+		}
+		
+		$struct = array();
+		
+		// Gameinfos
+		$gameinfos = AdminServ::getGameInfosStructFromPOST();
+		$struct['gameinfos'] = array(
+			'game_mode' => $gameinfos['GameMode'],
+			'chat_time' => $gameinfos['ChatTime'],
+			'finishtimeout' => $gameinfos['FinishTimeout'],
+			'allwarmupduration' => $gameinfos['AllWarmUpDuration'],
+			'disablerespawn' => $gameinfos['DisableRespawn'],
+			'forceshowallopponents' => $gameinfos['ForceShowAllOpponents'],
+			'script_name' => $gameinfos['ScriptName'],
+			'rounds_pointslimit' => $gameinfos['RoundsPointsLimit'],
+			'rounds_usenewrules' => $gameinfos['RoundsUseNewRules'],
+			'rounds_forcedlaps' => $gameinfos['RoundsForcedLaps'],
+			'rounds_pointslimitnewrules' => $gameinfos['RoundsPointsLimitNewRules'],
+			'team_pointslimit' => $gameinfos['TeamPointsLimit'],
+			'team_maxpoints' => $gameinfos['TeamMaxPoints'],
+			'team_usenewrules' => $gameinfos['TeamUseNewRules'],
+			'team_pointslimitnewrules' => $gameinfos['TeamPointsLimitNewRules'],
+			'timeattack_limit' => $gameinfos['TimeAttackLimit'],
+			'timeattack_synchstartperiod' => $gameinfos['TimeAttackSynchStartPeriod'],
+			'laps_nblaps' => $gameinfos['LapsNbLaps'],
+			'laps_timelimit' => $gameinfos['LapsTimeLimit'],
+			'cup_pointslimit' => $gameinfos['CupPointsLimit'],
+			$CupRoundsPerMap => $gameinfos['CupRoundsPerMap'],
+			'cup_nbwinners' => $gameinfos['CupNbWinners'],
+			'cup_warmupduration' => $gameinfos['CupWarmUpDuration']
+		);
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			unset($struct['gameinfos']['script_name']);
+		}
+		
+		// HotSeat
+		$struct['hotseat'] = array(
+			'game_mode' => intval($_POST['hotSeatGameMode']),
+			'time_limit' => TimeDate::secToMillisec( intval($_POST['hotSeatTimeLimit']) ),
+			'rounds_count' => intval($_POST['hotSeatCountRound'])
+		);
+		
+		// Filter
+		$struct['filter'] = array(
+			'is_lan' => array_key_exists('filterIsLan', $_POST),
+			'is_internet' => array_key_exists('filterIsInternet', $_POST),
+			'is_solo' => array_key_exists('filterIsSolo', $_POST),
+			'is_hotseat' => array_key_exists('filterIsHotSeat', $_POST),
+			'sort_index' => intval($_POST['filterSortIndex']),
+			'random_map_order' => array_key_exists('filterRandomMaps', $_POST),
+			'force_default_gamemode' => intval($_POST['filterDefaultGameMode']),
+		);
+		
+		// Maps
+		$struct['startindex'] = 1;
+		if( isset($_SESSION['adminserv']['matchset_maps_selected']) ){
+			$maps = $_SESSION['adminserv']['matchset_maps_selected']['lst'];
+			if( isset($maps) && is_array($maps) && count($maps) > 0 ){
+				foreach($maps as $id => $values){
+					$struct[$StructMap][$values['FileName']] = $values['UId'];
+				}
+			}
+		}
+		
+		
+		// Enregistrement
+		if( ($result = AdminServ::saveMatchSettings($filename, $struct)) !== true ){
+			AdminServ::error('Impossible d\'enregistrer le MatchSettings : '.$matchSettingName.' ('.$result.')');
+		}
+		else{
+			AdminServ::info('Le MatchSettings "'.$matchSettingName.'" a bien été créé dans le dossier : '.$mapsDirectoryPath);
+			Utils::redirection(false, '?p='.USER_PAGE);
+		}
+	}
+	else{
+		unset($_SESSION['adminserv']['matchset_maps_selected']);
+	}
 	
 	
 	// HTML
@@ -24,6 +118,7 @@
 		<?php echo $mapsDirectoryList; ?>
 	</section>
 	
+	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 	<section class="cadre right creatematchset">
 		<h1>Créer un MatchSettings</h1>
 		<div class="title-detail">
@@ -32,20 +127,23 @@
 			</ul>
 		</div>
 		
+		<h2>Nom du MatchSettings</h2>
+		<input class="text width3" type="text" name="matchSettingName" id="matchSettingName" value="match_settings" />
+		
 		<h2>Maps</h2>
 		<div class="content maps">
 			<fieldset>
 				<div class="mapsSelection">
 					<?php
+						$mapsSelectList = '<select name="mapsDirectoryList" id="mapsDirectoryList">';
+						$mapsSelectList .= '<option value="'.$mapsDirectoryPath.$directory.'">Racine</option>';
 						if( count($directoryList) > 0 ){
-							$mapsSelectList = '<select name="mapsDirectoryList" id="mapsDirectoryList">';
-							$mapsSelectList .= '<option value="'.$mapsDirectoryPath.$directory.'">Racine</option>';
 							foreach($directoryList as $dir){
 								$mapsSelectList .= '<option value="'.$dir['path'].'">'.$dir['level'].$dir['name'].'</option>';
 							}
-							$mapsSelectList .= '</select>';
-							echo $mapsSelectList;
 						}
+						$mapsSelectList .= '</select>';
+						echo $mapsSelectList;
 					?>
 					<input class="button light" type="button" name="mapImportSelection" id="mapImportSelection" value="Faire une sélection" />
 					<input class="button light" type="button" name="mapImport" id="mapImport" value="Importer tout le dossier" />
@@ -114,14 +212,14 @@
 					<tr>
 						<td class="key"><label for="hotSeatTimeLimit">Limite de temps</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="hotSeatTimeLimit" id="hotSeatTimeLimit" value="" />
+							<input class="text width2" type="text" name="hotSeatTimeLimit" id="hotSeatTimeLimit" value="300" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="hotSeatCountRound">Nombre de round</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="hotSeatCountRound" id="hotSeatCountRound" value="" />
+							<input class="text width2" type="text" name="hotSeatCountRound" id="hotSeatCountRound" value="5" />
 						</td>
 						<td class="preview"></td>
 					</tr>
@@ -136,35 +234,35 @@
 					<tr>
 						<td class="key"><label for="filterIsLan">Lan</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="filterIsLan" id="filterIsLan"<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="filterIsLan" id="filterIsLan" checked="checked" value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="filterIsInternet">Internet</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="filterIsInternet" id="filterIsInternet"<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="filterIsInternet" id="filterIsInternet" checked="checked" value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="filterIsSolo">Solo</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="filterIsSolo" id="filterIsSolo"<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="filterIsSolo" id="filterIsSolo" value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="filterIsHotSeat">HotSeat</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="filterIsHotSeat" id="filterIsHotSeat"<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="filterIsHotSeat" id="filterIsHotSeat" checked="checked" value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="filterSortIndex">Index de tri</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="filterSortIndex" id="filterSortIndex" value="" />
+							<input class="text width2" type="text" name="filterSortIndex" id="filterSortIndex" value="1000" />
 						</td>
 						<td class="preview"></td>
 					</tr>
@@ -187,7 +285,12 @@
 				</table>
 			</fieldset>
 		</div>
+		
+		<div class="fright save">
+			<input class="button light" type="submit" name="savematchsetting" id="savematchsetting" value="Enregistrer" />
+		</div>
 	</section>
+	</form>
 </section>
 <?php
 	AdminServUI::getFooter();

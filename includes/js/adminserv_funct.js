@@ -814,8 +814,13 @@ function matchset_setNbMapSelection(nb){
 /**
 * Récupère et affiche la sélection du MatchSettings
 */
-function matchset_mapSelection(){
-	$.getJSON("includes/ajax/get_matchset_mapselection.php", function(data){
+function matchset_mapSelection(removeId){
+	if(removeId){
+		var params = {remove: removeId};
+	}else{
+		var params = "";
+	}
+	$.getJSON("includes/ajax/get_matchset_mapselection.php", params, function(data){
 		if(data != null){
 			var out = "";
 			
@@ -828,7 +833,7 @@ function matchset_mapSelection(){
 						out += '</td>'
 						+'<td class="imgcenter"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
 						+'<td>'+map.Author+'</td>';
-						out += '<td class="checkbox"><a href="." title="'+$("#mapSelectionDialog").data("remove")+'"><img src="'+data.cfg.path_rsc+'images/16/delete.png" alt="" /></a></td>'
+						out += '<td class="checkbox imgcenter"><a href="." title="'+$("#mapSelectionDialog").data("remove")+'"><img src="'+data.cfg.path_rsc+'images/16/delete.png" alt="" /></a></td>'
 					+'</tr>';
 				});
 			}
