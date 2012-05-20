@@ -1720,6 +1720,116 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Enregistre la sélection du MatchSettings en session
+	*
+	* @param array $mapsImport -> Le tableau de maps à ajouter à la sélection
+	*/
+	public static function saveMatchSetSelection($mapsImport){
+		$maps['lst'] = array();
+		if( isset($_SESSION['adminserv']['matchset_maps_selected']) ){
+			$mapsSelected = $_SESSION['adminserv']['matchset_maps_selected'];
+			if( count($mapsSelected) > 0 ){
+				foreach($mapsSelected['lst'] as $id => $values){
+					$maps['lst'][] = $values;
+				}
+			}
+		}
+		if( count($mapsImport) > 0 ){
+			foreach($mapsImport['lst'] as $id => $values){
+				$maps['lst'][] = $values;
+			}
+		}
+		
+		// Nombre de maps
+		$nbm = count($maps['lst']);
+		if($nbm > 1){
+			$maps['nbm'] = $nbm.' maps';
+		}
+		else{
+			$maps['nbm'] = $nbm.' map';
+		}
+		$maps['cfg'] = $mapsImport['cfg'];
+		
+		// Mise à jour de la session
+		$_SESSION['adminserv']['matchset_maps_selected'] = $maps;
+	}
+	
+	
+	/**
+	* Création d'un MatchSettings
+	*
+	* @param string $filename -> L'url du dossier dans lequel le MatchSettings sera crée
+	* @param array  $struct   -> La structure du MatchSettings avec ses données
+	* $struct = Array
+	* (
+	*  [gameinfos] => Array
+	*   (
+	*    [game_mode] => 0
+	*    etc...
+	*   )
+	*  [hotseat] => Array()
+	*  [filter] => Array()
+	*  [startindex] => 1
+	*  [challenge] => Array
+	*   (
+	*    [name.Challenge.Gbx] => 8bDoQMwzUllV0D9eu7hSth3rQs6
+	*    etc...
+	*   )
+	* )
+	* @return true si le MatchSettings a été crée, sinon false
+	*/
+	public static function createMatchSettings($filename, $struct){
+		// Génération du XML
+		$matchSettings = '<?xml version="1.0" encoding="utf-8" ?>'."\n"
+		."<playlist>\n";
+			// Gameinfos
+			if($struct['gameinfos']){
+				$matchSettings .= "\t<gameinfos>\n";
+					foreach($struct['gameinfos'] as $name => $data){
+						$matchSettings .= "\t\t<$name>$data</$name>\n";
+					}
+				$matchSettings .= "\t</gameinfos>\n\n";
+			}
+			// Hotseat
+			if($struct['hotseat']){
+				$matchSettings .= "\t<hotseat>\n";
+					foreach($struct['hotseat'] as $name => $data){
+						$matchSettings .= "\t\t<$name>$data</$name>\n";
+					}
+				$matchSettings .= "\t</hotseat>\n\n";
+			}
+			// Filter
+			if($struct['filter']){
+				$matchSettings .= "\t<filter>\n";
+					foreach($struct['filter'] as $name => $data){
+						$matchSettings .= "\t\t<$name>$data</$name>\n";
+					}
+				$matchSettings .= "\t</filter>\n\n";
+			}
+			// Challenges
+			$matchSettings .= "\t<startindex>".$struct['startindex']."</startindex>\n";
+			if($struct['challenge']){
+				foreach($struct['challenge'] as $file => $ident){
+					$matchSettings .= "\t<challenge>\n"
+						."\t\t<file>$file</file>\n"
+						."\t\t<ident>$ident</ident>\n"
+					."\t</challenge>\n";
+				}
+			}
+		$matchSettings .= "</playlist>\n";
+		// Création XML
+		if( @!$newXMLObject = simplexml_load_string($matchSettings) ){
+			return false;
+		}
+		if( !$newXMLObject->asXML($filename) ){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	
+	/**
 	* Extrait les données d'un MatchSettings et renvoi un tableau
 	*
 	* @param string $filename -> L'url du MatchSettings
@@ -1820,80 +1930,6 @@ abstract class AdminServ {
 	
 	
 	/**
-	* Création d'un MatchSettings
-	*
-	* @param string $filename -> L'url du dossier dans lequel le MatchSettings sera crée
-	* @param array  $struct   -> La structure du MatchSettings avec ses données
-	* $struct = Array
-	* (
-	*  [gameinfos] => Array
-	*   (
-	*    [game_mode] => 0
-	*    etc...
-	*   )
-	*  [hotseat] => Array()
-	*  [filter] => Array()
-	*  [startindex] => 1
-	*  [challenge] => Array
-	*   (
-	*    [name.Challenge.Gbx] => 8bDoQMwzUllV0D9eu7hSth3rQs6
-	*    etc...
-	*   )
-	* )
-	* @return true si le MatchSettings a été crée, sinon false
-	*/
-	public static function createMatchSettings($filename, $struct){
-		// Génération du XML
-		$matchSettings = '<?xml version="1.0" encoding="utf-8" ?>'."\n"
-		."<playlist>\n";
-			// Gameinfos
-			if($struct['gameinfos']){
-				$matchSettings .= "\t<gameinfos>\n";
-					foreach($struct['gameinfos'] as $name => $data){
-						$matchSettings .= "\t\t<$name>$data</$name>\n";
-					}
-				$matchSettings .= "\t</gameinfos>\n\n";
-			}
-			// Hotseat
-			if($struct['hotseat']){
-				$matchSettings .= "\t<hotseat>\n";
-					foreach($struct['hotseat'] as $name => $data){
-						$matchSettings .= "\t\t<$name>$data</$name>\n";
-					}
-				$matchSettings .= "\t</hotseat>\n\n";
-			}
-			// Filter
-			if($struct['filter']){
-				$matchSettings .= "\t<filter>\n";
-					foreach($struct['filter'] as $name => $data){
-						$matchSettings .= "\t\t<$name>$data</$name>\n";
-					}
-				$matchSettings .= "\t</filter>\n\n";
-			}
-			// Challenges
-			$matchSettings .= "\t<startindex>".$struct['startindex']."</startindex>\n";
-			if($struct['challenge']){
-				foreach($struct['challenge'] as $file => $ident){
-					$matchSettings .= "\t<challenge>\n"
-						."\t\t<file>$file</file>\n"
-						."\t\t<ident>$ident</ident>\n"
-					."\t</challenge>\n";
-				}
-			}
-		$matchSettings .= "</playlist>\n";
-		// Création XML
-		if( @!$newXMLObject = simplexml_load_string($matchSettings) ){
-			return false;
-		}
-		if( !$newXMLObject->asXML($filename) ){
-			return false;
-		}else{
-			return true;
-		}
-	}
-	
-	
-	/**
 	* Extrait les données d'une playlist (blacklist ou guestlist) et renvoi un tableau
 	*
 	* @param string $filename -> L'url de la playlist
@@ -1913,34 +1949,6 @@ abstract class AdminServ {
 			$playlist['logins'][] = (string)$player->login;
 		}
 		return $playlist;
-	}
-	
-	
-	public static function updateMatchSetSelection($mapsImport){
-		$mapsSelected = $_SESSION['adminserv']['matchset_maps_selected'];
-		$maps['lst'] = array();
-		if( count($mapsSelected) > 0 ){
-			foreach($mapsSelected['lst'] as $id => $values){
-				$maps['lst'][] = $values;
-			}
-		}
-		if( count($mapsImport) > 0 ){
-			foreach($mapsImport['lst'] as $id => $values){
-				$maps['lst'][] = $values;
-			}
-		}
-		
-		// Nombre de maps
-		$nbm = count($maps['lst']);
-		if($nbm > 1){
-			$maps['nbm'] = $nbm.' maps';
-		}
-		else{
-			$maps['nbm'] = $nbm.' map';
-		}
-		$maps['cfg'] = $mapsImport['cfg'];
-		
-		$_SESSION['adminserv']['matchset_maps_selected'] = $maps;
 	}
 }
 

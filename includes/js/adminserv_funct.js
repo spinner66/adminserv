@@ -739,7 +739,7 @@ function matchset_mapImport(){
 }
 function matchset_mapImportSelection(){
 	var path = $("#mapsDirectoryList").val();
-	$.getJSON("includes/ajax/get_matchset_mapimportselection.php", {path: path}, function(data){
+	$.getJSON("includes/ajax/get_matchset_mapimport.php", {path: path, op: "getSelection"}, function(data){
 		if(data != null){
 			var out = "";
 			
@@ -788,7 +788,7 @@ function matchset_mapImportSelection(){
 								}
 							});
 						}
-						$.getJSON("includes/ajax/get_matchset_mapimport.php", {path: path, op: "select", select: listSelectionId}, function(data){
+						$.getJSON("includes/ajax/get_matchset_mapimport.php", {path: path, op: "setSelection", select: listSelectionId}, function(data){
 							if(data != null){
 								var nb = data.nbm.split(" ")[0];
 								matchset_setNbMapSelection(nb);
@@ -811,6 +811,9 @@ function matchset_mapImportSelection(){
 function matchset_setNbMapSelection(nb){
 	$("#nbMapSelected").text(nb);
 }
+/**
+* Récupère et affiche la sélection du MatchSettings
+*/
 function matchset_mapSelection(){
 	$.getJSON("includes/ajax/get_matchset_mapselection.php", function(data){
 		if(data != null){
@@ -825,7 +828,7 @@ function matchset_mapSelection(){
 						out += '</td>'
 						+'<td class="imgcenter"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
 						+'<td>'+map.Author+'</td>';
-						out += '<td class="checkbox"></td>'
+						out += '<td class="checkbox"><a href="." title="'+$("#mapSelectionDialog").data("remove")+'"><img src="'+data.cfg.path_rsc+'images/16/delete.png" alt="" /></a></td>'
 					+'</tr>';
 				});
 			}
