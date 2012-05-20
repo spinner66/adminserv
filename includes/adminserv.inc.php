@@ -703,7 +703,7 @@ abstract class AdminServUI {
 					if( count($directory['folders']) > 0 ){
 						foreach($directory['folders'] as $dir => $values){
 							$out .= '<li>'
-								.'<a href="./?p='. USER_PAGE .'&amp;d='.urlencode($currentPath.$dir).'/">'
+								.'<a href="./?p='. USER_PAGE .'&amp;d='.$currentPath.$dir.'/">'
 									.'<span class="dir-name">'.$dir.'</span>'
 									.'<span class="dir-info">'.$values['nb_file'].'</span>'
 								.'</a>'
@@ -724,7 +724,7 @@ abstract class AdminServUI {
 			// Options de dossier
 			if($showOptions && $currentPath){
 				if( AdminServConfig::$FOLDERS_OPTIONS['rename'] || AdminServConfig::$FOLDERS_OPTIONS['move'] || AdminServConfig::$FOLDERS_OPTIONS['delete'] ){
-					$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.urlencode($currentPath).'&amp;goto='. USER_PAGE .'">'
+					$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
 						.'<div class="option-folder-list">'
 							.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
 							.'<ul hidden="hidden">';
@@ -1447,203 +1447,6 @@ abstract class AdminServ {
 	
 	
 	/**
-	* Extrait les données d'un MatchSettings et renvoi un tableau
-	*
-	* @param string $filename -> L'url du MatchSettings
-	* @return array si le fichier existe, sinon false
-	*/
-	public static function getMatchSettingsData($filename){
-		if( @file_exists($filename) ){
-			if( !$xml = @simplexml_load_file($filename) ){
-				return false;
-			}
-		}else{
-			$xml = null;
-			return false;
-		}
-		if($xml){
-			/** Récuperation des valeurs du MatchSettings **/
-			$matchsettings = array();
-			// Gameinfos
-			foreach($xml->gameinfos as $gameinfos){
-				$matchsettings['gameinfos']['game_mode'][] = (string)$gameinfos->game_mode;
-				$matchsettings['gameinfos']['chat_time'][] = (string)$gameinfos->chat_time;
-				$matchsettings['gameinfos']['finishtimeout'][] = (string)$gameinfos->finishtimeout;
-				$matchsettings['gameinfos']['allwarmupduration'][] = (string)$gameinfos->allwarmupduration;
-				$matchsettings['gameinfos']['disablerespawn'][] = (string)$gameinfos->disablerespawn;
-				$matchsettings['gameinfos']['forceshowallopponents'][] = (string)$gameinfos->forceshowallopponents;
-				$matchsettings['gameinfos']['rounds_pointslimit'][] = (string)$gameinfos->rounds_pointslimit;
-				$matchsettings['gameinfos']['rounds_usenewrules'][] = (string)$gameinfos->rounds_usenewrules;
-				$matchsettings['gameinfos']['rounds_forcedlaps'][] = (string)$gameinfos->rounds_forcedlaps;
-				$matchsettings['gameinfos']['rounds_pointslimitnewrules'][] = (string)$gameinfos->rounds_pointslimitnewrules;
-				$matchsettings['gameinfos']['team_pointslimit'][] = (string)$gameinfos->team_pointslimit;
-				$matchsettings['gameinfos']['team_maxpoints'][] = (string)$gameinfos->team_maxpoints;
-				$matchsettings['gameinfos']['team_usenewrules'][] = (string)$gameinfos->team_usenewrules;
-				$matchsettings['gameinfos']['team_pointslimitnewrules'][] = (string)$gameinfos->team_pointslimitnewrules;
-				$matchsettings['gameinfos']['timeattack_limit'][] = (string)$gameinfos->timeattack_limit;
-				$matchsettings['gameinfos']['timeattack_synchstartperiod'][] = (string)$gameinfos->timeattack_synchstartperiod;
-				$matchsettings['gameinfos']['laps_nblaps'][] = (string)$gameinfos->laps_nblaps;
-				$matchsettings['gameinfos']['laps_timelimit'][] = (string)$gameinfos->laps_timelimit;
-				$matchsettings['gameinfos']['cup_pointslimit'][] = (string)$gameinfos->cup_pointslimit;
-				$matchsettings['gameinfos']['cup_roundsperchallenge'][] = (string)$gameinfos->cup_roundsperchallenge;
-				$matchsettings['gameinfos']['cup_nbwinners'][] = (string)$gameinfos->cup_nbwinners;
-				$matchsettings['gameinfos']['cup_warmupduration'][] = (string)$gameinfos->cup_warmupduration;
-			}
-			// Hotseat
-			foreach($xml->hotseat as $hotseat){
-				$matchsettings['hotseat']['game_mode'][] = (string)$hotseat->game_mode;
-				$matchsettings['hotseat']['time_limit'][] = (string)$hotseat->time_limit;
-				$matchsettings['hotseat']['rounds_count'][] = (string)$hotseat->rounds_count;
-			}
-			// Filter
-			foreach($xml->filter as $filter){
-				$matchsettings['filter']['is_lan'][] = (string)$filter->is_lan;
-				$matchsettings['filter']['is_internet'][] = (string)$filter->is_internet;
-				$matchsettings['filter']['is_solo'][] = (string)$filter->is_solo;
-				$matchsettings['filter']['is_hotseat'][] = (string)$filter->is_hotseat;
-				$matchsettings['filter']['sort_index'][] = (string)$filter->sort_index;
-				$matchsettings['filter']['random_map_order'][] = (string)$filter->random_map_order;
-				$matchsettings['filter']['force_default_gamemode'][] = (string)$filter->force_default_gamemode;
-			}
-			// Challenges
-			$matchsettings['startindex'] = (string)$xml->startindex;
-			foreach($xml->challenge as $challenge){
-				$matchsettings['challenge'][(string)$challenge->file][] = (string)$challenge->ident;
-			}
-			/** Création du tableau de sortie **/
-			if( isset($matchsettings) ){
-				$out = array();
-				// Gameinfos
-				if( isset($matchsettings['gameinfos']) ){
-					foreach($matchsettings['gameinfos'] as $key => $values){
-						$out['gameinfos'][$key] = $matchsettings['gameinfos'][$key][0];
-					}
-				}
-				// Hotseat
-				if( isset($matchsettings['hotseat']) ){
-					foreach($matchsettings['hotseat'] as $key => $values){
-						$out['hotseat'][$key] = $matchsettings['hotseat'][$key][0];
-					}
-				}
-				// Filter
-				if( isset($matchsettings['filter']) ){
-					foreach($matchsettings['filter'] as $key => $values){
-						$out['filter'][$key] = $matchsettings['filter'][$key][0];
-					}
-				}
-				// Challenges
-				$out['startindex'] = $matchsettings['startindex'];
-				if( isset($matchsettings['challenge']) ){
-					foreach($matchsettings['challenge'] as $challenge_key => $challenge_values){
-						$out['challenge'][$challenge_key] = $challenge_values[0];
-					}
-				}
-				return $out;
-			}else{
-				return false;
-			}
-		}
-	}
-	
-	
-	/**
-	* Création d'un MatchSettings
-	*
-	* @param string $filename -> L'url du dossier dans lequel le MatchSettings sera crée
-	* @param array  $struct   -> La structure du MatchSettings avec ses données
-	* $struct = Array
-	* (
-	*  [gameinfos] => Array
-	*   (
-	*    [game_mode] => 0
-	*    etc...
-	*   )
-	*  [hotseat] => Array()
-	*  [filter] => Array()
-	*  [startindex] => 1
-	*  [challenge] => Array
-	*   (
-	*    [name.Challenge.Gbx] => 8bDoQMwzUllV0D9eu7hSth3rQs6
-	*    etc...
-	*   )
-	* )
-	* @return true si le MatchSettings a été crée, sinon false
-	*/
-	public static function createMatchSettings($filename, $struct){
-		// Génération du XML
-		$matchSettings = '<?xml version="1.0" encoding="utf-8" ?>'."\n"
-		."<playlist>\n";
-			// Gameinfos
-			if($struct['gameinfos']){
-				$matchSettings .= "\t<gameinfos>\n";
-					foreach($struct['gameinfos'] as $name => $data){
-						$matchSettings .= "\t\t<$name>$data</$name>\n";
-					}
-				$matchSettings .= "\t</gameinfos>\n\n";
-			}
-			// Hotseat
-			if($struct['hotseat']){
-				$matchSettings .= "\t<hotseat>\n";
-					foreach($struct['hotseat'] as $name => $data){
-						$matchSettings .= "\t\t<$name>$data</$name>\n";
-					}
-				$matchSettings .= "\t</hotseat>\n\n";
-			}
-			// Filter
-			if($struct['filter']){
-				$matchSettings .= "\t<filter>\n";
-					foreach($struct['filter'] as $name => $data){
-						$matchSettings .= "\t\t<$name>$data</$name>\n";
-					}
-				$matchSettings .= "\t</filter>\n\n";
-			}
-			// Challenges
-			$matchSettings .= "\t<startindex>".$struct['startindex']."</startindex>\n";
-			if($struct['challenge']){
-				foreach($struct['challenge'] as $file => $ident){
-					$matchSettings .= "\t<challenge>\n"
-						."\t\t<file>$file</file>\n"
-						."\t\t<ident>$ident</ident>\n"
-					."\t</challenge>\n";
-				}
-			}
-		$matchSettings .= "</playlist>\n";
-		// Création XML
-		if( @!$newXMLObject = simplexml_load_string($matchSettings) ){
-			return false;
-		}
-		if( !$newXMLObject->asXML($filename) ){
-			return false;
-		}else{
-			return true;
-		}
-	}
-	
-	
-	/**
-	* Extrait les données d'une playlist (blacklist ou guestlist) et renvoi un tableau
-	*
-	* @param string $filename -> L'url de la playlist
-	* @return array si le fichier existe, sinon false
-	*/
-	public static function getPlaylistData($filename){
-		if( @file_exists($filename) ){
-			if( !$xml = @simplexml_load_file($filename) ){
-				return false;
-			}
-		}else{
-			return false;
-		}
-		$playlist = array();
-		$playlist['type'] = @$xml->getName();
-		foreach($xml->player as $player){
-			$playlist['logins'][] = (string)$player->login;
-		}
-		return $playlist;
-	}
-	
-	
-	/**
 	* Récupère le chemin du dossier "Maps"
 	*
 	* @global resource $client -> Le client doit être initialisé
@@ -1913,6 +1716,231 @@ abstract class AdminServ {
 		}
 		
 		return $out;
+	}
+	
+	
+	/**
+	* Extrait les données d'un MatchSettings et renvoi un tableau
+	*
+	* @param string $filename -> L'url du MatchSettings
+	* @return array si le fichier existe, sinon false
+	*/
+	public static function getMatchSettingsData($filename){
+		if( @file_exists($filename) ){
+			if( !$xml = @simplexml_load_file($filename) ){
+				return false;
+			}
+		}else{
+			$xml = null;
+			return false;
+		}
+		if($xml){
+			/** Récuperation des valeurs du MatchSettings **/
+			$matchsettings = array();
+			// Gameinfos
+			foreach($xml->gameinfos as $gameinfos){
+				$matchsettings['gameinfos']['game_mode'][] = (string)$gameinfos->game_mode;
+				$matchsettings['gameinfos']['chat_time'][] = (string)$gameinfos->chat_time;
+				$matchsettings['gameinfos']['finishtimeout'][] = (string)$gameinfos->finishtimeout;
+				$matchsettings['gameinfos']['allwarmupduration'][] = (string)$gameinfos->allwarmupduration;
+				$matchsettings['gameinfos']['disablerespawn'][] = (string)$gameinfos->disablerespawn;
+				$matchsettings['gameinfos']['forceshowallopponents'][] = (string)$gameinfos->forceshowallopponents;
+				$matchsettings['gameinfos']['rounds_pointslimit'][] = (string)$gameinfos->rounds_pointslimit;
+				$matchsettings['gameinfos']['rounds_usenewrules'][] = (string)$gameinfos->rounds_usenewrules;
+				$matchsettings['gameinfos']['rounds_forcedlaps'][] = (string)$gameinfos->rounds_forcedlaps;
+				$matchsettings['gameinfos']['rounds_pointslimitnewrules'][] = (string)$gameinfos->rounds_pointslimitnewrules;
+				$matchsettings['gameinfos']['team_pointslimit'][] = (string)$gameinfos->team_pointslimit;
+				$matchsettings['gameinfos']['team_maxpoints'][] = (string)$gameinfos->team_maxpoints;
+				$matchsettings['gameinfos']['team_usenewrules'][] = (string)$gameinfos->team_usenewrules;
+				$matchsettings['gameinfos']['team_pointslimitnewrules'][] = (string)$gameinfos->team_pointslimitnewrules;
+				$matchsettings['gameinfos']['timeattack_limit'][] = (string)$gameinfos->timeattack_limit;
+				$matchsettings['gameinfos']['timeattack_synchstartperiod'][] = (string)$gameinfos->timeattack_synchstartperiod;
+				$matchsettings['gameinfos']['laps_nblaps'][] = (string)$gameinfos->laps_nblaps;
+				$matchsettings['gameinfos']['laps_timelimit'][] = (string)$gameinfos->laps_timelimit;
+				$matchsettings['gameinfos']['cup_pointslimit'][] = (string)$gameinfos->cup_pointslimit;
+				$matchsettings['gameinfos']['cup_roundsperchallenge'][] = (string)$gameinfos->cup_roundsperchallenge;
+				$matchsettings['gameinfos']['cup_nbwinners'][] = (string)$gameinfos->cup_nbwinners;
+				$matchsettings['gameinfos']['cup_warmupduration'][] = (string)$gameinfos->cup_warmupduration;
+			}
+			// Hotseat
+			foreach($xml->hotseat as $hotseat){
+				$matchsettings['hotseat']['game_mode'][] = (string)$hotseat->game_mode;
+				$matchsettings['hotseat']['time_limit'][] = (string)$hotseat->time_limit;
+				$matchsettings['hotseat']['rounds_count'][] = (string)$hotseat->rounds_count;
+			}
+			// Filter
+			foreach($xml->filter as $filter){
+				$matchsettings['filter']['is_lan'][] = (string)$filter->is_lan;
+				$matchsettings['filter']['is_internet'][] = (string)$filter->is_internet;
+				$matchsettings['filter']['is_solo'][] = (string)$filter->is_solo;
+				$matchsettings['filter']['is_hotseat'][] = (string)$filter->is_hotseat;
+				$matchsettings['filter']['sort_index'][] = (string)$filter->sort_index;
+				$matchsettings['filter']['random_map_order'][] = (string)$filter->random_map_order;
+				$matchsettings['filter']['force_default_gamemode'][] = (string)$filter->force_default_gamemode;
+			}
+			// Challenges
+			$matchsettings['startindex'] = (string)$xml->startindex;
+			foreach($xml->challenge as $challenge){
+				$matchsettings['challenge'][(string)$challenge->file][] = (string)$challenge->ident;
+			}
+			/** Création du tableau de sortie **/
+			if( isset($matchsettings) ){
+				$out = array();
+				// Gameinfos
+				if( isset($matchsettings['gameinfos']) ){
+					foreach($matchsettings['gameinfos'] as $key => $values){
+						$out['gameinfos'][$key] = $matchsettings['gameinfos'][$key][0];
+					}
+				}
+				// Hotseat
+				if( isset($matchsettings['hotseat']) ){
+					foreach($matchsettings['hotseat'] as $key => $values){
+						$out['hotseat'][$key] = $matchsettings['hotseat'][$key][0];
+					}
+				}
+				// Filter
+				if( isset($matchsettings['filter']) ){
+					foreach($matchsettings['filter'] as $key => $values){
+						$out['filter'][$key] = $matchsettings['filter'][$key][0];
+					}
+				}
+				// Challenges
+				$out['startindex'] = $matchsettings['startindex'];
+				if( isset($matchsettings['challenge']) ){
+					foreach($matchsettings['challenge'] as $challenge_key => $challenge_values){
+						$out['challenge'][$challenge_key] = $challenge_values[0];
+					}
+				}
+				return $out;
+			}else{
+				return false;
+			}
+		}
+	}
+	
+	
+	/**
+	* Création d'un MatchSettings
+	*
+	* @param string $filename -> L'url du dossier dans lequel le MatchSettings sera crée
+	* @param array  $struct   -> La structure du MatchSettings avec ses données
+	* $struct = Array
+	* (
+	*  [gameinfos] => Array
+	*   (
+	*    [game_mode] => 0
+	*    etc...
+	*   )
+	*  [hotseat] => Array()
+	*  [filter] => Array()
+	*  [startindex] => 1
+	*  [challenge] => Array
+	*   (
+	*    [name.Challenge.Gbx] => 8bDoQMwzUllV0D9eu7hSth3rQs6
+	*    etc...
+	*   )
+	* )
+	* @return true si le MatchSettings a été crée, sinon false
+	*/
+	public static function createMatchSettings($filename, $struct){
+		// Génération du XML
+		$matchSettings = '<?xml version="1.0" encoding="utf-8" ?>'."\n"
+		."<playlist>\n";
+			// Gameinfos
+			if($struct['gameinfos']){
+				$matchSettings .= "\t<gameinfos>\n";
+					foreach($struct['gameinfos'] as $name => $data){
+						$matchSettings .= "\t\t<$name>$data</$name>\n";
+					}
+				$matchSettings .= "\t</gameinfos>\n\n";
+			}
+			// Hotseat
+			if($struct['hotseat']){
+				$matchSettings .= "\t<hotseat>\n";
+					foreach($struct['hotseat'] as $name => $data){
+						$matchSettings .= "\t\t<$name>$data</$name>\n";
+					}
+				$matchSettings .= "\t</hotseat>\n\n";
+			}
+			// Filter
+			if($struct['filter']){
+				$matchSettings .= "\t<filter>\n";
+					foreach($struct['filter'] as $name => $data){
+						$matchSettings .= "\t\t<$name>$data</$name>\n";
+					}
+				$matchSettings .= "\t</filter>\n\n";
+			}
+			// Challenges
+			$matchSettings .= "\t<startindex>".$struct['startindex']."</startindex>\n";
+			if($struct['challenge']){
+				foreach($struct['challenge'] as $file => $ident){
+					$matchSettings .= "\t<challenge>\n"
+						."\t\t<file>$file</file>\n"
+						."\t\t<ident>$ident</ident>\n"
+					."\t</challenge>\n";
+				}
+			}
+		$matchSettings .= "</playlist>\n";
+		// Création XML
+		if( @!$newXMLObject = simplexml_load_string($matchSettings) ){
+			return false;
+		}
+		if( !$newXMLObject->asXML($filename) ){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	
+	/**
+	* Extrait les données d'une playlist (blacklist ou guestlist) et renvoi un tableau
+	*
+	* @param string $filename -> L'url de la playlist
+	* @return array si le fichier existe, sinon false
+	*/
+	public static function getPlaylistData($filename){
+		if( @file_exists($filename) ){
+			if( !$xml = @simplexml_load_file($filename) ){
+				return false;
+			}
+		}else{
+			return false;
+		}
+		$playlist = array();
+		$playlist['type'] = @$xml->getName();
+		foreach($xml->player as $player){
+			$playlist['logins'][] = (string)$player->login;
+		}
+		return $playlist;
+	}
+	
+	
+	public static function updateMatchSetSelection($mapsImport){
+		$mapsSelected = $_SESSION['adminserv']['matchset_maps_selected'];
+		$maps['lst'] = array();
+		if( count($mapsSelected) > 0 ){
+			foreach($mapsSelected['lst'] as $id => $values){
+				$maps['lst'][] = $values;
+			}
+		}
+		if( count($mapsImport) > 0 ){
+			foreach($mapsImport['lst'] as $id => $values){
+				$maps['lst'][] = $values;
+			}
+		}
+		
+		// Nombre de maps
+		$nbm = count($maps['lst']);
+		if($nbm > 1){
+			$maps['nbm'] = $nbm.' maps';
+		}
+		else{
+			$maps['nbm'] = $nbm.' map';
+		}
+		$maps['cfg'] = $mapsImport['cfg'];
+		
+		$_SESSION['adminserv']['matchset_maps_selected'] = $maps;
 	}
 }
 

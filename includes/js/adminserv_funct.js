@@ -779,7 +779,22 @@ function matchset_mapImportSelection(){
 				buttons: [{
 					text: $("#mapImportSelectionDialog").data("select"),
 					click: function(){
-						$(this).dialog("close");
+						var listSelection = $("#mapImportSelectionDialog tbody tr.selected");
+						var listSelectionId = [];
+						if( listSelection.length > 0 ){
+							$.each(listSelection, function(i, n){
+								if( n.className.indexOf("selected") !== -1 ){
+									listSelectionId.push(n.sectionRowIndex);
+								}
+							});
+						}
+						$.getJSON("includes/ajax/get_matchset_mapimport.php", {path: path, op: "select", select: listSelectionId}, function(data){
+							if(data != null){
+								var nb = data.nbm.split(" ")[0];
+								matchset_setNbMapSelection(nb);
+								$("#mapImportSelectionDialog").dialog("close");
+							}
+						});
 					}
 				}]
 			});
@@ -794,9 +809,7 @@ function matchset_mapImportSelection(){
 * @param int nb
 */
 function matchset_setNbMapSelection(nb){
-	var currentNb = $("#nbMapSelected").text();
-	var newNb = parseInt(currentNb) + parseInt(nb);
-	$("#nbMapSelected").text(newNb);
+	$("#nbMapSelected").text(nb);
 }
 function matchset_mapSelection(){
 	$.getJSON("includes/ajax/get_matchset_mapselection.php", function(data){
