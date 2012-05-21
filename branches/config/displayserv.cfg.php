@@ -9,10 +9,10 @@ class DisplayServConfig {
 	
 	/* SERVERS */
 	const USE_ADMINSERV_SERVER_CONFIG = null;
+	const SERVER_CONNECTION_TIMEOUT = 3;
 	
 	/* PATH DIRECTORY */
 	const PATH_INCLUDES = './includes/';
 	const PATH_RESSOURCES = './ressources/';
 }
-
 ?>
