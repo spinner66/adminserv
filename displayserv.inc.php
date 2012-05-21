@@ -30,26 +30,71 @@ abstract class DisplayServ {
 	/**
 	* Récupère le CSS/JS du site
 	*/
-	public static function getHeadFiles($path = DisplayServConfig::PATH_RESSOURCES){
+	public static function getHeadFiles(){
 		// CSS
-		$out = '<link rel="stylesheet" href="'.$path.'styles/displayserv.css" />';
+		$out = '<link rel="stylesheet" href="'. DisplayServConfig::PATH_RESSOURCES .'styles/displayserv.css" />';
 		if( defined('USER_THEME') ){
-			if( file_exists($path.'styles/'. USER_THEME .'.css') ){
-					$out .= '<link rel="stylesheet" href="'.$path.'styles/'. USER_THEME .'.css" />';
+			if( file_exists(DisplayServConfig::PATH_RESSOURCES .'styles/'. USER_THEME .'.css') ){
+					$out .= '<link rel="stylesheet" href="'. DisplayServConfig::PATH_RESSOURCES .'styles/'. USER_THEME .'.css" />';
 			}
 		}
 		
 		// JS
-		$out .= '<script src="'.$path.'js/jquery.js"></script>'
-		.'<script src="'.$path.'js/displayserv.js"></script>';
+		$out .= '<script src="'. DisplayServConfig::PATH_INCLUDES .'js/jquery.js"></script>'
+		.'<script src="'. DisplayServConfig::PATH_INCLUDES .'js/displayserv.js"></script>';
 		
 		return $out;
 	}
 	
 	
-	
+	/**
+	* Intialise le client du serveur courant
+	*
+	* @return true si réussi, sinon une erreur
+	*/
 	public static function initialize(){
+		global $client;
 		
+		// CONSTANTS
+		define('SERVER_SID', $_GET['sid']);
+		define('SERVER_NAME', self::getServerName(SERVER_SID) );
+		define('SERVER_ADDR', ServerConfig::$SERVERS[SERVER_NAME]['address']);
+		define('SERVER_XMLRPC_PORT', ServerConfig::$SERVERS[SERVER_NAME]['port']);
+		
+		// CONNEXION
+		$client = new IXR_Client_Gbx;
+		if( !$client->InitWithIp(SERVER_ADDR, SERVER_XMLRPC_PORT, DisplayServConfig::SERVER_CONNECTION_TIMEOUT) ){
+			return 'Le serveur n\'est pas accessible.';
+		}
+		else{
+			if( !$client->query('Authenticate', 'User', 'User') ){
+				return 'Echec d\'authentification.';
+			}
+			else{
+				return true;
+			}
+		}
+	}
+	
+	public static function getServerName($serverId){
+		$out = null;
+		$servers = ServerConfig::$SERVERS;
+		$countServers = count($servers);
+		
+		if( $countServers > 0 ){
+			$i = 0;
+			foreach($servers as $serverName => $serverValues){
+				if($i == $serverId){
+					$out = $serverName;
+					break;
+				}
+				else{
+					$i++;
+				}
+			}
+		}
+		
+		return $out;
 	}
 }
 ?>
