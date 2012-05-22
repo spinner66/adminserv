@@ -22,7 +22,6 @@ abstract class DisplayServ {
 	* Récupère et inclue les classes PHP
 	*/
 	public static function getClass(){
-		self::getServerConfig();
 		require_once __DIR__ .'/class/GbxRemote.inc.php';
 	}
 	
