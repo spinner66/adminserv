@@ -1,7 +1,6 @@
 <?php
 	require_once 'config/displayserv.cfg.php';
 	require_once DisplayServConfig::PATH_INCLUDES .'displayserv.inc.php';
-	DisplayServ::getClass();
 ?>
 <!DOCTYPE html>
 <html lang="fr">

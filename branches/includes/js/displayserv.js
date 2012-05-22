@@ -1,6 +1,12 @@
 (function($){
 	$.fn.displayServ = function(){
-		// classes
+		// Classes
 		$(this).addClass("displayserv");
+		
+		// Requête
+		var serverId = 0;
+		$.getJSON("includes/ajax/initialize.php", function(data){
+			var data;
+		});
 	};
 })(jQuery);
