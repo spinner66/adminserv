@@ -19,36 +19,70 @@
 		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) && !isset(ServerConfig::$SERVERS['']) ){
 			
 			foreach(ServerConfig::$SERVERS as $serverName => $serverValues){
-				// CONNEXION
+				// Connexion
 				$client = new IXR_Client_Gbx;
 				if( !$client->InitWithIp($serverValues['address'], $serverValues['port']) ){
-					//echo 'Le serveur n\'est pas accessible.';
+					$out['error'] = 'Le serveur n\'est pas accessible.';
 				}
 				else{
 					if( !$client->query('Authenticate', 'User', 'User') ){
-						//echo 'Echec d\'authentification.';
+						$out['error'] = 'Echec d\'authentification.';
 					}
 					else{
-						$client->query('GetStatus');
-						$out['server']['status'] = $client->getResponse();
+						// Nom
 						$client->query('GetServerName');
 						$out['server']['name'] = $client->getResponse();
+						
+						// Login
 						$client->query('GetSystemInfo');
-						$out['server']['system'] =  $client->getResponse();
-						$client->query('GetMaxPlayers');
-						$out['server']['max_players'] =  $client->getResponse();
+						$system = $client->getResponse();
+						$out['server']['serverlogin'] =  $system['ServerLogin'];
+						
+						// Connecté sur
+						$client->query('GetVersion');
+						$version = $client->getResponse();
+						$out['server']['version'] = $version['Name'];
+						
+						// Statut
+						$client->query('GetStatus');
+						$status = $client->getResponse();
+						$out['server']['status'] = $status['Name'];
+						
+						// GameMode
+						$client->query('GetGameMode');
+						$out['server']['gamemode'] = $client->getResponse();
+						
+						// Map
+						$client->query('GetCurrentChallengeInfo');
+						$currentMapInfo = $client->getResponse();
+						$currentMapEnv = $currentMapInfo['Environnement'];
+						if($currentMapEnv == 'Speed'){
+							$currentMapEnv = 'Desert'; 
+						}
+						else if($currentMapEnv == 'Alpine'){
+							$currentMapEnv = 'Snow';
+						}
+						$out['server']['map']['name'] = htmlspecialchars($currentMapInfo['Name'], ENT_QUOTES, 'UTF-8');
+						$out['server']['map']['env'] = $currentMapEnv;
+						
+						// Players
 						$client->query('GetPlayerList', 50, 0);
-						$out['player'] = $client->getResponse();
+						$out['players']['list'] = $client->getResponse();
+						
+						// Count players
+						$client->query('GetMaxPlayers');
+						$maxPlayers = $client->getResponse();
+						$out['players']['count']['current'] = count($out['players']['list']);
+						$out['players']['count']['max'] = $maxPlayers['NextValue'];
 					}
 				}
 				
-				
-				
+				// Déconnexion
 				$client->Terminate();
 			}
 		}
 	}
 	
-	
+	// Retour
 	echo json_encode($out);
 ?>
