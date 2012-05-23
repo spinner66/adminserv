@@ -36,6 +36,15 @@
 			}
 		}
 	}
+	else if( isset($_POST['editMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
+		if($directory){
+			$hasDirectory = '&d='.$directory;
+		}
+		else{
+			$hasDirectory = null;
+		}
+		Utils::redirection(false, '?p=maps-creatematchset'.$hasDirectory.'&f='.$_POST['matchset'][0]);
+	}
 	
 	
 	// HTML
@@ -60,7 +69,7 @@
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=maps-<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>">
+		<form method="post" action="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>">
 		<div id="matchsetlist">
 			<table>
 				<thead>
@@ -108,6 +117,7 @@
 					<span class="selected-files-title">Pour la sélection</span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
+						<input class="button dark" type="submit" name="editMatchset" id="editMatchset" value="Éditer" />
 						<input class="button dark" type="submit" name="insertMatchset" id="insertMatchset" value="Insérer" />
 						<input class="button dark" type="submit" name="addMatchset" id="addMatchset" value="Ajouter" />
 						<input class="button dark" type="submit" name="loadMatchset" id="loadMatchset" value="Charger" />

@@ -1,10 +1,72 @@
 <?php
 	// LECTURE
-	$directoryList = Folder::getArborescence($mapsDirectoryPath.$directory, AdminServConfig::$MAPS_HIDDEN_FOLDERS, substr_count($mapsDirectoryPath.$directory, '/'));
-	
-	$gameInfos = AdminServ::getGameInfos();
-	$currGamInf = null;
-	$nextGamInf = $gameInfos['next'];
+	$directoryList = Folder::getArborescence($mapsDirectoryPath, AdminServConfig::$MAPS_HIDDEN_FOLDERS, substr_count($mapsDirectoryPath, '/'));
+	$matchSetting = array();
+	// Édition
+	if( isset($_GET['f']) && $_GET['f'] != null ){
+		$pageTitle = 'Éditer';
+		$matchSetting['name'] = $_GET['f'];
+		$matchSettingData = AdminServ::getMatchSettingsData($mapsDirectoryPath.$directory.$matchSetting['name']);
+		$matchSetting['gameinfos'] = array(
+			'GameMode' => $matchSettingData['gameinfos']['game_mode'],
+			'ChatTime' => $matchSettingData['gameinfos']['chat_time'],
+			'FinishTimeout' => $matchSettingData['gameinfos']['finishtimeout'],
+			'AllWarmUpDuration' => $matchSettingData['gameinfos']['allwarmupduration'],
+			'DisableRespawn' => $matchSettingData['gameinfos']['disablerespawn'],
+			'ForceShowAllOpponents' => $matchSettingData['gameinfos']['forceshowallopponents'],
+			'RoundsPointsLimit' => $matchSettingData['gameinfos']['rounds_pointslimit'],
+			'RoundsUseNewRules' => $matchSettingData['gameinfos']['rounds_usenewrules'],
+			'RoundsForcedLaps' => $matchSettingData['gameinfos']['rounds_forcedlaps'],
+			'TeamPointsLimit' => $matchSettingData['gameinfos']['team_pointslimit'],
+			'TeamMaxPoints' => $matchSettingData['gameinfos']['team_maxpoints'],
+			'TeamUseNewRules' => $matchSettingData['gameinfos']['team_usenewrules'],
+			'TimeAttackLimit' => $matchSettingData['gameinfos']['timeattack_limit'],
+			'TimeAttackSynchStartPeriod' => $matchSettingData['gameinfos']['timeattack_synchstartperiod'],
+			'LapsNbLaps' => $matchSettingData['gameinfos']['laps_nblaps'],
+			'LapsTimeLimit' => $matchSettingData['gameinfos']['laps_timelimit'],
+			'CupPointsLimit' => $matchSettingData['gameinfos']['cup_pointslimit'],
+			'CupRoundsPerMap' => $matchSettingData['gameinfos']['cup_roundsperchallenge'],
+			'CupNbWinners' => $matchSettingData['gameinfos']['cup_nbwinners'],
+			'CupWarmUpDuration' => $matchSettingData['gameinfos']['cup_warmupduration'],
+		);
+		$matchSetting['hotseat'] = array(
+			'GameMode' => $matchSettingData['hotseat']['game_mode'],
+			'TimeLimit' => $matchSettingData['hotseat']['time_limit'],
+			'RoundsCount' => $matchSettingData['hotseat']['rounds_count']
+		);
+		$matchSetting['filter'] = array(
+			'IsLan' => $matchSettingData['filter']['is_lan'],
+			'IsInternet' => $matchSettingData['filter']['is_internet'],
+			'IsSolo' => $matchSettingData['filter']['is_solo'],
+			'IsHotseat' => $matchSettingData['filter']['is_hotseat'],
+			'SortIndex' => $matchSettingData['filter']['sort_index'],
+			'RandomMapOrder' => $matchSettingData['filter']['random_map_order'],
+			'ForceDefaultGameMode' => $matchSettingData['filter']['force_default_gamemode']
+		);
+		$matchSetting['startindex'] = $matchSettingData['startindex'];
+		//$matchSetting['maps'] = $matchSettingData['maps'];
+	}
+	else{
+		$pageTitle = 'Créer';
+		$matchSettingName = 'match_settings';
+		$gameInfos = AdminServ::getGameInfos();
+		$matchSetting['gameinfos'] = $gameInfos['next'];
+		$matchSetting['hotseat'] = array(
+			'GameMode' => 1,
+			'TimeLimit' => 300000,
+			'RoundsCount' => 5
+		);
+		$matchSetting['filter'] = array(
+			'IsLan' => 1,
+			'IsInternet' => 1,
+			'IsSolo' => 0,
+			'IsHotseat' => 1,
+			'SortIndex' => 1000,
+			'RandomMapOrder' => 0,
+			'ForceDefaultGameMode' => 1
+		);
+		$matchSetting['StartIndex'] = 0;
+	}
 	
 	
 	// ENREGISTREMENT
@@ -120,7 +182,7 @@
 	
 	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 	<section class="cadre right creatematchset">
-		<h1>Créer un MatchSettings</h1>
+		<h1><?php echo $pageTitle; ?> un MatchSettings</h1>
 		<div class="title-detail">
 			<ul>
 				<li class="last path"><?php echo $mapsDirectoryPath.$directory; ?></li>
@@ -128,7 +190,7 @@
 		</div>
 		
 		<h2>Nom du MatchSettings</h2>
-		<input class="text width3" type="text" name="matchSettingName" id="matchSettingName" value="match_settings" />
+		<input class="text width3" type="text" name="matchSettingName" id="matchSettingName" value="<?php echo $matchSetting['name']; ?>" />
 		
 		<h2>Maps</h2>
 		<div class="content maps">
@@ -136,7 +198,7 @@
 				<div class="mapsSelection">
 					<?php
 						$mapsSelectList = '<select name="mapsDirectoryList" id="mapsDirectoryList">';
-						$mapsSelectList .= '<option value="'.$mapsDirectoryPath.$directory.'">Racine</option>';
+						$mapsSelectList .= '<option value="'.$mapsDirectoryPath.'">Racine</option>';
 						if( count($directoryList) > 0 ){
 							foreach($directoryList as $dir){
 								$mapsSelectList .= '<option value="'.$dir['path'].'">'.$dir['level'].$dir['name'].'</option>';
@@ -190,9 +252,9 @@
 		<div class="content gameinfos">
 			<?php
 				// Général
-				echo AdminServUI::getGameInfosGeneralForm($currGamInf, $nextGamInf);
+				echo AdminServUI::getGameInfosGeneralForm(null, $matchSetting['gameinfos']);
 				// Modes de jeux
-				echo AdminServUI::getGameInfosGameModeForm($currGamInf, $nextGamInf);
+				echo AdminServUI::getGameInfosGameModeForm(null, $matchSetting['gameinfos']);
 			?>
 		</div>
 		
@@ -204,7 +266,7 @@
 						<td class="key"><label for="hotSeatGameMode">Mode de jeu</label></td>
 						<td class="value">
 							<select class="width2" name="hotSeatGameMode" id="hotSeatGameMode">
-								<?php echo AdminServUI::getGameModeList(1); ?>
+								<?php echo AdminServUI::getGameModeList($matchSetting['hotseat']['GameMode']); ?>
 							</select>
 						</td>
 						<td class="preview"></td>
@@ -212,14 +274,14 @@
 					<tr>
 						<td class="key"><label for="hotSeatTimeLimit">Limite de temps</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="hotSeatTimeLimit" id="hotSeatTimeLimit" value="300" />
+							<input class="text width2" type="text" name="hotSeatTimeLimit" id="hotSeatTimeLimit" value="<?php echo TimeDate::millisecToSec($matchSetting['hotseat']['TimeLimit']); ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="hotSeatCountRound">Nombre de round</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="hotSeatCountRound" id="hotSeatCountRound" value="5" />
+							<input class="text width2" type="text" name="hotSeatCountRound" id="hotSeatCountRound" value="<?php echo $matchSetting['hotseat']['RoundsCount']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
@@ -234,42 +296,42 @@
 					<tr>
 						<td class="key"><label for="filterIsLan">Lan</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="filterIsLan" id="filterIsLan" checked="checked" value="" />
+							<input class="text" type="checkbox" name="filterIsLan" id="filterIsLan"<?php if($matchSetting['filter']['IsLan']){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="filterIsInternet">Internet</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="filterIsInternet" id="filterIsInternet" checked="checked" value="" />
+							<input class="text" type="checkbox" name="filterIsInternet" id="filterIsInternet"<?php if($matchSetting['filter']['IsInternet']){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="filterIsSolo">Solo</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="filterIsSolo" id="filterIsSolo" value="" />
+							<input class="text" type="checkbox" name="filterIsSolo" id="filterIsSolo"<?php if($matchSetting['filter']['IsSolo']){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="filterIsHotSeat">HotSeat</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="filterIsHotSeat" id="filterIsHotSeat" checked="checked" value="" />
+							<input class="text" type="checkbox" name="filterIsHotSeat" id="filterIsHotSeat"<?php if($matchSetting['filter']['IsHotseat']){ echo ' checked="checked"'; } ?>" value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="filterSortIndex">Index de tri</label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="filterSortIndex" id="filterSortIndex" value="1000" />
+							<input class="text width2" type="text" name="filterSortIndex" id="filterSortIndex" value="<?php echo $matchSetting['filter']['SortIndex']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="filterRandomMaps">Ordre des maps aléatoire</label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="filterRandomMaps" id="filterRandomMaps"<?php if($nextGamInf['RoundsUseNewRules'] != null){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="filterRandomMaps" id="filterRandomMaps"<?php if($matchSetting['filter']['RandomMapOrder']){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
@@ -277,7 +339,7 @@
 						<td class="key"><label for="filterDefaultGameMode">Mode de jeu par défaut</label></td>
 						<td class="value">
 							<select class="width2" name="filterDefaultGameMode" id="filterDefaultGameMode">
-								<?php echo AdminServUI::getGameModeList(1); ?>
+								<?php echo AdminServUI::getGameModeList($matchSetting['filter']['ForceDefaultGameMode']); ?>
 							</select>
 						</td>
 						<td class="preview"></td>
