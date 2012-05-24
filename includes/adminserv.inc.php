@@ -1853,96 +1853,83 @@ abstract class AdminServ {
 	* @return array si le fichier existe, sinon false
 	*/
 	public static function getMatchSettingsData($filename){
+		$out = array();
+		$xml = null;
+		
+		// Chargement du fichier XML
 		if( @file_exists($filename) ){
-			if( !$xml = @simplexml_load_file($filename) ){
-				return false;
+			if( !($xml = @simplexml_load_file($filename)) ){
+				$out['error'] = 'simplexml_load_file error';
 			}
-		}else{
-			$xml = null;
-			return false;
 		}
+		
+		// Lecture du fichier XML
 		if($xml){
-			/** Récuperation des valeurs du MatchSettings **/
-			$matchsettings = array();
+			// Jeu
+			if(SERVER_VERSION_NAME == 'TmForever'){
+				$mapsField = 'challenge';
+			}
+			else{
+				$mapsField = 'map';
+			}
+			
 			// Gameinfos
-			foreach($xml->gameinfos as $gameinfos){
-				$matchsettings['gameinfos']['game_mode'][] = (string)$gameinfos->game_mode;
-				$matchsettings['gameinfos']['chat_time'][] = (string)$gameinfos->chat_time;
-				$matchsettings['gameinfos']['finishtimeout'][] = (string)$gameinfos->finishtimeout;
-				$matchsettings['gameinfos']['allwarmupduration'][] = (string)$gameinfos->allwarmupduration;
-				$matchsettings['gameinfos']['disablerespawn'][] = (string)$gameinfos->disablerespawn;
-				$matchsettings['gameinfos']['forceshowallopponents'][] = (string)$gameinfos->forceshowallopponents;
-				$matchsettings['gameinfos']['rounds_pointslimit'][] = (string)$gameinfos->rounds_pointslimit;
-				$matchsettings['gameinfos']['rounds_usenewrules'][] = (string)$gameinfos->rounds_usenewrules;
-				$matchsettings['gameinfos']['rounds_forcedlaps'][] = (string)$gameinfos->rounds_forcedlaps;
-				$matchsettings['gameinfos']['rounds_pointslimitnewrules'][] = (string)$gameinfos->rounds_pointslimitnewrules;
-				$matchsettings['gameinfos']['team_pointslimit'][] = (string)$gameinfos->team_pointslimit;
-				$matchsettings['gameinfos']['team_maxpoints'][] = (string)$gameinfos->team_maxpoints;
-				$matchsettings['gameinfos']['team_usenewrules'][] = (string)$gameinfos->team_usenewrules;
-				$matchsettings['gameinfos']['team_pointslimitnewrules'][] = (string)$gameinfos->team_pointslimitnewrules;
-				$matchsettings['gameinfos']['timeattack_limit'][] = (string)$gameinfos->timeattack_limit;
-				$matchsettings['gameinfos']['timeattack_synchstartperiod'][] = (string)$gameinfos->timeattack_synchstartperiod;
-				$matchsettings['gameinfos']['laps_nblaps'][] = (string)$gameinfos->laps_nblaps;
-				$matchsettings['gameinfos']['laps_timelimit'][] = (string)$gameinfos->laps_timelimit;
-				$matchsettings['gameinfos']['cup_pointslimit'][] = (string)$gameinfos->cup_pointslimit;
-				$matchsettings['gameinfos']['cup_roundsperchallenge'][] = (string)$gameinfos->cup_roundsperchallenge;
-				$matchsettings['gameinfos']['cup_nbwinners'][] = (string)$gameinfos->cup_nbwinners;
-				$matchsettings['gameinfos']['cup_warmupduration'][] = (string)$gameinfos->cup_warmupduration;
+			if( isset($xml->gameinfos) && count($xml->gameinfos) > 0 ){
+				$gameinfos = $xml->gameinfos;
+				$out['gameinfos']['GameMode'] = (string)$gameinfos->game_mode;
+				$out['gameinfos']['ChatTime'] = (string)$gameinfos->chat_time;
+				$out['gameinfos']['FinishTimeout'] = (string)$gameinfos->finishtimeout;
+				$out['gameinfos']['AllWarmUpDuration'] = (string)$gameinfos->allwarmupduration;
+				$out['gameinfos']['DisableRespawn'] = (string)$gameinfos->disablerespawn;
+				$out['gameinfos']['ForceShowAllOpponents'] = (string)$gameinfos->forceshowallopponents;
+				$out['gameinfos']['RoundsPointsLimit'] = (string)$gameinfos->rounds_pointslimit;
+				$out['gameinfos']['RoundsUseNewRules'] = (string)$gameinfos->rounds_usenewrules;
+				$out['gameinfos']['RoundsForcedLaps'] = (string)$gameinfos->rounds_forcedlaps;
+				//$out['gameinfos']['rounds_pointslimitnewrules'] = (string)$gameinfos->rounds_pointslimitnewrules;
+				$out['gameinfos']['TeamPointsLimit'] = (string)$gameinfos->team_pointslimit;
+				$out['gameinfos']['TeamMaxPoints'] = (string)$gameinfos->team_maxpoints;
+				$out['gameinfos']['TeamUseNewRules'] = (string)$gameinfos->team_usenewrules;
+				//$out['gameinfos']['team_pointslimitnewrules'] = (string)$gameinfos->team_pointslimitnewrules;
+				$out['gameinfos']['TimeAttackLimit'] = (string)$gameinfos->timeattack_limit;
+				$out['gameinfos']['TimeAttackSynchStartPeriod'] = (string)$gameinfos->timeattack_synchstartperiod;
+				$out['gameinfos']['LapsNbLaps'] = (string)$gameinfos->laps_nblaps;
+				$out['gameinfos']['LapsTimeLimit'] = (string)$gameinfos->laps_timelimit;
+				$out['gameinfos']['CupPointsLimit'] = (string)$gameinfos->cup_pointslimit;
+				$out['gameinfos']['CupRoundsPerMap'] = (string)$gameinfos->cup_roundsperchallenge;
+				$out['gameinfos']['CupNbWinners'] = (string)$gameinfos->cup_nbwinners;
+				$out['gameinfos']['CupWarmUpDuration'] = (string)$gameinfos->cup_warmupduration;
 			}
+			
 			// Hotseat
-			foreach($xml->hotseat as $hotseat){
-				$matchsettings['hotseat']['game_mode'][] = (string)$hotseat->game_mode;
-				$matchsettings['hotseat']['time_limit'][] = (string)$hotseat->time_limit;
-				$matchsettings['hotseat']['rounds_count'][] = (string)$hotseat->rounds_count;
+			if( isset($xml->hotseat) && count($xml->hotseat) > 0 ){
+				$hotseat = $xml->hotseat;
+				$out['hotseat']['GameMode'] = (string)$hotseat->game_mode;
+				$out['hotseat']['TimeLimit'] = (string)$hotseat->time_limit;
+				$out['hotseat']['RoundsCount'] = (string)$hotseat->rounds_count;
 			}
+			
 			// Filter
-			foreach($xml->filter as $filter){
-				$matchsettings['filter']['is_lan'][] = (string)$filter->is_lan;
-				$matchsettings['filter']['is_internet'][] = (string)$filter->is_internet;
-				$matchsettings['filter']['is_solo'][] = (string)$filter->is_solo;
-				$matchsettings['filter']['is_hotseat'][] = (string)$filter->is_hotseat;
-				$matchsettings['filter']['sort_index'][] = (string)$filter->sort_index;
-				$matchsettings['filter']['random_map_order'][] = (string)$filter->random_map_order;
-				$matchsettings['filter']['force_default_gamemode'][] = (string)$filter->force_default_gamemode;
+			if( isset($xml->filter) && count($xml->filter) > 0 ){
+				$filter = $xml->filter;
+				$out['filter']['IsLan'] = (string)$filter->is_lan;
+				$out['filter']['IsInternet'] = (string)$filter->is_internet;
+				$out['filter']['IsSolo'] = (string)$filter->is_solo;
+				$out['filter']['IsHotseat'] = (string)$filter->is_hotseat;
+				$out['filter']['SortIndex'] = (string)$filter->sort_index;
+				$out['filter']['RandomMapOrder'] = (string)$filter->random_map_order;
+				$out['filter']['ForceDefaultGameMode'] = (string)$filter->force_default_gamemode;
 			}
-			// Challenges
-			$matchsettings['startindex'] = (string)$xml->startindex;
-			foreach($xml->challenge as $challenge){
-				$matchsettings['challenge'][(string)$challenge->file][] = (string)$challenge->ident;
-			}
-			/** Création du tableau de sortie **/
-			if( isset($matchsettings) ){
-				$out = array();
-				// Gameinfos
-				if( isset($matchsettings['gameinfos']) ){
-					foreach($matchsettings['gameinfos'] as $key => $values){
-						$out['gameinfos'][$key] = $matchsettings['gameinfos'][$key][0];
-					}
+			
+			// Maps
+			$out['StartIndex'] = (string)$xml->startindex;
+			if( isset($xml->$mapsField) && count($xml->$mapsField) > 0 ){
+				foreach($xml->$mapsField as $map){
+					$out['maps'][(string)$map->ident] = (string)$map->file;
 				}
-				// Hotseat
-				if( isset($matchsettings['hotseat']) ){
-					foreach($matchsettings['hotseat'] as $key => $values){
-						$out['hotseat'][$key] = $matchsettings['hotseat'][$key][0];
-					}
-				}
-				// Filter
-				if( isset($matchsettings['filter']) ){
-					foreach($matchsettings['filter'] as $key => $values){
-						$out['filter'][$key] = $matchsettings['filter'][$key][0];
-					}
-				}
-				// Challenges
-				$out['startindex'] = $matchsettings['startindex'];
-				if( isset($matchsettings['challenge']) ){
-					foreach($matchsettings['challenge'] as $challenge_key => $challenge_values){
-						$out['challenge'][$challenge_key] = $challenge_values[0];
-					}
-				}
-				return $out;
-			}else{
-				return false;
 			}
 		}
+		
+		return $out;
 	}
 	
 	
