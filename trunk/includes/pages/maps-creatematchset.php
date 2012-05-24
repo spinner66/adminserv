@@ -6,49 +6,14 @@
 	if( isset($_GET['f']) && $_GET['f'] != null ){
 		$pageTitle = 'Éditer';
 		$matchSetting['name'] = $_GET['f'];
-		$matchSettingData = AdminServ::getMatchSettingsData($mapsDirectoryPath.$directory.$matchSetting['name']);
-		$matchSetting['gameinfos'] = array(
-			'GameMode' => $matchSettingData['gameinfos']['game_mode'],
-			'ChatTime' => $matchSettingData['gameinfos']['chat_time'],
-			'FinishTimeout' => $matchSettingData['gameinfos']['finishtimeout'],
-			'AllWarmUpDuration' => $matchSettingData['gameinfos']['allwarmupduration'],
-			'DisableRespawn' => $matchSettingData['gameinfos']['disablerespawn'],
-			'ForceShowAllOpponents' => $matchSettingData['gameinfos']['forceshowallopponents'],
-			'RoundsPointsLimit' => $matchSettingData['gameinfos']['rounds_pointslimit'],
-			'RoundsUseNewRules' => $matchSettingData['gameinfos']['rounds_usenewrules'],
-			'RoundsForcedLaps' => $matchSettingData['gameinfos']['rounds_forcedlaps'],
-			'TeamPointsLimit' => $matchSettingData['gameinfos']['team_pointslimit'],
-			'TeamMaxPoints' => $matchSettingData['gameinfos']['team_maxpoints'],
-			'TeamUseNewRules' => $matchSettingData['gameinfos']['team_usenewrules'],
-			'TimeAttackLimit' => $matchSettingData['gameinfos']['timeattack_limit'],
-			'TimeAttackSynchStartPeriod' => $matchSettingData['gameinfos']['timeattack_synchstartperiod'],
-			'LapsNbLaps' => $matchSettingData['gameinfos']['laps_nblaps'],
-			'LapsTimeLimit' => $matchSettingData['gameinfos']['laps_timelimit'],
-			'CupPointsLimit' => $matchSettingData['gameinfos']['cup_pointslimit'],
-			'CupRoundsPerMap' => $matchSettingData['gameinfos']['cup_roundsperchallenge'],
-			'CupNbWinners' => $matchSettingData['gameinfos']['cup_nbwinners'],
-			'CupWarmUpDuration' => $matchSettingData['gameinfos']['cup_warmupduration'],
-		);
-		$matchSetting['hotseat'] = array(
-			'GameMode' => $matchSettingData['hotseat']['game_mode'],
-			'TimeLimit' => $matchSettingData['hotseat']['time_limit'],
-			'RoundsCount' => $matchSettingData['hotseat']['rounds_count']
-		);
-		$matchSetting['filter'] = array(
-			'IsLan' => $matchSettingData['filter']['is_lan'],
-			'IsInternet' => $matchSettingData['filter']['is_internet'],
-			'IsSolo' => $matchSettingData['filter']['is_solo'],
-			'IsHotseat' => $matchSettingData['filter']['is_hotseat'],
-			'SortIndex' => $matchSettingData['filter']['sort_index'],
-			'RandomMapOrder' => $matchSettingData['filter']['random_map_order'],
-			'ForceDefaultGameMode' => $matchSettingData['filter']['force_default_gamemode']
-		);
-		$matchSetting['startindex'] = $matchSettingData['startindex'];
-		//$matchSetting['maps'] = $matchSettingData['maps'];
+		$matchSetting += AdminServ::getMatchSettingsData($mapsDirectoryPath.$directory.$matchSetting['name']);
+		if( isset($matchSetting['maps']) ){
+			$_SESSION['adminserv']['matchset_maps_selected'] = $matchSetting['maps'];
+		}
 	}
 	else{
 		$pageTitle = 'Créer';
-		$matchSettingName = 'match_settings';
+		$matchSetting['name'] = 'match_settings';
 		$gameInfos = AdminServ::getGameInfos();
 		$matchSetting['gameinfos'] = $gameInfos['next'];
 		$matchSetting['hotseat'] = array(
