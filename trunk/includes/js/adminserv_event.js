@@ -357,7 +357,7 @@ $(document).ready(function(){
 				});
 				// Enlever une map de la sélection
 				$("#mapSelectionDialog tr a").live("click", function(){
-					matchset_mapSelection( $(this).parent("td").parent("tr")[0].sectionRowIndex );
+					matchset_mapSelection( parseInt($(this).parent("td").parent("tr")[0].sectionRowIndex + 1) );
 					return false;
 				});
 				
@@ -618,6 +618,16 @@ $(document).ready(function(){
 					// Mise à jour du nb de lignes sélectionnées
 					$(".maps .matchset").updateNbSelectedLines();
 					$(".maps .matchset").updateCheckAll( $("input#checkAll") );
+					
+					// Édition si une seule ligne sélectionné
+					if( $(".selected-files-count").text().replace("(", "").replace(")", "") > 1 ){
+						$("#editMatchset").attr("hidden", true);
+					}
+					else{
+						if( $("#editMatchset").attr("hidden") ){
+							$("#editMatchset").removeAttr("hidden");
+						}
+					}
 				}
 			});
 		}
