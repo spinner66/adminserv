@@ -1478,6 +1478,36 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Retourne un tableau avec le nombre de maps et l'intitulé
+	*
+	* @param array $mapsList -> La liste des maps
+	* @return array
+	*/
+	public static function getNbMaps($mapsList){
+		$out = array();
+		
+		// Test si c'est un tableau
+		if( is_array($mapsList) ){
+			$countMapsList = count($mapsList);
+		}
+		else{
+			$countMapsList = 0;
+		}
+		
+		// Compte et traduit l'intitulé
+		$out['nbm']['count'] = $countMapsList;
+		if($countMapsList > 1){
+			$out['nbm']['title'] = 'maps';
+		}
+		else{
+			$out['nbm']['title'] = 'map';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère la liste des maps sur le serveur
 	*
 	* @global resource $client -> Le client doit être initialisé
@@ -1530,12 +1560,7 @@ abstract class AdminServ {
 			}
 			
 			// Nombre de maps
-			if($countMapList > 1){
-				$out['nbm'] = $countMapList.' maps';
-			}
-			else{
-				$out['nbm'] = $countMapList.' map';
-			}
+			$out += self::getNbMaps($out['lst']);
 			
 			// Config
 			$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
@@ -1573,6 +1598,13 @@ abstract class AdminServ {
 	}
 	
 	
+	/**
+	* Récupère la liste des maps en local à partir d'un chemin
+	*
+	* @param string $path   -> Le chemin du dossier à lister
+	* @param string $sortBy -> Le tri à faire sur la liste
+	* @return array
+	*/
 	public static function getLocalMapList($path, $sortBy = null){
 		$out = array();
 		
@@ -1603,28 +1635,13 @@ abstract class AdminServ {
 							$out['lst'][$i]['Recent'] = $values['recent'];
 							$i++;
 						}
-						else{
-							if( !isset($out['lst']) ){
-								$out['lst'] = 'Aucune map';
-							}
-						}
 					}
-				}
-				else{
-					$out['lst'] = 'Aucune map';
 				}
 				
 				// Nombre de maps
-				if( is_array($out['lst']) ){
-					if( count($out['lst']) > 1){
-					$out['nbm'] = $countMapList.' maps';
-					}
-					else{
-						$out['nbm'] = $countMapList.' map';
-					}
-				}
-				else{
-					$out['nbm'] = '0 map';
+				$out += self::getNbMaps($out['lst']);
+				if($out['nbm']['count'] == 0){
+					$maps['lst'] = 'Aucune map';
 				}
 				
 				// Config
@@ -1661,6 +1678,12 @@ abstract class AdminServ {
 	}
 	
 	
+	/**
+	* Récupère la liste des matchsettings en local à partir d'un chemin
+	*
+	* @param string $path -> Le chemin du dossier à lister
+	* @return array
+	*/
 	public static function getLocalMatchSettingList($path){
 		$out = array();
 		
@@ -1695,7 +1718,7 @@ abstract class AdminServ {
 				// Nombre de maps
 				if( is_array($out['lst']) ){
 					if( count($out['lst']) > 1){
-					$out['nbm'] = $countMatchsetList.' matchsettings';
+						$out['nbm'] = $countMatchsetList.' matchsettings';
 					}
 					else{
 						$out['nbm'] = $countMatchsetList.' matchsetting';
@@ -1724,43 +1747,36 @@ abstract class AdminServ {
 	/**
 	* Enregistre la sélection du MatchSettings en session
 	*
-	* @param array $mapsImport -> Le tableau de maps à ajouter à la sélection
+	* @param array $maps -> Le tableau de maps à ajouter à la sélection
 	*/
-	public static function saveMatchSettingSelection($mapsImport = array() ){
+	public static function saveMatchSettingSelection($maps = array() ){
 		// Liste des maps
-		$maps['lst'] = array();
+		$out['lst'] = array();
 		if( isset($_SESSION['adminserv']['matchset_maps_selected']) ){
 			$mapsSelected = $_SESSION['adminserv']['matchset_maps_selected'];
 			if( isset($mapsSelected['lst']) && is_array($mapsSelected['lst']) && count($mapsSelected['lst']) > 0 ){
 				foreach($mapsSelected['lst'] as $id => $values){
-					$maps['lst'][] = $values;
+					$out['lst'][] = $values;
 				}
 			}
 		}
-		if( isset($mapsImport['lst']) && is_array($mapsImport['lst']) && count($mapsImport['lst']) > 0 ){
-			foreach($mapsImport['lst'] as $id => $values){
-				$maps['lst'][] = $values;
+		if( isset($maps['lst']) && is_array($maps['lst']) && count($maps['lst']) > 0 ){
+			foreach($maps['lst'] as $id => $values){
+				$out['lst'][] = $values;
 			}
 		}
 		
 		// Nombre de maps
-		
-		$nbm = count($maps['lst']);
-		if($nbm > 1){
-			$maps['nbm'] = $nbm.' maps';
-		}
-		else{
-			$maps['nbm'] = $nbm.' map';
-		}
-		if($nbm === 0){
-			$maps['lst'] = 'Aucune map';
+		$out += self::getNbMaps($out['lst']);
+		if($out['nbm']['count'] == 0){
+			$out['lst'] = 'Aucune map';
 		}
 		
 		// Config
-		$maps['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
+		$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
 		
 		// Mise à jour de la session
-		$_SESSION['adminserv']['matchset_maps_selected'] = $maps;
+		$_SESSION['adminserv']['matchset_maps_selected'] = $out;
 	}
 	
 	
@@ -1928,6 +1944,57 @@ abstract class AdminServ {
 				}
 			}
 		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Ajoute et met en forme les données des maps du MatchSettings
+	*
+	* @global resource $client -> Le client doit être initialisé
+	* @param  array    $maps   -> Le tableau extrait du matchsettings : assoc array(ident => filename)
+	* @return array
+	*/
+	public static function getMapListFromMatchSetting($maps){
+		global $client;
+		$out = null;
+		$path = self::getMapsDirectoryPath();
+		$countMapList = count($maps);
+		
+		if($countMapList > 0){
+			$i = 0;
+			foreach($maps as $mapUId => $mapFileName){
+				if( in_array(File::getDoubleExtension($mapFileName), AdminServConfig::$MAP_EXTENSION) ){
+					// Données
+					$Gbx = new GBXChallengeFetcher($path.Str::toSlash($mapFileName), true);
+					
+					// Name
+					$name = htmlspecialchars($Gbx->name, ENT_QUOTES, 'UTF-8');
+					$out['lst'][$i]['Name'] = TmNick::toHtml($name, 10, true);
+					
+					// Environnement
+					$env = $Gbx->envir;
+					if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
+					$out['lst'][$i]['Environnement'] = $env;
+					
+					// Autres
+					$out['lst'][$i]['FileName'] = $mapFileName;
+					$out['lst'][$i]['UId'] = $Gbx->uid;
+					$out['lst'][$i]['Author'] = $Gbx->author;
+					$i++;
+				}
+			}
+		}
+		
+		// Nombre de maps
+		$out += self::getNbMaps($out['lst']);
+		if($out['nbm']['count'] == 0){
+			$maps['lst'] = 'Aucune map';
+		}
+		
+		// Config
+		$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
 		
 		return $out;
 	}

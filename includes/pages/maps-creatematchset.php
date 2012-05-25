@@ -8,7 +8,12 @@
 		$matchSetting['name'] = $_GET['f'];
 		$matchSetting += AdminServ::getMatchSettingsData($mapsDirectoryPath.$directory.$matchSetting['name']);
 		if( isset($matchSetting['maps']) ){
-			$_SESSION['adminserv']['matchset_maps_selected'] = $matchSetting['maps'];
+			$maps = AdminServ::getMapListFromMatchSetting($matchSetting['maps']);
+			$matchSetting['nbm'] = $maps['nbm']['count'];
+			$_SESSION['adminserv']['matchset_maps_selected'] = $maps;
+		}
+		else{
+			$matchSetting['nbm'] = 0;
 		}
 	}
 	else{
@@ -31,6 +36,7 @@
 			'ForceDefaultGameMode' => 1
 		);
 		$matchSetting['StartIndex'] = 0;
+		$matchSetting['nbm'] = 0;
 	}
 	
 	
@@ -129,7 +135,9 @@
 		}
 	}
 	else{
-		unset($_SESSION['adminserv']['matchset_maps_selected']);
+		if( !isset($_GET['f']) ){
+			unset($_SESSION['adminserv']['matchset_maps_selected']);
+		}
 	}
 	
 	
@@ -192,7 +200,7 @@
 				</div>
 				
 				<div class="mapsSelected">
-					<p>Maps sélectionnées pour le MatchSettings : <span id="nbMapSelected">0</span></p>
+					<p>Maps sélectionnées pour le MatchSettings : <span id="nbMapSelected"><?php echo $matchSetting['nbm']; ?></span></p>
 					<input class="button light" type="button" name="mapSelection" id="mapSelection" value="Voir la sélection du MatchSettings" />
 					<div id="mapSelectionDialog" data-title="Sélection du MatchSettings" data-remove="Enlever cette map de la sélection" data-close="Fermer" hidden="hidden">
 						<table>
