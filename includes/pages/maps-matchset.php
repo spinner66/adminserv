@@ -37,11 +37,9 @@
 		}
 	}
 	else if( isset($_POST['editMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
+		$hasDirectory = null;
 		if($directory){
 			$hasDirectory = '&d='.$directory;
-		}
-		else{
-			$hasDirectory = null;
 		}
 		Utils::redirection(false, '?p=maps-creatematchset'.$hasDirectory.'&f='.$_POST['matchset'][0]);
 	}

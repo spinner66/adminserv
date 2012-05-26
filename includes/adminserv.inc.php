@@ -75,7 +75,7 @@ abstract class AdminServUI {
 			Utils::addCookieData('adminserv_user', array($_SESSION['theme'], self::getLang(), Utils::readCookieData('adminserv_user', 2), Utils::readCookieData('adminserv_user', 3)), AdminServConfig::COOKIE_EXPIRE);
 		}
 		
-		return $_SESSION['theme'];
+		return strtolower($_SESSION['theme']);
 	}
 	
 	
@@ -96,10 +96,10 @@ abstract class AdminServUI {
 			$out .= '<ul>';
 			// Si il y a un thème courant, on le place en 1er
 			if( count($currentTheme) > 0 ){
-				$out .= '<li><a class="theme-color" style="background-color: '.$currentThemeColor.';" href="?th='.$currentThemeName.'" title="'.ucfirst($currentThemeName).'"></a></li>';
+				$out .= '<li><a class="theme-color" style="background-color: '.$currentThemeColor[0].';" href="?th='.$currentThemeName.'" title="'.ucfirst($currentThemeName).'"></a></li>';
 			}
 			foreach(ExtensionConfig::$THEMES as $name => $color){
-				$out .= '<li><a class="theme-color" style="background-color: '.$color.';" href="?th='.$name.'" title="'.ucfirst($name).'"></a></li>';
+				$out .= '<li><a class="theme-color" style="background-color: '.$color[0].';" href="?th='.$name.'" title="'.ucfirst($name).'"></a></li>';
 			}
 			$out .= '</ul>';
 		}
@@ -237,9 +237,7 @@ abstract class AdminServUI {
 		}
 		$out .= '<link rel="stylesheet" href="'.$path.'styles/global.css" />';
 		if( defined('USER_THEME') ){
-			if( file_exists($path.'styles/'. USER_THEME .'.css') ){
-				$out .= '<link rel="stylesheet" href="'.$path.'styles/'. USER_THEME .'.css" />';
-			}
+			$out .= '<link rel="stylesheet" href="'.$path.'styles/theme.php?th='. USER_THEME .'" />';
 		}
 		
 		return $out;
@@ -612,7 +610,7 @@ abstract class AdminServUI {
 	/**
 	* Retourne une liste html pour un menu
 	*
-	* @param array $list -> array('Nom du lien' => 'nom_de_la_page')
+	* @param array $list -> array('nom_de_la_page' => 'Nom du lien')
 	* @return html
 	*/
 	public static function getMenuList($list){
@@ -622,7 +620,7 @@ abstract class AdminServUI {
 		if( count($list) > 0 ){
 			$out = '<nav class="vertical-nav">'
 				.'<ul>';
-					foreach($list as $title => $page){
+					foreach($list as $page => $title){
 						$out .= '<li><a '; if(USER_PAGE == $page){ $out .= 'class="active" '; } $out .= 'href="?p='.$page; if($directory){ $out .= '&amp;d='.$directory; } $out .= '">'.$title.'</a></li>';
 					}
 			$out .= '</ul>'

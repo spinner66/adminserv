@@ -4,11 +4,26 @@ class ExtensionConfig {
 	
 	// Liste des thèmes de couleurs
 	public static $THEMES = array(
-		'blue' => '#5e9cd5',
-		'orange' => '#ffa600',
-		'green' => '#8aca1b',
-		'purple' => '#b15cd5',
-		'black' => '#656267'
+		'blue' => array(
+			'#5e9cd5',
+			'#d9e8ff'
+		),
+		'orange' => array(
+			'#ffa600',
+			'#ffe3b0'
+		),
+		'green' => array(
+			'#8aca1b',
+			'#d1e9a8'
+		),
+		'purple' => array(
+			'#b15cd5',
+			'#e5c4f3'
+		),
+		'black' => array(
+			'#727272',
+			'#d4d4d4'
+		)
 	);
 	
 	
@@ -35,12 +50,12 @@ class ExtensionConfig {
 	
 	// Liste du menu des pages "maps"
 	public static $MAPSMENU = array(
-		'Liste' => 'maps-list',
-		'Local' => 'maps-local',
-		'Envoyer' => 'maps-upload',
-		'Ordonner' => 'maps-order',
-		'MatchSettings' => 'maps-matchset',
-		'Créer un MatchSetting' => 'maps-creatematchset',
+		'maps-list' => 'Liste',
+		'maps-local' => 'Local',
+		'maps-upload' => 'Envoyer',
+		'maps-order' => 'Ordonner',
+		'maps-matchset' => 'MatchSettings',
+		'maps-creatematchset' => 'Créer un MatchSettings'
 	);
 	
 	
