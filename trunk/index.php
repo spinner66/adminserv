@@ -84,23 +84,18 @@
 			}
 		}
 		// PAGES UNIQUES
-		$pages = array(
+		$PAGESLIST = array(
 			'general',
 			'srvopts',
 			'gameinfos',
 			'chat',
-			'maps-list',
-			'maps-local',
-			'maps-upload',
-			'maps-matchset',
-			'maps-creatematchset',
-			'maps-order',
 			'plugins',
 			'guestban',
 		);
-		if( in_array(USER_PAGE, $pages) ){
-			unset($pages[0]);
-			foreach($pages as $page){
+		$PAGESLIST = array_merge($PAGESLIST, array_keys(ExtensionConfig::$MAPSMENU) );
+		if( in_array(USER_PAGE, $PAGESLIST) ){
+			unset($PAGESLIST[0]);
+			foreach($PAGESLIST as $page){
 				if(USER_PAGE === $page){
 					include_once 'includes/pages/'.$page.'.php';
 					break;
@@ -114,7 +109,7 @@
 				Utils::redirection(false, '?p='.USER_PAGE);
 			}
 			else{
-				include_once 'includes/pages/'.$pages[0].'.php';
+				include_once 'includes/pages/'.$PAGESLIST[0].'.php';
 			}
 		}
 	}
