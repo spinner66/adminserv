@@ -859,3 +859,30 @@ function matchset_mapSelection(removeId){
 		}
 	});
 }
+
+
+/* Folders */
+function getRenameFolderForm(){
+	$("#renameFolderForm").removeAttr("hidden");
+	$("#renameFolderForm").dialog({
+		title: $("#renameFolderForm").data("title"),
+		modal: true,
+		resizable: false,
+		minWidth: 406,
+		buttons: [
+			{
+				text: $("#renameFolderForm").data("cancel"),
+				click: function(){
+					$(this).dialog("close");
+				}
+			},
+			{
+				text: $("#renameFolderForm").data("rename"),
+				click: function(){
+					
+				}
+			},
+			
+		]
+	});
+}
