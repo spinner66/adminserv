@@ -722,6 +722,8 @@ abstract class AdminServUI {
 			// Options de dossier
 			if($showOptions && $currentPath){
 				if( AdminServConfig::$FOLDERS_OPTIONS['rename'] || AdminServConfig::$FOLDERS_OPTIONS['move'] || AdminServConfig::$FOLDERS_OPTIONS['delete'] ){
+					$currentDirEx = explode('/', $currentPath);
+					$currentDir = $currentDirEx[count($currentDirEx)-2];
 					$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
 						.'<div class="option-folder-list">'
 							.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
@@ -738,6 +740,15 @@ abstract class AdminServUI {
 							$out .= '</ul>'
 						.'</div>'
 						.'<input type="hidden" name="optionFolderHiddenField" id="optionFolderHiddenField" value="" />'
+						.'<div id="renameFolderForm" class="content option-form" hidden="hidden" data-title="Renommer un dossier" data-cancel="Annuler" data-rename="Renommer">'
+							.'<ul>'
+								.'<li>'
+									.'<span class="rename-map-name">'.$currentDir.'</span>'
+									.'<span class="rename-map-arrow">&nbsp;</span>'
+									.'<input class="text width2" type="text" name="renameFolderNewName" value="'.$currentDir.'" />'
+								.'</li>'
+							.'</ul>'
+						.'</div>'
 					.'</form>';
 				}
 			}
@@ -1478,15 +1489,15 @@ abstract class AdminServ {
 	/**
 	* Retourne un tableau avec le nombre de maps et l'intitulé
 	*
-	* @param array $mapsList -> La liste des maps
+	* @param array $array -> La tableau contenant la liste des maps
 	* @return array
 	*/
-	public static function getNbMaps($mapsList){
+	public static function getNbMaps($array){
 		$out = array();
 		
 		// Test si c'est un tableau
-		if( is_array($mapsList) ){
-			$countMapsList = count($mapsList);
+		if( isset($array['lst']) && is_array($array['lst']) ){
+			$countMapsList = count($array['lst']);
 		}
 		else{
 			$countMapsList = 0;
@@ -1553,12 +1564,12 @@ abstract class AdminServ {
 					$i++;
 				}
 			}
-			else{
-				$out['lst'] = 'Aucune map';
-			}
 			
 			// Nombre de maps
-			$out += self::getNbMaps($out['lst']);
+			$out += self::getNbMaps($out);
+			if($out['nbm']['count'] == 0){
+				$out['lst'] = 'Aucune map';
+			}
 			
 			// Config
 			$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
@@ -1637,9 +1648,9 @@ abstract class AdminServ {
 				}
 				
 				// Nombre de maps
-				$out += self::getNbMaps($out['lst']);
+				$out += self::getNbMaps($out);
 				if($out['nbm']['count'] == 0){
-					$maps['lst'] = 'Aucune map';
+					$out['lst'] = 'Aucune map';
 				}
 				
 				// Config
@@ -1694,36 +1705,41 @@ abstract class AdminServ {
 					foreach($directory['files'] as $file => $values){
 						if( in_array(File::getExtension($file), AdminServConfig::$MATCHSET_EXTENSION) ){
 							// Données
-							//TOTO: extraire les données pour le nb de maps
+							$matchsetData = self::getMatchSettingsData($path.$file, array('maps'));
+							$matchsetNbmCount = count($matchsetData['maps']);
+							if($matchsetNbmCount > 1){
+								$matchsetNbm = $matchsetNbmCount . ' maps';
+							}
+							else{
+								$matchsetNbm = $matchsetNbmCount . ' map';
+							}
 							
 							$out['lst'][$i]['Name'] = substr($file, 0, -4);
 							$out['lst'][$i]['FileName'] = $file;
+							$out['lst'][$i]['Nbm'] = $matchsetNbm;
 							$out['lst'][$i]['Mtime'] = $values['mtime'];
 							$out['lst'][$i]['Recent'] = $values['recent'];
 							$i++;
 						}
-						else{
-							if( !isset($out['lst']) ){
-								$out['lst'] = 'Aucun matchsetting';
-							}
-						}
 					}
-				}
-				else{
-					$out['lst'] = 'Aucun matchsetting';
 				}
 				
 				// Nombre de maps
-				if( is_array($out['lst']) ){
+				if( isset($out['lst']) && is_array($out['lst']) ){
+					$out['nbm']['count'] = $countMatchsetList;
 					if( count($out['lst']) > 1){
-						$out['nbm'] = $countMatchsetList.' matchsettings';
+						$out['nbm']['title'] = 'matchsettings';
 					}
 					else{
-						$out['nbm'] = $countMatchsetList.' matchsetting';
+						$out['nbm']['title'] = 'matchsetting';
 					}
 				}
 				else{
-					$out['nbm'] = '0 matchsetting';
+					$out['nbm']['count'] = 0;
+					$out['nbm']['title'] = 'matchsetting';
+				}
+				if($out['nbm']['count'] == 0){
+					$out['lst'] = 'Aucun matchsetting';
 				}
 				
 				// Config
@@ -1749,7 +1765,7 @@ abstract class AdminServ {
 	*/
 	public static function saveMatchSettingSelection($maps = array() ){
 		// Liste des maps
-		$out['lst'] = array();
+		$out = array();
 		if( isset($_SESSION['adminserv']['matchset_maps_selected']) ){
 			$mapsSelected = $_SESSION['adminserv']['matchset_maps_selected'];
 			if( isset($mapsSelected['lst']) && is_array($mapsSelected['lst']) && count($mapsSelected['lst']) > 0 ){
@@ -1765,7 +1781,7 @@ abstract class AdminServ {
 		}
 		
 		// Nombre de maps
-		$out += self::getNbMaps($out['lst']);
+		$out += self::getNbMaps($out);
 		if($out['nbm']['count'] == 0){
 			$out['lst'] = 'Aucune map';
 		}
@@ -1864,9 +1880,10 @@ abstract class AdminServ {
 	* Extrait les données d'un MatchSettings et renvoi un tableau
 	*
 	* @param string $filename -> L'url du MatchSettings
+	* @param array  $list     -> Liste des champs à retourner
 	* @return array si le fichier existe, sinon false
 	*/
-	public static function getMatchSettingsData($filename){
+	public static function getMatchSettingsData($filename, $list = array('gameinfos', 'hotseat', 'filter', 'maps') ){
 		$out = array();
 		$xml = null;
 		
@@ -1888,57 +1905,65 @@ abstract class AdminServ {
 			}
 			
 			// Gameinfos
-			if( isset($xml->gameinfos) && count($xml->gameinfos) > 0 ){
-				$gameinfos = $xml->gameinfos;
-				$out['gameinfos']['GameMode'] = (string)$gameinfos->game_mode;
-				$out['gameinfos']['ChatTime'] = (string)$gameinfos->chat_time;
-				$out['gameinfos']['FinishTimeout'] = (string)$gameinfos->finishtimeout;
-				$out['gameinfos']['AllWarmUpDuration'] = (string)$gameinfos->allwarmupduration;
-				$out['gameinfos']['DisableRespawn'] = (string)$gameinfos->disablerespawn;
-				$out['gameinfos']['ForceShowAllOpponents'] = (string)$gameinfos->forceshowallopponents;
-				$out['gameinfos']['RoundsPointsLimit'] = (string)$gameinfos->rounds_pointslimit;
-				$out['gameinfos']['RoundsUseNewRules'] = (string)$gameinfos->rounds_usenewrules;
-				$out['gameinfos']['RoundsForcedLaps'] = (string)$gameinfos->rounds_forcedlaps;
-				//$out['gameinfos']['rounds_pointslimitnewrules'] = (string)$gameinfos->rounds_pointslimitnewrules;
-				$out['gameinfos']['TeamPointsLimit'] = (string)$gameinfos->team_pointslimit;
-				$out['gameinfos']['TeamMaxPoints'] = (string)$gameinfos->team_maxpoints;
-				$out['gameinfos']['TeamUseNewRules'] = (string)$gameinfos->team_usenewrules;
-				//$out['gameinfos']['team_pointslimitnewrules'] = (string)$gameinfos->team_pointslimitnewrules;
-				$out['gameinfos']['TimeAttackLimit'] = (string)$gameinfos->timeattack_limit;
-				$out['gameinfos']['TimeAttackSynchStartPeriod'] = (string)$gameinfos->timeattack_synchstartperiod;
-				$out['gameinfos']['LapsNbLaps'] = (string)$gameinfos->laps_nblaps;
-				$out['gameinfos']['LapsTimeLimit'] = (string)$gameinfos->laps_timelimit;
-				$out['gameinfos']['CupPointsLimit'] = (string)$gameinfos->cup_pointslimit;
-				$out['gameinfos']['CupRoundsPerMap'] = (string)$gameinfos->cup_roundsperchallenge;
-				$out['gameinfos']['CupNbWinners'] = (string)$gameinfos->cup_nbwinners;
-				$out['gameinfos']['CupWarmUpDuration'] = (string)$gameinfos->cup_warmupduration;
+			if( in_array('gameinfos', $list) ){
+				if( isset($xml->gameinfos) && count($xml->gameinfos) > 0 ){
+					$gameinfos = $xml->gameinfos;
+					$out['gameinfos']['GameMode'] = (string)$gameinfos->game_mode;
+					$out['gameinfos']['ChatTime'] = (string)$gameinfos->chat_time;
+					$out['gameinfos']['FinishTimeout'] = (string)$gameinfos->finishtimeout;
+					$out['gameinfos']['AllWarmUpDuration'] = (string)$gameinfos->allwarmupduration;
+					$out['gameinfos']['DisableRespawn'] = (string)$gameinfos->disablerespawn;
+					$out['gameinfos']['ForceShowAllOpponents'] = (string)$gameinfos->forceshowallopponents;
+					$out['gameinfos']['RoundsPointsLimit'] = (string)$gameinfos->rounds_pointslimit;
+					$out['gameinfos']['RoundsUseNewRules'] = (string)$gameinfos->rounds_usenewrules;
+					$out['gameinfos']['RoundsForcedLaps'] = (string)$gameinfos->rounds_forcedlaps;
+					//$out['gameinfos']['rounds_pointslimitnewrules'] = (string)$gameinfos->rounds_pointslimitnewrules;
+					$out['gameinfos']['TeamPointsLimit'] = (string)$gameinfos->team_pointslimit;
+					$out['gameinfos']['TeamMaxPoints'] = (string)$gameinfos->team_maxpoints;
+					$out['gameinfos']['TeamUseNewRules'] = (string)$gameinfos->team_usenewrules;
+					//$out['gameinfos']['team_pointslimitnewrules'] = (string)$gameinfos->team_pointslimitnewrules;
+					$out['gameinfos']['TimeAttackLimit'] = (string)$gameinfos->timeattack_limit;
+					$out['gameinfos']['TimeAttackSynchStartPeriod'] = (string)$gameinfos->timeattack_synchstartperiod;
+					$out['gameinfos']['LapsNbLaps'] = (string)$gameinfos->laps_nblaps;
+					$out['gameinfos']['LapsTimeLimit'] = (string)$gameinfos->laps_timelimit;
+					$out['gameinfos']['CupPointsLimit'] = (string)$gameinfos->cup_pointslimit;
+					$out['gameinfos']['CupRoundsPerMap'] = (string)$gameinfos->cup_roundsperchallenge;
+					$out['gameinfos']['CupNbWinners'] = (string)$gameinfos->cup_nbwinners;
+					$out['gameinfos']['CupWarmUpDuration'] = (string)$gameinfos->cup_warmupduration;
+				}
 			}
 			
 			// Hotseat
-			if( isset($xml->hotseat) && count($xml->hotseat) > 0 ){
-				$hotseat = $xml->hotseat;
-				$out['hotseat']['GameMode'] = (string)$hotseat->game_mode;
-				$out['hotseat']['TimeLimit'] = (string)$hotseat->time_limit;
-				$out['hotseat']['RoundsCount'] = (string)$hotseat->rounds_count;
+			if( in_array('hotseat', $list) ){
+				if( isset($xml->hotseat) && count($xml->hotseat) > 0 ){
+					$hotseat = $xml->hotseat;
+					$out['hotseat']['GameMode'] = (string)$hotseat->game_mode;
+					$out['hotseat']['TimeLimit'] = (string)$hotseat->time_limit;
+					$out['hotseat']['RoundsCount'] = (string)$hotseat->rounds_count;
+				}
 			}
 			
 			// Filter
-			if( isset($xml->filter) && count($xml->filter) > 0 ){
-				$filter = $xml->filter;
-				$out['filter']['IsLan'] = (string)$filter->is_lan;
-				$out['filter']['IsInternet'] = (string)$filter->is_internet;
-				$out['filter']['IsSolo'] = (string)$filter->is_solo;
-				$out['filter']['IsHotseat'] = (string)$filter->is_hotseat;
-				$out['filter']['SortIndex'] = (string)$filter->sort_index;
-				$out['filter']['RandomMapOrder'] = (string)$filter->random_map_order;
-				$out['filter']['ForceDefaultGameMode'] = (string)$filter->force_default_gamemode;
+			if( in_array('filter', $list) ){
+				if( isset($xml->filter) && count($xml->filter) > 0 ){
+					$filter = $xml->filter;
+					$out['filter']['IsLan'] = (string)$filter->is_lan;
+					$out['filter']['IsInternet'] = (string)$filter->is_internet;
+					$out['filter']['IsSolo'] = (string)$filter->is_solo;
+					$out['filter']['IsHotseat'] = (string)$filter->is_hotseat;
+					$out['filter']['SortIndex'] = (string)$filter->sort_index;
+					$out['filter']['RandomMapOrder'] = (string)$filter->random_map_order;
+					$out['filter']['ForceDefaultGameMode'] = (string)$filter->force_default_gamemode;
+				}
 			}
 			
 			// Maps
-			$out['StartIndex'] = (string)$xml->startindex;
-			if( isset($xml->$mapsField) && count($xml->$mapsField) > 0 ){
-				foreach($xml->$mapsField as $map){
-					$out['maps'][(string)$map->ident] = (string)$map->file;
+			if( in_array('maps', $list) ){
+				$out['StartIndex'] = (string)$xml->startindex;
+				if( isset($xml->$mapsField) && count($xml->$mapsField) > 0 ){
+					foreach($xml->$mapsField as $map){
+						$out['maps'][(string)$map->ident] = (string)$map->file;
+					}
 				}
 			}
 		}
@@ -1956,7 +1981,7 @@ abstract class AdminServ {
 	*/
 	public static function getMapListFromMatchSetting($maps){
 		global $client;
-		$out = null;
+		$out = array();
 		$path = self::getMapsDirectoryPath();
 		$countMapList = count($maps);
 		
@@ -1986,9 +2011,9 @@ abstract class AdminServ {
 		}
 		
 		// Nombre de maps
-		$out += self::getNbMaps($out['lst']);
+		$out += self::getNbMaps($out);
 		if($out['nbm']['count'] == 0){
-			$maps['lst'] = 'Aucune map';
+			$out['lst'] = 'Aucune map';
 		}
 		
 		// Config

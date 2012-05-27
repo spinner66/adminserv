@@ -886,6 +886,23 @@ td .detailModeTd {
 #form-move-map select {
 	width: 99%;
 }
+#renameFolderForm.option-form input.text {
+	height: auto;
+	margin-top: 6px;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+}
+#renameFolderForm.option-form ul li .rename-map-name {
+	height: 24px;
+}
+#renameFolderForm.option-form ul li .rename-map-arrow {
+	border-top-width: 12px;
+	border-bottom-width: 12px;
+	border-left-width: 12px;
+}
 
 /* Option de type radio en ligne
 ---------------------------------*/
@@ -1360,6 +1377,11 @@ footer {
 }
 .folders .option-folder-list ul li a.delete {
 	background-image: url("../images/16/delete.png");
+}
+#renameFolderForm {
+	height: 36px !important;
+	margin: 10% 0;
+	overflow: hidden;
 }
 
 

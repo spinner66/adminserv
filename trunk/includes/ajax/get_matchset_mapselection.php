@@ -20,7 +20,7 @@
 			$mapsSelection = $_SESSION['adminserv']['matchset_maps_selected'];
 			
 			// Liste
-			if( count($mapsSelection['lst']) ){
+			if( isset($mapsSelection['lst']) && is_array($mapsSelection['lst']) && count($mapsSelection['lst']) > 0 ){
 				foreach($mapsSelection['lst'] as $id => $values){
 					if($id == $removeSelection){
 						unset($mapsSelection['lst'][$id]);

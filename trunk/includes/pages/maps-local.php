@@ -179,7 +179,7 @@
 		
 		<div class="options">
 			<div class="fleft">
-				<span class="nb-line"><?php echo $mapsList['nbm']; ?></span>
+				<span class="nb-line"><?php echo $mapsList['nbm']['count'].' '.$mapsList['nbm']['title']; ?></span>
 			</div>
 			<div class="fright">
 				<div class="selected-files-label locked">

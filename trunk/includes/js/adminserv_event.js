@@ -125,6 +125,15 @@ $(document).ready(function(){
 				$(this).children("span").addClass("arrow-down");
 			}
 		});
+		$("#renameFolder").click(function(){
+			$("#optionFolderHiddenField").val("rename");
+			getRenameFolderForm();
+			return false;
+		});
+		$("#moveFolder").click(function(){
+			
+			return false;
+		});
 		$("#deleteFolder").click(function(){
 			if( confirm( $(this).data("confirm-text") ) ){
 				$("#optionFolderHiddenField").val("delete");

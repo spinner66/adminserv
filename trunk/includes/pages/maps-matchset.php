@@ -73,6 +73,7 @@
 				<thead>
 					<tr>
 						<th class="thleft"><a href="?sort=name">Nom</a></th>
+						<th><a href="?sort=nbm">Contient</a></th>
 						<th><a href="?sort=mtime">Modifié le</a></th>
 						<th class="thright"></th>
 					</tr>
@@ -89,6 +90,7 @@
 							// Ligne
 							$showMatchsetList .= '<tr class="'; if($i%2){ $showMatchsetList .= 'even'; }else{ $showMatchsetList .= 'odd'; } if($id == $matchset['Recent']){ $showMatchsetList .= ' recent'; } $showMatchsetList .= '">'
 								.'<td class="imgleft"><img src="'.$matchsetList['cfg']['path_rsc'].'images/16/finishgrey.png" alt="" /><span title="'.$matchset['FileName'].'">'.$matchset['Name'].'</span></td>'
+								.'<td>'.$matchset['Nbm'].'</td>'
 								.'<td>'.date('d/m/Y', $matchset['Mtime']).'</td>'
 								.'<td class="checkbox"><input type="checkbox" name="matchset[]" value="'.$matchset['FileName'].'" /></td>'
 							.'</tr>';
@@ -108,7 +110,7 @@
 		
 		<div class="options">
 			<div class="fleft">
-				<span class="nb-line"><?php echo $matchsetList['nbm']; ?></span>
+				<span class="nb-line"><?php echo $matchsetList['nbm']['count'].' '.$matchsetList['nbm']['title']; ?></span>
 			</div>
 			<div class="fright">
 				<div class="selected-files-label locked">

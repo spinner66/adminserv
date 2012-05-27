@@ -19,12 +19,12 @@
 		'$888' => 'Gris',
 		'$fff' => 'Blanc'
 	);
-	$chatColor = null;
+	$chatColorOptions = null;
 	$lastColorUsed = Utils::readCookieData('adminserv_user', 3);
 	foreach($colorList as $colorCode => $colorName){
 		if($colorCode == $lastColorUsed){ $selected = ' selected="selected"'; }
 		else{ $selected = null; }
-		$chatColor .= '<option value="'.$colorCode.'"'.$selected.'>'.$colorName.'</option>';
+		$chatColorOptions .= '<option value="'.$colorCode.'"'.$selected.'>'.$colorName.'</option>';
 	}
 	if( isset($_SESSION['adminserv']['chat_dst']) ){
 		$playerList = AdminServUI::getPlayerList($_SESSION['adminserv']['chat_dst']);
@@ -52,8 +52,8 @@
 	
 	<div class="options">
 		<input class="text" type="text" name="chatNickname" id="chatNickname" value="<?php echo $chatNickname; ?>" data-default-value="Pseudo" />
-		<select name="chatColor" id="chatColor">
-			<?php echo $chatColor; ?>
+		<select name="chatColor" id="chatColor" title="Couleur par défaut : jaune">
+			<?php echo $chatColorOptions; ?>
 		</select>
 		<input class="text width4" type="text" name="chatMessage" id="chatMessage" value="Message" data-default-value="Message" />
 		<select name="chatDestination" id="chatDestination" title="<?php echo $destTitle; ?>">

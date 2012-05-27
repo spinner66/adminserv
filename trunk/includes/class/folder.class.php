@@ -106,7 +106,41 @@ abstract class Folder {
 	
 	
 	/**
+	* Renomme un dossier
 	*
+	* @param string $oldname -> Chemin de l'ancien dossier
+	* @param string $newname -> Chemin du nouveau dossier
+	* @return true si réussi sinon message d'erreur
+	*/
+	public static function rename($oldname, $newname){
+		$out = null;
+		
+		if( @file_exists($oldname) ){
+			if( is_dir($oldname) ){
+				if( @rename($oldname, $newname) ){
+					$out = true;
+				}
+				else{
+					$out = 'Rename '.$oldname.' failed';
+				}
+			}
+			else{
+				$out = 'Not directory';
+			}
+		}
+		else{
+			$out = 'Folder no exists';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Supprime un dossier
+	*
+	* @param string $dirname -> Chemin du dossier à supprimer
+	* @return true si réussi sinon message d'erreur
 	*/
 	public static function delete($dirname){
 		$out = null;
