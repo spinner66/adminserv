@@ -126,17 +126,18 @@ $(document).ready(function(){
 			}
 		});
 		$("#renameFolder").click(function(){
-			$("#optionFolderHiddenField").val("rename");
+			$("#optionFolderHiddenFieldAction").val("rename");
 			getRenameFolderForm();
 			return false;
 		});
 		$("#moveFolder").click(function(){
-			
+			$("#optionFolderHiddenFieldAction").val("move");
+			getMoveFolderForm();
 			return false;
 		});
 		$("#deleteFolder").click(function(){
 			if( confirm( $(this).data("confirm-text") ) ){
-				$("#optionFolderHiddenField").val("delete");
+				$("#optionFolderHiddenFieldAction").val("delete");
 				$("#optionFolderForm").submit();
 			}
 			return false;
