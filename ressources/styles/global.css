@@ -871,7 +871,8 @@ td .detailModeTd {
 	padding-top: 5px;
 	border-top: 1px solid #ddd;
 }
-#form-move-map label {
+#form-move-map label,
+#moveFolderForm label {
 	display: block;
 	color: #ddd;
 	background: #555;
@@ -902,6 +903,14 @@ td .detailModeTd {
 	border-top-width: 12px;
 	border-bottom-width: 12px;
 	border-left-width: 12px;
+}
+#moveFolderForm label {
+	width: 94.6%;
+	margin-left: 6px;
+}
+#moveFolderForm select {
+	width: 100%;
+	font-size: 13.3333px;
 }
 
 /* Option de type radio en ligne
@@ -1380,6 +1389,11 @@ footer {
 }
 #renameFolderForm {
 	height: 36px !important;
+	margin: 10% 0;
+	overflow: hidden;
+}
+#moveFolderForm {
+	height: 72px !important;
 	margin: 10% 0;
 	overflow: hidden;
 }

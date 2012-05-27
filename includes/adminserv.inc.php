@@ -646,7 +646,7 @@ abstract class AdminServUI {
 		
 		if( class_exists('Folder') ){
 			// Titre + nouveau dossier
-			$out .= '<form id="createFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
+			$out .= '<form id="createFolderForm" method="post" action="?p='. USER_PAGE .'&amp;d='.$currentPath.'">'
 				.'<h1>Dossiers';
 					if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new']){
 						$out .='<span id="form-new-folder" hidden="hidden">'
@@ -722,9 +722,8 @@ abstract class AdminServUI {
 			// Options de dossier
 			if($showOptions && $currentPath){
 				if( AdminServConfig::$FOLDERS_OPTIONS['rename'] || AdminServConfig::$FOLDERS_OPTIONS['move'] || AdminServConfig::$FOLDERS_OPTIONS['delete'] ){
-					$currentDirEx = explode('/', $currentPath);
-					$currentDir = $currentDirEx[count($currentDirEx)-2];
-					$out .= '<form id="optionFolderForm" method="post" action="?p=maps.inc&amp;d='.$currentPath.'&amp;goto='. USER_PAGE .'">'
+					$currentDir = basename($currentPath);
+					$out .= '<form id="optionFolderForm" method="post" action="?p='. USER_PAGE .'&amp;d='.$currentPath.'">'
 						.'<div class="option-folder-list">'
 							.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
 							.'<ul hidden="hidden">';
@@ -735,20 +734,22 @@ abstract class AdminServUI {
 									$out .= '<li><a class="button light move" id="moveFolder" href=".">Déplacer</a></li>';
 								}
 								if(AdminServConfig::$FOLDERS_OPTIONS['delete']){
-									$out .= '<li><a class="button light delete" id="deleteFolder" href="." data-confirm-text="Voulez-vous vraiment supprimer ce dossier ?">Supprimer</a></li>';
+									$out .= '<li><a class="button light delete" id="deleteFolder" href="." data-confirm-text="Voulez-vous vraiment supprimer le dossier '.$currentDir.' ?">Supprimer</a></li>';
 								}
 							$out .= '</ul>'
 						.'</div>'
-						.'<input type="hidden" name="optionFolderHiddenField" id="optionFolderHiddenField" value="" />'
-						.'<div id="renameFolderForm" class="content option-form" hidden="hidden" data-title="Renommer un dossier" data-cancel="Annuler" data-rename="Renommer">'
+						.'<input type="hidden" name="optionFolderHiddenFieldAction" id="optionFolderHiddenFieldAction" value="" />'
+						.'<input type="hidden" name="optionFolderHiddenFieldValue" id="optionFolderHiddenFieldValue" value="" />'
+						.'<div id="renameFolderForm" class="option-form" hidden="hidden" data-title="Renommer un dossier" data-cancel="Annuler" data-rename="Renommer">'
 							.'<ul>'
 								.'<li>'
 									.'<span class="rename-map-name">'.$currentDir.'</span>'
 									.'<span class="rename-map-arrow">&nbsp;</span>'
-									.'<input class="text width2" type="text" name="renameFolderNewName" value="'.$currentDir.'" />'
+									.'<input class="text width2" type="text" name="renameFolderNewName" id="renameFolderNewName" value="'.$currentDir.'" />'
 								.'</li>'
 							.'</ul>'
 						.'</div>'
+						.'<div id="moveFolderForm" class="option-form" hidden="hidden" data-title="Déplacer un dossier" data-cancel="Annuler" data-move="Déplacer" data-root="Racine" data-movethefolder="Déplacer le dossier <b>'.$currentDir.'</b> dans :"></div>'
 					.'</form>';
 				}
 			}

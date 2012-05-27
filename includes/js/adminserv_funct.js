@@ -879,7 +879,49 @@ function getRenameFolderForm(){
 			{
 				text: $("#renameFolderForm").data("rename"),
 				click: function(){
-					
+					$("#optionFolderHiddenFieldValue").val( $("#renameFolderNewName").val() );
+					$("#optionFolderForm").submit();
+				}
+			},
+			
+		]
+	});
+}
+function getMoveFolderForm(){
+	$("#moveFolderForm").removeAttr("hidden");
+	$.getJSON("includes/ajax/get_directory_list.php", function(data){
+		if(data != null){
+			var out = "";
+			var formSelector = $("#moveFolderForm");
+			out += '<label for="moveFormDirectoryList">'+formSelector.data("movethefolder")+'</label>'
+			+ '<select name="moveFormDirectoryList" id="moveFormDirectoryList">'
+				+ '<option value=".">'+formSelector.data("root")+'</option>';
+				$.each(data, function(i, n){
+					out += '<option value="'+n.path+'">'+n.level+n.name+'</option>';
+				});
+			out += '</select>';
+			
+			// HTML
+			formSelector.html(out);
+		}
+	});
+	$("#moveFolderForm").dialog({
+		title: $("#moveFolderForm").data("title"),
+		modal: true,
+		resizable: false,
+		minWidth: 406,
+		buttons: [
+			{
+				text: $("#moveFolderForm").data("cancel"),
+				click: function(){
+					$(this).dialog("close");
+				}
+			},
+			{
+				text: $("#moveFolderForm").data("move"),
+				click: function(){
+					$("#optionFolderHiddenFieldValue").val( $("#moveFormDirectoryList").val() );
+					$("#optionFolderForm").submit();
 				}
 			},
 			
