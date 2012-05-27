@@ -1316,9 +1316,11 @@ footer {
 	margin: 0 7px -3px 0;
 }
 .path {
-	text-align: right;
 	color: #fff;
 	width: 400px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: right;
 }
 /* Nouveau dossier */
 #form-new-folder {

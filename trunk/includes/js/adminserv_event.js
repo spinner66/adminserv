@@ -110,6 +110,7 @@ $(document).ready(function(){
 		/**
 		* Option du dossier
 		*/
+		$(".path").scrollLeft(1000);
 		$(".folders .option-folder-list h3").click(function(){
 			var selector = $(this).parent().children("ul");
 			if( selector.attr("hidden") ){

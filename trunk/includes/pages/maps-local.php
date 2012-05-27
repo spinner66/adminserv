@@ -131,7 +131,7 @@
 		<h1>Local</h1>
 		<div class="title-detail">
 			<ul>
-				<li class="path"><?php echo $mapsDirectoryPath.$directory; ?></li>
+				<li><div class="path"><?php echo $mapsDirectoryPath.$directory; ?></div></li>
 				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($mapsList['lst']) ){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
