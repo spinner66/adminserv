@@ -2524,4 +2524,26 @@ abstract class AdminServPlugin {
 		
 	}
 }
+
+
+/**
+* Classe pour la gestion de la base de donnée
+*/
+abstract class AdminServDB {
+	
+	public static function install(){
+		
+	}
+	
+	
+	public static function connection(){
+		$out = @mysql_connect(DataBaseConfig::DB_HOST, DataBaseConfig::DB_USER , DataBaseConfig::DB_PASS, true)
+		or die('Impossible de se connecter au serveur : '.mysql_error() );
+		mysql_select_db(DataBaseConfig::DB_NAME);
+		mysql_query('SET NAMES UTF8');
+		
+		return $out;
+	}
+	
+}
 ?>

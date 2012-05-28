@@ -1,14 +1,4 @@
 <?php
-class OnlineConfig {
-	/********************* ONLINE CONFIGURATION *********************/
-	
-	const ACTIVATE = true;
-	const CHECK_PASSWORD = 'SuperAdmin';
-	const CHECK_IP = 'localhost';
-	const ADD_ONLY = false;
-}
-
-
 class AdminServConfig {
 	/********************* OPTIONAL CONFIGURATION *********************/
 	
@@ -60,5 +50,34 @@ class AdminServConfig {
 	const PATH_INCLUDES = './includes/';
 	const PATH_PLUGINS = './plugins/';
 	const PATH_RESSOURCES = './ressources/';
+}
+
+class OnlineConfig {
+	/********************* ONLINE CONFIGURATION *********************/
+	
+	const ACTIVATE = true;
+	const CHECK_PASSWORD = 'SuperAdmin';
+	const CHECK_IP = 'localhost';
+	const ADD_ONLY = false;
+}
+
+class DataBaseConfig {
+	/********************* DATABASE CONFIGURATION *********************/
+	
+	const DB_HOST = '';
+	const DB_USER = '';
+	const DB_PASS = '';
+	const DB_NAME = '';
+	const DB_TABLE_PREFIX = 'srv_';
+	
+	public static $DB_TABLE_COLUMNS = array(
+		'id' => 'serverId',
+		'name' => 'serverName',
+		'addr' => 'serverAddr',
+		'port' => 'serverPort',
+		'matchsettings' => 'serverMatchSet',
+		'adminlevel' => 'serverAdminLevel',
+		'active' => 'serverActive'
+	);
 }
 ?>
