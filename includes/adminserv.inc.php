@@ -2482,21 +2482,46 @@ abstract class AdminServServerConfig {
 */
 abstract class AdminServPlugin {
 	
+	public static function initialize(){
+		$out = null;
+		
+		if( self::hasPlugin() ){
+			foreach(ExtensionConfig::$PLUGINS as $plugin){
+				self::getPlugin($plugin);
+			}
+		}
+		
+		return $out;
+	}
+	
+	
 	/**
 	* Détermine si il y a au moins un plugin disponible
 	*
 	* @return bool
 	*/
-	public static function hasPlugin(){
+	public static function hasPlugin($name = null){
 		$out = false;
 		
 		if( class_exists('ExtensionConfig') ){
 			if( isset(ExtensionConfig::$PLUGINS) && count(ExtensionConfig::$PLUGINS) > 0 ){
-				$out = true;
+				if($name){
+					if( in_array($name, ExtensionConfig::$PLUGINS) ){
+						$out = true;
+					}
+				}
+				else{
+					$out = true;
+				}
 			}
 		}
 		
 		return $out;
+	}
+	
+	
+	public static function getPlugin($name){
+		
 	}
 }
 ?>
