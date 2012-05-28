@@ -11,17 +11,24 @@ abstract class Utils {
 	* @param string $page  -> Page à rediriger
 	* @param int    $sleep -> Temps en seconde à attendre avec d'exécuter la redirection
 	*/
-	public static function redirection($auto = true, $page = null, $sleep = null){
+	public static function redirection($auto = true, $page = null, $sleep = 0){
+		if( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != null){ $protocol = 'https'; }
+		else{ $protocol = 'http'; }
 		$host = $_SERVER['HTTP_HOST'];
 		$uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 		if($auto){
 			$page = basename($_SERVER['PHP_SELF']);
+			if($page == 'index.php'){
+				$page = null;
+			}
 		}
+		
 		// Redirection
-		if($sleep != null){
-			header("Refresh: $sleep; URL=http://$host$uri/$page");
-		}else{
-			header("Location: http://$host$uri/$page");
+		if($sleep !== 0){
+			header("Refresh: $sleep; URL=$protocol://$host$uri/$page");
+		}
+		else{
+			header("Location: $protocol://$host$uri/$page");
 		}
 		exit;
 	}
@@ -36,7 +43,14 @@ abstract class Utils {
 	*/
 	public static function replaceTextURL($str, $bbcode = false){
 		$regex = '$(?:https?|ftp)://(?:www\.|ssl\.)?[a-z0-9._%-]+(?:/[a-z0-9._/%-]*(?:\?[a-z0-9._/%-]+=[a-z0-9._/%+-]+(?:&(?:amp;)?[a-z0-9._/%-]+=[a-z0-9._/%+-]+)*)?)?(?:#[a-z0-9._-]*)?$i';
-		if($bbcode){ $code = '[url]$0[/url]'; }else{ $code = '<a href="$0">$0</a>'; }
+		
+		if($bbcode){
+			$code = '[url]$0[/url]';
+		}
+		else{
+			$code = '<a href="$0">$0</a>';
+		}
+		
 		return preg_replace($regex, $code, $str);
 	}
 	
@@ -44,36 +58,36 @@ abstract class Utils {
 	/**
 	* Vérifie si l'adresse email est dans un format valide
 	*
-	* @param str $email -> L'adresse email à tester
-	* @return true si adresse valide sinon false
+	* @param string $email -> L'adresse email à tester
+	* @return bool
 	*/
 	public static function isValidEmail($email){
-		if($email != null){
-			$valid_email = '#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,5}$#';
-			if( preg_match($valid_email, $email) ){
-				return true;
-			}else{
-				return false;
-			}
+		$out = false;
+		$regex = '#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,5}$#';
+		
+		if( preg_match($regex, $email) ){
+			$out = true;
 		}
+		
+		return $out;
 	}
 	
 	
 	/**
 	* Vérifie si le numero de téléphone est dans un format valide
 	*
-	* @param str $tel -> Le numero de téléphone à tester
-	* @return true si numero valide sinon false
+	* @param string $tel -> Le numero de téléphone à tester
+	* @return bool
 	*/
 	public static function isValidTel($tel){
-		if($tel != null){
-			$valid_tel = '#^0[0-9]([ .-]?[0-9]{2}){4}$#';
-			if( preg_match($valid_tel, $tel) ){
-				return true;
-			}else{
-				return false;
-			}
+		$out = false;
+		$regex = '#^0[0-9]([ .-]?[0-9]{2}){4}$#';
+		
+		if( preg_match($regex, $tel) ){
+			$out = true;
 		}
+		
+		return $out;
 	}
 	
 	
@@ -91,7 +105,6 @@ abstract class Utils {
 		}
 		// On stocke le code dans la session
 		$_SESSION['captcha'] = $code;
-		// On ferme la session pour forcer l'écriture immédiate
 		session_write_close();
 		return '<img src="./includes/captcha/showcaptcha.php" height="40" width="145" alt="Impossible d\'afficher le code !" />';
 	}
@@ -130,26 +143,30 @@ abstract class Utils {
 	/**
 	* Ajoute des données dans un cookie
 	*
-	* @param string $cookie_name   -> Le nom du cookie
-	* @param array  $data          -> Les données du cookie
-	* @param int    $cookie_expire -> Le nombre de jours avant que le cookie expire
+	* @param string $cookieName   -> Le nom du cookie
+	* @param array  $data         -> Les données du cookie
+	* @param int    $cookieExpire -> Le nombre de jours avant que le cookie expire
 	* @return true si l'écriture du cookie à réussi, sinon false
 	*/
-	public static function addCookieData($cookie_name, $data, $cookie_expire = 15){
+	public static function addCookieData($cookieName, $data, $cookieExpire = 15){
 		$separator = '|';
 		// Liste des données
 		$newCookieData = null;
 		for($i = 0; $i < count($data); $i++){
 			if($i == count($data)-1){
 				$newCookieData .= $data[$i];
-			}else{
+			}
+			else{
 				$newCookieData .= $data[$i].$separator;
 			}
 		}
 		// On écrit le cookie
-		if( setcookie($cookie_name, $newCookieData, time()+60*60*24*$cookie_expire, '/') ){
+		if( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != null){ $isHttps = true; }
+		else{ $isHttps = false; }
+		if( setcookie($cookieName, $newCookieData, time()+60*60*24*$cookieExpire, '/', $isHttps) ){
 			return true;
-		}else{
+		}
+		else{
 			return false;
 		}
 	}
@@ -256,7 +273,8 @@ abstract class Utils {
 		// De même pour l'utilisateur
 		if($addr){
 			$user_ip_list = explode('.', $addr);
-		}else{
+		}
+		else{
 			$user_ip_list = explode('.', $_SERVER['REMOTE_ADDR']);
 		}
 		$user_ip_substr = $user_ip_list[0].'.'.$user_ip_list[1].'.'.$user_ip_list[2];
