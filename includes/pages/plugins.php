@@ -8,26 +8,30 @@
 	
 	<section class="cadre right list">
 		<?php
-			if( $plugin = AdminServPlugin::getCurrentPlugin() ){
-				echo '<h1>'.AdminServPlugin::getName($plugin).'</h1>';
-				AdminServPlugin::getPlugin($plugin);
-			}
-			else{
+			if( $plugin = AdminServPlugin::getCurrent() ){
+				echo '<h1>'.AdminServPlugin::getInfos($plugin, 'name').'</h1>';
+				AdminServPlugin::get($plugin);
+			}else{
 		?>
 			<h1>Plugins</h1>
+			<div class="title-detail">
+				<ul>
+					<li class="last">2 plugins installés</li>
+				</ul>
+			</div>
 			<div class="content">
-				<p>Les plugins sont des extensions permettant l'ajout de fonctionnalités pour AdminServ.</p>
+				<p>Les plugins sont des extensions permettant d'ajouter des fonctionnalités pour AdminServ.</p>
 			</div>
 			
 			<h2>Comment installer un plugin ?</h2>
 			<div class="content">
 				<p>Les plugins sont diponibles sur la page de téléchargement du projet AdminServ : <a href="http://code.google.com/p/adminserv/downloads/list">Cliquez-ici</a></p>
-				<p>Ensuite dézipper le fichier et placer son contenu dans le dossier "plugins" d'AdminServ. Pour finir, dans la configuration Extension, ajoutez
-				une ligne décrivant le plugin :</p>
+				<p>- Dézippez le plugin et placez son contenu dans le dossier "plugins" d'AdminServ.<br />
+				- Dans la configuration Extension, ajoutez le nom du dossier du plugin précédement ajouté.</p>
 				<p>
 					<code>
 						public static $PLUGINS = array(<br />
-						&nbsp;&nbsp;&nbsp;&nbsp;'Nom du plugin',<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;'PluginName',<br />
 						);
 					</code>
 				</p>
@@ -35,9 +39,8 @@
 			
 			<h2>Comment créer son plugin ?</h2>
 			<div class="content">
-				<p>Pour créer son plugin, il faut créer un dossier dans plugins avec un fichier php portant le même nom (tout en minuscule).
-				C'est ce fichier php qui sera inclu dans la page "plugins" d'AdminServ. A vous de créer une configuration, une classe, et autres ressources possibles
-				puis de les inclures dans le fichier principal du plugin.</p>
+				<p>Pour créer son plugin, copiez le dossier example et remplacez les valeurs dans le fichier info.ini.<br />
+				Le fichier index.php sera inclu dans la page "plugins" d'AdminServ. A vous de créer une configuration, une classe, et autres ressources puis de les inclures dans ce fichier.</p>
 			</div>
 		<?php } ?>
 	</section>

@@ -2486,16 +2486,16 @@ abstract class AdminServPlugin {
 	/**
 	* Détermine si il y a au moins un plugin disponible
 	*
-	* @param string $name -> Test un plugin en particuliers
+	* @param string $name -> Test un plugin en particulier
 	* @return bool
 	*/
-	public static function hasPlugin($name = null){
+	public static function hasPlugin($pluginName = null){
 		$out = false;
 		
 		if( class_exists('ExtensionConfig') ){
 			if( isset(ExtensionConfig::$PLUGINS) && count(ExtensionConfig::$PLUGINS) > 0 ){
-				if($name){
-					if( in_array($name, ExtensionConfig::$PLUGINS) ){
+				if($pluginName){
+					if( in_array($pluginName, ExtensionConfig::$PLUGINS) ){
 						$out = true;
 					}
 				}
@@ -2510,48 +2510,40 @@ abstract class AdminServPlugin {
 	
 	
 	/**
-	* Récupère le nom du plugin
+	* Récupère le plugin courant
 	*
-	* @param string $scriptName -> Le nom du dossier plugin
-	* @return string
+	* @return pluginName
 	*/
-	public static function getName($scriptName){
+	public static function getCurrent(){
 		$out = null;
-		
-		if( count(ExtensionConfig::$PLUGINS) > 0 ){
-			foreach(ExtensionConfig::$PLUGINS as $plugin){
-				if(self::getScriptName($plugin) == $scriptName ){
-					$out = $plugin;
-					break;
-				}
-			}
+		if( isset($_GET['n']) && $_GET['n'] != null ){
+			$out = $_GET['n'];
 		}
-		
 		return $out;
 	}
 	
 	
 	/**
-	* Récupère le nom du dossier plugin à partir du nom
+	* Récupère les infos du plugin grâce au fichier info.ini
 	*
-	* @param string $name -> Le nom du plugin dans la config
-	* @return string
+	* @param string $pluginName  -> Le nom du dossier plugin
+	* @param string $returnField -> Retourner un champ en particulier
+	* @return array ou string si le 2ème paramètre est spécifié
 	*/
-	public static function getScriptName($name){
-		return strtolower( str_replace('-', '', Str::replaceChars($name) ) );
-	}
-	
-	
-	/**
-	* Récupère le plugin courant
-	*
-	* @return script name
-	*/
-	public static function getCurrentPlugin(){
+	public static function getInfos($pluginName, $returnField = null){
 		$out = null;
-		if( isset($_GET['n']) && $_GET['n'] != null ){
-			$out = $_GET['n'];
+		$path = AdminServConfig::PATH_PLUGINS .$pluginName.'/info.ini';
+		
+		if( file_exists($path) ){
+			$ini = parse_ini_file($path);
+			if($returnField){
+				$out = $ini[$returnField];
+			}
+			else{
+				$out = $ini;
+			}
 		}
+		
 		return $out;
 	}
 	
@@ -2563,12 +2555,21 @@ abstract class AdminServPlugin {
 	*/
 	public static function getMenuList(){
 		$out = null;
-		
+		$pluginsList = array();
 		if( count(ExtensionConfig::$PLUGINS) > 0 ){
+			foreach(ExtensionConfig::$PLUGINS as $plugin){
+				$pluginInfos = self::getInfos($plugin);
+				if($pluginInfos['game'] == 'all' || $pluginInfos['game'] == SERVER_VERSION_NAME){
+					$pluginsList[$plugin] = $pluginInfos;
+				}
+			}
+		}
+		
+		if( count($pluginsList) > 0 ){
 			$out = '<nav class="vertical-nav">'
 				.'<ul>';
-					foreach(ExtensionConfig::$PLUGINS as $plugin){
-						$out .= '<li><a '; if(self::getCurrentPlugin() == self::getScriptName($plugin) ){ $out .= 'class="active" '; } $out .= 'href="?p='. USER_PAGE .'&n='.self::getScriptName($plugin).'">'.$plugin.'</a></li>';
+					foreach($pluginsList as $plugin => $infos){
+						$out .= '<li><a '; if(self::getCurrent() == $plugin){ $out .= 'class="active" '; } $out .= 'href="?p='. USER_PAGE .'&n='.$plugin.'" title="Version : '.$infos['version'].'">'.$infos['name'].'</a></li>';
 					}
 			$out .= '</ul>'
 			.'</nav>';
@@ -2581,22 +2582,14 @@ abstract class AdminServPlugin {
 	/**
 	* Inclue tous les fichiers necessaire au fonctionnement du plugin
 	*
-	* @param string $scriptName -> Le nom du dossier plugin
+	* @param string $pluginName -> Le nom du dossier plugin
 	*/
-	public static function getPlugin($scriptName){
+	public static function get($pluginName){
 		$out = null;
 		
-		$includes = array(
-			'.cfg.php',
-			'.class.php',
-			'.php'
-		);
-		
-		foreach($includes as $ext){
-			$file = AdminServConfig::PATH_PLUGINS .$scriptName.'/'.$scriptName.$ext;
-			if( file_exists($file) ){
-				require_once $file;
-			}
+		$file = AdminServConfig::PATH_PLUGINS .$pluginName.'/index.php';
+		if( file_exists($file) ){
+			require_once $file;
 		}
 		
 		return $out;

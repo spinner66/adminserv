@@ -61,7 +61,7 @@ class ExtensionConfig {
 	
 	// Liste des plugins installés
 	public static $PLUGINS = array(
-		'My Plugin'
+		'example',
 	);
 }
 ?>
