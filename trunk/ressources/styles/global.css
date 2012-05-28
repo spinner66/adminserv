@@ -1048,7 +1048,17 @@ td .detailModeTd {
 .content.last {
 	margin: 0;
 }
-
+.content p {
+	margin: 12px;
+}
+.content p a {
+	color: #666;
+	text-decoration: none;
+	border-bottom: 1px solid #5e9cd5;
+}
+.content p a:hover {
+	border: 0;
+}
 
 
 /* Footer

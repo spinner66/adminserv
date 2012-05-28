@@ -2482,22 +2482,11 @@ abstract class AdminServServerConfig {
 */
 abstract class AdminServPlugin {
 	
-	public static function initialize(){
-		$out = null;
-		
-		if( self::hasPlugin() ){
-			foreach(ExtensionConfig::$PLUGINS as $plugin){
-				self::getPlugin($plugin);
-			}
-		}
-		
-		return $out;
-	}
-	
 	
 	/**
 	* Détermine si il y a au moins un plugin disponible
 	*
+	* @param string $name -> Test un plugin en particuliers
 	* @return bool
 	*/
 	public static function hasPlugin($name = null){
@@ -2520,8 +2509,97 @@ abstract class AdminServPlugin {
 	}
 	
 	
-	public static function getPlugin($name){
+	/**
+	* Récupère le nom du plugin
+	*
+	* @param string $scriptName -> Le nom du dossier plugin
+	* @return string
+	*/
+	public static function getName($scriptName){
+		$out = null;
 		
+		if( count(ExtensionConfig::$PLUGINS) > 0 ){
+			foreach(ExtensionConfig::$PLUGINS as $plugin){
+				if(self::getScriptName($plugin) == $scriptName ){
+					$out = $plugin;
+					break;
+				}
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère le nom du dossier plugin à partir du nom
+	*
+	* @param string $name -> Le nom du plugin dans la config
+	* @return string
+	*/
+	public static function getScriptName($name){
+		return strtolower( str_replace('-', '', Str::replaceChars($name) ) );
+	}
+	
+	
+	/**
+	* Récupère le plugin courant
+	*
+	* @return script name
+	*/
+	public static function getCurrentPlugin(){
+		$out = null;
+		if( isset($_GET['n']) && $_GET['n'] != null ){
+			$out = $_GET['n'];
+		}
+		return $out;
+	}
+	
+	
+	/**
+	* Retourne une liste html pour le menu des plugins
+	*
+	* @return html
+	*/
+	public static function getMenuList(){
+		$out = null;
+		
+		if( count(ExtensionConfig::$PLUGINS) > 0 ){
+			$out = '<nav class="vertical-nav">'
+				.'<ul>';
+					foreach(ExtensionConfig::$PLUGINS as $plugin){
+						$out .= '<li><a '; if(self::getCurrentPlugin() == self::getScriptName($plugin) ){ $out .= 'class="active" '; } $out .= 'href="?p='. USER_PAGE .'&n='.self::getScriptName($plugin).'">'.$plugin.'</a></li>';
+					}
+			$out .= '</ul>'
+			.'</nav>';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Inclue tous les fichiers necessaire au fonctionnement du plugin
+	*
+	* @param string $scriptName -> Le nom du dossier plugin
+	*/
+	public static function getPlugin($scriptName){
+		$out = null;
+		
+		$includes = array(
+			'.cfg.php',
+			'.class.php',
+			'.php'
+		);
+		
+		foreach($includes as $ext){
+			$file = AdminServConfig::PATH_PLUGINS .$scriptName.'/'.$scriptName.$ext;
+			if( file_exists($file) ){
+				require_once $file;
+			}
+		}
+		
+		return $out;
 	}
 }
 
