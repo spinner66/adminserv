@@ -38,6 +38,13 @@ $(document).ready(function(){
 				$(".cadre").updateNbSelectedLines();
 			});
 		}
+		else if( $("body").hasClass("section-addserver") ){
+			$("#addServerAdmLvlSA, #addServerAdmLvlADM, #addServerAdmLvlUSR").blur(function(){
+				if( $(this).val() == "" ){
+					$(this).val("all");
+				}
+			});
+		}
 		else if( $("body").hasClass("section-index") ){
 			// Adminlevel
 			getServerAdminLevel();
