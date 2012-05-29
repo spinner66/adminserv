@@ -1,4 +1,13 @@
 <?php
+class OnlineConfig {
+	/********************* ONLINE CONFIGURATION *********************/
+	
+	const ACTIVATE = true;
+	const CHECK_PASSWORD = 'SuperAdmin';
+	const CHECK_IP = 'localhost';
+	const ADD_ONLY = false;
+}
+
 class AdminServConfig {
 	/********************* OPTIONAL CONFIGURATION *********************/
 	
@@ -20,14 +29,14 @@ class AdminServConfig {
 	
 	/* FILES AND FOLDERS */
 	public static $FOLDERS_OPTIONS = array(
-		'new' => true,
-		'rename' => true,
-		'move' => true,
-		'delete' => true
+		'new' => array(true, 'Admin'),
+		'rename' => array(true, 'Admin'),
+		'move' => array(true, 'Admin'),
+		'delete' => array(true, 'SuperAdmin')
 	);
 	public static $MAPS_HIDDEN_FOLDERS = array('MatchSettings', 'Replays');
 	public static $MAPS_HIDDEN_FILES = array('db', 'txt', 'xml', 'zip', 'php', 'log');
-	public static $MATCHSET_HIDDEN_FOLDERS =  array('Campaigns', 'Replays');
+	public static $MATCHSET_HIDDEN_FOLDERS = array('Campaigns', 'Replays');
 	public static $MATCHSET_HIDDEN_FILES = array('db', 'gbx', 'php', 'log');
 	public static $PLAYLIST_HIDDEN_FILES = array('gbx', 'dedicated_cfg.txt', 'checksum.txt', 'servers.txt', 'php', 'dat', 'log', 'cfg', 'cfg~');
 	
@@ -50,15 +59,6 @@ class AdminServConfig {
 	const PATH_INCLUDES = './includes/';
 	const PATH_PLUGINS = './plugins/';
 	const PATH_RESSOURCES = './ressources/';
-}
-
-class OnlineConfig {
-	/********************* ONLINE CONFIGURATION *********************/
-	
-	const ACTIVATE = true;
-	const CHECK_PASSWORD = 'SuperAdmin';
-	const CHECK_IP = 'localhost';
-	const ADD_ONLY = false;
 }
 
 class DataBaseConfig {

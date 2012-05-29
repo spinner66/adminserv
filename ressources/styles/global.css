@@ -1162,6 +1162,9 @@ footer {
 #playerlist {
 	min-height: 433px;
 }
+.section-index .cadre.left {
+	min-height: 511px;
+}
 .section-index .selected-files-option {
 	width: 70%;
 	top: auto;
