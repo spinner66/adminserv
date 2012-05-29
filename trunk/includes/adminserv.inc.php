@@ -648,14 +648,14 @@ abstract class AdminServUI {
 			// Titre + nouveau dossier
 			$out .= '<form id="createFolderForm" method="post" action="?p='. USER_PAGE .'&amp;d='.$currentPath.'">'
 				.'<h1>Dossiers';
-					if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new']){
+					if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['new'][1]) ){
 						$out .='<span id="form-new-folder" hidden="hidden">'
 							.'<input class="text" type="text" name="newFolderName" id="newFolderName" value="" />'
 							.'<input class="button light" type="submit" name="newFolderValid" id="newFolderValid" value="ok" />'
 						.'</span>';
 					}
 				$out .= '</h1>';
-				if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new']){
+				if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['new'][1]) ){
 					$out .= '<div class="title-detail"><a href="." id="newfolder" data-cancel="Annuler" data-new="Nouveau">Nouveau</a></div>';
 				}
 			$out .= '</form>';
@@ -721,19 +721,19 @@ abstract class AdminServUI {
 			
 			// Options de dossier
 			if($showOptions && $currentPath){
-				if( AdminServConfig::$FOLDERS_OPTIONS['rename'] || AdminServConfig::$FOLDERS_OPTIONS['move'] || AdminServConfig::$FOLDERS_OPTIONS['delete'] ){
+				if( (AdminServConfig::$FOLDERS_OPTIONS['rename'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['rename'][1])) || (AdminServConfig::$FOLDERS_OPTIONS['move'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['move'][1])) || (AdminServConfig::$FOLDERS_OPTIONS['delete'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['delete'][1])) ){
 					$currentDir = basename($currentPath);
 					$out .= '<form id="optionFolderForm" method="post" action="?p='. USER_PAGE .'&amp;d='.$currentPath.'">'
 						.'<div class="option-folder-list">'
 							.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
 							.'<ul hidden="hidden">';
-								if(AdminServConfig::$FOLDERS_OPTIONS['rename']){
+								if(AdminServConfig::$FOLDERS_OPTIONS['rename'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['rename'][1]) ){
 									$out .= '<li><a class="button light rename" id="renameFolder" href=".">Renommer</a></li>';
 								}
-								if(AdminServConfig::$FOLDERS_OPTIONS['move']){
+								if(AdminServConfig::$FOLDERS_OPTIONS['move'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['move'][1])){
 									$out .= '<li><a class="button light move" id="moveFolder" href=".">Déplacer</a></li>';
 								}
-								if(AdminServConfig::$FOLDERS_OPTIONS['delete']){
+								if(AdminServConfig::$FOLDERS_OPTIONS['delete'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['delete'][1])){
 									$out .= '<li><a class="button light delete" id="deleteFolder" href="." data-confirm-text="Voulez-vous vraiment supprimer le dossier '.$currentDir.' ?">Supprimer</a></li>';
 								}
 							$out .= '</ul>'
