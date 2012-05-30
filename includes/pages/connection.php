@@ -29,7 +29,7 @@
 						
 						// Redirection
 						if($_SESSION['adminserv']['sid'] != -1 && $_SESSION['adminserv']['name'] != null && $_SESSION['adminserv']['password'] != null && $_SESSION['adminserv']['adminlevel'] != null){
-							Utils::redirection(false);
+							Utils::redirection();
 						}else{
 							AdminServ::error('Erreur de connexion : session invalide.');
 						}
