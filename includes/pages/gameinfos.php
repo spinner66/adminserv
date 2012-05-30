@@ -47,7 +47,7 @@
 	AdminServUI::getHeader();
 ?>
 <section class="cadre">
-	<h1>Informations de jeu</h1>
+	<h1><?php echo Utils::t('Game informations'); ?></h1>
 	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 		<div class="content gameinfos">
 			<?php
@@ -63,7 +63,7 @@
 			</div>
 		<?php } ?>
 		<div class="fright save">
-			<input class="button light" type="submit" name="savegameinfos" id="savegameinfos" value="Enregistrer" />
+			<input class="button light" type="submit" name="savegameinfos" id="savegameinfos" value="<?php echo Utils::t('Save'); ?>" />
 		</div>
 	</form>
 </section>

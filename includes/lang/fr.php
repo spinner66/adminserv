@@ -73,5 +73,7 @@ $translate = array(
 	'Replays auto save' => 'Sauvegarde auto des replays',
 	'Buddy notification' => 'Notifications des amis',
 	'Save' => 'Enregistrer',
+	// GameInfos
+	'Game informations' => 'Informations de jeu',
 );
 ?>
