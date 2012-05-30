@@ -895,11 +895,11 @@ abstract class AdminServ {
 										define('API_VERSION', $getVersion['ApiVersion']);
 										if(SERVER_VERSION_NAME == 'ManiaPlanet'){ TmNick::$linkProtocol = 'maniaplanet'; }
 										define('LINK_PROTOCOL', TmNick::$linkProtocol);
-										if( !isset($_SESSION['adminserv_mode']) ){
+										if( !isset($_SESSION['adminserv']['mode']) ){
 											define('USER_MODE', 'simple');
 										}
 										else{
-											define('USER_MODE', $_SESSION['adminserv_mode']);
+											define('USER_MODE', $_SESSION['adminserv']['mode']);
 										}
 										return true;
 									}
@@ -1150,9 +1150,8 @@ abstract class AdminServ {
 			
 			// TRI
 			if( is_array($out['ply']) && count($out['ply']) > 0 ){
+				// Si on est en mode équipe, on tri par équipe
 				if( self::isTeamGameMode($out['srv']['gameModeId']) ){
-					// Si on est en mode équipe, on force en mode détail et on tri par équipe
-					$_SESSION['adminserv_mode'] = 'detail';
 					uasort($out['ply'], 'AdminServSort::sortByTeam');
 				}
 				else{
