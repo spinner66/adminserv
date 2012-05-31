@@ -38,11 +38,11 @@
 	</section>
 	
 	<section class="cadre right list">
-		<h1>Liste</h1>
+		<h1><?php echo Utils::t('List'); ?></h1>
 		<div class="title-detail">
 			<ul>
 				<?php if(is_array($mapsList) && count($mapsList) > 0 && count($mapsList['lst']) > 25){ ?>
-					<li><a id="scrollToCurrentMap" href="#currentMap">Allez à la map en cours</a></li>
+					<li><a id="scrollToCurrentMap" href="#currentMap"><?php echo Utils::t('Go to the current map'); ?></a></li>
 				<?php } ?>
 				<li><a id="detailMode" href="." data-statusmode="<?php echo USER_MODE; ?>" data-textdetail="<?php echo Utils::t('Detail mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detail mode'); } ?></a></li>
 				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value="" /></li>
@@ -54,9 +54,9 @@
 			<table>
 				<thead>
 					<tr>
-						<th class="thleft"><a href="?sort=name">Map</a></th>
-						<th><a href="?sort=env">Environnement</a></th>
-						<th><a href="?sort=author">Auteur</a></th>
+						<th class="thleft"><a href="?sort=name"><?php echo Utils::t('Map'); ?></a></th>
+						<th><a href="?sort=env"><?php echo Utils::t('Environment'); ?></a></th>
+						<th><a href="?sort=author"><?php echo Utils::t('Author'); ?></a></th>
 						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=goldtime"><?php echo Utils::t('Gold time'); ?></a></th>
 						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=cost"><?php echo Utils::t('Cost'); ?></a></th>
 						<th class="thright"></th>
@@ -107,11 +107,11 @@
 			</div>
 			<div class="fright">
 				<div class="selected-files-label locked">
-					<span class="selected-files-title">Pour la sélection</span>
+					<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="removeMap" id="removeMap" value="Supprimer" />
-						<input class="button dark" type="submit" name="chooseNextMap" id="chooseNextMap" value="Déplacer après la map en cours" />
+						<input class="button dark" type="submit" name="removeMap" id="removeMap" value="<?php echo Utils::t('Delete'); ?>" />
+						<input class="button dark" type="submit" name="chooseNextMap" id="chooseNextMap" value="<?php echo Utils::t('Move after the current map'); ?>" />
 					</div>
 				</div>
 			</div>
