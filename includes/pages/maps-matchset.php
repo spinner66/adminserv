@@ -59,7 +59,7 @@
 	</section>
 	
 	<section class="cadre right matchset">
-		<h1>MatchSettings</h1>
+		<h1><?php echo Utils::t('MatchSettings'); ?></h1>
 		<div class="title-detail">
 			<ul>
 				<li class="path"><?php echo $mapsDirectoryPath.$directory; ?></li>
@@ -72,9 +72,9 @@
 			<table>
 				<thead>
 					<tr>
-						<th class="thleft"><a href="?sort=name">Nom</a></th>
-						<th><a href="?sort=nbm">Contient</a></th>
-						<th><a href="?sort=mtime">Modifié le</a></th>
+						<th class="thleft"><a href="?sort=name"><?php echo Utils::t('Name'); ?></a></th>
+						<th><a href="?sort=nbm"><?php echo Utils::t('Contains'); ?></a></th>
+						<th><a href="?sort=mtime"><?php echo Utils::t('Modified'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
 					<tr class="table-separation"></tr>
@@ -114,14 +114,14 @@
 			</div>
 			<div class="fright">
 				<div class="selected-files-label locked">
-					<span class="selected-files-title">Pour la sélection</span>
+					<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="editMatchset" id="editMatchset" value="Éditer" />
-						<input class="button dark" type="submit" name="insertMatchset" id="insertMatchset" value="Insérer" />
-						<input class="button dark" type="submit" name="addMatchset" id="addMatchset" value="Ajouter" />
-						<input class="button dark" type="submit" name="loadMatchset" id="loadMatchset" value="Charger" />
-						<input class="button dark" type="submit" name="saveMatchset" id="saveMatchset" value="Sauvegarder" />
+						<input class="button dark" type="submit" name="editMatchset" id="editMatchset" value="<?php echo Utils::t('Edit'); ?>" />
+						<input class="button dark" type="submit" name="insertMatchset" id="insertMatchset" value="<?php echo Utils::t('Insert'); ?>" />
+						<input class="button dark" type="submit" name="addMatchset" id="addMatchset" value="<?php echo Utils::t('Add'); ?>" />
+						<input class="button dark" type="submit" name="loadMatchset" id="loadMatchset" value="<?php echo Utils::t('Load'); ?>" />
+						<input class="button dark" type="submit" name="saveMatchset" id="saveMatchset" value="<?php echo Utils::t('Save '); ?>" />
 					</div>
 				</div>
 			</div>

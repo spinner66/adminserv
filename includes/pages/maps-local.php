@@ -60,7 +60,7 @@
 		foreach($_POST['renameMapList'] as $newMapName){
 			$result = File::rename($mapsDirectoryPath.$_POST['map'][$i], $mapsDirectoryPath.$newMapName);
 			if($result !== true ){
-				AdminServ::error('Impossible de renommer la map : '.$newMapName.' ('.$result.')');
+				AdminServ::error(Utils::t('Unable to rename the map').' : '.$newMapName.' ('.$result.')');
 				break;
 			}
 			$i++;
@@ -71,7 +71,7 @@
 		foreach($_POST['renameMapList'] as $newMapName){
 			$result = File::rename($mapsDirectoryPath.$_POST['map'][$i], $mapsDirectoryPath.Str::replaceChars($newMapName));
 			if($result !== true){
-				AdminServ::error('Impossible de renommer la map : '.$newMapName.' ('.$result.')');
+				AdminServ::error(Utils::t('Unable to rename the map').' : '.$newMapName.' ('.$result.')');
 				break;
 			}
 			$i++;
@@ -90,7 +90,7 @@
 		foreach($_POST['map'] as $map){
 			$result = File::rename($mapsDirectoryPath.$directory.$map, $newPath.$map);
 			if($result !== true ){
-				AdminServ::error('Impossible de déplacer la map : '.$map.' ('.$result.')');
+				AdminServ::error(Utils::t('Unable to move the map').' : '.$map.' ('.$result.')');
 				break;
 			}
 		}
@@ -99,7 +99,7 @@
 		foreach($_POST['map'] as $map){
 			$result = File::delete($mapsDirectoryPath.$map);
 			if($result !== true){
-				AdminServ::error('Impossible de supprimer la map : '.$map.' ('.$result.')');
+				AdminServ::error(Utils::t('Unable to delete the map').' : '.$map.' ('.$result.')');
 				break;
 			}
 		}
@@ -128,7 +128,7 @@
 	</section>
 	
 	<section class="cadre right local">
-		<h1>Local</h1>
+		<h1><?php echo Utils::t('Local'); ?></h1>
 		<div class="title-detail">
 			<ul>
 				<li><div class="path"><?php echo $mapsDirectoryPath.$directory; ?></div></li>
@@ -141,9 +141,9 @@
 			<table>
 				<thead>
 					<tr>
-						<th class="thleft"><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=name">Map</a></th>
-						<th><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=env">Environnement</a></th>
-						<th><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=author">Auteur</a></th>
+						<th class="thleft"><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=name"><?php echo Utils::t('Map'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=env"><?php echo Utils::t('Environment'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
 					<tr class="table-separation"></tr>
@@ -183,20 +183,20 @@
 			</div>
 			<div class="fright">
 				<div class="selected-files-label locked">
-					<span class="selected-files-title">Pour la sélection</span>
+					<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="Supprimer" data-confirm="Voulez-vous vraiment supprimer cette sélection ?" />
-						<input class="button dark" type="button" name="moveMap" id="moveMap" value="Déplacer" />
-						<input class="button dark" type="button" name="renameMap" id="renameMap" value="Renommer" />
-						<input class="button dark" type="submit" name="downloadMap" id="downloadMap" value="Télécharger" />
-						<input class="button dark" type="submit" name="insertMap" id="insertMap" value="Insérer" />
-						<input class="button dark" type="submit" name="addMap" id="addMap" value="Ajouter" />
+						<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="<?php echo Utils::t('Delete'); ?>" data-confirm="<?php echo Utils::t('Do yo really want to remove this selection?'); ?>" />
+						<input class="button dark" type="button" name="moveMap" id="moveMap" value="<?php echo Utils::t('Move'); ?>" />
+						<input class="button dark" type="button" name="renameMap" id="renameMap" value="<?php echo Utils::t('Rename'); ?>" />
+						<input class="button dark" type="submit" name="downloadMap" id="downloadMap" value="<?php echo Utils::t('Download'); ?>" />
+						<input class="button dark" type="submit" name="insertMap" id="insertMap" value="<?php echo Utils::t('Insert'); ?>" />
+						<input class="button dark" type="submit" name="addMap" id="addMap" value="<?php echo Utils::t('Add'); ?>" />
 					</div>
 				</div>
 			</div>
-			<div id="form-rename-map" class="option-form" hidden="hidden" data-cancel="Annuler" data-rename="Renommer" data-autorename="Remplacer les caractères spéciaux"></div>
-			<div id="form-move-map" class="option-form" hidden="hidden" data-cancel="Annuler" data-move="Déplacer" data-inthefolder="dans le dossier :" data-root="Racine"></div>
+			<div id="form-rename-map" class="option-form" hidden="hidden" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-rename="<?php echo Utils::t('Rename'); ?>" data-autorename="<?php echo Utils::t('Replace the specials characters'); ?>"></div>
+			<div id="form-move-map" class="option-form" hidden="hidden" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-move="<?php echo Utils::t('Move'); ?>" data-inthefolder="<?php echo Utils::t('in the folder:'); ?>" data-root="<?php echo Utils::t('Root'); ?>"></div>
 		</div>
 		</form>
 	</section>

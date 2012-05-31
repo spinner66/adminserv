@@ -1,8 +1,8 @@
 <?php
 	// SESSION
 	if( !isset($_SESSION['adminserv']['allow_config_servers']) ){
-		AdminServ::error('Vous n\'êtes pas autorisé à configurer les serveurs.');
-		Utils::redirection(false);
+		AdminServ::error( Utils::t('You are not allowed to configure the servers') );
+		Utils::redirection();
 	}
 	
 	// VERIFICATION
@@ -11,8 +11,8 @@
 		if( AdminServServerConfig::hasServer() ){
 			// Si on n'autorise pas la configuration en ligne
 			if( OnlineConfig::ACTIVATE !== true ){
-				AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
-				Utils::redirection(false);
+				AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
+				Utils::redirection();
 			}
 			else{
 				if( OnlineConfig::ADD_ONLY === true ){
@@ -23,8 +23,8 @@
 		else{
 			// Si on n'autorise pas la configuration en ligne
 			if( OnlineConfig::ACTIVATE !== true ){
-				AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
-				Utils::redirection(false);
+				AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
+				Utils::redirection();
 			}
 			else{
 				if( OnlineConfig::ADD_ONLY === true ){
@@ -34,8 +34,8 @@
 		}
 	}
 	else{
-		AdminServ::error('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.');
-		Utils::redirection(false);
+		AdminServ::error( Utils::t('The servers configuration file doesn\'t reconized by AdminServ.') );
+		Utils::redirection();
 	}
 	
 	
@@ -53,7 +53,7 @@
 		
 		// SET
 		$setServerData = array(
-			'name' => trim( htmlspecialchars( addslashes($_POST['server'][0] . ' - copie') ) ),
+			'name' => trim( htmlspecialchars( addslashes($_POST['server'][0] . ' - '.Utils::t('copy') ) ) ),
 			'address' => trim($getServerData['address']),
 			'port' => intval($getServerData['port']),
 			'matchsettings' => trim($getServerData['matchsettings']),
@@ -64,11 +64,11 @@
 			)
 		);
 		if( AdminServServerConfig::saveServerConfig($setServerData) ){
-			AdminServ::info('Le serveur a bien été dupliqué.');
-			Utils::redirection(false, '?p=servers');
+			AdminServ::info( Utils::t('This server has been duplicated.') );
+			Utils::redirection(false, '?p='.USER_PAGE);
 		}
 		else{
-			AdminServ::error('Impossible de dupliquer le serveur.');
+			AdminServ::error( Utils::t('Unable to duplicate server.') );
 		}
 	}
 	
@@ -79,7 +79,7 @@
 		unset($servers[$_POST['server'][0]]);
 		AdminServServerConfig::saveServerConfig(array(), -1, $servers);
 		AdminServ::info('Le serveur "'.$_POST['server'][0].'" a été supprimé.');
-		Utils::redirection(false, '?p=servers');
+		Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	
 	
@@ -90,19 +90,19 @@
 	AdminServUI::getHeader();
 ?>
 <section class="cadre">
-	<h1>Liste des serveurs</h1>
+	<h1><?php echo Utils::t('Servers list'); ?></h1>
 	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 	<table id="serverList">
 		<thead>
 			<tr>
-				<th class="thleft"><a href="?sort=">Nom du serveur</a></th>
-				<th><a href="?sort=">Adresse</a></th>
-				<th>Port</th>
-				<th>MatchSettings</th>
-				<th>Niveau SuperAdmin</th>
-				<th>Niveau Admin</th>
-				<th>Niveau User</th>
-				<th class="thright">Gestion</th>
+				<th class="thleft"><a href="?sort="><?php echo Utils::t('Server name'); ?></a></th>
+				<th><a href="?sort="><?php echo Utils::t('Address'); ?></a></th>
+				<th><?php echo Utils::t('Port'); ?></th>
+				<th><?php echo Utils::t('MatchSettings'); ?></th>
+				<th><?php echo Utils::t('SuperAdmin level'); ?></th>
+				<th><?php echo Utils::t('Admin level'); ?></th>
+				<th><?php echo Utils::t('User level'); ?></th>
+				<th class="thright"><?php echo Utils::t('Manage'); ?></th>
 			</tr>
 			<tr class="table-separation"></tr>
 		</thead>
@@ -118,7 +118,7 @@
 					if($serverData['matchsettings']){
 						$matchSettings = $serverData['matchsettings'];
 					}else{
-						$matchSettings = 'Aucun';
+						$matchSettings = Utils::t('None');
 					}
 					
 					// Niveaux admins
@@ -127,23 +127,23 @@
 					foreach($adminLevels as $level){
 						if( array_key_exists($level, $serverData['adminlevel']) ){
 							if( is_array($serverData['adminlevel'][$level]) ){
-								$adminLevelsStatus[] = 'Adresse IP';
+								$adminLevelsStatus[] = Utils::t('IP address');
 							}
 							else if($serverData['adminlevel'][$level] === 'local'){
-								$adminLevelsStatus[] = 'Réseau local';
+								$adminLevelsStatus[] = Utils::t('Local network');
 							}
 							else if($serverData['adminlevel'][$level] === 'all'){
-								$adminLevelsStatus[] = 'Tous';
+								$adminLevelsStatus[] = Utils::t('All');
 							}
 							else if($serverData['adminlevel'][$level] === 'none'){
-								$adminLevelsStatus[] = 'Enlevé';
+								$adminLevelsStatus[] = Utils::t('Removed');
 							}
 							else{
-								$adminLevelsStatus[] = 'Manquant';
+								$adminLevelsStatus[] = Utils::t('Missing');
 							}
 						}
 						else{
-							$adminLevelsStatus[] = 'Manquant';
+							$adminLevelsStatus[] = Utils::t('Missing');
 						}
 					}
 					
@@ -162,7 +162,7 @@
 				}
 			}
 			else{
-				$showServerList .= '<tr class="no-line"><td class="center" colspan="8">Aucun serveur</td></tr>';
+				$showServerList .= '<tr class="no-line"><td class="center" colspan="8">'.Utils::t('No server').'</td></tr>';
 			}
 			
 			// Affichage
@@ -178,10 +178,10 @@
 					if( is_array($serverList) && count($serverList) > 0 ){
 						$countServerList = count($serverList);
 						if($countServerList > 1 ){
-							echo $countServerList.' serveurs';
+							echo $countServerList.' '.Utils::t('servers');
 						}
 						else{
-							echo $countServerList.' serveur';
+							echo $countServerList.' '.Utils::t('server');
 						}
 					}
 				?>
@@ -191,9 +191,9 @@
 			<div class="selected-files-label locked">
 				<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 				<div class="selected-files-option">
-					<input class="button dark" type="submit" name="deleteserver" id="deleteserver" value="Supprimer" />
-					<input class="button dark" type="submit" name="duplicateserver" id="duplicateserver" value="Dupliquer" />
-					<input class="button dark" type="submit" name="editserver" id="editserver" value="Modifier" />
+					<input class="button dark" type="submit" name="deleteserver" id="deleteserver" value="<?php echo Utils::t('Delete'); ?>" />
+					<input class="button dark" type="submit" name="duplicateserver" id="duplicateserver" value="<?php echo Utils::t('Duplicate'); ?>" />
+					<input class="button dark" type="submit" name="editserver" id="editserver" value="<?php echo Utils::('Modify'); ?>" />
 				</div>
 			</div>
 		</div>

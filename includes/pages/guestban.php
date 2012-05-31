@@ -112,7 +112,7 @@
 		}
 		
 		// Requête
-		if($playerlogin != 'Login joueur'){
+		if($playerlogin != Utils::t('Player login') ){
 			// Inviter
 			if($addPlayerTypeList == 'guestlist'){
 				if( !$client->query('AddGuest', $playerlogin) ){
@@ -173,7 +173,7 @@
 	else if( isset($_POST['deletePlaylist']) && isset($_POST['playlist']) && count($_POST['playlist'] > 0) ){
 		foreach($_POST['playlist'] as $playlist){
 			if( !File::delete($gameDataDirectory.'Config/'.$playlist) ){
-				AdminServ::error('Impossible de supprimer la playlist : '.$playlist);
+				AdminServ::error(Utils::t('Unable to delete the playlist').' : '.$playlist);
 				break;
 			}
 		}
@@ -240,16 +240,16 @@
 		<h1>Banlist<?php if($countBanList > 0){ echo ' ('.$countBanList.')'; } ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=banlist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
+				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=banlist" data-empty="<?php echo Utils::t('The list is already empty.'); ?>"><?php echo Utils::t('Clean the list'); ?></a></li>
 				<li class="last"><input type="checkbox" name="checkAllBanlist" id="checkAllBanlist" value=""<?php if($countBanList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		<table>
 			<thead>
 				<tr>
-					<th class="thleft">Login</th>
-					<th>Adresse IP</th>
-					<th>Client</th>
+					<th class="thleft"><?php echo Utils::t('Login'); ?></th>
+					<th><?php echo Utils::t('IP address'); ?></th>
+					<th><?php echo Utils::t('Client'); ?></th>
 					<th class="thright"></th>
 				</tr>
 			</thead>
@@ -272,7 +272,7 @@
 						}
 					}
 					else{
-						$showBanList .= '<tr class="no-line"><td class="center" colspan="4">Aucun joueur</td></tr>';
+						$showBanList .= '<tr class="no-line"><td class="center" colspan="4">'.Utils::t('No player').'</td></tr>';
 					}
 					
 					// Affichage
@@ -286,14 +286,14 @@
 		<h1>Blacklist<?php if($countBlackList > 0){ echo ' ('.$countBlackList.')'; } ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=blacklist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
+				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=blacklist" data-empty="<?php echo Utils::t('The list is already empty.'); ?>"><?php echo Utils::t('Clean the list'); ?></a></li>
 				<li class="last"><input type="checkbox" name="checkAllBlacklist" id="checkAllBlacklist" value=""<?php if($countBlackList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		<table>
 			<thead>
 				<tr>
-					<th class="thleft">Login</th>
+					<th class="thleft"><?php echo Utils::t('Login'); ?></th>
 					<th class="thright"></th>
 				</tr>
 			</thead>
@@ -314,7 +314,7 @@
 						}
 					}
 					else{
-						$showBlackList .= '<tr class="no-line"><td class="center" colspan="2">Aucun joueur</td></tr>';
+						$showBlackList .= '<tr class="no-line"><td class="center" colspan="2">'.Utils::t('No player').'</td></tr>';
 					}
 					
 					// Affichage
@@ -328,14 +328,14 @@
 		<h1>Guestlist<?php if($countGuestList > 0){ echo ' ('.$countGuestList.')'; } ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=guestlist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
+				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=guestlist" data-empty="<?php echo Utils::t('The list is already empty.'); ?>"><?php echo Utils::t('Clean the list'); ?></a></li>
 				<li class="last"><input type="checkbox" name="checkAllGuestlist" id="checkAllGuestlist" value=""<?php if($countGuestList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		<table>
 			<thead>
 				<tr>
-					<th class="thleft">Login</th>
+					<th class="thleft"><?php echo Utils::t('Login'); ?></th>
 					<th class="thright"></th>
 				</tr>
 			</thead>
@@ -356,7 +356,7 @@
 						}
 					}
 					else{
-						$showGuestList .= '<tr class="no-line"><td class="center" colspan="2">Aucun joueur</td></tr>';
+						$showGuestList .= '<tr class="no-line"><td class="center" colspan="2">'.Utils::t('No player').'</td></tr>';
 					}
 					
 					// Affichage
@@ -370,14 +370,14 @@
 		<h1>Ignorelist<?php if($countIgnoreList > 0){ echo ' ('.$countIgnoreList.')'; } ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=ignorelist" data-empty="La liste est déjà vide.">Vider la liste</a></li>
+				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=ignorelist" data-empty="<?php echo Utils::t('The list is already empty.'); ?>"><?php echo Utils::t('Clean the list'); ?></a></li>
 				<li class="last"><input type="checkbox" name="checkAllIgnorelist" id="checkAllIgnorelist" value=""<?php if($countIgnoreList == 0){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		<table>
 			<thead>
 				<tr>
-					<th class="thleft">Login</th>
+					<th class="thleft"><?php echo Utils::t('Login'); ?></th>
 					<th class="thright"></th>
 				</tr>
 			</thead>
@@ -398,7 +398,7 @@
 						}
 					}
 					else{
-						$showIgnoreList .= '<tr class="no-line"><td class="center" colspan="2">Aucun joueur</td></tr>';
+						$showIgnoreList .= '<tr class="no-line"><td class="center" colspan="2">'.Utils::t('No player').'</td></tr>';
 					}
 					
 					// Affichage
@@ -411,11 +411,11 @@
 	<div class="options">
 		<div class="fright">
 			<div class="selected-files-label locked">
-				<span class="selected-files-title">Pour la sélection</span>
+				<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 				<span class="selected-files-count">(0)</span>
 				<div class="selected-files-option">
-					<input class="button dark" type="submit" name="blackListPlayer" id="blackListPlayer" value="Blacklister" />
-					<input class="button dark" type="submit" name="removeList" id="removeList" value="Retirer de la liste" />
+					<input class="button dark" type="submit" name="blackListPlayer" id="blackListPlayer" value="<?php echo Utils::t('Blacklist'); ?>" />
+					<input class="button dark" type="submit" name="removeList" id="removeList" value="<?php echo Utils::t('Remove from the list'); ?>" />
 				</div>
 			</div>
 		</div>
@@ -424,42 +424,42 @@
 </section>
 
 <section class="cadre right">
-	<h1>Ajouter</h1>
+	<h1><?php echo Utils::t('Add'); ?></h1>
 	<div class="content last addPlayer">
 		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 			<div>
 				<select class="width2" name="addPlayerList" id="addPlayerList"<?php if($playerList == null){ echo ' hidden="hidden"'; } ?>>
-					<option value="none">Sélectionnez un joueur</option>
-					<option value="more">Entrez un autre login</option>
+					<option value="none"><?php echo Utils::t('Select a player'); ?></option>
+					<option value="more"><?php echo Utils::t('Enter another login'); ?></option>
 				</select>
-				<input class="text width2" type="text" name="addPlayerLogin" id="addPlayerLogin" data-default-value="Login joueur" value="Login joueur"<?php if($playerList != null){ echo ' hidden="hidden"'; } ?> />
+				<input class="text width2" type="text" name="addPlayerLogin" id="addPlayerLogin" data-default-value="<?php echo Utils::t('Player login'); ?>" value="<?php echo Utils::t('Player login'); ?>"<?php if($playerList != null){ echo ' hidden="hidden"'; } ?> />
 				<select class="addPlayerTypeList" name="addPlayerTypeList" id="addPlayerTypeList">
-					<option value="none">Ajouter à la</option>
+					<option value="none"><?php echo Utils::t('Add in the'); ?></option>
 					<option value="guestlist">Guestlist</option>
 					<option value="blacklist">Blacklist</option>
 				</select>
-				<input class="button light" type="submit" name="addPlayer" id="addPlayer" value="Ajouter" />
+				<input class="button light" type="submit" name="addPlayer" id="addPlayer" value="<?php echo Utils::t('Add'); ?>" />
 			</div>
 		</form>
 	</div>
 	
 	<div id="playlists">
 		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
-			<h1>Playlists
+			<h1><?php echo Utils::t('Playlists'); ?>
 				<div id="form-new-playlist" hidden="hidden">
 					<select name="createPlaylistType" id="createPlaylistType">
-						<option value="none">Type</option>
+						<option value="none"><?php echo Utils::t('Type'); ?></option>
 						<option value="guestlist">Guestlist</option>
 						<option value="blacklist">Blacklist</option>
 					</select>
-					<input class="text" type="text" name="createPlaylistName" id="createPlaylistName" data-playlistname="Nom de la playlist" value="Nom de la playlist" />
-					<input class="button light" type="submit" name="createPlaylistValid" id="createPlaylistValid" value="Créer" />
+					<input class="text" type="text" name="createPlaylistName" id="createPlaylistName" data-playlistname="<?php echo Utils::t('Playlist name'); ?>" value="<?php echo Utils::t('Playlist name'); ?>" />
+					<input class="button light" type="submit" name="createPlaylistValid" id="createPlaylistValid" value="<?php echo Utils::t('Create'); ?>" />
 				</div>
 			</h1>
 		</form>
 		<div class="title-detail">
 			<ul>
-				<li><a id="clickNewPlaylist" href="" data-cancel="Annuler" data-newplaylist="Nouvelle playlist">Nouvelle playlist</a></li>
+				<li><a id="clickNewPlaylist" href="" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-newplaylist="<?php echo Utils::t('New playlist'); ?>"><?php echo Utils::t('New playlist'); ?></a></li>
 				<li class="last"><input type="checkbox" name="checkAllPlaylists" id="checkAllPlaylists" value="" /></li>
 			</ul>
 		</div>
@@ -468,10 +468,10 @@
 		<table>
 			<thead>
 				<tr>
-					<th class="thleft">Playlist</th>
-					<th>Type</th>
-					<th>Contient</th>
-					<th>Modifié le</th>
+					<th class="thleft"><?php echo Utils::t('Playlist'); ?></th>
+					<th><?php echo Utils::t('Type'); ?></th>
+					<th><?php echo Utils::t('Contains'); ?></th>
+					<th><?php echo Utils::t('Modified'); ?></th>
 					<th class="thright"></th>
 				</tr>
 			</thead>
@@ -484,19 +484,19 @@
 					$i = 0;
 					foreach($playlistDirectory['files'] as $file){
 						$ext = File::getExtension($file['filename']);
-						if($ext == 'txt' || $ext = 'text' || $ext == 'xml'){
+						if($ext == 'txt' || $ext == 'text' || $ext == 'xml'){
 							$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
 							if( isset($data['logins']) ){
 								$countDataLogins = count($data['logins']);
 								if($countDataLogins > 1){
-									$nbPlayers = $countDataLogins.' joueurs';
+									$nbPlayers = $countDataLogins.' '.Utils::t('players');
 								}
 								else{
-									$nbPlayers = '1 joueur';
+									$nbPlayers = '1 '.Utils::t('player');
 								}
 							}
 							else{
-								$nbPlayers = '0 joueur';
+								$nbPlayers = '0 '.Utils::t('player');
 							}
 							
 							// Ligne
@@ -515,7 +515,7 @@
 					}
 				}
 				else{
-					$showPlaylists .= '<tr class="no-line"><td class="center" colspan="4">Aucune playlist</td></tr>';
+					$showPlaylists .= '<tr class="no-line"><td class="center" colspan="4">'.Utils::t('No playlist').'</td></tr>';
 				}
 				
 				// Affichage
@@ -527,12 +527,12 @@
 		<div class="options">
 			<div class="fright">
 				<div class="selected-files-label locked">
-					<span class="selected-files-title">Pour la sélection</span>
+					<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="deletePlaylist" id="deletePlaylist" value="Supprimer" />
-						<input class="button dark" type="submit" name="loadPlaylist" id="loadPlaylist" value="Charger" />
-						<input class="button dark" type="submit" name="savePlaylist" id="savePlaylist" value="Sauvegarder" />
+						<input class="button dark" type="submit" name="deletePlaylist" id="deletePlaylist" value="<?php echo Utils::t('Delete'); ?>" />
+						<input class="button dark" type="submit" name="loadPlaylist" id="loadPlaylist" value="<?php echo Utils::t('Load'); ?>" />
+						<input class="button dark" type="submit" name="savePlaylist" id="savePlaylist" value="<?php echo Utils::t('Save '); ?>" />
 					</div>
 				</div>
 			</div>

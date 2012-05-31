@@ -1,8 +1,8 @@
 <?php
 	// SESSION
 	if( !isset($_SESSION['adminserv']['allow_config_servers']) ){
-		AdminServ::error('Vous n\'êtes pas autorisé à configurer les serveurs.');
-		Utils::redirection(false);
+		AdminServ::error( Utils::t('You are not allowed to configure the servers') );
+		Utils::redirection();
 	}
 	
 	// VERIFICATION
@@ -11,21 +11,21 @@
 		if( AdminServServerConfig::hasServer() ){
 			// Si on autorise la configuration en ligne
 			if( OnlineConfig::ACTIVATE !== true ){
-				AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
-				Utils::redirection(false);
+				AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
+				Utils::redirection();
 			}
 		}
 		else{
 			// Si on autorise la configuration en ligne
 			if( OnlineConfig::ACTIVATE !== true ){
-				AdminServ::info('Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
-				Utils::redirection(false);
+				AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
+				Utils::redirection();
 			}
 		}
 	}
 	else{
-		AdminServ::error('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.');
-		Utils::redirection(false);
+		AdminServ::error( Utils::t('The servers configuration file doesn\'t reconized by AdminServ.') );
+		Utils::redirection();
 	}
 	
 	
@@ -58,20 +58,20 @@
 		// Édition
 		if($id !== -1){
 			if( AdminServServerConfig::saveServerConfig($serverData, $id) ){
-				AdminServ::info('Le serveur a bien été modifié.');
+				AdminServ::info( Utils::t('This server has been modified.') );
 				Utils::redirection(false, '?p=servers');
 			}
 			else{
-				AdminServ::error('Impossible de modifier le serveur.');
+				AdminServ::error( Utils::t('Unable to modify the server.') );
 			}
 		}
 		else{
 			// Ajout
 			if( AdminServServerConfig::saveServerConfig($serverData) ){
-				AdminServ::info('Le serveur a bien été ajouté.');
+				AdminServ::info( Utils::t('This server has been added.') );
 			}
 			else{
-				AdminServ::error('Impossible d\'ajouter le serveur.');
+				AdminServ::error( Utils::t('Unable to add the server.') );
 			}
 		}
 	}
@@ -107,75 +107,75 @@
 	AdminServUI::getHeader();
 ?>
 <section class="cadre">
-	<h1><?php if( defined('IS_SERVER_EDITION') ){ echo 'Éditer un serveur'; }else{ echo Utils::t('Add server'); } ?></h1>
+	<h1><?php if( defined('IS_SERVER_EDITION') ){ echo Utils::t('Edit server'); }else{ echo Utils::t('Add server'); } ?></h1>
 	<form method="post" action="?p=<?php echo USER_PAGE; if($id !== -1){ echo '&id='.$id; } ?>">
 		<div class="content">
 			<fieldset>
-				<legend>Informations de connexion</legend>
+				<legend><?php echo Utils::t('Connection informations'); ?></legend>
 				<table>
 					<tr>
-						<td class="key"><label for="addServerName">Nom du serveur</label></td>
+						<td class="key"><label for="addServerName"><?php echo Utils::t('Server name'); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerName" id="addServerName" value="<?php echo $serverName; ?>" />
 						</td>
 						<td class="help">
-							Nom du serveur sans couleur
+							<?php echo Utils::t('Server name without color'); ?>
 						</td>
 					</tr>
 					<tr>
-						<td class="key"><label for="addServerAddress">Adresse</label></td>
+						<td class="key"><label for="addServerAddress"><?php echo Utils::t('Address'); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerAddress" id="addServerAddress" value="<?php echo $serverAddress; ?>" />
 						</td>
 						<td class="help">
-							Adresse IP ou nom de domaine
+							<?php echo Utils::t('IP address or domain name'); ?>
 						</td>
 					</tr>
 					<tr>
-						<td class="key"><label for="addServerPort">Port XMLRPC</label></td>
+						<td class="key"><label for="addServerPort"><?php echo Utils::t('XMLRPC port'); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerPort" id="addServerPort" value="<?php echo $serverPort; ?>" />
 						</td>
 						<td class="help">
-							Port permettant le contrôle à distance
+							<?php echo Utils::t('Port for remotely control'); ?>
 						</td>
 					</tr>
 				</table>
 			</fieldset>
 			
 			<fieldset>
-				<legend>Informations optionnelles</legend>
+				<legend><?php echo Utils::t('Optionnal informations'); ?></legend>
 				<table>
 					<tr>
-						<td class="key"><label for="addServerMatchSet">MatchSettings du serveur</label></td>
+						<td class="key"><label for="addServerMatchSet"><?php echo Utils::t('Server MatchSettings'); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerMatchSet" id="addServerMatchSet" value="<?php echo $serverMatchSet; ?>" />
 						</td>
 						<td class="help">
-							Nom du MatchSettings courant du serveur
+							<?php echo Utils::t('Current server MatchSettings name'); ?>
 						</td>
 					</tr>
 					<tr>
-						<td class="key"><label for="addServerAdmLvlSA">Niveau "SuperAdmin"</label></td>
+						<td class="key"><label for="addServerAdmLvlSA"><?php echo Utils::t('SuperAdmin level'); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerAdmLvlSA" id="addServerAdmLvlSA" value="<?php echo $serverAdmLvl_SA; ?>" />
 						</td>
 						<td rowspan="3" class="help">
-							Valeurs possibles pour les niveaux admins :<br />
-							all => accès à tous<br />
-							local => accès au réseau local<br />
-							192.168.0.1, 192.168.0.2 => accès à une ou plusieurs adresses IP<br />
-							none => accès enlevé de la liste
+							<?php echo Utils::t('Possible values for the admin level:'); ?><br />
+							<?php echo Utils::t('all => all access'); ?><br />
+							<?php echo Utils::t('local => local network access'); ?><br />
+							<?php echo Utils::t('192.168.0.1, 192.168.0.2 => one or more IP address access'); ?><br />
+							<?php echo Utils::t('none => removed of the access list'); ?>
 						</td>
 					</tr>
 					<tr>
-						<td class="key"><label for="addServerAdmLvlADM">Niveau "Admin"</label></td>
+						<td class="key"><label for="addServerAdmLvlADM"><?php echo Utils::t('Admin level'); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerAdmLvlADM" id="addServerAdmLvlADM" value="<?php echo $serverAdmLvl_ADM; ?>" />
 						</td>
 					</tr>
 					<tr>
-						<td class="key"><label for="addServerAdmLvlUSR">Niveau "User"</label></td>
+						<td class="key"><label for="addServerAdmLvlUSR"><?php echo Utils::t('User level'); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerAdmLvlUSR" id="addServerAdmLvlUSR" value="<?php echo $serverAdmLvl_USR; ?>" />
 						</td>
@@ -185,7 +185,7 @@
 		</div>
 		
 		<div class="fright save">
-			<input class="button light" type="submit" name="saveserver" id="saveserver" value="Enregistrer" />
+			<input class="button light" type="submit" name="saveserver" id="saveserver" value="<?php echo Utils::t('Save'); ?>" />
 		</div>
 	</form>
 </section>

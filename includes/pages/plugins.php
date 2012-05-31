@@ -13,10 +13,22 @@
 				AdminServPlugin::get($plugin);
 			}else{
 		?>
-			<h1>Plugins</h1>
+			<h1><?php echo Utils::t('Plugins'); ?></h1>
 			<div class="title-detail">
 				<ul>
-					<li class="last">2 plugins installés</li>
+					<li class="last">
+						<?php
+							if( isset(ExtensionConfig::$PLUGINS) ){ 
+								$pluginsCount = count(ExtensionConfig::$PLUGINS);
+								if($pluginsCount > 1){
+									echo $pluginsCount.' '.Utils::t('plugins installed');
+								}
+								else{
+									echo $pluginsCount.' '.Utils::t('plugin installed');
+								}
+							}
+						?>
+					</li>
 				</ul>
 			</div>
 			<div class="content">
@@ -39,7 +51,7 @@
 			
 			<h2>Comment créer son plugin ?</h2>
 			<div class="content">
-				<p>Pour créer son plugin, copiez le dossier example et remplacez les valeurs dans le fichier info.ini.<br />
+				<p>Pour créer son plugin, copiez le dossier example et remplacez les valeurs dans le fichier config.ini.<br />
 				Le fichier index.php sera inclu dans la page "plugins" d'AdminServ. A vous de créer une configuration, une classe, et autres ressources puis de les inclures dans ce fichier.</p>
 			</div>
 		<?php } ?>
