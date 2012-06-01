@@ -298,7 +298,7 @@ abstract class AdminServUI {
 		
 		// Retour
 		if($out === -1){
-			$out = '<option value="null">Aucun serveur disponible</option>';
+			$out = '<option value="null">'.Utils::t('No server available').'</option>';
 		}
 		return $out;
 	}
@@ -349,7 +349,7 @@ abstract class AdminServUI {
 		
 		// Retour
 		if($out === -1){
-			$out = '<option value="null">Aucun mode de jeu disponible</option>';
+			$out = '<option value="null">'.Utils::t('No game mode available').'</option>';
 		}
 		return $out;
 	}
@@ -366,7 +366,7 @@ abstract class AdminServUI {
 		global $currGamInf, $nextGamInf;
 		
 		$out = '<tr>'
-			.'<td class="key"><label for="Next'.$id.'">'.$name.'</label></td>';
+			.'<td class="key"><label for="Next'.$id.'">'.Utils::t($name).'</label></td>';
 			if($currGamInf != null){
 				$out .= '<td class="value">'
 					.'<input class="text width2" type="text" name="Curr'.$id.'" id="Curr'.$id.'" readonly="readonly" value="'.$currGamInf[$id].'" />'
@@ -394,7 +394,7 @@ abstract class AdminServUI {
 			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/restartrace.png" alt="" />Général</legend>'
 			.'<table>'
 				.'<tr>'
-					.'<td class="key"><label for="NextGameMode">Mode de jeu</label></td>';
+					.'<td class="key"><label for="NextGameMode">'.Utils::t('Game mode').'</label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
 							.'<input class="text width2" type="text" name="CurrGameMode" id="CurrGameMode" readonly="readonly" value="'.AdminServ::getGameModeName($currGamInf['GameMode']).'" />'
@@ -408,7 +408,7 @@ abstract class AdminServUI {
 					.'<td class="preview"></td>'
 				.'</tr>'
 				.'<tr>'
-					.'<td class="key"><label for="NextChatTime">Temps de fin de map <span>(sec)</span></label></td>';
+					.'<td class="key"><label for="NextChatTime">'.Utils::t('End map time').' <span>('.Utils::t('sec').')</span></label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
 							.'<input class="text width2" type="text" name="CurrChatTime" id="CurrChatTime" readonly="readonly" value="'.TimeDate::millisecToSec($currGamInf['ChatTime'] + 8000).'" />'
@@ -420,28 +420,28 @@ abstract class AdminServUI {
 					.'<td class="preview"></td>'
 				.'</tr>'
 				.'<tr>'
-					.'<td class="key"><label for="NextFinishTimeout">Temps de fin de round/lap <span>(sec)</span></label></td>';
+					.'<td class="key"><label for="NextFinishTimeout">'.Utils::t('End round/lap time').' <span>('.Utils::t('sec').')</span></label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrFinishTimeout" id="CurrFinishTimeout" readonly="readonly" value="'; if($currGamInf['FinishTimeout'] == 0){ $out .= 'Par défaut (15sec)'; }else if($currGamInf['FinishTimeout'] == 1){ $out .= 'Auto (en fonction de la map)'; }else{ $out .= TimeDate::millisecToSec($currGamInf['FinishTimeout']); } $out .= '" />'
+							.'<input class="text width2" type="text" name="CurrFinishTimeout" id="CurrFinishTimeout" readonly="readonly" value="'; if($currGamInf['FinishTimeout'] == 0){ $out .= Utils::t('Default').' (15'.Utils::t('sec'); }else if($currGamInf['FinishTimeout'] == 1){ $out .= Utils::t('Auto (based on map)'); }else{ $out .= TimeDate::millisecToSec($currGamInf['FinishTimeout']); } $out .= '" />'
 						.'</td>';
 					}
 					$out .= '<td class="value next">'
 						.'<select class="width2" name="NextFinishTimeout" id="NextFinishTimeout"'; if($nextGamInf['FinishTimeout'] > 1){ $out .= ' hidden="hidden"'; } $out .= '>'
-							.'<option value="0"'; if($nextGamInf['FinishTimeout'] == 0){ $out .= ' selected="selected"'; } $out .= '>Par défaut (15sec)</option>'
-							.'<option value="1"'; if($nextGamInf['FinishTimeout'] == 1){ $out .= ' selected="selected"'; } $out .= '>Auto (en fonction de la map)</option>'
-							.'<option value="more">Choisir le temps</option>'
+							.'<option value="0"'; if($nextGamInf['FinishTimeout'] == 0){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('Default').' (15'.Utils::t('sec').')</option>'
+							.'<option value="1"'; if($nextGamInf['FinishTimeout'] == 1){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('Auto (based on map)').'</option>'
+							.'<option value="more">'.Utils::t('Choose time').'</option>'
 						.'</select>'
 						.'<input class="text width2" type="text" name="NextFinishTimeoutValue" id="NextFinishTimeoutValue" value="'; if($nextGamInf['FinishTimeout'] > 1){ $out .= TimeDate::millisecToSec($nextGamInf['FinishTimeout']); } $out .= '"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= ' />'
 					.'</td>'
-					.'<td class="preview"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= '><a class="returnDefaultValue" href="?p='. USER_PAGE .'">Revenir à la valeur par défaut</a></td>'
+					.'<td class="preview"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= '><a class="returnDefaultValue" href="?p='. USER_PAGE .'">'.Utils::t('Return to the default value').'</a></td>'
 				.'</tr>'
-				.self::getGameInfosField('Nombre de WarmUp', 'AllWarmUpDuration')
+				.self::getGameInfosField('All WarmUp duration', 'AllWarmUpDuration')
 				.'<tr>'
-					.'<td class="key"><label for="NextDisableRespawn">Respawn</label></td>';
+					.'<td class="key"><label for="NextDisableRespawn">'.Utils::t('Respawn').'</label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrDisableRespawn" id="CurrDisableRespawn" readonly="readonly" value="'; if($currGamInf['DisableRespawn'] === false){ $out .= 'Activé'; }else{ $out .= 'Désactivé'; } $out .= '" />'
+							.'<input class="text width2" type="text" name="CurrDisableRespawn" id="CurrDisableRespawn" readonly="readonly" value="'; if($currGamInf['DisableRespawn'] === false){ $out .= Utils::t('Enable'); }else{ $out .= Utils::t('Disable'); } $out .= '" />'
 						.'</td>';
 					}
 					$out .= '<td class="value">'
@@ -450,21 +450,21 @@ abstract class AdminServUI {
 					.'<td class="preview"></td>'
 				.'</tr>'
 				.'<tr>'
-					.'<td class="key"><label for="NextForceShowAllOpponents">Forcer l\'affichage des adversaires</label></td>';
+					.'<td class="key"><label for="NextForceShowAllOpponents">'.Utils::t('Force show all opponents').'</label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrForceShowAllOpponents" id="CurrForceShowAllOpponents" readonly="readonly" value="'; if($currGamInf['ForceShowAllOpponents'] == 0){ $out .= 'Laisser le choix au joueur'; }else if($currGamInf['ForceShowAllOpponents'] == 1){ $out .= 'Tous les adversaires'; }else{ $out .= $currGamInf['ForceShowAllOpponents'].' adversaires minimum'; } $out .= '" />'
+							.'<input class="text width2" type="text" name="CurrForceShowAllOpponents" id="CurrForceShowAllOpponents" readonly="readonly" value="'; if($currGamInf['ForceShowAllOpponents'] == 0){ $out .= Utils::t('Allow player choose'); }else if($currGamInf['ForceShowAllOpponents'] == 1){ $out .= Utils::t('All opponents'); }else{ $out .= $currGamInf['ForceShowAllOpponents'].' '.Utils::t('minimal opponents'); } $out .= '" />'
 						.'</td>';
 					}
 					$out .= '<td class="value next">'
 						.'<select class="width2" name="NextForceShowAllOpponents" id="NextForceShowAllOpponents"'; if($nextGamInf['ForceShowAllOpponents'] > 1){ $out .= ' hidden="hidden"'; } $out .= '>'
-							.'<option value="0"'; if($nextGamInf['ForceShowAllOpponents'] == 0){ $out .= ' selected="selected"'; } $out .= '>Laisser le choix au joueur</option>'
-							.'<option value="1"'; if($nextGamInf['ForceShowAllOpponents'] == 1){ $out .= ' selected="selected"'; } $out .= '>Tous les adversaires</option>'
-							.'<option value="more">Choisir le nombre d\'adversaires</option>'
+							.'<option value="0"'; if($nextGamInf['ForceShowAllOpponents'] == 0){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('Allow player choose').'</option>'
+							.'<option value="1"'; if($nextGamInf['ForceShowAllOpponents'] == 1){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('All opponents').'</option>'
+							.'<option value="more">'.Utils::t('Choose opponents number').'</option>'
 						.'</select>'
 						.'<input class="text width2" type="text" name="NextForceShowAllOpponentsValue" id="NextForceShowAllOpponentsValue" value="'; if($nextGamInf['ForceShowAllOpponents'] > 1){ $out .= $nextGamInf['ForceShowAllOpponents']; } $out .= '"'; if($nextGamInf['ForceShowAllOpponents'] < 2){ $out .= ' hidden="hidden"'; } $out .= ' />'
 					.'</td>'
-					.'<td class="preview"'; if($nextGamInf['ForceShowAllOpponents'] < 2){ $out .= ' hidden="hidden"'; } $out .= '><a class="returnDefaultValue" href="?p='. USER_PAGE .'">Revenir à la valeur par défaut</a></td>'
+					.'<td class="preview"'; if($nextGamInf['ForceShowAllOpponents'] < 2){ $out .= ' hidden="hidden"'; } $out .= '><a class="returnDefaultValue" href="?p='. USER_PAGE .'">'.Utils::t('Return to the default value').'</a></td>'
 				.'</tr>'
 			.'</table>'
 		.'</fieldset>';
@@ -486,7 +486,7 @@ abstract class AdminServUI {
 		$out .= '<fieldset id="gameMode-script" class="gameinfos_script" hidden="hidden">'
 			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/options.png" alt="" />'.ExtensionConfig::$GAMEMODES[0].'</legend>'
 			.'<table class="game_infos">'
-				.self::getGameInfosField('Nom du script', 'ScriptName')
+				.self::getGameInfosField('Script name', 'ScriptName')
 			.'</table>'
 		.'</fieldset>';
 		
@@ -494,10 +494,10 @@ abstract class AdminServUI {
 			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_rounds.png" alt="" />'.ExtensionConfig::$GAMEMODES[1].'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
-					.'<td class="key"><label for="NextRoundsUseNewRules">Utiliser les nouvelles règles</label></td>';
+					.'<td class="key"><label for="NextRoundsUseNewRules">'.Utils::t('Use new rules').'</label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrRoundsUseNewRules" id="CurrRoundsUseNewRules" readonly="readonly" value="'; if($currGamInf['RoundsUseNewRules'] != null){ $out .= 'Activé'; }else{ $out .= 'Désactivé'; } $out .= '" />'
+							.'<input class="text width2" type="text" name="CurrRoundsUseNewRules" id="CurrRoundsUseNewRules" readonly="readonly" value="'; if($currGamInf['RoundsUseNewRules'] != null){ $out .= Utils::t('Enable'); }else{ $out .= Utils::t('Disable'); } $out .= '" />'
 						.'</td>';
 					}
 					$out .= '<td class="value">'
@@ -505,9 +505,9 @@ abstract class AdminServUI {
 					.'</td>'
 					.'<td class="preview"></td>'
 				.'</tr>'
-				.self::getGameInfosField('Limite de points', 'RoundsPointsLimit')
-				.self::getGameInfosField('Limite de points personnalisée', 'RoundCustomPoints')
-				.self::getGameInfosField('ForcedLaps', 'RoundsForcedLaps')
+				.self::getGameInfosField('Points limit', 'RoundsPointsLimit')
+				.self::getGameInfosField('Custom points limit', 'RoundCustomPoints')
+				.self::getGameInfosField('Forced laps', 'RoundsForcedLaps')
 			.'</table>'
 		.'</fieldset>'
 		
@@ -515,7 +515,7 @@ abstract class AdminServUI {
 			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_timeattack.png" alt="" />'.ExtensionConfig::$GAMEMODES[2].'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
-					.'<td class="key"><label for="NextTimeAttackLimit">Limite de temps <span>(sec)</span></label></td>';
+					.'<td class="key"><label for="NextTimeAttackLimit">'.Utils::t('Time limit').' <span>('.Utils::t('sec').')</span></label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
 							.'<input class="text width2" type="text" name="CurrTimeAttackLimit" id="CurrTimeAttackLimit" readonly="readonly" value="'.TimeDate::millisecToSec($currGamInf['TimeAttackLimit']).'" />'
@@ -526,7 +526,7 @@ abstract class AdminServUI {
 					.'</td>'
 					.'<td class="preview"></td>'
 				.'</tr>'
-				.self::getGameInfosField('Temps de synchronisation du départ', 'TimeAttackSynchStartPeriod')
+				.self::getGameInfosField('Synchronization start period', 'TimeAttackSynchStartPeriod')
 			.'</table>'
 		.'</fieldset>'
 		
@@ -534,10 +534,10 @@ abstract class AdminServUI {
 			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_team.png" alt="" />'.ExtensionConfig::$GAMEMODES[3].'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
-					.'<td class="key"><label for="NextTeamUseNewRules">Utiliser les nouvelles règles</label></td>';
+					.'<td class="key"><label for="NextTeamUseNewRules">'.Utils::t('Use new rules').'</label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrTeamUseNewRules" id="CurrTeamUseNewRules" readonly="readonly" value="'; if($currGamInf['TeamUseNewRules'] != null){ $out .= 'Activé'; }else{ $out .= 'Désactivé'; } $out .= '" />'
+							.'<input class="text width2" type="text" name="CurrTeamUseNewRules" id="CurrTeamUseNewRules" readonly="readonly" value="'; if($currGamInf['TeamUseNewRules'] != null){ $out .= Utils::t('Enable'); }else{ $out .= Utils::t('Disable'); } $out .= '" />'
 						.'</td>';
 					}
 					$out .= '<td class="value">'
@@ -545,26 +545,26 @@ abstract class AdminServUI {
 					.'</td>'
 					.'<td class="preview"></td>'
 				.'</tr>'
-				.self::getGameInfosField('Limite de points', 'TeamPointsLimit')
-				.self::getGameInfosField('Points maximum', 'TeamMaxPoints')
+				.self::getGameInfosField('Points limit', 'TeamPointsLimit')
+				.self::getGameInfosField('Maximal points', 'TeamMaxPoints')
 			.'</table>'
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-laps" class="gameinfos_laps" hidden="hidden">'
 			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_laps.png" alt="" />'.ExtensionConfig::$GAMEMODES[4].'</legend>'
 			.'<table class="game_infos">'
-				.self::getGameInfosField('Nombre de tours', 'LapsNbLaps')
-				.self::getGameInfosField('Limite de temps <span>(sec)</span>', 'LapsTimeLimit')
+				.self::getGameInfosField('Number of laps', 'LapsNbLaps')
+				.self::getGameInfosField(Utils::t('Time limit').' <span>('.Utils::t('sec').')</span>', 'LapsTimeLimit')
 			.'</table>'
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-cup" class="gameinfos_cup" hidden="hidden">'
 			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_cup.png" alt="" />'.ExtensionConfig::$GAMEMODES[6].'</legend>'
 			.'<table class="game_infos">'
-				.self::getGameInfosField('Limite de points', 'CupPointsLimit')
-				.self::getGameInfosField('Nombre de round par map', 'CupRoundsPerMap')
-				.self::getGameInfosField('Nombre de vainqueur', 'CupNbWinners')
-				.self::getGameInfosField('Nombre de WarmUp', 'CupWarmUpDuration')
+				.self::getGameInfosField('Points limit', 'CupPointsLimit')
+				.self::getGameInfosField('Rounds per map', 'CupRoundsPerMap')
+				.self::getGameInfosField('Number of winner', 'CupNbWinners')
+				.self::getGameInfosField('All WarmUp duration', 'CupWarmUpDuration')
 			.'</table>'
 		.'</fieldset>';
 		
@@ -601,7 +601,7 @@ abstract class AdminServUI {
 		
 		// Retour
 		if($out === -1){
-			$out = '<option value="null">Aucun joueur disponible</option>';
+			$out = '<option value="null">'.Utils::t('No player available').'</option>';
 		}
 		return $out;
 	}
@@ -656,7 +656,7 @@ abstract class AdminServUI {
 					}
 				$out .= '</h1>';
 				if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['new'][1]) ){
-					$out .= '<div class="title-detail"><a href="." id="newfolder" data-cancel="Annuler" data-new="Nouveau">Nouveau</a></div>';
+					$out .= '<div class="title-detail"><a href="." id="newfolder" data-cancel="'.Utils::t('Cancel').'" data-new="'.Utils::t('New').'">'.Utils::t('New').'</a></div>';
 				}
 			$out .= '</form>';
 			
@@ -692,7 +692,7 @@ abstract class AdminServUI {
 						$out .= '<li>'
 							.'<a href="./?p='. USER_PAGE . $params.'">'
 								.'<img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/back.png" alt="" />'
-								.'<span class="dir-name">Dossier parent</span>'
+								.'<span class="dir-name">'.Utils::t('Parent folder').'</span>'
 							.'</a>'
 						.'</li>';
 					}
@@ -725,22 +725,22 @@ abstract class AdminServUI {
 					$currentDir = basename($currentPath);
 					$out .= '<form id="optionFolderForm" method="post" action="?p='. USER_PAGE .'&amp;d='.$currentPath.'">'
 						.'<div class="option-folder-list">'
-							.'<h3>Options du dossier<span class="arrow-down">&nbsp;</span></h3>'
+							.'<h3>'.Utils::t('Folder options').'<span class="arrow-down">&nbsp;</span></h3>'
 							.'<ul hidden="hidden">';
 								if(AdminServConfig::$FOLDERS_OPTIONS['rename'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['rename'][1]) ){
-									$out .= '<li><a class="button light rename" id="renameFolder" href=".">Renommer</a></li>';
+									$out .= '<li><a class="button light rename" id="renameFolder" href=".">'.Utils::t('Rename').'</a></li>';
 								}
 								if(AdminServConfig::$FOLDERS_OPTIONS['move'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['move'][1])){
-									$out .= '<li><a class="button light move" id="moveFolder" href=".">Déplacer</a></li>';
+									$out .= '<li><a class="button light move" id="moveFolder" href=".">'.Utils::t('Move').'</a></li>';
 								}
 								if(AdminServConfig::$FOLDERS_OPTIONS['delete'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['delete'][1])){
-									$out .= '<li><a class="button light delete" id="deleteFolder" href="." data-confirm-text="Voulez-vous vraiment supprimer le dossier '.$currentDir.' ?">Supprimer</a></li>';
+									$out .= '<li><a class="button light delete" id="deleteFolder" href="." data-confirm-text="'.Utils::t('Do yo really want to remove this folder !currentDir?', array('!currentDir' => $currentDir)).'">'.Utils::t('Delete').'</a></li>';
 								}
 							$out .= '</ul>'
 						.'</div>'
 						.'<input type="hidden" name="optionFolderHiddenFieldAction" id="optionFolderHiddenFieldAction" value="" />'
 						.'<input type="hidden" name="optionFolderHiddenFieldValue" id="optionFolderHiddenFieldValue" value="" />'
-						.'<div id="renameFolderForm" class="option-form" hidden="hidden" data-title="Renommer un dossier" data-cancel="Annuler" data-rename="Renommer">'
+						.'<div id="renameFolderForm" class="option-form" hidden="hidden" data-title="'.Utils::t('Rename folder').'" data-cancel="'.Utils::t('Cancel').'" data-rename="'.Utils::t('Rename').'">'
 							.'<ul>'
 								.'<li>'
 									.'<span class="rename-map-name">'.$currentDir.'</span>'
@@ -749,7 +749,7 @@ abstract class AdminServUI {
 								.'</li>'
 							.'</ul>'
 						.'</div>'
-						.'<div id="moveFolderForm" class="option-form" hidden="hidden" data-title="Déplacer un dossier" data-cancel="Annuler" data-move="Déplacer" data-root="Racine" data-movethefolder="Déplacer le dossier <b>'.$currentDir.'</b> dans :"></div>'
+						.'<div id="moveFolderForm" class="option-form" hidden="hidden" data-title="'.Utils::t('Move folder').'" data-cancel="'.Utils::t('Cancel').'" data-move="'.Utils::t('Move').'" data-root="'.Utils::t('Root').'" data-movethefolder="'.Utils::t('Move folder <b>!currentDir</b> in:', array('!currentDir' => $currentDir)).'"></div>'
 					.'</form>';
 				}
 			}
