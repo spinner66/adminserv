@@ -822,7 +822,7 @@ abstract class AdminServ {
 		global $client;
 		// Tente de récupérer le message d'erreur du dédié
 		if($text === null){
-			$text = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+			$text = '['.$client->getErrorCode().'] '.Utils::t($client->getErrorMessage() );
 		}
 		$_SESSION['error'] = $text;
 	}
@@ -855,15 +855,15 @@ abstract class AdminServ {
 			// CONNEXION
 			$client = new IXR_Client_Gbx;
 			if( !$client->InitWithIp(SERVER_ADDR, SERVER_XMLRPC_PORT, AdminServConfig::SERVER_CONNECTION_TIMEOUT) ){
-				Utils::redirection(false, '?error='.urlencode('Le serveur n\'est pas accessible.'));
+				Utils::redirection(false, '?error='.urlencode( Utils::t('The server is not accessible.') ) );
 			}
 			else{
 				if( !self::userAllowedInAdminLevel(SERVER_NAME, USER_ADMINLEVEL) ){
-					Utils::redirection(false, '?error='.urlencode('Vous n\êtes pas autorisé dans ce niveau admin.'));
+					Utils::redirection(false, '?error='.urlencode( Utils::t('You are not allowed at this admin level') ) );
 				}
 				else{
 					if( !$client->query('Authenticate', USER_ADMINLEVEL, $_SESSION['adminserv']['password']) ){
-						Utils::redirection(false, '?error='.urlencode('Le mot de passe ne correspond pas au serveur.'));
+						Utils::redirection(false, '?error='.urlencode( Utils::t('The password doesn\'t match to the server.') ) );
 					}
 					else{
 						if($fullInit){
@@ -1009,7 +1009,7 @@ abstract class AdminServ {
 		
 		// Retour
 		if($out === -1){
-			$out = 'Aucun mode de jeu disponible';
+			$out = Utils::t('No game mode available');
 		}
 		return $out;
 	}
@@ -1133,15 +1133,15 @@ abstract class AdminServ {
 				}
 			}
 			else{
-				$out['ply'] = 'Aucun joueur';
+				$out['ply'] = Utils::t('No player');
 			}
 			
 			// Nombre de joueurs
 			if($countPlayerList > 1){
-				$out['nbp'] = $countPlayerList.' joueurs';
+				$out['nbp'] = $countPlayerList.' '.Utils::t('players');
 			}
 			else{
-				$out['nbp'] = $countPlayerList.' joueur';
+				$out['nbp'] = $countPlayerList.' '.Utils::t('player');
 			}
 			
 			// Config
@@ -1175,7 +1175,7 @@ abstract class AdminServ {
 			}
 		}
 		else{
-			$out['error'] = 'client not initialized';
+			$out['error'] = Utils::t('Client not initialized');
 		}
 		
 		return $out;
@@ -1221,7 +1221,7 @@ abstract class AdminServ {
 			}
 		}
 		else{
-			$out = 'command not recognized';
+			$out = Utils::t('Command not recognized');
 		}
 		
 		return $out;
@@ -1418,12 +1418,9 @@ abstract class AdminServ {
 					$line = self::clearChatServerLine($line);
 				}
 				
-				// TODO : On traduit le texte
-				/*if($i18n == 'fr'){
-					if($line == '$99FThis is a draw round.'){ $line = 'Match nul.'; }
-					if($line == '$99FThe $<$00FBlue team$> wins this round.'){ $line = 'L\'équipe bleue remporte ce tour.'; }
-					if($line == '$99FThe $<$F00Red team$> wins this round.'){ $line = 'L\'équipe rouge remporte ce tour.'; }
-				}*/
+				if($line == '$99FThis is a draw round.'){ $line = Utils::t('$99FThis is a draw round.'); }
+				if($line == '$99FThe $<$00FBlue team$> wins this round.'){ $line = Utils::t('$99FThe $<$00FBlue team$> wins this round.'); }
+				if($line == '$99FThe $<$F00Red team$> wins this round.'){ $line = Utils::t('$99FThe $<$F00Red team$> wins this round.'); }
 				
 				// On enlève les codes nadeo $s, $o, $w, etc
 				$line = TmNick::stripNadeoCode($line);
@@ -1506,10 +1503,10 @@ abstract class AdminServ {
 		// Compte et traduit l'intitulé
 		$out['nbm']['count'] = $countMapsList;
 		if($countMapsList > 1){
-			$out['nbm']['title'] = 'maps';
+			$out['nbm']['title'] = Utils::t('maps');
 		}
 		else{
-			$out['nbm']['title'] = 'map';
+			$out['nbm']['title'] = Utils::t('map');
 		}
 		
 		return $out;
@@ -1568,7 +1565,7 @@ abstract class AdminServ {
 			// Nombre de maps
 			$out += self::getNbMaps($out);
 			if($out['nbm']['count'] == 0){
-				$out['lst'] = 'Aucune map';
+				$out['lst'] = Utils::t('No map');
 			}
 			
 			// Config
@@ -1600,7 +1597,7 @@ abstract class AdminServ {
 			}
 		}
 		else{
-			$out['error'] = 'client not initialized';
+			$out['error'] = Utils::t('Client not initialized');
 		}
 		
 		return $out;
@@ -1650,7 +1647,7 @@ abstract class AdminServ {
 				// Nombre de maps
 				$out += self::getNbMaps($out);
 				if($out['nbm']['count'] == 0){
-					$out['lst'] = 'Aucune map';
+					$out['lst'] = Utils::t('No map');
 				}
 				
 				// Config
@@ -1680,7 +1677,7 @@ abstract class AdminServ {
 			}
 		}
 		else{
-			$out['error'] = 'class "Folder" or "GBXChallengeFetcher" not found';
+			$out['error'] = 'Class "Folder" or "GBXChallengeFetcher" not found';
 		}
 		
 		return $out;
@@ -1708,10 +1705,10 @@ abstract class AdminServ {
 							$matchsetData = self::getMatchSettingsData($path.$file, array('maps'));
 							$matchsetNbmCount = count($matchsetData['maps']);
 							if($matchsetNbmCount > 1){
-								$matchsetNbm = $matchsetNbmCount . ' maps';
+								$matchsetNbm = $matchsetNbmCount . ' '.Utils::t('maps');
 							}
 							else{
-								$matchsetNbm = $matchsetNbmCount . ' map';
+								$matchsetNbm = $matchsetNbmCount . ' '.Utils::t('map');
 							}
 							
 							$out['lst'][$i]['Name'] = substr($file, 0, -4);
@@ -1728,18 +1725,18 @@ abstract class AdminServ {
 				if( isset($out['lst']) && is_array($out['lst']) ){
 					$out['nbm']['count'] = $countMatchsetList;
 					if( count($out['lst']) > 1){
-						$out['nbm']['title'] = 'matchsettings';
+						$out['nbm']['title'] = Utils::t('matchsettings');
 					}
 					else{
-						$out['nbm']['title'] = 'matchsetting';
+						$out['nbm']['title'] = Utils::t('matchsetting');
 					}
 				}
 				else{
 					$out['nbm']['count'] = 0;
-					$out['nbm']['title'] = 'matchsetting';
+					$out['nbm']['title'] = Utils::t('matchsetting');
 				}
 				if($out['nbm']['count'] == 0){
-					$out['lst'] = 'Aucun matchsetting';
+					$out['lst'] = Utils::t('No matchsetting');
 				}
 				
 				// Config
@@ -1751,7 +1748,7 @@ abstract class AdminServ {
 			}
 		}
 		else{
-			$out['error'] = 'class "Folder" or "File" not found';
+			$out['error'] = 'Class "Folder" or "File" not found';
 		}
 		
 		return $out;
@@ -1783,7 +1780,7 @@ abstract class AdminServ {
 		// Nombre de maps
 		$out += self::getNbMaps($out);
 		if($out['nbm']['count'] == 0){
-			$out['lst'] = 'Aucune map';
+			$out['lst'] = Utils::t('No map');
 		}
 		
 		// Config
@@ -1811,7 +1808,7 @@ abstract class AdminServ {
 	*  [startindex] => 1
 	*  [map] => Array
 	*   (
-	*    [name.Map.Gbx] => 8bDoQMwzUllV0D9eu7hSth3rQs6
+	*    [8bDoQMwzUllV0D9eu7hSth3rQs6] => name.Map.Gbx
 	*    etc...
 	*   )
 	* )
@@ -1850,7 +1847,7 @@ abstract class AdminServ {
 			// Maps
 			$out .= "\t<startindex>".$struct['startindex']."</startindex>\n";
 			if( isset($struct[$mapField]) && count($struct[$mapField]) > 0 ){
-				foreach($struct[$mapField] as $file => $ident){
+				foreach($struct[$mapField] as $ident => $file){
 					$out .= "\t<$mapField>\n"
 						."\t\t<file>$file</file>\n"
 						."\t\t<ident>$ident</ident>\n"
@@ -1861,11 +1858,11 @@ abstract class AdminServ {
 		
 		// Création XML
 		if( ! @$newXMLObject = simplexml_load_string($out) ){
-			$out = 'Erreur de conversion texte->XML';
+			$out = Utils::t('Convert text->XML error');
 		}
 		else{
 			if( !$newXMLObject->asXML($filename) ){
-				$out = 'Erreur d\'entregistrement du fichier XML';
+				$out = Utils::t('Saving XML file error');
 			}
 			else{
 				$out = true;
@@ -2013,7 +2010,7 @@ abstract class AdminServ {
 		// Nombre de maps
 		$out += self::getNbMaps($out);
 		if($out['nbm']['count'] == 0){
-			$out['lst'] = 'Aucune map';
+			$out['lst'] = Utils::t('No map');
 		}
 		
 		// Config
@@ -2223,11 +2220,11 @@ abstract class AdminServLogs {
 					$out = true;
 				}
 				else{
-					AdminServ::error('Le dossier "logs" ne permet pas l\'écriture de log.');
+					AdminServ::error( Utils::t('The folder "logs" is not writable.') );
 				}
 			}
 			else{
-				AdminServ::error('Le dossier "logs" n\'existe pas.');
+				AdminServ::error( Utils::t('The folder "logs" not exists.') );
 			}
 		}
 		
@@ -2237,7 +2234,7 @@ abstract class AdminServLogs {
 					$path = self::$LOGS_PATH.$file.'.log';
 					if($activate && !file_exists($path) ){
 						if( File::save($path) !== true ){
-							AdminServ::error('Impossible de créer le fichier de log : '.$file.'.');
+							AdminServ::error( Utils::t('Unable to create log file:').' '.$file.'.');
 							$out = false;
 							break;
 						}
@@ -2265,7 +2262,7 @@ abstract class AdminServLogs {
 		
 		if( file_exists($path) ){
 			if( File::save($path, $str) !== true ){
-				AdminServ::error('Impossible d\'ajouter un log au fichier : '.$type.'.');
+				AdminServ::error( Utils::t('Unable to add log in file:').' '.$type.'.');
 			}
 			else{
 				$out = true;
@@ -2375,11 +2372,11 @@ abstract class AdminServServerConfig {
 				$out = ServerConfig::$SERVERS[$serverName];
 			}
 			else{
-				$out = 'Ce serveur n\'existe pas';
+				$out = Utils::t('This server not exists');
 			}
 		}
 		else{
-			$out = 'Aucun serveur disponible';
+			$out = Utils::t('No server available');
 		}
 		
 		return $out;
@@ -2523,15 +2520,15 @@ abstract class AdminServPlugin {
 	
 	
 	/**
-	* Récupère les infos du plugin grâce au fichier info.ini
+	* Récupère la config du plugin grâce au fichier config.ini
 	*
 	* @param string $pluginName  -> Le nom du dossier plugin
 	* @param string $returnField -> Retourner un champ en particulier
 	* @return array ou string si le 2ème paramètre est spécifié
 	*/
-	public static function getInfos($pluginName, $returnField = null){
+	public static function getConfig($pluginName, $returnField = null){
 		$out = null;
-		$path = AdminServConfig::PATH_PLUGINS .$pluginName.'/info.ini';
+		$path = AdminServConfig::PATH_PLUGINS .$pluginName.'/config.ini';
 		
 		if( file_exists($path) ){
 			$ini = parse_ini_file($path);
@@ -2557,7 +2554,7 @@ abstract class AdminServPlugin {
 		$pluginsList = array();
 		if( count(ExtensionConfig::$PLUGINS) > 0 ){
 			foreach(ExtensionConfig::$PLUGINS as $plugin){
-				$pluginInfos = self::getInfos($plugin);
+				$pluginInfos = self::getConfig($plugin);
 				if($pluginInfos['game'] == 'all' || $pluginInfos['game'] == SERVER_VERSION_NAME){
 					$pluginsList[$plugin] = $pluginInfos;
 				}
@@ -2583,7 +2580,7 @@ abstract class AdminServPlugin {
 	*
 	* @param string $pluginName -> Le nom du dossier plugin
 	*/
-	public static function get($pluginName){
+	public static function getPlugin($pluginName){
 		$out = null;
 		
 		$file = AdminServConfig::PATH_PLUGINS .$pluginName.'/index.php';

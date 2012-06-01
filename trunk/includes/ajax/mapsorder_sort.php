@@ -1,6 +1,6 @@
 <?php
 	/**
-	* 
+	* Tri la liste des maps
 	*/
 	
 	// INCLUDES

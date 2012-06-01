@@ -9,8 +9,8 @@
 	<section class="cadre right list">
 		<?php
 			if( $plugin = AdminServPlugin::getCurrent() ){
-				echo '<h1>'.AdminServPlugin::getInfos($plugin, 'name').'</h1>';
-				AdminServPlugin::get($plugin);
+				echo '<h1>'.AdminServPlugin::getConfig($plugin, 'name').'</h1>';
+				AdminServPlugin::getPlugin($plugin);
 			}else{
 		?>
 			<h1><?php echo Utils::t('Plugins'); ?></h1>
