@@ -61,7 +61,8 @@ class ExtensionConfig {
 	
 	// Liste des plugins installés
 	public static $PLUGINS = array(
-		'example',
+		'planets',
+		'coppers',
 	);
 }
 ?>

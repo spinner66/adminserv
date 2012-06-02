@@ -724,6 +724,12 @@ td.value {
 	padding-left: 9px;
 	text-align: left;
 }
+td.info {
+	color: #aaa;
+	text-align: left;
+	font-style: italic;
+	font-size: .9em;
+}
 td .detailModeTd {
 	display: block;
 	font-size: .7em;
@@ -1095,12 +1101,6 @@ footer {
 }
 .section-addserver table .value {
 	width: 340px;
-}
-.section-addserver table .help {
-	color: #aaa;
-	text-align: left;
-	font-style: italic;
-	font-size: .9em;
 }
 .section-servers table tbody tr {
 	height: 22px;

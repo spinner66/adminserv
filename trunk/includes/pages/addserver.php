@@ -122,7 +122,7 @@
 						<td class="value">
 							<input class="text width3" type="text" name="addServerName" id="addServerName" value="<?php echo $serverName; ?>" />
 						</td>
-						<td class="help">
+						<td class="info">
 							<?php echo Utils::t('Server name without color'); ?>
 						</td>
 					</tr>
@@ -131,7 +131,7 @@
 						<td class="value">
 							<input class="text width3" type="text" name="addServerAddress" id="addServerAddress" value="<?php echo $serverAddress; ?>" />
 						</td>
-						<td class="help">
+						<td class="info">
 							<?php echo Utils::t('IP address or domain name'); ?>
 						</td>
 					</tr>
@@ -140,7 +140,7 @@
 						<td class="value">
 							<input class="text width3" type="text" name="addServerPort" id="addServerPort" value="<?php echo $serverPort; ?>" />
 						</td>
-						<td class="help">
+						<td class="info">
 							<?php echo Utils::t('Port for remotely control'); ?>
 						</td>
 					</tr>
@@ -155,7 +155,7 @@
 						<td class="value">
 							<input class="text width3" type="text" name="addServerMatchSet" id="addServerMatchSet" value="<?php echo $serverMatchSet; ?>" />
 						</td>
-						<td class="help">
+						<td class="info">
 							<?php echo Utils::t('Current server MatchSettings name'); ?>
 						</td>
 					</tr>
@@ -164,7 +164,7 @@
 						<td class="value">
 							<input class="text width3" type="text" name="addServerAdmLvlSA" id="addServerAdmLvlSA" value="<?php echo $serverAdmLvl_SA; ?>" />
 						</td>
-						<td rowspan="3" class="help">
+						<td rowspan="3" class="info">
 							<?php echo Utils::t('Possible values for the admin level:'); ?><br />
 							<?php echo Utils::t('all => all access'); ?><br />
 							<?php echo Utils::t('local => local network access'); ?><br />

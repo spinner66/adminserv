@@ -19,7 +19,7 @@
 			AdminServ::error();
 		}
 		else{
-			AdminServLogs::add('action', 'Remove map: '.$_POST['map']);
+			AdminServLogs::add('action', 'Remove map ('.count($_POST['map']).')');
 		}
 	}
 	else if( isset($_POST['chooseNextMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
@@ -27,7 +27,7 @@
 			AdminServ::error();
 		}
 		else{
-			AdminServLogs::add('action', 'Choose next map: '.$_POST['map']);
+			AdminServLogs::add('action', 'Choose next map ('.count($_POST['map']).')');
 		}
 	}
 	

@@ -197,7 +197,7 @@
 				<div class="selected-files-option">
 					<input class="button dark" type="submit" name="deleteserver" id="deleteserver" value="<?php echo Utils::t('Delete'); ?>" />
 					<input class="button dark" type="submit" name="duplicateserver" id="duplicateserver" value="<?php echo Utils::t('Duplicate'); ?>" />
-					<input class="button dark" type="submit" name="editserver" id="editserver" value="<?php echo Utils::('Modify'); ?>" />
+					<input class="button dark" type="submit" name="editserver" id="editserver" value="<?php echo Utils::t('Modify'); ?>" />
 				</div>
 			</div>
 		</div>
