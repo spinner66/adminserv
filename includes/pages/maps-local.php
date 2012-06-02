@@ -21,6 +21,9 @@
 				AdminServ::error();
 				break;
 			}
+			else{
+				AdminServLogs:add('action', 'Add map: '.$map);
+			}
 		}
 	}
 	else if( isset($_POST['insertMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
@@ -29,11 +32,15 @@
 				AdminServ::error();
 				break;
 			}
+			else{
+				AdminServLogs:add('action', 'Insert map: '.$map);
+			}
 		}
 	}
 	else if( isset($_POST['downloadMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		// Si on télécharge plusieurs fichiers, on envoi un zip
-		if( count($_POST['map']) > 1){
+		$countMaps = count($_POST['map']);
+		if($countMaps > 1){
 			$struct = array();
 			foreach($_POST['map'] as $map){
 				$struct[] = $mapsDirectoryPath.$map;
@@ -45,6 +52,7 @@
 			}
 			else{
 				File::download($zipFileName);
+				AdminServLogs:add('action', 'Download packmap ('.$countMaps.' maps)');
 				if( $result = File::delete($zipFileName) !== true ){
 					AdminServ::error($result);
 				}
@@ -53,6 +61,7 @@
 		// Sinon on envoi le fichier seul
 		else{
 			File::download($mapsDirectoryPath.$_POST['map'][0]);
+			AdminServLogs:add('action', 'Download map: '.$_POST['map'][0]);
 		}
 	}
 	else if( isset($_POST['renameMapValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
@@ -62,6 +71,9 @@
 			if($result !== true ){
 				AdminServ::error(Utils::t('Unable to rename the map').' : '.$newMapName.' ('.$result.')');
 				break;
+			}
+			else{
+				AdminServLogs:add('action', 'Rename map: '.$_POST['map'][$i].' to '.$newMapName);
 			}
 			$i++;
 		}
@@ -73,6 +85,9 @@
 			if($result !== true){
 				AdminServ::error(Utils::t('Unable to rename the map').' : '.$newMapName.' ('.$result.')');
 				break;
+			}
+			else{
+				AdminServLogs:add('action', 'Rename map (auto): '.$_POST['map'][$i].' to '.$newMapName);
 			}
 			$i++;
 		}
@@ -93,6 +108,9 @@
 				AdminServ::error(Utils::t('Unable to move the map').' : '.$map.' ('.$result.')');
 				break;
 			}
+			else{
+				AdminServLogs:add('action', 'Move map: '.$directory.$map.' to '.$newPath.$map);
+			}
 		}
 	}
 	else if( isset($_POST['deleteMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
@@ -101,6 +119,9 @@
 			if($result !== true){
 				AdminServ::error(Utils::t('Unable to delete the map').' : '.$map.' ('.$result.')');
 				break;
+			}
+			else{
+				AdminServLogs:add('action', 'Delete map: '.$map);
 			}
 		}
 	}

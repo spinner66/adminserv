@@ -9,6 +9,8 @@ $translate = array(
 	'Password' => 'Mot de passe',
 	'Admin level' => 'Niveau admin',
 	'Connection' => 'Connexion',
+	'Please put a password.' => 'Veuillez mettre un mot de passe.',
+	'Connection error: invalid session.' => 'Erreur de connexion : session invalide.',
 	// General
 	'Current map' => 'Map en cours',
 	'Name' => 'Nom',
@@ -229,6 +231,7 @@ $translate = array(
 	'server' => 'serveur',
 	'Duplicate' => 'Dupliquer',
 	'Modify' => 'Modifier',
+	'The "!serverName" server has been deleted.' => 'Le serveur "!serverName" a été supprimé.',
 	// AddServer
 	'This server has been modified.' => 'Le serveur a bien été modifié.',
 	'Unable to modify the server.' => 'Impossible de modifier le serveur.',

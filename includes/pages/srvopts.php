@@ -33,6 +33,9 @@
 		if( !$client->query('SetServerOptions', $struct) ){
 			AdminServ::error();
 		}
+		else{
+			AdminServLogs::add('action', 'Save server options');
+		}
 	}
 	
 	

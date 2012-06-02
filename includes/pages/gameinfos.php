@@ -32,6 +32,8 @@
 					}
 				}
 			}
+			
+			AdminServLogs::add('action', 'Save game infos');
 		}
 	}
 	

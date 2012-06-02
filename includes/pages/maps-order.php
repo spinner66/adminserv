@@ -19,6 +19,9 @@
 		if( !$client->query($queries['chooseNextMap'], $list) ){
 			AdminServ::error();
 		}
+		else{
+			AdminServLogs::add('action', 'Order map list');
+		}
 	}
 	
 	

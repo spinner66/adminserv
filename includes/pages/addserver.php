@@ -58,7 +58,9 @@
 		// Édition
 		if($id !== -1){
 			if( AdminServServerConfig::saveServerConfig($serverData, $id) ){
-				AdminServ::info( Utils::t('This server has been modified.') );
+				$action = Utils::t('This server has been modified.');
+				AdminServ::info($action);
+				AdminServLogs::add('action', $action);
 				Utils::redirection(false, '?p=servers');
 			}
 			else{
@@ -68,7 +70,9 @@
 		else{
 			// Ajout
 			if( AdminServServerConfig::saveServerConfig($serverData) ){
-				AdminServ::info( Utils::t('This server has been added.') );
+				$action = Utils::t('This server has been added.');
+				AdminServ::info($action);
+				AdminServLogs::add('action', $action);
 			}
 			else{
 				AdminServ::error( Utils::t('Unable to add the server.') );

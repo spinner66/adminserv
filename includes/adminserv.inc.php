@@ -824,6 +824,8 @@ abstract class AdminServ {
 		if($text === null){
 			$text = '['.$client->getErrorCode().'] '.Utils::t($client->getErrorMessage() );
 		}
+		
+		AdminServLogs::add('error', $text);
 		$_SESSION['error'] = $text;
 	}
 	public static function info($text){
