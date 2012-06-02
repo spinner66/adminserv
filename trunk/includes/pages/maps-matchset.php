@@ -10,6 +10,9 @@
 				AdminServ::error();
 				break;
 			}
+			else{
+				AdminServLogs::add('action', 'Save matchsettings: '.$matchset);
+			}
 		}
 	}
 	else if( isset($_POST['loadMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
@@ -17,6 +20,9 @@
 			if( !$client->query('LoadMatchSettings', $mapsDirectoryPath.$matchset) ){
 				AdminServ::error();
 				break;
+			}
+			else{
+				AdminServLogs::add('action', 'Load matchsettings: '.$matchset);
 			}
 		}
 	}
@@ -26,6 +32,9 @@
 				AdminServ::error();
 				break;
 			}
+			else{
+				AdminServLogs::add('action', 'Append playlist from matchsettings: '.$matchset);
+			}
 		}
 	}
 	else if( isset($_POST['insertMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
@@ -34,6 +43,9 @@
 				AdminServ::error();
 				break;
 			}
+			else{
+				AdminServLogs::add('action', 'Insert playlist from matchsettings: '.$matchset);
+			}
 		}
 	}
 	else if( isset($_POST['editMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
@@ -41,6 +53,7 @@
 		if($directory){
 			$hasDirectory = '&d='.$directory;
 		}
+		AdminServLogs::add('action', 'Edit matchsettings: '.$_POST['matchset'][0]);
 		Utils::redirection(false, '?p=maps-creatematchset'.$hasDirectory.'&f='.$_POST['matchset'][0]);
 	}
 	

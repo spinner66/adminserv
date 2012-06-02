@@ -16,8 +16,8 @@
 					$adminLevel = addslashes( htmlspecialchars($_POST['as_adminlevel']) );
 					
 					// Vérification des valeurs
-					if($password === ''){
-						AdminServ::error('Veuillez mettre un mot de passe.');
+					if($password === null){
+						AdminServ::error( Utils::t('Please put a password.') );
 					}
 					else{
 						// Sessions & Cookies
@@ -30,8 +30,9 @@
 						// Redirection
 						if($_SESSION['adminserv']['sid'] != -1 && $_SESSION['adminserv']['name'] != null && $_SESSION['adminserv']['password'] != null && $_SESSION['adminserv']['adminlevel'] != null){
 							Utils::redirection();
-						}else{
-							AdminServ::error('Erreur de connexion : session invalide.');
+						}
+						else{
+							AdminServ::error( Utils::t('Connection error: invalid session.') );
 						}
 					}
 				}
@@ -41,7 +42,7 @@
 					Utils::redirection(false, './config/');
 				}
 				else{
-					AdminServ::info('Aucun serveur disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"');
+					AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
 				}
 			}
 		}
@@ -50,7 +51,7 @@
 				Utils::redirection(false, './config/');
 			}
 			else{
-				AdminServ::error('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.');
+				AdminServ::error( Utils::t('The servers configuration file doesn\'t reconized by AdminServ.') );
 			}
 		}
 	}

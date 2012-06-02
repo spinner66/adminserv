@@ -98,6 +98,7 @@
 			foreach($PAGESLIST as $page){
 				if(USER_PAGE === $page){
 					include_once 'includes/pages/'.$page.'.php';
+						AdminServLogs::add('access', $page);
 					break;
 				}
 			}
@@ -118,15 +119,18 @@
 		if(USER_PAGE == 'servers'){
 			$GLOBALS['page_title'] = 'Configuration';
 			include_once 'includes/pages/servers.php';
+			AdminServLogs::add('access', 'servers');
 		}
 		else if(USER_PAGE == 'addserver'){
 			$GLOBALS['page_title'] = 'Configuration';
 			include_once 'includes/pages/addserver.php';
+			AdminServLogs::add('access', 'addserver');
 		}
 		// CONNEXION
 		else{
 			$GLOBALS['page_title'] = 'Connexion';
 			include_once 'includes/pages/connection.php';
+			AdminServLogs::add('access', 'connection');
 		}
 	}
 ?>

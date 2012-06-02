@@ -18,20 +18,32 @@
 			if( !$client->query('CleanBanList') ){
 				AdminServ::error();
 			}
+			else{
+				AdminServLogs::add('action', 'Clean banlist');
+			}
 		}
 		else if($clean == 'ignorelist'){
 			if( !$client->query('CleanIgnoreList') ){
 				AdminServ::error();
+			}
+			else{
+				AdminServLogs::add('action', 'Clean ignorelist');
 			}
 		}
 		else if($clean == 'guestlist'){
 			if( !$client->query('CleanGuestList') ){
 				AdminServ::error();
 			}
+			else{
+				AdminServLogs::add('action', 'Clean guestlist');
+			}
 		}
 		else if($clean == 'blacklist'){
 			if( !$client->query('CleanBlackList') ){
 				AdminServ::error();
+			}
+			else{
+				AdminServLogs::add('action', 'Clean blacklist');
 			}
 		}
 	}
@@ -57,6 +69,9 @@
 					AdminServ::error();
 					break;
 				}
+				else{
+					AdminServLogs::add('action', 'Blacklist player: '.$player);
+				}
 			}
 		}
 	}
@@ -68,6 +83,9 @@
 					AdminServ::error();
 					break;
 				}
+				else{
+					AdminServLogs::add('action', 'Unban player: '.$player);
+				}
 			}
 		}
 		else if( isset($_POST['blacklist']) && count($_POST['blacklist']) > 0 ){
@@ -75,6 +93,9 @@
 				if( !$client->query('UnBlackList', $player) ){
 					AdminServ::error();
 					break;
+				}
+				else{
+					AdminServLogs::add('action', 'Unblacklist player: '.$player);
 				}
 			}
 		}
@@ -84,6 +105,9 @@
 					AdminServ::error();
 					break;
 				}
+				else{
+					AdminServLogs::add('action', 'Remove guest player: '.$player);
+				}
 			}
 		}
 		else if( isset($_POST['ignorelist']) && count($_POST['ignorelist']) > 0 ){
@@ -91,6 +115,9 @@
 				if( !$client->query('UnIgnore', $player) ){
 					AdminServ::error();
 					break;
+				}
+				else{
+					AdminServLogs::add('action', 'Unignore player: '.$player);
 				}
 			}
 		}
@@ -118,11 +145,17 @@
 				if( !$client->query('AddGuest', $playerlogin) ){
 					AdminServ::error();
 				}
+				else{
+					AdminServLogs::add('action', 'Add guest player: '.$player);
+				}
 			}
 			// Blacklister
 			else if($addPlayerTypeList == 'blacklist'){
 				if( !$client->query('BlackList', $playerlogin) ){
 					AdminServ::error();
+				}
+				else{
+					AdminServLogs::add('action', 'Add blacklist player: '.$player);
 				}
 			}
 		}
@@ -139,12 +172,18 @@
 					AdminServ::error();
 					break;
 				}
+				else{
+					AdminServLogs::add('action', 'Save guestlist');
+				}
 			}
 			// BlackList
 			else{
 				if( !$client->query('SaveBlackList', $playlist) ){
 					AdminServ::error();
 					break;
+				}
+				else{
+					AdminServLogs::add('action', 'Save blacklist');
 				}
 			}
 			$i++;
@@ -159,12 +198,18 @@
 					AdminServ::error();
 					break;
 				}
+				else{
+					AdminServLogs::add('action', 'Load guestlist');
+				}
 			}
 			// BlackList
 			else{
 				if( !$client->query('LoadBlackList', $playlist) ){
 					AdminServ::error();
 					break;
+				}
+				else{
+					AdminServLogs::add('action', 'Load blacklist');
 				}
 			}
 			$i++;
@@ -175,6 +220,9 @@
 			if( !File::delete($gameDataDirectory.'Config/'.$playlist) ){
 				AdminServ::error(Utils::t('Unable to delete the playlist').' : '.$playlist);
 				break;
+			}
+			else{
+				AdminServLogs::add('action', 'Delete playlist: '.$playlist);
 			}
 		}
 	}
@@ -187,11 +235,17 @@
 			if( !$client->query('SaveGuestList', $filename) ){
 				AdminServ::error();
 			}
+			else{
+				AdminServLogs::add('action', 'Create playlist (guestlist): '.$filename);
+			}
 		}
 		// Blacklist
 		else{
 			if( !$client->query('SaveBlackList', $filename) ){
 				AdminServ::error();
+			}
+			else{
+				AdminServLogs::add('action', 'Create playlist (blacklist): '.$filename);
 			}
 		}
 	}

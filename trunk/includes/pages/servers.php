@@ -64,7 +64,9 @@
 			)
 		);
 		if( AdminServServerConfig::saveServerConfig($setServerData) ){
-			AdminServ::info( Utils::t('This server has been duplicated.') );
+			$action = Utils::t('This server has been duplicated.');
+			AdminServ::info($action);
+			AdminServLogs::add('action', $action);
 			Utils::redirection(false, '?p='.USER_PAGE);
 		}
 		else{
@@ -78,7 +80,9 @@
 		$servers = ServerConfig::$SERVERS;
 		unset($servers[$_POST['server'][0]]);
 		AdminServServerConfig::saveServerConfig(array(), -1, $servers);
-		AdminServ::info('Le serveur "'.$_POST['server'][0].'" a été supprimé.');
+		$action = Utils::t('The "!serverName" server has been deleted.', array('!serverName' => $_POST['server'][0]));
+		AdminServ::info($action);
+		AdminServLogs::add('action', $action);
 		Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	

@@ -18,10 +18,16 @@
 		if( !$client->query($queries['removeMap'], $_POST['map']) ){
 			AdminServ::error();
 		}
+		else{
+			AdminServLogs:add('action', 'Remove map: '.$_POST['map']);
+		}
 	}
 	else if( isset($_POST['chooseNextMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		if( !$client->query($queries['chooseNextMap'], $_POST['map']) ){
 			AdminServ::error();
+		}
+		else{
+			AdminServLogs:add('action', 'Choose next map: '.$_POST['map']);
 		}
 	}
 	

@@ -6,6 +6,9 @@
 				AdminServ::error();
 				break;
 			}
+			else{
+				AdminServLogs::add('action', 'Ban player: '.$player);
+			}
 		}
 	}
 	else if( isset($_POST['KickLoginList']) && count($_POST['player']) > 0 ){
@@ -13,6 +16,9 @@
 			if( !$client->query('Kick', $player) ){
 				AdminServ::error();
 				break;
+			}
+			else{
+				AdminServLogs::add('action', 'Kick player: '.$player);
 			}
 		}
 	}
@@ -22,6 +28,9 @@
 				AdminServ::error();
 				break;
 			}
+			else{
+				AdminServLogs::add('action', 'Ignore player: '.$player);
+			}
 		}
 	}
 	else if( isset($_POST['GuestLoginList']) && count($_POST['player']) > 0 ){
@@ -29,6 +38,9 @@
 			if( !$client->query('AddGuest', $player) ){
 				AdminServ::error();
 				break;
+			}
+			else{
+				AdminServLogs::add('action', 'Add Guest player: '.$player);
 			}
 		}
 	}
@@ -42,6 +54,9 @@
 				if( !$client->query('ForceSpectator', $player, 0) ){
 					AdminServ::error();
 					break;
+				}
+				else{
+					AdminServLogs::add('action', 'Force player mode: '.$player);
 				}
 			}
 		}
@@ -57,6 +72,9 @@
 					AdminServ::error();
 					break;
 				}
+				else{
+					AdminServLogs::add('action', 'Force spectator mode: '.$player);
+				}
 			}
 		}
 	}
@@ -71,6 +89,10 @@
 			if( !$client->query('ForcePlayerTeam', $player, $teamId) ){
 				AdminServ::error();
 				break;
+			}
+			else{
+				if($teamId == 0){ $color = 'blue'; }else{ $color = 'red'; }
+				AdminServLogs::add('action', 'Force player in '.$color.' team: '.$player);
 			}
 		}
 	}
@@ -90,8 +112,12 @@
 		if( !$client->query('ForceScores', $scores, true) ){
 			AdminServ::error();
 		}else{
-			if( !$client->query('ChatSendServerMessage', Utils::t('[Admin] The scores have been modified : $00fblue team $fffhas !scoreTeamBlue and $f00red team $fffhas !scoreTeamRed', array('!scoreTeamBlue' => $scoreTeamBlue, '!scoreTeamRed' => $scoreTeamRed)) ) ){
+			$action = Utils::t('[Admin] The scores have been modified : $00fblue team $fffhas !scoreTeamBlue and $f00red team $fffhas !scoreTeamRed', array('!scoreTeamBlue' => $scoreTeamBlue, '!scoreTeamRed' => $scoreTeamRed));
+			if( !$client->query('ChatSendServerMessage', $action) ){
 				AdminServ::error();
+			}
+			else{
+				AdminServLogs::add('action', $action);
 			}
 		}
 	}

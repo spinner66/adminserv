@@ -130,7 +130,9 @@
 			AdminServ::error(Utils::t('Unable to save the MatchSettings').' : '.$matchSettingName.' ('.$result.')');
 		}
 		else{
-			AdminServ::info(Utils::t('The MatchSettings !matchSettingName success to create in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$mapsDirectoryPath);
+			$action = Utils::t('The MatchSettings !matchSettingName success to create in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$mapsDirectoryPath;
+			AdminServ::info($action);
+			AdminServLogs::add('action', $action);
 			Utils::redirection(false, '?p='.USER_PAGE);
 		}
 	}
