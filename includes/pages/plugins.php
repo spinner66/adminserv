@@ -1,4 +1,7 @@
 <?php
+	// Nombre de plugins
+	$nbPlugins = AdminServPlugin::countPlugins();
+	
 	AdminServUI::getHeader();
 ?>
 <section class="plugins hasMenu">
@@ -17,17 +20,7 @@
 			<div class="title-detail">
 				<ul>
 					<li class="last">
-						<?php
-							if( isset(ExtensionConfig::$PLUGINS) ){ 
-								$pluginsCount = count(ExtensionConfig::$PLUGINS);
-								if($pluginsCount > 1){
-									echo $pluginsCount.' '.Utils::t('plugins installed');
-								}
-								else{
-									echo $pluginsCount.' '.Utils::t('plugin installed');
-								}
-							}
-						?>
+						<?php echo $nbPlugins['count'].' '.$nbPlugins['title']; ?>
 					</li>
 				</ul>
 			</div>

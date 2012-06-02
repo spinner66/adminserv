@@ -218,6 +218,9 @@ abstract class AdminServUI {
 			$GLOBALS['body_class'] .= ' front';
 		}
 		$GLOBALS['body_class'] .= ' section-'.USER_PAGE;
+		if( $plugin = AdminServPlugin::getCurrent() ){
+			$GLOBALS['body_class'] .= ' plugin-'.$plugin;
+		}
 		$GLOBALS['body_class'] = trim($GLOBALS['body_class']);
 		
 		require_once __DIR__ .'/header.inc.php';
@@ -576,9 +579,10 @@ abstract class AdminServUI {
 	* Récupère la liste des joueurs
 	*
 	* @param string $currentPlayerLogin -> Le login joueur à sélectionner
+	* @param array  $addFields          -> Ajouter des options
 	* @return string
 	*/
-	public static function getPlayerList($currentPlayerLogin = null){
+	public static function getPlayerList($currentPlayerLogin = null, $addOptions = array() ){
 		global $client;
 		$out = null;
 		
@@ -602,6 +606,11 @@ abstract class AdminServUI {
 		// Retour
 		if($out === -1){
 			$out = '<option value="null">'.Utils::t('No player available').'</option>';
+		}
+		if( count($addOptions) > 0 ){
+			foreach($addOptions as $optKey => $optValue){
+				$out .= '<option value="'.$optKey.'"'.$selected.'>'.TmNick::toText($optValue).'</option>';
+			}
 		}
 		return $out;
 	}
@@ -2528,8 +2537,11 @@ abstract class AdminServPlugin {
 	* @param string $returnField -> Retourner un champ en particulier
 	* @return array ou string si le 2ème paramètre est spécifié
 	*/
-	public static function getConfig($pluginName, $returnField = null){
+	public static function getConfig($pluginName = null, $returnField = null){
 		$out = null;
+		if($pluginName == null){
+			$pluginName = self::getCurrent();
+		}
 		$path = AdminServConfig::PATH_PLUGINS .$pluginName.'/config.ini';
 		
 		if( file_exists($path) ){
@@ -2578,16 +2590,64 @@ abstract class AdminServPlugin {
 	
 	
 	/**
+	* Compte le nombre de plugins installés
+	*
+	* @return array
+	*/
+	public static function countPlugins(){
+		$out = array();
+		$pluginsList = array();
+		if( count(ExtensionConfig::$PLUGINS) > 0 ){
+			foreach(ExtensionConfig::$PLUGINS as $plugin){
+				$pluginInfos = self::getConfig($plugin);
+				if($pluginInfos['game'] == 'all' || $pluginInfos['game'] == SERVER_VERSION_NAME){
+					$pluginsList[] = $plugin;
+				}
+			}
+		}
+		
+		$out['count'] = count($pluginsList);
+		if($out['count'] > 1){
+			$out['title'] = Utils::t('plugins installed');
+		}
+		else{
+			$out['title'] = Utils::t('plugin installed');
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Inclue tous les fichiers necessaire au fonctionnement du plugin
 	*
 	* @param string $pluginName -> Le nom du dossier plugin
 	*/
-	public static function getPlugin($pluginName){
-		$out = null;
+	public static function getPlugin($pluginName = null){
+		global $client, $translate;
 		
 		$file = AdminServConfig::PATH_PLUGINS .$pluginName.'/index.php';
 		if( file_exists($file) ){
 			require_once $file;
+		}
+	}
+	
+	
+	/**
+	* Récupère le chemin du dossier plugin
+	*
+	* @param string $pluginName -> Le nom du dossier plugin
+	* @return string
+	*/
+	public static function getPluginPath($pluginName = null){
+		$out = null;
+		if($pluginName == null){
+			$pluginName = self::getCurrent();
+		}
+		$path = AdminServConfig::PATH_PLUGINS;
+		
+		if($path && $pluginName){
+			$out = $path.$pluginName.'/';
 		}
 		
 		return $out;
