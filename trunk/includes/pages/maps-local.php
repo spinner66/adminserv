@@ -22,7 +22,7 @@
 				break;
 			}
 			else{
-				AdminServLogs:add('action', 'Add map: '.$map);
+				AdminServLogs::add('action', 'Add map: '.$map);
 			}
 		}
 	}
@@ -33,7 +33,7 @@
 				break;
 			}
 			else{
-				AdminServLogs:add('action', 'Insert map: '.$map);
+				AdminServLogs::add('action', 'Insert map: '.$map);
 			}
 		}
 	}
@@ -52,7 +52,7 @@
 			}
 			else{
 				File::download($zipFileName);
-				AdminServLogs:add('action', 'Download packmap ('.$countMaps.' maps)');
+				AdminServLogs::add('action', 'Download packmap ('.$countMaps.' maps)');
 				if( $result = File::delete($zipFileName) !== true ){
 					AdminServ::error($result);
 				}
@@ -61,7 +61,7 @@
 		// Sinon on envoi le fichier seul
 		else{
 			File::download($mapsDirectoryPath.$_POST['map'][0]);
-			AdminServLogs:add('action', 'Download map: '.$_POST['map'][0]);
+			AdminServLogs::add('action', 'Download map: '.$_POST['map'][0]);
 		}
 	}
 	else if( isset($_POST['renameMapValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
@@ -73,7 +73,7 @@
 				break;
 			}
 			else{
-				AdminServLogs:add('action', 'Rename map: '.$_POST['map'][$i].' to '.$newMapName);
+				AdminServLogs::add('action', 'Rename map: '.$_POST['map'][$i].' to '.$newMapName);
 			}
 			$i++;
 		}
@@ -87,7 +87,7 @@
 				break;
 			}
 			else{
-				AdminServLogs:add('action', 'Rename map (auto): '.$_POST['map'][$i].' to '.$newMapName);
+				AdminServLogs::add('action', 'Rename map (auto): '.$_POST['map'][$i].' to '.$newMapName);
 			}
 			$i++;
 		}
@@ -109,7 +109,7 @@
 				break;
 			}
 			else{
-				AdminServLogs:add('action', 'Move map: '.$directory.$map.' to '.$newPath.$map);
+				AdminServLogs::add('action', 'Move map: '.$directory.$map.' to '.$newPath.$map);
 			}
 		}
 	}
@@ -121,7 +121,7 @@
 				break;
 			}
 			else{
-				AdminServLogs:add('action', 'Delete map: '.$map);
+				AdminServLogs::add('action', 'Delete map: '.$map);
 			}
 		}
 	}
