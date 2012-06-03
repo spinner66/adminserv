@@ -99,6 +99,8 @@
 	
 	// Nombre de joueurs
 	$playerCount = AdminServ::getNbPlayers();
+	
+	$client->Terminate();
 ?>
 <script src="<?php echo $path; ?>js/event.js"></script>
 

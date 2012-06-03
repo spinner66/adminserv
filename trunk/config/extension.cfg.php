@@ -63,6 +63,7 @@ class ExtensionConfig {
 	public static $PLUGINS = array(
 		'planets',
 		'coppers',
+		'callback',
 	);
 }
 ?>
