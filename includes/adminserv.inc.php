@@ -579,10 +579,9 @@ abstract class AdminServUI {
 	* Récupère la liste des joueurs
 	*
 	* @param string $currentPlayerLogin -> Le login joueur à sélectionner
-	* @param array  $addFields          -> Ajouter des options
 	* @return string
 	*/
-	public static function getPlayerList($currentPlayerLogin = null, $addOptions = array() ){
+	public static function getPlayerList($currentPlayerLogin = null){
 		global $client;
 		$out = null;
 		
@@ -606,11 +605,6 @@ abstract class AdminServUI {
 		// Retour
 		if($out === -1){
 			$out = '<option value="null">'.Utils::t('No player available').'</option>';
-		}
-		if( count($addOptions) > 0 ){
-			foreach($addOptions as $optKey => $optValue){
-				$out .= '<option value="'.$optKey.'"'.$selected.'>'.TmNick::toText($optValue).'</option>';
-			}
 		}
 		return $out;
 	}
@@ -1187,6 +1181,26 @@ abstract class AdminServ {
 		}
 		else{
 			$out['error'] = Utils::t('Client not initialized');
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère le nombre de joueurs présent sur le serveur
+	*
+	* @return int
+	*/
+	public static function getNbPlayers(){
+		global $client;
+		$out = 0;
+		
+		if( !$client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
+			self::error();
+		}
+		else{
+			$out = count( $client->getResponse() );
 		}
 		
 		return $out;

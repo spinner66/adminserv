@@ -9,7 +9,7 @@
 	
 	
 	/* ACTIONS */
-	if( isset($_POST['transferplanets']) ){
+	if( isset($_POST['transfercoppers']) ){
 		// Server > Server
 		if( isset($_POST['serverToServerAmout']) && isset($_POST['serverToServerLogin']) ){
 			$serverToServerAmout = intval($_POST['serverToServerAmout']);
@@ -71,13 +71,13 @@
 	
 	
 	/* LECTURE */
-	// Nombre de planets
-	$nbPlanets = 0;
-	if( !$client->query('GetServerPlanets') ){
+	// Nombre de coppers
+	$nbCoppers = 0;
+	if( !$client->query('GetServerCoppers') ){
 		AdminServ::error();
 	}
 	else{
-		$nbPlanets = $client->getResponse();
+		$nbCoppers = $client->getResponse();
 	}
 	
 	// Statut du transfert
@@ -104,7 +104,7 @@
 
 <h2><?php echo Utils::t('Infos'); ?></h2>
 <div class="content">
-	<p><?php echo Utils::t('Number of planets:'); ?> <b><?php echo $nbPlanets; ?></b></p>
+	<p><?php echo Utils::t('Number of coppers:'); ?> <b><?php echo $nbCoppers; ?></b></p>
 	<p><?php echo Utils::t('Transfer state:').' '.$transferState; ?></p>
 </div>
 
@@ -195,6 +195,6 @@
 	</fieldset>
 </div>
 <div class="fright save">
-	<input class="button light" type="submit" name="transferplanets" id="transferplanets" value="<?php echo Utils::t('Transfer'); ?>" />
+	<input class="button light" type="submit" name="transfercoppers" id="transfercoppers" value="<?php echo Utils::t('Transfer'); ?>" />
 </div>
 </form>

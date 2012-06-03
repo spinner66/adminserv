@@ -3,14 +3,12 @@ class ServerConfig {
 	public static $SERVERS = array(
 		/********************* SERVER CONFIGURATION *********************/
 		
-    /*
-		'new server name' => array(
+		'ям Private' => array(
 			'address'		=> 'localhost',
-			'port'			=> 5000,
-			'matchsettings'	=> '',
-			'adminlevel'	=> array('SuperAdmin' => 'all', 'Admin' => 'all', 'User' => 'all')
+			'port'			=> 2086,
+			'matchsettings'	=> 'rmp',
+			'adminlevel'	=> array('SuperAdmin' => array('192.168.0.2', '192.168.0.3'), 'Admin' => 'local', 'User' => 'all')
 		),
-    */
 	);
 }
 ?>

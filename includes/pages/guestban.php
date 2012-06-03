@@ -281,8 +281,8 @@
 	}
 	
 	// Liste des joueurs présent sur le serveur
-	$playerList = AdminServUI::getPlayerList();
-	
+	$playerListOptions = AdminServUI::getPlayerList();
+	$playerCount = AdminServ::getNbPlayers();
 	
 	// HTML
 	$client->Terminate();
@@ -482,11 +482,12 @@
 	<div class="content last addPlayer">
 		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 			<div>
-				<select class="width2" name="addPlayerList" id="addPlayerList"<?php if($playerList == null){ echo ' hidden="hidden"'; } ?>>
+				<select class="width2" name="addPlayerList" id="addPlayerList"<?php if($playerCount == 0){ echo ' hidden="hidden"'; } ?>>
 					<option value="none"><?php echo Utils::t('Select a player'); ?></option>
+					<?php echo $playerListOptions; ?>
 					<option value="more"><?php echo Utils::t('Enter another login'); ?></option>
 				</select>
-				<input class="text width2" type="text" name="addPlayerLogin" id="addPlayerLogin" data-default-value="<?php echo Utils::t('Player login'); ?>" value="<?php echo Utils::t('Player login'); ?>"<?php if($playerList != null){ echo ' hidden="hidden"'; } ?> />
+				<input class="text width2" type="text" name="addPlayerLogin" id="addPlayerLogin" data-default-value="<?php echo Utils::t('Player login'); ?>" value="<?php echo Utils::t('Player login'); ?>"<?php if($playerCount != 0){ echo ' hidden="hidden"'; } ?> />
 				<select class="addPlayerTypeList" name="addPlayerTypeList" id="addPlayerTypeList">
 					<option value="none"><?php echo Utils::t('Add in the'); ?></option>
 					<option value="guestlist">Guestlist</option>
