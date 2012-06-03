@@ -354,7 +354,6 @@
 	<input type="hidden" id="isTeamGameMode" name="isTeamGameMode" value="<?php echo $isTeamGameMode; ?>" />
 	</form>
 </section>
-
 <?php
 	AdminServUI::getFooter();
 ?>

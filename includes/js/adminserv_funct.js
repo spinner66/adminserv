@@ -928,3 +928,14 @@ function getMoveFolderForm(){
 		]
 	});
 }
+
+
+
+
+function enableCallback(){
+	$.getJSON("includes/ajax/enable_callback.php", function(data){
+		if(data != null){
+			
+		}
+	});
+}
