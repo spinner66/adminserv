@@ -1041,6 +1041,51 @@ abstract class AdminServ {
 		}
 	}
 	
+	public static function getMainServerLoginFromRelay(){
+		global $client;
+		$out = null;
+		
+		if( self::isAdminLevel('Admin') && SERVER_VERSION_NAME == 'ManiaPlanet' ){
+			if( !$client->query('GameDataDirectory') ){
+				self::error();
+			}
+			else{
+				// Chemin parent
+				$currentPath = Str::toSlash( $client->getResponse() );
+				$parentPathEx = explode('/', $currentPath);
+				array_pop($parentPathEx);
+				array_pop($parentPathEx);
+				if( count($parentPathEx) > 0 ){
+					$parentPath = null;
+					foreach($parentPathEx as $part){
+						$parentPath .= $part.'/';
+					}
+				}
+				
+				// Fichier RunSrv
+				if( self::isLinuxServer() ){ $ext = 'sh'; }else{ $ext = 'bat'; }
+				$file = $parentPath.'RunSrv.'.$ext;
+				if( file_exists($file) ){
+					$fileContents = file_get_contents($file);
+					$fileContentsEx = explode('/join=', $fileContents);
+					$fileContentsEx = explode(' ', $fileContentsEx[1]);
+					$out = trim($fileContentsEx[0]);
+				}
+			}
+		}
+		
+		return $out;
+	}
+	
+		public static function isLinuxServer(){
+			if(substr($_SERVER['DOCUMENT_ROOT'], 0, 1) === '/'){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+	
 	
 	/**
 	* Récupère les informations du serveur actuel (map, serveur, stats, joueurs)
@@ -2282,7 +2327,9 @@ abstract class AdminServLogs {
 	public static function add($type, $str){
 		$out = false;
 		$type = strtolower($type);
-		$str = '['.date('d/m/Y H:i:s').'] ['. USER_PAGE .'] ['.$_SERVER['REMOTE_ADDR'].'] '.$str."\n";
+		$hasPlugin = AdminServPlugin::getCurrent();
+		if($hasPlugin){ $hasPlugin = '['.$hasPlugin.'] '; }else{ $hasPlugin = null; }
+		$str = '['.date('d/m/Y H:i:s').'] ['. USER_PAGE .'] '.$hasPlugin.'['.$_SERVER['REMOTE_ADDR'].'] '.$str."\n";
 		$path = self::$LOGS_PATH.$type.'.log';
 		
 		if( file_exists($path) ){
@@ -2502,6 +2549,30 @@ abstract class AdminServServerConfig {
 * Classe pour la gestion des plugins
 */
 abstract class AdminServPlugin {
+	
+	/**
+	* Tente de récupérer une config des plugins à partir d'un autre fichier
+	*/
+	public static function getAnotherPluginsList(){
+		$useAnotherConfig = AdminServConfig::$USE_ANOTHER_PLUGINS_LIST;
+		
+		if( count($useAnotherConfig) > 0 ){
+			// Récupération du fichier
+			if( isset($useAnotherConfig[0]) && $useAnotherConfig[0] != null && file_exists($useAnotherConfig[0]) ){
+				require_once $useAnotherConfig[0];
+				
+				if( isset($useAnotherConfig[1]) && $useAnotherConfig[1] == 'add'){
+					ExtensionConfig::$PLUGINS = array_merge(ExtensionConfig::$PLUGINS, $PLUGINS);
+				}
+				else{
+					ExtensionConfig::$PLUGINS = $PLUGINS;
+				}
+			}
+			else{
+				AdminServ::error( Utils::t('Cannot include another plugins config file.') );
+			}
+		}
+	}
 	
 	
 	/**

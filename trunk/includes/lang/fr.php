@@ -2,6 +2,7 @@
 $translate = array(
 	// Header
 	'Access server' => 'Accéder au serveur',
+	'Access relay' => 'Accéder au relai',
 	'Disconnect' => 'Déconnexion',
 	'Servers' => 'Serveurs',
 	// Connection
@@ -185,6 +186,7 @@ $translate = array(
 	'Plugins' => 'Plugins',
 	'plugin installed' => 'plugin installé',
 	'plugins installed' => 'plugins installés',
+	'Cannot include another plugins config file.' => 'Impossible d\'inclure un autre fichier de config pour les plugins.',
 	// Guest-ban
 	'Unable to delete the playlist' => 'Impossible de supprimer la playlist',
 	'Player login' => 'Login joueur',
