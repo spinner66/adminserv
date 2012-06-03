@@ -1041,51 +1041,6 @@ abstract class AdminServ {
 		}
 	}
 	
-	public static function getMainServerLoginFromRelay(){
-		global $client;
-		$out = null;
-		
-		if( self::isAdminLevel('Admin') && SERVER_VERSION_NAME == 'ManiaPlanet' ){
-			if( !$client->query('GameDataDirectory') ){
-				self::error();
-			}
-			else{
-				// Chemin parent
-				$currentPath = Str::toSlash( $client->getResponse() );
-				$parentPathEx = explode('/', $currentPath);
-				array_pop($parentPathEx);
-				array_pop($parentPathEx);
-				if( count($parentPathEx) > 0 ){
-					$parentPath = null;
-					foreach($parentPathEx as $part){
-						$parentPath .= $part.'/';
-					}
-				}
-				
-				// Fichier RunSrv
-				if( self::isLinuxServer() ){ $ext = 'sh'; }else{ $ext = 'bat'; }
-				$file = $parentPath.'RunSrv.'.$ext;
-				if( file_exists($file) ){
-					$fileContents = file_get_contents($file);
-					$fileContentsEx = explode('/join=', $fileContents);
-					$fileContentsEx = explode(' ', $fileContentsEx[1]);
-					$out = trim($fileContentsEx[0]);
-				}
-			}
-		}
-		
-		return $out;
-	}
-	
-		public static function isLinuxServer(){
-			if(substr($_SERVER['DOCUMENT_ROOT'], 0, 1) === '/'){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-	
 	
 	/**
 	* Récupère les informations du serveur actuel (map, serveur, stats, joueurs)
@@ -1226,6 +1181,48 @@ abstract class AdminServ {
 		}
 		else{
 			$out['error'] = Utils::t('Client not initialized');
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère le login du serveur principal à partir d'un serveur Relai
+	*
+	* @return string
+	*/
+	public static function getMainServerLoginFromRelay(){
+		global $client;
+		$out = null;
+		
+		if( self::isAdminLevel('Admin') && SERVER_VERSION_NAME == 'ManiaPlanet' ){
+			if( !$client->query('GameDataDirectory') ){
+				self::error('tout pété');
+			}
+			else{
+				// Chemin parent
+				$currentPath = Str::toSlash( $client->getResponse() );
+				$parentPathEx = explode('/', $currentPath);
+				array_pop($parentPathEx);
+				array_pop($parentPathEx);
+				if( count($parentPathEx) > 0 ){
+					$parentPath = null;
+					foreach($parentPathEx as $part){
+						$parentPath .= $part.'/';
+					}
+				}
+				
+				// Fichier RunSrv
+				if( Utils::isLinuxServer() ){ $ext = 'sh'; }else{ $ext = 'bat'; }
+				$file = $parentPath.'RunSrv.'.$ext;
+				if( file_exists($file) ){
+					$fileContents = file_get_contents($file);
+					$fileContentsEx = explode('/join=', $fileContents);
+					$fileContentsEx = explode(' ', $fileContentsEx[1]);
+					$out = trim($fileContentsEx[0]);
+				}
+			}
 		}
 		
 		return $out;
