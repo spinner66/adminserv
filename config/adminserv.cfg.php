@@ -48,6 +48,9 @@ class AdminServConfig {
 	public static $MAP_EXTENSION = array('map.gbx', 'challenge.gbx');
 	public static $MATCHSET_EXTENSION = array('txt', 'xml');
 	
+	/* PLUGINS */
+	public static $USE_ANOTHER_PLUGINS_LIST = array();
+	
 	/* LOGS */
 	public static $LOGS = array(
 		'access' => true,

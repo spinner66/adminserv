@@ -132,6 +132,13 @@
 	}
 	
 	
+	if(IS_RELAY){
+		echo AdminServ::getMainServerLoginFromRelay();
+	}
+	
+	AdminServ::dsm( AdminServ::isLinuxServer() );
+	
+	
 	// HTML
 	$client->Terminate();
 	AdminServUI::getHeader();

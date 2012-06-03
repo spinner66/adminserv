@@ -1,4 +1,7 @@
 <?php
+	// Tente de récupérer les plugins d'une autre config
+	AdminServPlugin::getAnotherPluginsList();
+	
 	// Nombre de plugins
 	$nbPlugins = AdminServPlugin::countPlugins();
 	
