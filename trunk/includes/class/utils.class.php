@@ -258,6 +258,21 @@ abstract class Utils {
 	
 	
 	/**
+	* Détermine si le serveur est sous Linux, par défaut windows
+	*
+	* @return bool
+	*/
+	public static function isLinuxServer(){
+		if(substr($_SERVER['DOCUMENT_ROOT'], 0, 1) === '/'){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	
+	/**
 	* Détermine si l'adresse ip du visiteur est dans le réseau local
 	*
 	* @param string $addr -> L'adresse IP à utiliser

@@ -130,14 +130,9 @@
 	if($isTeamGameMode){
 		$_SESSION['adminserv']['mode'] = 'detail';
 	}
-	
-	
 	if(IS_RELAY){
-		echo AdminServ::getMainServerLoginFromRelay();
+		$mainServerLogin = AdminServ::getMainServerLoginFromRelay();
 	}
-	
-	AdminServ::dsm( AdminServ::isLinuxServer() );
-	
 	
 	// HTML
 	$client->Terminate();
@@ -208,7 +203,16 @@
 			</tr>
 			<tr>
 				<td class="key"><?php echo Utils::t('Connected on'); ?></td>
-				<td class="value<?php echo ' '.strtolower(SERVER_VERSION_NAME); ?>" id="srv_version_name"><?php echo SERVER_VERSION_NAME; ?></td>
+				<td class="value" id="srv_version_name">
+					<?php
+						if(IS_RELAY){
+							echo $mainServerLogin.' (<span class="'.strtolower(SERVER_VERSION_NAME).'">'. SERVER_VERSION_NAME .'</span>)';
+						}
+						else{
+							echo '<span class="'.strtolower(SERVER_VERSION_NAME).'">'. SERVER_VERSION_NAME .'</span>';
+						}
+					?>
+				</td>
 			</tr>
 			<tr>
 				<td class="key"><?php echo Utils::t('Dedicated version'); ?></td>
