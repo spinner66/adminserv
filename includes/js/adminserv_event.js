@@ -193,9 +193,6 @@ $(document).ready(function(){
 		* Général
 		*/
 		if( $("body").hasClass("section-index") ){
-			// Callback
-			
-			
 			// Infos serveur
 			setInterval(function(){
 				getCurrentServerInfo(getMode(), getCurrentSort());

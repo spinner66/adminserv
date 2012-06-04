@@ -183,7 +183,7 @@ class UploadedFileForm {
 	* @return true si réussi, sinon false
 	*/
 	public function saveMap($client, $path, $filename, $queries){
-		$out = null;
+		$out = true;
 		$str = file_get_contents($_FILES['qqfile']['tmp_name']);
 		$str64 = new IXR_Base64($str);
 		if( $client->query('WriteFile', $path.$filename, $str64) ){
@@ -202,9 +202,6 @@ class UploadedFileForm {
 			}
 		}
 		
-		if($out == null){
-			$out = true;
-		}
 		return $out;
 	}
 	
