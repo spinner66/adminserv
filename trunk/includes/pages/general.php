@@ -205,7 +205,7 @@
 				<td class="key"><?php echo Utils::t('Connected on'); ?></td>
 				<td class="value" id="srv_version_name">
 					<?php
-						if(IS_RELAY){
+						if(IS_RELAY && isset($mainServerLogin) && $mainServerLogin !== null){
 							echo $mainServerLogin.' (<span class="'.strtolower(SERVER_VERSION_NAME).'">'. SERVER_VERSION_NAME .'</span>)';
 						}
 						else{

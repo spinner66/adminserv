@@ -837,10 +837,9 @@ class IXR_Client_Gbx {
 class IXR_ClientMulticall_Gbx extends IXR_Client_Gbx {
 	public $calls = array();
 
-	function addCall($methodName, $args) {
-		$struct = array('methodName' => $methodName, 'params' => $args);
-		$this->calls[] = $struct;
-
+	function addCall($methodName, $args = array() ) {
+		$this->calls[] = array('methodName' => $methodName, 'params' => $args);
+		
 		return (count($this->calls) - 1);
 	}
 

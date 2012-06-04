@@ -858,7 +858,7 @@ abstract class AdminServ {
 			define('SERVER_ADMINLEVEL', serialize( ServerConfig::$SERVERS[SERVER_NAME]['adminlevel']) );
 			
 			// CONNEXION
-			$client = new IXR_Client_Gbx;
+			$client = new IXR_ClientMulticall_Gbx;
 			if( !$client->InitWithIp(SERVER_ADDR, SERVER_XMLRPC_PORT, AdminServConfig::SERVER_CONNECTION_TIMEOUT) ){
 				Utils::redirection(false, '?error='.urlencode( Utils::t('The server is not accessible.') ) );
 			}
@@ -872,43 +872,44 @@ abstract class AdminServ {
 					}
 					else{
 						if($fullInit){
-							if( !$client->query('GetSystemInfo') ){
+							$client->addCall('GetSystemInfo');
+							$client->addCall('IsRelayServer');
+							$client->addCall('GetVersion');
+							if( !$client->multiquery() ){
 								self::error();
 							}
 							else{
-								$serverInfo =  $client->getResponse();
-								define('SERVER_LOGIN', $serverInfo['ServerLogin']);
-								define('SERVER_PUBLISHED_IP', $serverInfo['PublishedIp']);
-								define('SERVER_PORT', $serverInfo['Port']);
-								define('SERVER_P2P_PORT', $serverInfo['P2PPort']);
-								define('IS_SERVER', $serverInfo['IsServer']);
-								define('IS_DEDICATED', $serverInfo['IsDedicated']);
-								
-								if( !$client->query('IsRelayServer') ){
-									self::error();
+								$queryValues = $client->GetResponse();
+								if( isset($queryValues[0][0]) ){
+									$getSystemInfo = $queryValues[0][0];
+									define('SERVER_LOGIN', $getSystemInfo['ServerLogin']);
+									define('SERVER_PUBLISHED_IP', $getSystemInfo['PublishedIp']);
+									define('SERVER_PORT', $getSystemInfo['Port']);
+									define('SERVER_P2P_PORT', $getSystemInfo['P2PPort']);
+									define('IS_SERVER', $getSystemInfo['IsServer']);
+									define('IS_DEDICATED', $getSystemInfo['IsDedicated']);
+								}
+								if( isset($queryValues[1][0]) ){
+									define('IS_RELAY', $queryValues[1][0]);
+								}
+								if( isset($queryValues[2][0]) ){
+									$getVersion = $queryValues[2][0];
+									define('SERVER_VERSION_NAME', $getVersion['Name']);
+									define('SERVER_VERSION', $getVersion['Version']);
+									define('SERVER_BUILD', $getVersion['Build']);
+									define('API_VERSION', $getVersion['ApiVersion']);
+								}
+								if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+									TmNick::$linkProtocol = 'maniaplanet';
+								}
+								define('LINK_PROTOCOL', TmNick::$linkProtocol);
+								if( !isset($_SESSION['adminserv']['mode']) ){
+									define('USER_MODE', 'simple');
 								}
 								else{
-									define('IS_RELAY', $client->getResponse() );
-									if( !$client->query('GetVersion') ){
-										self::error();
-									}
-									else{
-										$getVersion = $client->getResponse();
-										define('SERVER_VERSION_NAME', $getVersion['Name']);
-										define('SERVER_VERSION', $getVersion['Version']);
-										define('SERVER_BUILD', $getVersion['Build']);
-										define('API_VERSION', $getVersion['ApiVersion']);
-										if(SERVER_VERSION_NAME == 'ManiaPlanet'){ TmNick::$linkProtocol = 'maniaplanet'; }
-										define('LINK_PROTOCOL', TmNick::$linkProtocol);
-										if( !isset($_SESSION['adminserv']['mode']) ){
-											define('USER_MODE', 'simple');
-										}
-										else{
-											define('USER_MODE', $_SESSION['adminserv']['mode']);
-										}
-										return true;
-									}
+									define('USER_MODE', $_SESSION['adminserv']['mode']);
 								}
+								return true;
 							}
 						}
 						else{
@@ -1116,6 +1117,8 @@ abstract class AdminServ {
 			$countPlayerList = count($playerList);
 			
 			if( $countPlayerList > 0 ){
+				$client->query('GetCurrentRanking', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
+				$rankingList = $client->GetResponse();
 				$i = 0;
 				foreach($playerList as $player){
 					// Nickname et Playerlogin
@@ -1133,6 +1136,12 @@ abstract class AdminServ {
 					$out['ply'][$i]['TeamName'] = $teamName;
 					$out['ply'][$i]['IsSpectator'] = $player['IsSpectator'];
 					$out['ply'][$i]['IsInOfficialMode'] = $player['IsInOfficialMode'];
+					$out['ply'][$i]['Rank'] = $rankingList[$i]['Rank'];
+					$out['ply'][$i]['BestTime'] = $rankingList[$i]['BestTime'];
+					$out['ply'][$i]['BestCheckpoints'] = $rankingList[$i]['BestCheckpoints'];
+					$out['ply'][$i]['Score'] = $rankingList[$i]['Score'];
+					$out['ply'][$i]['NbrLapsFinished'] = $rankingList[$i]['NbrLapsFinished'];
+					$out['ply'][$i]['LadderScore'] = $rankingList[$i]['LadderScore'];
 					$out['ply'][$i]['LadderRanking'] = $player['LadderRanking'];
 					$i++;
 				}
@@ -1160,21 +1169,22 @@ abstract class AdminServ {
 					uasort($out['ply'], 'AdminServSort::sortByTeam');
 				}
 				else{
-					if($sortBy != null){
-						switch($sortBy){
-							case 'nickname':
-								uasort($out['ply'], 'AdminServSort::sortByNickName');
-								break;
-							case 'ladder':
-								uasort($out['ply'], 'AdminServSort::sortByLadderRanking');
-								break;
-							case 'login':
-								uasort($out['ply'], 'AdminServSort::sortByLogin');
-								break;
-							case 'status':
-								uasort($out['ply'], 'AdminServSort::sortByStatus');
-								break;
-						}
+					switch($sortBy){
+						case 'nickname':
+							uasort($out['ply'], 'AdminServSort::sortByNickName');
+							break;
+						case 'ladder':
+							uasort($out['ply'], 'AdminServSort::sortByLadderRanking');
+							break;
+						case 'login':
+							uasort($out['ply'], 'AdminServSort::sortByLogin');
+							break;
+						case 'status':
+							uasort($out['ply'], 'AdminServSort::sortByStatus');
+							break;
+						default:
+							uasort($out['ply'], 'AdminServSort::sortByRank');
+							break;
 					}
 				}
 			}
@@ -1196,7 +1206,7 @@ abstract class AdminServ {
 		global $client;
 		$out = null;
 		
-		if( self::isAdminLevel('Admin') && SERVER_VERSION_NAME == 'ManiaPlanet' ){
+		if( self::isAdminLevel('Admin') ){
 			if( !$client->query('GameDataDirectory') ){
 				self::error('tout pété');
 			}
@@ -1215,7 +1225,8 @@ abstract class AdminServ {
 				
 				// Fichier RunSrv
 				if( Utils::isLinuxServer() ){ $ext = 'sh'; }else{ $ext = 'bat'; }
-				$file = $parentPath.'RunSrv.'.$ext;
+				if(SERVER_VERSION_NAME == 'TmForever'){ $filename = 'Start'; }else{ $filename = 'RunSrv'; }
+				$file = $parentPath.$filename.'.'.$ext;
 				if( file_exists($file) ){
 					$fileContents = file_get_contents($file);
 					$fileContentsEx = explode('/join=', $fileContents);
@@ -2117,7 +2128,7 @@ abstract class AdminServ {
 */
 abstract class AdminServSort {
 	
-	/* General */
+	
 	public static function sortByNickName($a, $b){
 		// Modification
 		$a['NickName'] = TmNick::toText($a['NickName']);
@@ -2257,6 +2268,16 @@ abstract class AdminServSort {
 			return 0;
 		}
 		if($a['CopperPrice'] < $b['CopperPrice']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	public static function sortByRank($a, $b){
+		if($a['Rank'] == $b['Rank']){
+			return 0;
+		}
+		if($a['Rank'] < $b['Rank']){
 			return -1;
 		}else{
 			return 1;
