@@ -23,6 +23,7 @@ abstract class DisplayServ {
 	*/
 	public static function getClass(){
 		require_once __DIR__ .'/class/GbxRemote.inc.php';
+		require_once __DIR__ .'/class/tmnick.class.php';
 	}
 	
 	
