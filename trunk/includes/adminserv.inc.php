@@ -226,6 +226,7 @@ abstract class AdminServUI {
 		require_once __DIR__ .'/header.inc.php';
 	}
 	public static function getFooter(){
+		global $timestart;
 		require_once __DIR__ .'/footer.inc.php';
 	}
 	
@@ -879,26 +880,21 @@ abstract class AdminServ {
 								self::error();
 							}
 							else{
-								$queryValues = $client->GetResponse();
-								if( isset($queryValues[0][0]) ){
-									$getSystemInfo = $queryValues[0][0];
-									define('SERVER_LOGIN', $getSystemInfo['ServerLogin']);
-									define('SERVER_PUBLISHED_IP', $getSystemInfo['PublishedIp']);
-									define('SERVER_PORT', $getSystemInfo['Port']);
-									define('SERVER_P2P_PORT', $getSystemInfo['P2PPort']);
-									define('IS_SERVER', $getSystemInfo['IsServer']);
-									define('IS_DEDICATED', $getSystemInfo['IsDedicated']);
-								}
-								if( isset($queryValues[1][0]) ){
-									define('IS_RELAY', $queryValues[1][0]);
-								}
-								if( isset($queryValues[2][0]) ){
-									$getVersion = $queryValues[2][0];
-									define('SERVER_VERSION_NAME', $getVersion['Name']);
-									define('SERVER_VERSION', $getVersion['Version']);
-									define('SERVER_BUILD', $getVersion['Build']);
-									define('API_VERSION', $getVersion['ApiVersion']);
-								}
+								$queriesData = $client->getMultiqueryResponse();
+								
+								$getSystemInfo = $queriesData['GetSystemInfo'];
+								define('SERVER_LOGIN', $getSystemInfo['ServerLogin']);
+								define('SERVER_PUBLISHED_IP', $getSystemInfo['PublishedIp']);
+								define('SERVER_PORT', $getSystemInfo['Port']);
+								define('SERVER_P2P_PORT', $getSystemInfo['P2PPort']);
+								define('IS_SERVER', $getSystemInfo['IsServer']);
+								define('IS_DEDICATED', $getSystemInfo['IsDedicated']);
+								define('IS_RELAY', $queriesData['IsRelayServer']);
+								$getVersion = $queriesData['GetVersion'];
+								define('SERVER_VERSION_NAME', $getVersion['Name']);
+								define('SERVER_VERSION', $getVersion['Version']);
+								define('SERVER_BUILD', $getVersion['Build']);
+								define('API_VERSION', $getVersion['ApiVersion']);
 								if(SERVER_VERSION_NAME == 'ManiaPlanet'){
 									TmNick::$linkProtocol = 'maniaplanet';
 								}
@@ -1053,29 +1049,59 @@ abstract class AdminServ {
 		global $client;
 		$out = array();
 		
-		if( $client->query('GetCurrentMapInfo') ){
+		// JEU
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$queryName = array(
+				'getMapInfo' => 'GetCurrentChallengeInfo'
+			);
+		}
+		else{
+			$queryName = array(
+				'getMapInfo' => 'GetCurrentMapInfo'
+			);
+		}
+		
+		// REQUÊTES
+		$client->addCall($queryName['getMapInfo']);
+		if( self::isAdminLevel('Admin') ){
+			$client->addCall('GetMapsDirectory');
+		}
+		$client->addCall('GetGameMode');
+		$client->addCall('GetServerName');
+		$client->addCall('GetStatus');
+		if( self::isAdminLevel('SuperAdmin') ){
+			$client->addCall('GetNetworkStats');
+		}
+		$client->addCall('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
+		
+		if( !$client->multiquery() ){
+			$out['error'] = Utils::t('Client not initialized');
+		}
+		else{
+			// DONNÉES DES REQUÊTES
+			$queriesData = $client->getMultiqueryResponse();
+			
+			// GameMode
+			$client->query('GetGameMode');
+			$out['srv']['gameModeId'] = $queriesData['GetGameMode'];
+			$out['srv']['gameModeName'] = self::getGameModeName($out['srv']['gameModeId']);
+			
 			// CurrentMapInfo
-			$currentMapInfo = $client->getResponse();
+			$currentMapInfo = $queriesData[$queryName['getMapInfo']];
 			$out['map']['name'] = TmNick::toHtml($currentMapInfo['Name'], 10, true, false, '#999');
 			$out['map']['uid'] = $currentMapInfo['UId'];
 			$out['map']['author'] = $currentMapInfo['Author'];
 			$out['map']['enviro'] = $currentMapInfo['Environnement'];
 			
 			// MapThumbnail
-			if( self::isAdminLevel('Admin') ){
-				$client->query('GetMapsDirectory');
-				$mapsDirectory = $client->getResponse();
+			$mapsDirectory = $queriesData['GetMapsDirectory'];
+			if($mapsDirectory){
 				$Gbx = new GBXChallengeFetcher($mapsDirectory.$currentMapInfo['FileName'], true, true);
 				$out['map']['thumb'] = base64_encode($Gbx->thumbnail);
 			}
 			else{
 				$out['map']['thumb'] = null;
 			}
-			
-			// GameMode
-			$client->query('GetGameMode');
-			$out['srv']['gameModeId'] = $client->getResponse();
-			$out['srv']['gameModeName'] = self::getGameModeName($out['srv']['gameModeId']);
 			
 			// TeamScores
 			if( self::isTeamGameMode($out['srv']['gameModeId']) ){
@@ -1086,18 +1112,15 @@ abstract class AdminServ {
 			}
 			
 			// ServerName
-			$client->query('GetServerName');
-			$out['srv']['name'] = TmNick::toHtml($client->getResponse(), 10, true, false, '#999');
+			$out['srv']['name'] = TmNick::toHtml($queriesData['GetServerName'], 10, true, false, '#999');
 			
 			// Status
 			$client->query('GetStatus');
-			$status = $client->getResponse();
-			$out['srv']['status'] = $status['Name'];
+			$out['srv']['status'] = $queriesData['GetStatus']['Name'];
 			
 			// NetworkStats
-			if( self::isAdminLevel('SuperAdmin') ){
-				$client->query('GetNetworkStats');
-				$networkStats = $client->getResponse();
+			$networkStats = $queriesData['GetNetworkStats'];
+			if( count($networkStats) > 0 ){
 				$out['net']['uptime'] = TimeDate::secToStringTime($networkStats['Uptime'], false);
 				$out['net']['nbrconnection'] = $networkStats['NbrConnection'];
 				$out['net']['meanconnectiontime'] = TimeDate::secToStringTime($networkStats['MeanConnectionTime'], false);
@@ -1112,8 +1135,7 @@ abstract class AdminServ {
 			}
 			
 			// PlayerList
-			$client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
-			$playerList = $client->getResponse();
+			$playerList = $queriesData['GetPlayerList'];
 			$countPlayerList = count($playerList);
 			
 			if( $countPlayerList > 0 ){
@@ -1188,9 +1210,6 @@ abstract class AdminServ {
 					}
 				}
 			}
-		}
-		else{
-			$out['error'] = Utils::t('Client not initialized');
 		}
 		
 		return $out;
@@ -1316,105 +1335,67 @@ abstract class AdminServ {
 		global $client;
 		$out = array();
 		
-		if( !$client->query('GetGameInfos') ){
+		$client->addCall('GetGameInfos');
+		// Complétion du tableau gamInf pour ManiaPlanet
+		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+			$client->addCall('GetAllWarmUpDuration');
+			$client->addCall('GetDisableRespawn');
+			$client->addCall('GetForceShowAllOpponents');
+			$client->addCall('GetScriptName');
+			$client->addCall('GetCupPointsLimit');
+			$client->addCall('GetCupRoundsPerMap');
+			$client->addCall('GetCupNbWinners');
+			$client->addCall('GetCupWarmUpDuration');
+			$client->addCall('GetRoundCustomPoints');
+		}
+		
+		if( !$client->multiquery() ){
 			self::error();
 		}
 		else{
-			$gamInf = $client->getResponse();
-			$currGamInf = $gamInf['CurrentGameInfos'];
-			$nextGamInf = $gamInf['NextGameInfos'];
+			$queriesData = $client->getMultiqueryResponse();
 			
-			// Complétion du tableau gamInf pour ManiaPlanet
-			if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-				// Nb de WarmUp
-				if( !$client->query('GetAllWarmUpDuration') ){
-					AdminServ::error();
-				}
-				else{
-					$GetAllWarmUpDuration = $client->getResponse();
-					$currGamInf['AllWarmUpDuration'] = $GetAllWarmUpDuration['CurrentValue'];
-					$nextGamInf['AllWarmUpDuration'] = $GetAllWarmUpDuration['NextValue'];
-					
-					// Respawn
-					if( !$client->query('GetDisableRespawn') ){
-						AdminServ::error();
-					}
-					else{
-						$DisableRespawn = $client->getResponse();
-						$currGamInf['DisableRespawn'] = $DisableRespawn['CurrentValue'];
-						$nextGamInf['DisableRespawn'] = $DisableRespawn['NextValue'];
-						
-						// ForceShowAllOpponents
-						if( !$client->query('GetForceShowAllOpponents') ){
-							AdminServ::error();
-						}
-						else{
-							$ForceShowAllOpponents = $client->getResponse();
-							$currGamInf['ForceShowAllOpponents'] = $ForceShowAllOpponents['CurrentValue'];
-							$nextGamInf['ForceShowAllOpponents'] = $ForceShowAllOpponents['NextValue'];
-							
-							// ScriptName
-							if( !$client->query('GetScriptName') ){
-								AdminServ::error();
-							}
-							else{
-								$ScriptName = $client->getResponse();
-								$currGamInf['ScriptName'] = $ScriptName['CurrentValue'];
-								$nextGamInf['ScriptName'] = $ScriptName['NextValue'];
-							
-								// Mode Cup
-								if( !$client->query('GetCupPointsLimit') ){
-									AdminServ::error();
-								}
-								else{
-									$CupPointsLimit = $client->getResponse();
-									$currGamInf['CupPointsLimit'] = $CupPointsLimit['CurrentValue'];
-									$nextGamInf['CupPointsLimit'] = $CupPointsLimit['NextValue'];
-									if( !$client->query('GetCupRoundsPerMap') ){
-										AdminServ::error();
-									}
-									else{
-										$CupRoundsPerMap = $client->getResponse();
-										$currGamInf['CupRoundsPerMap'] = $CupRoundsPerMap['CurrentValue'];
-										$nextGamInf['CupRoundsPerMap'] = $CupRoundsPerMap['NextValue'];
-										if( !$client->query('GetCupNbWinners') ){
-											AdminServ::error();
-										}
-										else{
-											$CupNbWinners = $client->getResponse();
-											$currGamInf['CupNbWinners'] = $CupNbWinners['CurrentValue'];
-											$nextGamInf['CupNbWinners'] = $CupNbWinners['NextValue'];
-											if( !$client->query('GetCupWarmUpDuration') ){
-												AdminServ::error();
-											}
-											else{
-												$CupWarmUpDuration = $client->getResponse();
-												$currGamInf['CupWarmUpDuration'] = $CupWarmUpDuration['CurrentValue'];
-												$nextGamInf['CupWarmUpDuration'] = $CupWarmUpDuration['NextValue'];
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+			// Game infos
+			$currGamInf = $queriesData['GetGameInfos']['CurrentGameInfos'];
+			$nextGamInf = $queriesData['GetGameInfos']['NextGameInfos'];
+			
+			// Nb de WarmUp
+			$currGamInf['AllWarmUpDuration'] = $queriesData['GetAllWarmUpDuration']['CurrentValue'];
+			$nextGamInf['AllWarmUpDuration'] = $queriesData['GetAllWarmUpDuration']['NextValue'];
+			
+			// Respawn
+			$currGamInf['DisableRespawn'] = $queriesData['GetDisableRespawn']['CurrentValue'];
+			$nextGamInf['DisableRespawn'] = $queriesData['GetDisableRespawn']['NextValue'];
+			
+			// ForceShowAllOpponents
+			$currGamInf['ForceShowAllOpponents'] = $queriesData['GetForceShowAllOpponents']['CurrentValue'];
+			$nextGamInf['ForceShowAllOpponents'] = $queriesData['GetForceShowAllOpponents']['NextValue'];
+			
+			// ScriptName
+			$currGamInf['ScriptName'] = $queriesData['GetScriptName']['CurrentValue'];
+			$nextGamInf['ScriptName'] = $queriesData['GetScriptName']['NextValue'];
+			
+			// Mode Cup
+			$currGamInf['CupPointsLimit'] = $queriesData['GetCupPointsLimit']['CurrentValue'];
+			$nextGamInf['CupPointsLimit'] = $queriesData['GetCupPointsLimit']['NextValue'];
+			$currGamInf['CupRoundsPerMap'] = $queriesData['GetCupRoundsPerMap']['CurrentValue'];
+			$nextGamInf['CupRoundsPerMap'] = $queriesData['GetCupRoundsPerMap']['NextValue'];
+			$currGamInf['CupNbWinners'] = $queriesData['GetCupNbWinners']['CurrentValue'];
+			$nextGamInf['CupNbWinners'] = $queriesData['GetCupNbWinners']['NextValue'];
+			$currGamInf['CupWarmUpDuration'] = $queriesData['GetCupWarmUpDuration']['CurrentValue'];
+			$nextGamInf['CupWarmUpDuration'] = $queriesData['GetCupWarmUpDuration']['NextValue'];
 			
 			// RoundCustomPoints
-			if( !$client->query('GetRoundCustomPoints') ){
-				AdminServ::error();
-			}
-			else{
-				$RoundCustomPoints = $client->getResponse();
-				$RoundCustomPointsList = null;
+			$RoundCustomPoints = $queriesData['GetRoundCustomPoints'];
+			$RoundCustomPointsList = null;
+			if( count($RoundCustomPoints) > 0 ){
 				foreach($RoundCustomPoints as $point){
 					$RoundCustomPointsList .= $point.',';
 				}
 				$RoundCustomPointsList = substr($RoundCustomPointsList, 0, -1);
-				$currGamInf['RoundCustomPoints'] = $RoundCustomPointsList;
-				$nextGamInf['RoundCustomPoints'] = $RoundCustomPointsList;
 			}
+			$currGamInf['RoundCustomPoints'] = $RoundCustomPointsList;
+			$nextGamInf['RoundCustomPoints'] = $RoundCustomPointsList;
 			
 			// Retour
 			$out['curr'] = $currGamInf;
@@ -1603,19 +1584,32 @@ abstract class AdminServ {
 		
 		// Méthodes
 		if(SERVER_VERSION_NAME == 'TmForever'){
-			$methodeMapList = 'GetChallengeList';
-			$methodeMapIndex = 'GetCurrentChallengeIndex';
+			$queryName = array(
+				'mapList' => 'GetChallengeList',
+				'mapIndex' => 'GetCurrentChallengeIndex'
+			);
 		}
 		else{
-			$methodeMapList = 'GetMapList';
-			$methodeMapIndex = 'GetCurrentMapIndex';
+			$queryName = array(
+				'mapList' => 'GetMapList',
+				'mapIndex' => 'GetCurrentMapIndex'
+			);
 		}
 		
 		// MAPSLIST
-		if( $client->query($methodeMapList, AdminServConfig::LIMIT_MAPS_LIST, 0) ){
+		/*$client->addCall($queryName['mapList'], AdminServConfig::LIMIT_MAPS_LIST, 0);
+		$client->addCall($queryName['mapIndex']);*/
+		
+		if( !$client->query($queryName['mapList'], AdminServConfig::LIMIT_MAPS_LIST, 0) ){
+			$out['error'] = Utils::t('Client not initialized');
+		}
+		else{
+			/*$queriesData = $client->getMultiqueryResponse();
+			self::dsm($queriesData);*/
+			
 			$mapList = $client->getResponse();
 			$countMapList = count($mapList);
-			$client->query($methodeMapIndex);
+			$client->query($queryName['mapIndex']);
 			$out['cid'] = $client->getResponse();
 			
 			if( $countMapList > 0 ){
@@ -1673,9 +1667,6 @@ abstract class AdminServ {
 				}
 				$out['lst'] = array_values($out['lst']);
 			}
-		}
-		else{
-			$out['error'] = Utils::t('Client not initialized');
 		}
 		
 		return $out;
