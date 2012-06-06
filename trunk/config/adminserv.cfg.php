@@ -42,7 +42,7 @@ class AdminServConfig {
 	
 	/* UPLOAD */
 	public static $ALLOWED_EXTENSIONS = array('gbx', 'zip', 'rar', '7z', 'gzip');
-	public static $SIZE_LIMIT = 25; // mo
+	const SIZE_LIMIT = 'auto'; // mo
 	
 	/* LOCAL */
 	public static $MAP_EXTENSION = array('map.gbx', 'challenge.gbx');

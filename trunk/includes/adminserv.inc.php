@@ -226,7 +226,6 @@ abstract class AdminServUI {
 		require_once __DIR__ .'/header.inc.php';
 	}
 	public static function getFooter(){
-		global $timestart;
 		require_once __DIR__ .'/footer.inc.php';
 	}
 	
@@ -1072,7 +1071,6 @@ abstract class AdminServ {
 		if( self::isAdminLevel('SuperAdmin') ){
 			$client->addCall('GetNetworkStats');
 		}
-		$client->addCall('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
 		
 		if( !$client->multiquery() ){
 			$out['error'] = Utils::t('Client not initialized');
@@ -1135,7 +1133,8 @@ abstract class AdminServ {
 			}
 			
 			// PlayerList
-			$playerList = $queriesData['GetPlayerList'];
+			$client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
+			$playerList = $client->getResponse();
 			$countPlayerList = count($playerList);
 			
 			if( $countPlayerList > 0 ){
@@ -1386,16 +1385,9 @@ abstract class AdminServ {
 			$nextGamInf['CupWarmUpDuration'] = $queriesData['GetCupWarmUpDuration']['NextValue'];
 			
 			// RoundCustomPoints
-			$RoundCustomPoints = $queriesData['GetRoundCustomPoints'];
-			$RoundCustomPointsList = null;
-			if( count($RoundCustomPoints) > 0 ){
-				foreach($RoundCustomPoints as $point){
-					$RoundCustomPointsList .= $point.',';
-				}
-				$RoundCustomPointsList = substr($RoundCustomPointsList, 0, -1);
-			}
-			$currGamInf['RoundCustomPoints'] = $RoundCustomPointsList;
-			$nextGamInf['RoundCustomPoints'] = $RoundCustomPointsList;
+			$RoundCustomPoints = implode(',', $queriesData['GetRoundCustomPoints']);
+			$currGamInf['RoundCustomPoints'] = $RoundCustomPoints;
+			$nextGamInf['RoundCustomPoints'] = $RoundCustomPoints;
 			
 			// Retour
 			$out['curr'] = $currGamInf;
@@ -1597,16 +1589,10 @@ abstract class AdminServ {
 		}
 		
 		// MAPSLIST
-		/*$client->addCall($queryName['mapList'], AdminServConfig::LIMIT_MAPS_LIST, 0);
-		$client->addCall($queryName['mapIndex']);*/
-		
 		if( !$client->query($queryName['mapList'], AdminServConfig::LIMIT_MAPS_LIST, 0) ){
 			$out['error'] = Utils::t('Client not initialized');
 		}
 		else{
-			/*$queriesData = $client->getMultiqueryResponse();
-			self::dsm($queriesData);*/
-			
 			$mapList = $client->getResponse();
 			$countMapList = count($mapList);
 			$client->query($queryName['mapIndex']);
