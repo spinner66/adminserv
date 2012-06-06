@@ -3,6 +3,12 @@
 	session_start();
 	define('ADMINSERV_VERSION', '2.0');
 	require_once 'config/adminserv.cfg.php';
+	if(AdminServConfig::MULTI_ADMINSERV){
+		$_SESSION['adminserv']['path'] = basename(__DIR__).'/';
+	}
+	else{
+		$_SESSION['adminserv']['path'] = null;
+	}
 	if( file_exists('config/servers.cfg.php') ){
 		require_once 'config/servers.cfg.php';
 	}
@@ -51,8 +57,8 @@
 	
 	// LANG
 	define('USER_LANG', AdminServUI::getLang($lang) );
-	if( file_exists('includes/lang/'. USER_LANG .'.php') ){
-		require_once 'includes/lang/'. USER_LANG .'.php';
+	if( file_exists(AdminServConfig::PATH_INCLUDES .'lang/'. USER_LANG .'.php') ){
+		require_once AdminServConfig::PATH_INCLUDES .'lang/'. USER_LANG .'.php';
 	}
 	
 	
@@ -79,7 +85,7 @@
 		// PAGES GROUPES
 		if( strstr(USER_PAGE, '-') ){
 			$pageEx = explode('-', USER_PAGE);
-			$pageInc = 'includes/pages/'.$pageEx[0].'.inc.php';
+			$pageInc = AdminServConfig::PATH_INCLUDES .'pages/'.$pageEx[0].'.inc.php';
 			if( file_exists($pageInc) ){
 				include_once $pageInc;
 			}
@@ -98,7 +104,7 @@
 			unset($PAGESLIST[0]);
 			foreach($PAGESLIST as $page){
 				if(USER_PAGE === $page){
-					include_once 'includes/pages/'.$page.'.php';
+					include_once AdminServConfig::PATH_INCLUDES .'pages/'.$page.'.php';
 					AdminServLogs::add('access', 'Connected - Access to the page');
 					break;
 				}
@@ -111,7 +117,7 @@
 				Utils::redirection(false, '?p='.USER_PAGE);
 			}
 			else{
-				include_once 'includes/pages/'.$PAGESLIST[0].'.php';
+				include_once AdminServConfig::PATH_INCLUDES .'pages/'.$PAGESLIST[0].'.php';
 			}
 		}
 	}
@@ -119,18 +125,18 @@
 		// CONFIG
 		if(USER_PAGE == 'servers'){
 			$GLOBALS['page_title'] = 'Configuration';
-			include_once 'includes/pages/servers.php';
+			include_once AdminServConfig::PATH_INCLUDES .'pages/servers.php';
 			AdminServLogs::add('access', 'Configuration - Server list');
 		}
 		else if(USER_PAGE == 'addserver'){
 			$GLOBALS['page_title'] = 'Configuration';
-			include_once 'includes/pages/addserver.php';
+			include_once AdminServConfig::PATH_INCLUDES .'pages/addserver.php';
 			AdminServLogs::add('access', 'Configuration - Add server');
 		}
 		// CONNEXION
 		else{
 			$GLOBALS['page_title'] = 'Connexion';
-			include_once 'includes/pages/connection.php';
+			include_once AdminServConfig::PATH_INCLUDES .'pages/connection.php';
 			AdminServLogs::add('access', 'Index - Connection');
 		}
 	}

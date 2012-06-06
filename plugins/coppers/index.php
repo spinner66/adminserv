@@ -71,30 +71,27 @@
 	
 	
 	/* LECTURE */
-	// Nombre de coppers
-	$nbCoppers = 0;
-	if( !$client->query('GetServerCoppers') ){
+	$client->addCall('GetServerCoppers');
+	if( isset($_SESSION['adminserv']['transfer_billid']) && $_SESSION['adminserv']['transfer_billid'] != null){
+		$client->addCall('GetBillState', $_SESSION['adminserv']['transfer_billid']);
+	}
+	
+	if( !$client->multiquery() ){
 		AdminServ::error();
 	}
 	else{
-		$nbCoppers = $client->getResponse();
-	}
-	
-	// Statut du transfert
-	$billState = null;
-	if( isset($_SESSION['adminserv']['transfer_billid']) && $_SESSION['adminserv']['transfer_billid'] != null){
-		if( !$client->query('GetBillState', $_SESSION['adminserv']['transfer_billid']) ){
-			AdminServ::error();
+		$queriesData = $client->getMultiqueryResponse();
+		
+		// Nombre de coppers
+		$nbPlanets = $queriesData['GetServerCoppers'];
+		
+		// Statut du transfert
+		if( $billState = isset($queriesData['GetBillState']) ){
+			$transferState = Utils::t('Transaction').' #'.$billState['TransactionId'].' : '.$billState['StateName'];
 		}
 		else{
-			$billState = $client->getResponse();
+			$transferState = '<i>'.Utils::t('No transfer made.').'</i>';
 		}
-	}
-	if($billState){
-		$transferState = Utils::t('Transaction').' #'.$billState['TransactionId'].' : '.$billState['StateName'];
-	}
-	else{
-		$transferState = '<i>'.Utils::t('No transfer made.').'</i>';
 	}
 	
 	// Nombre de joueurs

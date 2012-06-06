@@ -6,7 +6,8 @@
 	*/
 	
 	// INCLUDES
-	require_once '../../config/servers.cfg.php';
+	session_start();
+	require_once '../../'.$_SESSION['adminserv']['path'].'config/servers.cfg.php';
 	require_once '../adminserv.inc.php';
 	require_once '../class/utils.class.php';
 	

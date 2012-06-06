@@ -58,6 +58,9 @@ class AdminServConfig {
 		'error' => true
 	);
 	
+	/* MULTI ADMINSERV */
+	const MULTI_ADMINSERV = false;
+	
 	/* PATH DIRECTORY */
 	const PATH_INCLUDES = './includes/';
 	const PATH_PLUGINS = './plugins/';
