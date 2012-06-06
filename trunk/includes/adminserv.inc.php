@@ -768,7 +768,7 @@ abstract class AdminServUI {
 	* Récupère le template de liste pour la page Maps-order
 	*/
 	public static function getTemplateMapsOrderList($list){
-		$out = null
+		$out = null;
 		$pathRessources = AdminServConfig::PATH_RESSOURCES;
 		
 		if( is_array($list) && count($list) > 0 ){

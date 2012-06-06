@@ -75,17 +75,18 @@
 					
 					// Liste des joueurs
 					if( is_array($mapsList) && count($mapsList) > 0 ){
+						$pathRessources = AdminServConfig::PATH_RESSOURCES;
 						$i = 0;
 						foreach($mapsList['lst'] as $id => $map){
 							// Ligne
 							$showMapList .= '<tr'; if($id == $mapsList['cid']){ $showMapList .= ' id="currentMap"'; } $showMapList .= ' class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($id == $mapsList['cid']){ $showMapList .= ' current'; } $showMapList .= '">'
-								.'<td class="imgleft"><img src="'.$mapsList['cfg']['path_rsc'].'images/16/map.png" alt="" />'
+								.'<td class="imgleft"><img src="'.$pathRessources.'images/16/map.png" alt="" />'
 									.'<span title="'.$map['FileName'].'">'.$map['Name'].'</span>';
 									if(USER_MODE == 'detail'){
 										$showMapList .= '<span class="detailModeTd">'.$map['UId'].'</span>';
 									}
 								$showMapList .= '</td>'
-								.'<td class="imgcenter"><img src="'.$mapsList['cfg']['path_rsc'].'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
+								.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
 								.'<td>'.$map['Author'].'</td>';
 								if(USER_MODE == 'detail'){
 									$showMapList .= '<td>'.$map['GoldTime'].'</td>'
