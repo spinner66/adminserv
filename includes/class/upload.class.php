@@ -111,7 +111,7 @@ class UploadedFileXhr {
 			}
 		}
 		
-		if($out == null){
+		if($out === null){
 			$out = true;
 		}
 		return $out;
@@ -512,7 +512,7 @@ class FileUploader {
 	* @param function $filenameFunction  -> La fonction de traitement du filename
 	* @return array('success' => true) ou array('error' => 'error message')
 	*/
-	public static function saveUploadedFileToManiaPlanetDedicatedServer($client, $uploadDirectory, $queries, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
+	public static function saveUploadedFileToManiaPlanetServer($client, $uploadDirectory, $queries, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
 		// Initialisation de la classe et enregistrement du fichier sur un serveur dédié Maniaplanet
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
 		$result = $uploader->handleUploadManiaPlanet($client, $uploadDirectory, $queries, $filenameFunction);
