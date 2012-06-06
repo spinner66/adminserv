@@ -18,7 +18,7 @@
 	if( class_exists('ServerConfig') ){
 		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) && !isset(ServerConfig::$SERVERS['']) ){
 			$out['servers'] = count(ServerConfig::$SERVERS);
-			$out['label']['server'] = 'Server';
+			$out['label']['server'] = 'Serveur';
 			$out['label']['name'] = 'Nom du serveur';
 			$out['label']['login'] = 'Login serveur';
 			$out['label']['connect'] = 'Connecté sur';
