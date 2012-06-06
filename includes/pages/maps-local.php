@@ -175,12 +175,13 @@
 					
 					// Liste des maps local
 					if( is_array($mapsList['lst']) && count($mapsList['lst']) > 0 ){
+						$pathRessources = AdminServConfig::PATH_RESSOURCES;
 						$i = 0;
 						foreach($mapsList['lst'] as $id => $map){
 							// Ligne
 							$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($map['Recent']){ $showMapList .= ' recent'; } $showMapList .= '">'
-								.'<td class="imgleft"><img src="'.$mapsList['cfg']['path_rsc'].'images/16/map.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
-								.'<td class="imgcenter"><img src="'.$mapsList['cfg']['path_rsc'].'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
+								.'<td class="imgleft"><img src="'.$pathRessources.'images/16/map.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
+								.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
 								.'<td>'.$map['Author'].'</td>'
 								.'<td class="checkbox"><input type="checkbox" name="map[]" value="'.$map['FileName'].'" /></td>'
 							.'</tr>';
