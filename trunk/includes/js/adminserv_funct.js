@@ -1,6 +1,12 @@
 /**
 * Fonctions générales
 */
+function getIncludesPath(){
+	return $.trim( $("#path_includes").text() );
+}
+function getRessourcesPath(){
+	return $.trim( $("#path_ressources").text() );
+}
 function getPath(){
 	return $.trim( $(".path").text() );
 }
@@ -90,7 +96,7 @@ function info(text, hide){
 * @param string cmd -> Le nom de la méthode à utiliser
 */
 function speedAdmin(cmd){
-	$.post("includes/ajax/speed_admin.php", {cmd: cmd}, function(response){
+	$.post(getIncludesPath()+"ajax/speed_admin.php", {cmd: cmd}, function(response){
 		if(response != "null"){
 			error("Error: "+response);
 		}
@@ -114,7 +120,7 @@ function getServerAdminLevel(){
 	var serverName = $("select#as_server").val();
 	var adminLevelList = "";
 	
-	$.getJSON("includes/ajax/get_server_adminlevel.php", {srv: serverName}, function(response){
+	$.getJSON(getIncludesPath()+"ajax/get_server_adminlevel.php", {srv: serverName}, function(response){
 		if(response != null){
 			$.each(response.levels, function(i, n){
 				if(response.last != null && response.last == n){ var selected = ' selected="selected"'; }
@@ -136,6 +142,7 @@ function getServerAdminLevel(){
 * Récupère les informations du serveur actuel (map, serveur, stats, joueurs)
 */
 function getCurrentServerInfo(mode, sort){
+	var path_ressources = getRessourcesPath();
 	if(!mode){
 		mode = getMode();
 	}
@@ -144,13 +151,13 @@ function getCurrentServerInfo(mode, sort){
 	}
 	var isTeamGameMode = $("#isTeamGameMode").val();
 	
-	$.getJSON("includes/ajax/get_current_serverinfo.php", {mode: mode, sort: sort}, function(data){
+	$.getJSON(getIncludesPath()+"ajax/get_current_serverinfo.php", {mode: mode, sort: sort}, function(data){
 		if(data != null){
 			// Map
 			if(data.map != null){
 				$("#map_name").html(data.map.name);
 				$("#map_author").html(data.map.author);
-				$("#map_enviro").html(data.map.enviro+'<img src="'+data.cfg.path_rsc+'images/env/'+data.map.enviro.toLowerCase()+'.png" alt="" />');
+				$("#map_enviro").html(data.map.enviro+'<img src="'+path_ressources+'images/env/'+data.map.enviro.toLowerCase()+'.png" alt="" />');
 				$("#map_uid").html(data.map.uid);
 				$("#map_gamemode").html(data.srv.gameModeName);
 				$("#map_gamemode").attr("class", "");
@@ -192,11 +199,11 @@ function getCurrentServerInfo(mode, sort){
 					$.each(data.ply, function(i, player){
 						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">';
 							if(isTeamGameMode && mode == "detail"){
-								out += '<td class="detailModeTd imgleft"><img src="'+data.cfg.path_rsc+'images/16/team_'+player.TeamId+'.png" alt="" />'+player.TeamName+'</td>';
+								out += '<td class="detailModeTd imgleft"><img src="'+path_ressources+'images/16/team_'+player.TeamId+'.png" alt="" />'+player.TeamName+'</td>';
 							}
-							out += '<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/solo.png" alt="" />'+player.NickName+'</td>';
+							out += '<td class="imgleft"><img src="'+path_ressources+'images/16/solo.png" alt="" />'+player.NickName+'</td>';
 							if( !isTeamGameMode && mode == "detail" ){
-								out += '<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/leagueladder.png" alt="" />'+player.LadderRanking+'</td>';
+								out += '<td class="imgleft"><img src="'+path_ressources+'images/16/leagueladder.png" alt="" />'+player.LadderRanking+'</td>';
 							}
 							out += '<td>'+player.Login+'</td>'
 							+'<td>'+player.PlayerStatus+'</td>'
@@ -233,7 +240,7 @@ function getCurrentServerInfo(mode, sort){
 * @param string dest -> Selecteur Jquery pour afficher les données
 */
 function getPreviewSrvOpts(str, dest){
-	$.getJSON("includes/ajax/preview_srvopts.php", {t: str}, function(data){
+	$.getJSON(getIncludesPath()+"ajax/preview_srvopts.php", {t: str}, function(data){
 		if(data != null){
 			$(dest).html('['+data.str+']');
 		}
@@ -281,7 +288,7 @@ function getCurrentGameModeConfig(){
 * @return string html
 */
 function getChatServerLines(hideServerLines){
-	$.getJSON("includes/ajax/get_chatserverlines.php", {s: hideServerLines}, function(data){
+	$.getJSON(getIncludesPath()+"ajax/get_chatserverlines.php", {s: hideServerLines}, function(data){
 		if(data != null){
 			$("#chat").html(data);
 		}
@@ -302,7 +309,7 @@ function addChatServerLine(){
 	var destination = $("#chatDestination").val();
 	var hideServerLines = $("#checkServerLines").data("val");
 	
-	$.post("includes/ajax/add_chatserverline.php", {nic: nickname, clr: color, msg: message, dst: destination}, function(response){
+	$.post(getIncludesPath()+"ajax/add_chatserverline.php", {nic: nickname, clr: color, msg: message, dst: destination}, function(response){
 		if(response != null){
 			getChatServerLines(hideServerLines);
 			$("#chatMessage").val("");
@@ -317,7 +324,7 @@ function addChatServerLine(){
 function initializeUploader(){
 	uploader = new qq.FileUploader({
 		element: $("#formUpload")[0],
-		action: 'includes/ajax/upload.php',
+		action: getIncludesPath()+'ajax/upload.php',
 		maxConnections: 2,
 		params: {
 			path: getPath(),
@@ -384,6 +391,7 @@ function initializeUploader(){
 * Récupère la liste des maps du serveur
 */
 function getMapList(mode, sort){
+	var path_ressources = getRessourcesPath();
 	if(!mode){
 		mode = getMode();
 	}
@@ -391,7 +399,7 @@ function getMapList(mode, sort){
 		setCurrentSort(sort);
 	}
 	
-	$.getJSON("includes/ajax/get_maplist.php", {mode: mode, sort: sort}, function(data){
+	$.getJSON(getIncludesPath()+"ajax/get_maplist.php", {mode: mode, sort: sort}, function(data){
 		if(data != null){
 			if(data.lst != null && !$("#maplist").isChecked() ){
 				var out = "";
@@ -400,13 +408,13 @@ function getMapList(mode, sort){
 				if( typeof(data.lst) == "object" && data.lst.length > 0 ){
 					$.each(data.lst, function(i, map){
 						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } if(data.cid == i){ out += ' current'; } out += '">'
-							+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/map.png" alt="" />'
+							+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
 								+'<span title="'+map.FileName+'">'+map.Name+'</span>'
 								if(mode == "detail"){
 									out += '<span class="detailModeTd">'+map.UId+'</span>';
 								}
 							out += '</td>'
-							+'<td class="imgcenter"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
+							+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
 							+'<td>'+map.Author+'</td>';
 							if(mode == "detail"){
 								out += '<td>'+map.GoldTime+'</td>'
@@ -478,7 +486,7 @@ function getMapList(mode, sort){
 * Récupère l'arboréscence des dossiers pour déplacer
 */
 function getMoveFolderList(nbFiles){
-	$.getJSON("includes/ajax/get_directory_list.php", function(data){
+	$.getJSON(getIncludesPath()+"ajax/get_directory_list.php", function(data){
 		if(data != null){
 			var out = "";
 			var formSelector = $("#form-move-map");
@@ -561,9 +569,10 @@ function slideUpNewFolderForm(){
 * Fait un tri sur la liste des maps pour la page "maps-order"
 */
 function setMapsOrderSort(sort, order){
+	var path_ressources = getRessourcesPath();
 	var list = $("#jsonlist").val();
 	
-	$.getJSON("includes/ajax/mapsorder_sort.php", {srt: sort, ord: order, lst: list}, function(data){
+	$.getJSON(getIncludesPath()+"ajax/mapsorder_sort.php", {srt: sort, ord: order, lst: list}, function(data){
 		if(data != null){
 			var out = "";
 			
@@ -573,8 +582,8 @@ function setMapsOrderSort(sort, order){
 						out += '<li class="ui-state-default">'
 							+'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
 							+'<div class="order-map-name" title="'+map.FileName+'">'+map.Name+'</div>'
-							+'<div class="order-map-env"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
-							+'<div class="order-map-author"><img src="'+data.cfg.path_rsc+'images/16/challengeauthor.png" alt="" />'+map.Author+'</div>'
+							+'<div class="order-map-env"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
+							+'<div class="order-map-author"><img src="'+path_ressources+'images/16/challengeauthor.png" alt="" />'+map.Author+'</div>'
 						+'</li>';
 					}
 				});
@@ -729,7 +738,7 @@ function setMapslistDetailMode(){
 */
 function matchset_mapImport(){
 	var path = $("#mapsDirectoryList").val();
-	$.getJSON("includes/ajax/get_matchset_mapimport.php", {path: path}, function(data){
+	$.getJSON(getIncludesPath()+"ajax/get_matchset_mapimport.php", {path: path}, function(data){
 		if(data != null){
 			matchset_setNbMapSelection(data.nbm.count);
 			$(".creatematchset .maps").removeClass("loading");
@@ -738,7 +747,9 @@ function matchset_mapImport(){
 }
 function matchset_mapImportSelection(){
 	var path = $("#mapsDirectoryList").val();
-	$.getJSON("includes/ajax/get_matchset_mapimport.php", {path: path, op: "getSelection"}, function(data){
+	var path_includes = getIncludesPath();
+	var path_ressources = getRessourcesPath();
+	$.getJSON(path_includes+"ajax/get_matchset_mapimport.php", {path: path, op: "getSelection"}, function(data){
 		if(data != null){
 			var out = "";
 			
@@ -746,10 +757,10 @@ function matchset_mapImportSelection(){
 			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
 				$.each(data.lst, function(i, map){
 					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
-						+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/map.png" alt="" />'
+						+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
 							+'<span title="'+map.FileName+'">'+map.Name+'</span>'
 						out += '</td>'
-						+'<td class="imgcenter"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
+						+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
 						+'<td>'+map.Author+'</td>';
 						out += '<td class="checkbox">'; if(data.cid != i){ out += '<input type="checkbox" name="map[]" value="'+map.FileName+'" />'; } out += '</td>'
 					+'</tr>';
@@ -787,7 +798,7 @@ function matchset_mapImportSelection(){
 								}
 							});
 						}
-						$.getJSON("includes/ajax/get_matchset_mapimport.php", {path: path, op: "setSelection", select: listSelectionId}, function(data){
+						$.getJSON(path_includes+"ajax/get_matchset_mapimport.php", {path: path, op: "setSelection", select: listSelectionId}, function(data){
 							if(data != null){
 								matchset_setNbMapSelection(data.nbm.count);
 								$("#mapImportSelectionDialog").dialog("close");
@@ -813,12 +824,13 @@ function matchset_setNbMapSelection(nb){
 * Récupère et affiche la sélection du MatchSettings
 */
 function matchset_mapSelection(removeId){
+	var path_ressources = getRessourcesPath();
 	if(removeId){
 		var params = {remove: parseInt(removeId - 1)};
 	}else{
 		var params = "";
 	}
-	$.getJSON("includes/ajax/get_matchset_mapselection.php", params, function(data){
+	$.getJSON(getIncludesPath()+"ajax/get_matchset_mapselection.php", params, function(data){
 		if(data != null){
 			var out = "";
 			
@@ -826,12 +838,12 @@ function matchset_mapSelection(removeId){
 			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
 				$.each(data.lst, function(i, map){
 					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
-						+'<td class="imgleft"><img src="'+data.cfg.path_rsc+'images/16/map.png" alt="" />'
+						+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
 							+'<span title="'+map.FileName+'">'+map.Name+'</span>'
 						out += '</td>'
-						+'<td class="imgcenter"><img src="'+data.cfg.path_rsc+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
+						+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
 						+'<td>'+map.Author+'</td>';
-						out += '<td class="checkbox imgcenter"><a href="." title="'+$("#mapSelectionDialog").data("remove")+'"><img src="'+data.cfg.path_rsc+'images/16/delete.png" alt="" /></a></td>'
+						out += '<td class="checkbox imgcenter"><a href="." title="'+$("#mapSelectionDialog").data("remove")+'"><img src="'+path_ressources+'images/16/delete.png" alt="" /></a></td>'
 					+'</tr>';
 				});
 			}
@@ -889,7 +901,7 @@ function getRenameFolderForm(){
 }
 function getMoveFolderForm(){
 	$("#moveFolderForm").removeAttr("hidden");
-	$.getJSON("includes/ajax/get_directory_list.php", function(data){
+	$.getJSON(getIncludesPath()+"ajax/get_directory_list.php", function(data){
 		if(data != null){
 			var out = "";
 			var formSelector = $("#moveFolderForm");

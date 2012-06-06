@@ -768,7 +768,8 @@ abstract class AdminServUI {
 	* Récupère le template de liste pour la page Maps-order
 	*/
 	public static function getTemplateMapsOrderList($list){
-		$out = null;
+		$out = null
+		$pathRessources = AdminServConfig::PATH_RESSOURCES;
 		
 		if( is_array($list) && count($list) > 0 ){
 			foreach($list['lst'] as $id => $map){
@@ -776,8 +777,8 @@ abstract class AdminServUI {
 					$out .= '<li class="ui-state-default">'
 						.'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
 						.'<div class="order-map-name" title="'.$map['FileName'].'">'.$map['Name'].'</div>'
-						.'<div class="order-map-env"><img src="'.$list['cfg']['path_rsc'].'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</div>'
-						.'<div class="order-map-author"><img src="'.$list['cfg']['path_rsc'].'images/16/challengeauthor.png" alt="" />'.$map['Author'].'</div>'
+						.'<div class="order-map-env"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</div>'
+						.'<div class="order-map-author"><img src="'.$pathRessources.'images/16/challengeauthor.png" alt="" />'.$map['Author'].'</div>'
 					.'</li>';
 				}
 			}
@@ -1178,9 +1179,6 @@ abstract class AdminServ {
 			else{
 				$out['nbp'] = $countPlayerList.' '.Utils::t('player');
 			}
-			
-			// Config
-			$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
 			
 			
 			// TRI
@@ -1626,9 +1624,6 @@ abstract class AdminServ {
 				$out['lst'] = Utils::t('No map');
 			}
 			
-			// Config
-			$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
-			
 			
 			// TRI
 			if($sortBy != null){
@@ -1704,9 +1699,6 @@ abstract class AdminServ {
 				if($out['nbm']['count'] == 0){
 					$out['lst'] = Utils::t('No map');
 				}
-				
-				// Config
-				$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
 				
 				
 				// TRIS
@@ -1793,9 +1785,6 @@ abstract class AdminServ {
 				if($out['nbm']['count'] == 0){
 					$out['lst'] = Utils::t('No matchsetting');
 				}
-				
-				// Config
-				$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
 			}
 			else{
 				// Retour des erreurs de la méthode read
@@ -1837,9 +1826,6 @@ abstract class AdminServ {
 		if($out['nbm']['count'] == 0){
 			$out['lst'] = Utils::t('No map');
 		}
-		
-		// Config
-		$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
 		
 		// Mise à jour de la session
 		$_SESSION['adminserv']['matchset_maps_selected'] = $out;
@@ -2067,9 +2053,6 @@ abstract class AdminServ {
 		if($out['nbm']['count'] == 0){
 			$out['lst'] = Utils::t('No map');
 		}
-		
-		// Config
-		$out['cfg']['path_rsc'] = AdminServConfig::PATH_RESSOURCES;
 		
 		return $out;
 	}

@@ -5,7 +5,7 @@
 	
 	// INCLUDES
 	session_start();
-	require_once '../../config/adminserv.cfg.php';
+	require_once '../../'.$_SESSION['adminserv']['path'].'config/adminserv.cfg.php';
 	require_once '../adminserv.inc.php';
 	AdminServUI::getClass();
 	
