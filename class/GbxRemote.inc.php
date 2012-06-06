@@ -822,8 +822,31 @@ class IXR_ClientMulticall_Gbx extends IXR_Client_Gbx {
 		} else {
 			$result = parent::query('system.multicall', $this->calls);
 		}
-		$this->calls = array();  // reset for next calls
 		return $result;
+	}
+	
+	function getMultiqueryResponse(){
+		$out = array();
+
+		if( count($this->calls) > 0 ){
+			$result = $this->getResponse();
+			foreach($this->calls as $i => $method){
+				if( isset($result[$i]['faultCode']) ){
+					$out[$method['methodName']] = array();
+				}
+				else{
+					if( count($result[$i]) == 1 && isset($result[$i][0]) ){
+						$out[$method['methodName']] = $result[$i][0];
+					}
+					else{
+						$out[$method['methodName']] = $result[$i];
+					}
+				}
+			}
+		}
+
+		$this->calls = array();
+		return $out;
 	}
 }
 ?>

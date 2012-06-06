@@ -7,47 +7,43 @@
 		$.getJSON("includes/ajax/initialize.php", function(data){
 			if(data != null){
 				var out = '<ul class="ds-servers-list">';
-					if(data.servers != null){
+					if(data.servers){
 						for(var i = 0; i < data.servers; i++){
-							out += '<li id="ds-server-'+i+'" class="ds-server">'
-								+ '<div class="ds-part-left">'
-									+ '<div class="ds-header">'
-										+ data.label.server+" n°"+(i+1)
-									+ '</div>'
-									+ '<div class="ds-content">'
-										+ '<ul>'
-											+ '<li>'+data.label.name+'</li>'
-											+ '<li>'+data.label.login+'</li>'
-											+ '<li>'+data.label.connect+'</li>'
-											+ '<li>'+data.label.status+'</li>'
-											+ '<li>'+data.label.gamemode+'</li>'
-											+ '<li>'+data.label.currentmap+'</li>'
-											+ '<li>'+data.label.players+'</li>'
-										+ '</ul>'
-									+ '</div>'
-								+ '</div>'
-								+ '<div class="ds-part-middle">'
-									+ '<div class="ds-header"></div>'
-									+ '<div class="ds-content">'
-										+ '<ul>'
-											+ '<li class="ds-server-name"></li>'
-											+ '<li class="ds-server-login"></li>'
-											+ '<li class="ds-server-connect"></li>'
-											+ '<li class="ds-server-status"></li>'
-											+ '<li class="ds-server-gamemode"></li>'
-											+ '<li class="ds-server-currentmap"></li>'
-											+ '<li class="ds-server-players-count"></li>'
-										+ '</ul>'
-									+ '</div>'
-								+ '</div>'
-								+ '<div class="ds-part-right">'
-									+ '<div class="ds-header">'
-										+ data.label.players
-									+ '</div>'
-									+ '<div class="ds-content">'
-										+ '<div class="ds-servers-players-list"></div>'
-									+ '</div>'
-								+ '</div>'
+							out += '<li id="ds-server-'+i+'" class="ds-server loading">'
+								+ '<table>'
+									+ '<tr class="ds-header">'
+										+ '<th colspan="2">'+data.label.server+" n°"+(i+1)+'</th>'
+										+ '<th>'+data.label.players+'</th>'
+									+ '</tr>'
+									+ '<tr class="ds-space"><td colspan="3"></td></tr>'
+									+ '<tr class="ds-content">'
+										+ '<td class="ds-part-left">'
+											+ '<ul>'
+												+ '<li>'+data.label.name+'</li>'
+												+ '<li>'+data.label.login+'</li>'
+												+ '<li>'+data.label.connect+'</li>'
+												+ '<li>'+data.label.status+'</li>'
+												+ '<li>'+data.label.gamemode+'</li>'
+												+ '<li>'+data.label.currentmap+'</li>'
+												+ '<li>'+data.label.players+'</li>'
+											+ '</ul>'
+										+ '</td>'
+										+ '<td class="ds-part-middle">'
+											+ '<ul>'
+												+ '<li class="ds-server-name"></li>'
+												+ '<li class="ds-server-login"></li>'
+												+ '<li class="ds-server-connect"></li>'
+												+ '<li class="ds-server-status"></li>'
+												+ '<li class="ds-server-gamemode"></li>'
+												+ '<li class="ds-server-currentmap"></li>'
+												+ '<li class="ds-server-players-count"></li>'
+											+ '</ul>'
+										+ '</td>'
+										+ '<td class="ds-part-right">'
+											+ '<div class="ds-servers-players-list"></div>'
+										+ '</td>'
+									+ '</tr>'
+								+ '</table>'
 							+ '</li>';
 						}
 					}
@@ -59,7 +55,7 @@
 				// 2ème étape - Récupérer les données serveur
 				$.getJSON("includes/ajax/get_servers.php", function(data){
 					if(data != null){
-						if(data.servers.length > 0){
+						if(data.servers){
 							for(var i = 0; i < data.servers.length; i++){
 								var serverId = $("#ds-server-"+i);
 								
@@ -86,6 +82,7 @@
 										playerListTable += '<td>'+data.players[i].list+'</td>';
 									}
 								playerListTable += "</table>";
+								serverId.removeClass("loading");
 								serverId.find(".ds-servers-players-list").html(playerListTable);
 							}
 						}
