@@ -32,7 +32,7 @@
 	// ENREGISTREMENT
 	if( isset($_POST['saveserver']) ){
 		// Variables
-		$serverName = trim( htmlspecialchars( addslashes($_POST['addServerName']) ) );
+		$serverName = Str::replaceSpecialChars( htmlspecialchars(addslashes($_POST['addServerName'])), false);
 		$serverAddress = trim($_POST['addServerAddress']);
 		$serverPort = intval($_POST['addServerPort']);
 		$serverMatchSet = trim($_POST['addServerMatchSet']);

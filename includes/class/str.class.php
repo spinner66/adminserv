@@ -64,7 +64,7 @@ abstract class Str {
 	*
 	* @param string $str -> La chaine de caractères
 	*/
-	public static function replaceSpecialChars($str){
+	public static function replaceSpecialChars($str, $replaceSpace = true){
 		// Listes
 		$toRemove = array(
 			"'", '"', '&', '<', '>', '+', '=', '*', '/', '²', '~', '#', '{', '[', '(', '|', '`', '\\', '^', '@', ')', ']', '}', '¨', '$', '£', '¤',
@@ -74,14 +74,21 @@ abstract class Str {
 			'′', '″', '∂', '∏', '∑', '√', '∞', '¬', '∩', '∫', '⇒', '⇔', '∀', '∃', '∇', '∈', '∋', '∝', '∠', '∧', '∨', '∴', '∼', '⊂', '⊃',
 			'⊆', '⊇', '⊥'
 		);
-		$toDash = array(
-			' ', '  '
-		);
+		if($replaceSpace){
+			$toDash = array(
+				' ', '  '
+			);
+		}
 		
 		// Remplacement
 		$str = trim($str);
 		$str = str_replace($toRemove, '', $str);
-		$str = str_replace($toDash, '-', $str);
+		if($replaceSpace){
+			$str = str_replace($toDash, '-', $str);
+		}
+		else{
+			$str = trim($str);
+		}
 		return $str;
 	}
 	
