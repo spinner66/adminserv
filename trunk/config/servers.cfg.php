@@ -15,7 +15,7 @@ class ServerConfig {
 			'matchsettings'	=> '',
 			'adminlevel'	=> array('SuperAdmin' => 'all', 'Admin' => 'all', 'User' => 'all')
 		),
-		'ям Relay 2' => array(
+		'ям Relay 2     ' => array(
 			'address'		=> 'localhost',
 			'port'			=> 2088,
 			'matchsettings'	=> '',

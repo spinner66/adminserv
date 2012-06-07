@@ -174,6 +174,21 @@ class UploadedFileForm {
 	}
 	
 	
+	public function writeMap($client, $path, $filename, $queries){
+		$out = true;
+		$str = file_get_contents($_FILES['qqfile']['tmp_name']);
+		$str64 = new IXR_Base64($str);
+		if( !$client->query('WriteFile', $path.$filename, $str64) ){
+			$out = false;
+		}
+		else{
+			self::saveMap($client, $path, $filename, $queries);
+		}
+		
+		return $out;
+	}
+	
+	
 	/**
 	* Enregistre le fichier sur un serveur FTP
 	*
@@ -184,21 +199,17 @@ class UploadedFileForm {
 	*/
 	public function saveMap($client, $path, $filename, $queries){
 		$out = true;
-		$str = file_get_contents($_FILES['qqfile']['tmp_name']);
-		$str64 = new IXR_Base64($str);
-		if( $client->query('WriteFile', $path.$filename, $str64) ){
-			$pathTofile = $path.$filename;
-			// Insert
-			if($queries['type'] == 'insert'){
-				if( !$client->query($queries['insert'], $filename) ){
-					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-				}
+		$pathTofile = $path.$filename;
+		// Insert
+		if($queries['type'] == 'insert'){
+			if( !$client->query($queries['insert'], $filename) ){
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 			}
-			// Add
-			else{
-				if( !$client->query($queries['add'], $filename) ){
-					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-				}
+		}
+		// Add
+		else{
+			if( !$client->query($queries['add'], $filename) ){
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 			}
 		}
 		

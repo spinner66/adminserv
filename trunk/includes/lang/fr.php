@@ -182,6 +182,12 @@ $translate = array(
 	'{file} is too small, minimum file size is {minSizeLimit}.' => '{file} est trop petit. La taille minimal est de {minSizeLimit}.',
 	'{file} is empty, please select files again without it.' => '{file} est vide. Veuillez sélectionner un fichier qui n\'est pas vide.',
 	'The files are being uploaded, if you leave now the upload will be cancelled.' => 'Les fichiers sont en cours de transfert. Si vous quittez la page, l\'envoi sera annulé.',
+	'No file hasn\'t uploaded' => 'Aucun fichier n\'a été uploadé',
+	'The file is empty.' => 'Le fichier est vide.',
+	'The file size is too large.' => 'La taille du fichier est supérieur à la limite autorisé.',
+	'The file has invalid extension (allowed extensions:' => 'L\'extension du fichier est invalide (extension autorisées :',
+	'The file doesn\'t uploaded. The upload has cancelled or is a server error.' => 'Le fichier n\'a pas été envoyé. L\'envoi a été annulé ou une erreur du serveur est survenue.',
+	'Server error. The upload destination folder isn\'t writable.' => 'Erreur du serveur. Le dossier de destination des uploads n\'est pas écrivable.',
 	// Plugins
 	'Plugins' => 'Plugins',
 	'plugin installed' => 'plugin installé',
