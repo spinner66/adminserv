@@ -251,10 +251,10 @@
 	}
 	
 	// LECTURE
-	$client->addCall('GetBanList', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
-	$client->addCall('GetBlackList', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
-	$client->addCall('GetGuestList', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
-	$client->addCall('GetIgnoreList', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
+	$client->addCall('GetBanList', array(AdminServConfig::LIMIT_PLAYERS_LIST, 0) );
+	$client->addCall('GetBlackList', array(AdminServConfig::LIMIT_PLAYERS_LIST, 0) );
+	$client->addCall('GetGuestList', array(AdminServConfig::LIMIT_PLAYERS_LIST, 0) );
+	$client->addCall('GetIgnoreList', array(AdminServConfig::LIMIT_PLAYERS_LIST, 0) );
 	if( !$client->multiquery() ){
 		AdminServ::error();
 	}
@@ -269,37 +269,6 @@
 		$countGuestList = count($guestList);
 		$countIgnoreList = count($ignoreList);
 	}
-	
-	/*
-	if( !$client->query('GetBanList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		AdminServ::error();
-	}
-	else{
-		$banList = $client->getResponse();
-		$countBanList = count($banList);
-	}
-	if( !$client->query('GetBlackList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		AdminServ::error();
-	}
-	else{
-		$blackList = $client->getResponse();
-		$countBlackList = count($blackList);
-	}
-	if( !$client->query('GetGuestList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		AdminServ::error();
-	}
-	else{
-		$guestList = $client->getResponse();
-		$countGuestList = count($guestList);
-	}
-	if( !$client->query('GetIgnoreList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-		AdminServ::error();
-	}
-	else{
-		$ignoreList = $client->getResponse();
-		$countIgnoreList = count($ignoreList);
-	}
-	*/
 	
 	// Liste des joueurs présent sur le serveur
 	$playerListOptions = AdminServUI::getPlayerList();
