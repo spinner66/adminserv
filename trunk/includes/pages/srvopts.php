@@ -40,11 +40,14 @@
 	
 	
 	// LECTURE
-	if( !$client->query('GetServerOptions') ){
+	$client->addCall('GetServerOptions');
+	$client->addCall('GetBuddyNotification', array('') );
+	if( !$client->multiquery() ){
 		AdminServ::error();
 	}
 	else{
-		$srvOpt = $client->getResponse();
+		$queriesData = $client->getMultiqueryResponse();
+		$srvOpt = $queriesData['GetServerOptions'];
 		$srvOpt['Name'] = stripslashes($srvOpt['Name']);
 		$srvOpt['NameHtml'] = TmNick::toHtml($srvOpt['Name'], 10, false, false, '#666');
 		$srvOpt['Comment'] = stripslashes($srvOpt['Comment']);
@@ -53,12 +56,7 @@
 		else{ $srvOpt['CurrentLadderModeName'] = 'Inactif'; }
 		if($srvOpt['CurrentVehicleNetQuality'] !== 0){ $srvOpt['CurrentVehicleNetQualityName'] = 'Haute'; }
 		else{ $srvOpt['CurrentVehicleNetQualityName'] = 'Rapide'; }
-		if( !$client->query('GetBuddyNotification', '') ){
-			AdminServ::error();
-		}
-		else{
-			$srvOpt['BuddyNotification'] = $client->getResponse();
-		}
+		$srvOpt['BuddyNotification'] = $queriesData['GetBuddyNotification'];
 	}
 	
 	

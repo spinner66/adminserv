@@ -11,6 +11,7 @@ $translate = array(
 	'Admin level' => 'Niveau admin',
 	'Connection' => 'Connexion',
 	'Please put a password.' => 'Veuillez mettre un mot de passe.',
+	'Connection error' => 'Erreur de connexion',
 	'Connection error: invalid session.' => 'Erreur de connexion : session invalide.',
 	// General
 	'Current map' => 'Map en cours',

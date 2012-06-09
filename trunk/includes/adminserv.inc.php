@@ -1073,6 +1073,7 @@ abstract class AdminServ {
 		if( self::isAdminLevel('SuperAdmin') ){
 			$client->addCall('GetNetworkStats');
 		}
+		$client->addCall('GetPlayerList', array(AdminServConfig::LIMIT_PLAYERS_LIST, 0) );
 		
 		if( !$client->multiquery() ){
 			$out['error'] = Utils::t('Client not initialized');
@@ -1135,8 +1136,7 @@ abstract class AdminServ {
 			}
 			
 			// PlayerList
-			$client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
-			$playerList = $client->getResponse();
+			$playerList = $queriesData['GetPlayerList'];
 			$countPlayerList = count($playerList);
 			
 			if( $countPlayerList > 0 ){
@@ -1956,11 +1956,15 @@ abstract class AdminServ {
 					$out['gameinfos']['RoundsPointsLimit'] = (string)$gameinfos->rounds_pointslimit;
 					$out['gameinfos']['RoundsUseNewRules'] = (string)$gameinfos->rounds_usenewrules;
 					$out['gameinfos']['RoundsForcedLaps'] = (string)$gameinfos->rounds_forcedlaps;
-					//$out['gameinfos']['rounds_pointslimitnewrules'] = (string)$gameinfos->rounds_pointslimitnewrules;
+					if(SERVER_VERSION_NAME == 'TmForever'){
+						$out['gameinfos']['rounds_pointslimitnewrules'] = (string)$gameinfos->rounds_pointslimitnewrules;
+					}
 					$out['gameinfos']['TeamPointsLimit'] = (string)$gameinfos->team_pointslimit;
 					$out['gameinfos']['TeamMaxPoints'] = (string)$gameinfos->team_maxpoints;
 					$out['gameinfos']['TeamUseNewRules'] = (string)$gameinfos->team_usenewrules;
-					//$out['gameinfos']['team_pointslimitnewrules'] = (string)$gameinfos->team_pointslimitnewrules;
+					if(SERVER_VERSION_NAME == 'TmForever'){
+						$out['gameinfos']['team_pointslimitnewrules'] = (string)$gameinfos->team_pointslimitnewrules;
+					}
 					$out['gameinfos']['TimeAttackLimit'] = (string)$gameinfos->timeattack_limit;
 					$out['gameinfos']['TimeAttackSynchStartPeriod'] = (string)$gameinfos->timeattack_synchstartperiod;
 					$out['gameinfos']['LapsNbLaps'] = (string)$gameinfos->laps_nblaps;
@@ -2012,7 +2016,7 @@ abstract class AdminServ {
 	
 	
 	/**
-	* Ajoute et met en forme les données des maps du MatchSettings
+	* Met en forme les données des maps du MatchSettings
 	*
 	* @global resource $client -> Le client doit être initialisé
 	* @param  array    $maps   -> Le tableau extrait du matchsettings : assoc array(ident => filename)
@@ -2066,19 +2070,24 @@ abstract class AdminServ {
 	* @return array si le fichier existe, sinon false
 	*/
 	public static function getPlaylistData($filename){
+		$out = array();
+		
+		// Chargement du fichier XML
 		if( @file_exists($filename) ){
-			if( !$xml = @simplexml_load_file($filename) ){
-				return false;
+			if( !($xml = @simplexml_load_file($filename)) ){
+				$out['error'] = 'simplexml_load_file error';
 			}
-		}else{
-			return false;
 		}
-		$playlist = array();
-		$playlist['type'] = @$xml->getName();
-		foreach($xml->player as $player){
-			$playlist['logins'][] = (string)$player->login;
+		
+		// Lecture du fichier XML
+		if($xml){
+			$out['type'] = @$xml->getName();
+			foreach($xml->player as $player){
+				$out['logins'][] = (string)$player->login;
+			}
 		}
-		return $playlist;
+		
+		return $out;
 	}
 }
 
@@ -2716,27 +2725,5 @@ abstract class AdminServPlugin {
 		
 		return $out;
 	}
-}
-
-
-/**
-* Classe pour la gestion de la base de donnée
-*/
-abstract class AdminServDB {
-	
-	public static function install(){
-		
-	}
-	
-	
-	public static function connection(){
-		$out = @mysql_connect(DataBaseConfig::DB_HOST, DataBaseConfig::DB_USER , DataBaseConfig::DB_PASS, true)
-		or die('Impossible de se connecter au serveur : '.mysql_error() );
-		mysql_select_db(DataBaseConfig::DB_NAME);
-		mysql_query('SET NAMES UTF8');
-		
-		return $out;
-	}
-	
 }
 ?>
