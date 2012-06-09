@@ -95,7 +95,7 @@ class UploadedFileXhr {
 			$str64 = new IXR_Base64($file);
 			
 			if( !$client->query('WriteFile', $filename, $str64) ){
-				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'write';
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 			}
 		}
 		
@@ -117,13 +117,13 @@ class UploadedFileXhr {
 		// Insert
 		if($queries['type'] == 'insert'){
 			if( !$client->query($queries['insert'], $filename) ){
-				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'insert';
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 			}
 		}
 		// Add
 		else{
 			if( !$client->query($queries['add'], $filename) ){
-				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'add';
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 			}
 		}
 		
