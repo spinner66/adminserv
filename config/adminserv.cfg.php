@@ -75,15 +75,14 @@ class DataBaseConfig {
 	const DB_PASS = '';
 	const DB_NAME = '';
 	const DB_TABLE_PREFIX = 'srv_';
+}
+
+class FTPConfig {
+	/********************* FTP CONFIGURATION *********************/
 	
-	public static $DB_TABLE_COLUMNS = array(
-		'id' => 'serverId',
-		'name' => 'serverName',
-		'addr' => 'serverAddr',
-		'port' => 'serverPort',
-		'matchsettings' => 'serverMatchSet',
-		'adminlevel' => 'serverAdminLevel',
-		'active' => 'serverActive'
-	);
+	const FTP_HOST = '';
+	const FTP_USER = '';
+	const FTP_PASS = '';
+	const FTP_PORT = 21;
 }
 ?>

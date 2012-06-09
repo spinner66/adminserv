@@ -73,47 +73,60 @@ class UploadedFileXhr {
 	
 	
 	/**
-	* Enregistre le fichier sur un serveur FTP
+	* Écrit la map dans le dossier "Maps" via le serveur
 	*
-	* @param resource $ftp_stream -> La ressource de connexion FTP
-	* @param string   $path       -> Le chemin complet du dossier de destination
-	* @param string   $filename   -> Le nom du fichier
-	* @return true si réussi, sinon false
+	* @param resource $client   -> La ressource du client GbxRemote
+	* @param string   $filename -> Le chemin vers le fichier
 	*/
-	public function saveMap($client, $path, $filename, $queries){
-		$out = null;
+	public function writeMap($client, $filename){
+		$out = true;
+		
 		// Ouverture du flux "input" de PHP et création d'un fichier temp
 		$input = fopen("php://input", "r");
 		$temp = tmpfile();
 		$realSize = stream_copy_to_stream($input, $temp);
 		fclose($input);
 		if( $realSize != $this->getSize() ){
-			return false;
+			$out = false;
 		}
-		fseek($temp, 0, SEEK_SET);
-		$file = stream_get_contents($temp);
-		$str64 = new IXR_Base64($file);
-		if( !$client->query('WriteFile', $filename, $str64) ){
-			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-		}
-		else{
-			// Insert
-			if($queries['type'] == 'insert'){
-				if( !$client->query($queries['insert'], $path.$filename) ){
-					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-				}
-			}
-			// Add
-			else{
-				if( !$client->query($queries['add'], $path.$filename) ){
-					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-				}
+		if($out != false){
+			fseek($temp, 0, SEEK_SET);
+			$file = stream_get_contents($temp);
+			$str64 = new IXR_Base64($file);
+			
+			if( !$client->query('WriteFile', $filename, $str64) ){
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'write';
 			}
 		}
 		
-		if($out === null){
-			$out = true;
+		return $out;
+	}
+	
+	
+	/**
+	* Ajoute ou insert une map à la liste du serveur
+	*
+	* @param resource $client   -> La ressource du client GbxRemote
+	* @param string   $filename -> Le chemin vers le fichier
+	* @param array    $queries           -> Requêtes à executer et le type d'ajout à la liste: array('insert' => 'InsertMap', 'add' => 'AddMap', 'type' => 'add')
+	* @return true si réussi, sinon erreur texte
+	*/
+	public function saveMap($client, $filename, $queries){
+		$out = true;
+		
+		// Insert
+		if($queries['type'] == 'insert'){
+			if( !$client->query($queries['insert'], $filename) ){
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'insert';
+			}
 		}
+		// Add
+		else{
+			if( !$client->query($queries['add'], $filename) ){
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'add';
+			}
+		}
+		
 		return $out;
 	}
 	
@@ -174,15 +187,19 @@ class UploadedFileForm {
 	}
 	
 	
-	public function writeMap($client, $path, $filename, $queries){
+	/**
+	* Écrit la map dans le dossier "Maps" via le serveur
+	*
+	* @param resource $client   -> La ressource du client GbxRemote
+	* @param string   $filename -> Le chemin vers le fichier
+	*/
+	public function writeMap($client, $filename){
 		$out = true;
 		$str = file_get_contents($_FILES['qqfile']['tmp_name']);
 		$str64 = new IXR_Base64($str);
-		if( !$client->query('WriteFile', $path.$filename, $str64) ){
-			$out = false;
-		}
-		else{
-			self::saveMap($client, $path, $filename, $queries);
+		
+		if( !$client->query('WriteFile', $filename, $str64) ){
+			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'opuet';
 		}
 		
 		return $out;
@@ -190,26 +207,26 @@ class UploadedFileForm {
 	
 	
 	/**
-	* Enregistre le fichier sur un serveur FTP
+	* Ajoute ou insert une map à la liste du serveur
 	*
-	* @param resource $ftp_stream -> La ressource de connexion FTP
-	* @param string   $path       -> Le chemin complet du dossier de destination
-	* @param string   $filename   -> Le nom du fichier
-	* @return true si réussi, sinon false
+	* @param resource $client   -> La ressource du client GbxRemote
+	* @param string   $filename -> Le chemin vers le fichier
+	* @param array    $queries           -> Requêtes à executer et le type d'ajout à la liste: array('insert' => 'InsertMap', 'add' => 'AddMap', 'type' => 'add')
+	* @return true si réussi, sinon erreur texte
 	*/
-	public function saveMap($client, $path, $filename, $queries){
+	public function saveMap($client, $filename, $queries){
 		$out = true;
-		$pathTofile = $path.$filename;
+		
 		// Insert
 		if($queries['type'] == 'insert'){
 			if( !$client->query($queries['insert'], $filename) ){
-				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'insert';
 			}
 		}
 		// Add
 		else{
 			if( !$client->query($queries['add'], $filename) ){
-				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'add';
 			}
 		}
 		
@@ -250,7 +267,7 @@ class FileUploader {
 		$this->sizeLimit = $sizeLimit;
 		
 		// Test si le serveur peut accepter la config
-		$this->_checkServerSettings();       
+		$this->_checkServerSettings();
 		
 		// Test si il y a bien un fichier, si oui, on selectionne le type d'enregistrement (XHR ou Formulaire)
 		if( isset($_GET['qqfile']) ){
@@ -304,21 +321,21 @@ class FileUploader {
 	public function handleUpload($uploadDirectory, $replaceOldFile = false, $filenameFunction = null){
 		// Si on peut écrire dans le dossier de destination
 		if( !is_writable($uploadDirectory) ){
-			return array('error' => 'Erreur du serveur. Le dossier de destination des uploads n\'est pas écrivable.');
+			return array('error' => Utils::t('Server error. The upload destination folder isn\'t writable.'));
 		}
 		
 		// Si il y a bien un fichier envoyé
 		if( !$this->file ){
-			return array('error' => 'Aucun fichier n\'a été uploadé.');
+			return array('error' => Utils::t('No file hasn\'t uploaded'));
 		}
 		
 		// Récuperation de la taille du fichier et test si il n'est pas vide ou supérieur à la taille configurée
 		$size = $this->file->getSize();
 		if($size === 0){
-			return array('error' => 'Le fichier est vide.');
+			return array('error' => Utils::t('The file is empty.'));
 		}
 		if($size > $this->sizeLimit){
-			return array('error' => 'La taille du fichier est supérieur à la limite autorisé.');
+			return array('error' => Utils::t('The file size is too large.'));
 		}
 		
 		// Récuperation du nom et de l'extension du fichier pour tester si l'extension est valide et si le nom du fichier n'existe pas déjà
@@ -331,7 +348,7 @@ class FileUploader {
 		$ext = $pathinfo['extension'];
 		if( $this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions) ){
 			$these = implode(', ', $this->allowedExtensions);
-			return array('error' => 'L\'extension du fichier est invalide (extension autorisées : '.$these.').');
+			return array('error' => Utils::t('The file has invalid extension (allowed extensions:').' '.$these.').');
 		}
 		if( !$replaceOldFile ){
 			// Pour chaque fichier, on test si il existe, si oui, on rajoute un nombre aléatoire de 10 à 99
@@ -344,7 +361,7 @@ class FileUploader {
 		if( $this->file->save($uploadDirectory . $filename . '.' . $ext) ){
 			return array('success' => true);
 		}else{
-			return array('error' => 'Le fichier n\'a pas été envoyé. L\'envoi a été annulé ou une erreur du serveur est survenue.');
+			return array('error' => Utils::t('The file doesn\'t uploaded. The upload has cancelled or is a server error.'));
 		}
 	}
 	
@@ -361,21 +378,21 @@ class FileUploader {
 	public function handleUploadFTP($ftp_stream, $uploadDirectory, $replaceOldFile = false, $filenameFunction = null){
 		// Si on peut écrire dans le dossier de destination
 		if( ! @ftp_chdir($ftp_stream, $uploadDirectory) ){
-			return array('error' => 'Erreur du serveur. Le dossier de destination des uploads n\'est pas écrivable.');
+			return array('error' => Utils::t('Server error. The upload destination folder isn\'t writable.'));
 		}
 		
 		// Si il y a bien un fichier envoyé
 		if( !$this->file ){
-			return array('error' => 'Aucun fichier n\'a été uploadé.');
+			return array('error' => Utils::t('No file hasn\'t uploaded'));
 		}
 		
 		// Récuperation de la taille du fichier et test si il n'est pas vide ou supérieur à la taille configurée
 		$size = $this->file->getSize();
 		if($size === 0){
-			return array('error' => 'Le fichier est vide.');
+			return array('error' => Utils::t('The file is empty.'));
 		}
 		if($size > $this->sizeLimit){
-			return array('error' => 'La taille du fichier est supérieur à la limite autorisé.');
+			return array('error' => Utils::t('The file size is too large.'));
 		}
 		
 		// Récuperation du nom et de l'extension du fichier pour tester si l'extension est valide et si le nom du fichier n'existe pas déjà
@@ -388,7 +405,7 @@ class FileUploader {
 		$ext = $pathinfo['extension'];
 		if( $this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions) ){
 			$these = implode(', ', $this->allowedExtensions);
-			return array('error' => 'L\'extension du fichier est invalide (extension autorisées : '.$these.').');
+			return array('error' => Utils::t('The file has invalid extension (allowed extensions:').' '.$these.').');
 		}
 		
 		// Si il ne faut pas remplacer les anciens fichiers
@@ -415,7 +432,7 @@ class FileUploader {
 		if( $this->file->saveFTP($ftp_stream, $uploadDirectory, $filename.'.'.$ext) ){
 			return array('success' => true);
 		}else{
-			return array('error' => 'Le fichier n\'a pas été envoyé. L\'envoi a été annulé ou une erreur du serveur est survenue.');
+			return array('error' => Utils::t('The file doesn\'t uploaded. The upload has cancelled or is a server error.'));
 		}
 	}
 	
@@ -432,21 +449,21 @@ class FileUploader {
 	public function handleUploadManiaPlanet($client, $uploadDirectory, $queries, $filenameFunction = null){
 		// Si le client est initialisé
 		if (!$client->socket || $client->protocol == 0) {
-			return array('error' => 'Client not initialized.');
+			return array('error' => Utils::t('Client not initialized'));
 		}
 		
 		// Si il y a bien un fichier envoyé
 		if( !$this->file ){
-			return array('error' => 'Aucun fichier n\'a été uploadé.');
+			return array('error' => Utils::t('No file hasn\'t uploaded'));
 		}
 		
 		// Récuperation de la taille du fichier et test si il n'est pas vide ou supérieur à la taille configurée
 		$size = $this->file->getSize();
 		if($size === 0){
-			return array('error' => 'Le fichier est vide.');
+			return array('error' => Utils::t('The file is empty.'));
 		}
 		if($size > $this->sizeLimit){
-			return array('error' => 'La taille du fichier est supérieur à la limite autorisé.');
+			return array('error' => Utils::t('The file size is too large.'));
 		}
 		
 		// Récuperation du nom et de l'extension du fichier pour tester si l'extension est valide et si le nom du fichier n'existe pas déjà
@@ -459,14 +476,24 @@ class FileUploader {
 		$ext = $pathinfo['extension'];
 		if( $this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions) ){
 			$these = implode(', ', $this->allowedExtensions);
-			return array('error' => 'L\'extension du fichier est invalide (extension autorisées : '.$these.').');
+			return array('error' => Utils::t('The file has invalid extension (allowed extensions:').' '.$these.').');
 		}
 		
 		// Enregistrement du fichier
-		if( $out = $this->file->saveMap($client, $uploadDirectory, $filename.'.'.$ext, $queries) ){
+		$pathToFile = $uploadDirectory . $filename.'.'.$ext;
+		if( Utils::isLocalhostIP() ){
+			$this->file->save($pathToFile);
+		}
+		else{
+			$this->file->writeMap($client, $pathToFile);
+		}
+		$out = $this->file->saveMap($client, $pathToFile, $queries);
+		
+		if($out === true){
 			return array('success' => true, 'out' => $out);
-		}else{
-			return array('error' => 'Le fichier n\'a pas été envoyé. L\'envoi a été annulé ou une erreur du serveur est survenue. ('.$out.')');
+		}
+		else{
+			return array('error' => Utils::t('The file doesn\'t uploaded. The upload has cancelled or is a server error.').' ('.$out.')');
 		}
 	}
 	
