@@ -134,7 +134,7 @@
 	
 	// Info serveur
 	$serverInfo = AdminServ::getCurrentServerInfo();
-	$isTeamGameMode = AdminServ::isTeamGameMode($serverInfo['srv']['gameModeId']);
+	$isTeamGameMode = AdminServ::isGameMode(3, $serverInfo['srv']['gameModeId']);
 	// Si on est en mode équipe, on force l'affichage en mode détail
 	if($isTeamGameMode){
 		$_SESSION['adminserv']['mode'] = 'detail';
