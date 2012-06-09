@@ -7,7 +7,7 @@
 		$_SESSION['adminserv']['path'] = basename(__DIR__).'/';
 	}
 	else{
-		$_SESSION['adminserv']['path'] = null;
+		$_SESSION['adminserv']['path'] = "";
 	}
 	if( file_exists('config/servers.cfg.php') ){
 		require_once 'config/servers.cfg.php';

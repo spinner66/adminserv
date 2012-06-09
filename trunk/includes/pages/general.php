@@ -1,6 +1,15 @@
 <?php
 	// ACTIONS
-	if( isset($_POST['BanLoginList']) && count($_POST['player']) > 0 ){
+	if( isset($_GET['stop']) ){
+		if( !$client->query('StopServer') ){
+			AdminServ::error();
+		}
+		else{
+			$client->Terminate();
+			Utils::redirection(false, '?logout');
+		}
+	}
+	else if( isset($_POST['BanLoginList']) && count($_POST['player']) > 0 ){
 		foreach($_POST['player'] as $player){
 			if( !$client->query('Ban', $player) ){
 				AdminServ::error();
