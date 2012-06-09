@@ -1021,22 +1021,21 @@ abstract class AdminServ {
 	/**
 	* Détermine si le mode de jeu fourni en paramètre est le mode par équipe
 	*
-	* @param int $currentGameMode -> ID du mode de jeu
+	* @param int $gameModeId      -> ID du mode de jeu à faire tester
+	* @param int $currentGameMode -> ID du mode de jeu courant
 	* @return bool
 	*/
-	public static function isTeamGameMode($currentGameMode){
-		// ID du mode
+	public static function isGameMode($gameModeId, $currentGameMode){
+		$out = false;
 		if(SERVER_VERSION_NAME == 'TmForever'){
-			$teamModeId = 2;
-		}else{
-			$teamModeId = 3;
+			$gameModeId--;
 		}
 		
-		if($currentGameMode == $teamModeId){
-			return true;
-		}else{
-			return false;
+		if($gameModeId == $currentGameMode){
+			$out = true;
 		}
+		
+		return $out;
 	}
 	
 	
@@ -1104,8 +1103,8 @@ abstract class AdminServ {
 				$out['map']['thumb'] = null;
 			}
 			
-			// TeamScores
-			if( self::isTeamGameMode($out['srv']['gameModeId']) ){
+			// TeamScores (mode team)
+			if( self::isGameMode(3, $out['srv']['gameModeId']) ){
 				$client->query('GetCurrentRanking', 2, 0);
 				$currentRanking = $client->getResponse();
 				$out['map']['scores']['blue'] = $currentRanking[0]['Score'];
@@ -1185,7 +1184,7 @@ abstract class AdminServ {
 			// TRI
 			if( is_array($out['ply']) && count($out['ply']) > 0 ){
 				// Si on est en mode équipe, on tri par équipe
-				if( self::isTeamGameMode($out['srv']['gameModeId']) ){
+				if( self::isGameMode(3, $out['srv']['gameModeId']) ){
 					uasort($out['ply'], 'AdminServSort::sortByTeam');
 				}
 				else{

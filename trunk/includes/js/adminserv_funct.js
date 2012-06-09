@@ -97,15 +97,16 @@ function info(text, hide){
 */
 function speedAdmin(cmd){
 	$.post(getIncludesPath()+"ajax/speed_admin.php", {cmd: cmd}, function(response){
-		if(response != "null"){
+		if(response != "true"){
 			error("Error: "+response);
 		}
 		setTimeout(function(){
+			var sort = getCurrentSort();
 			if( $("body").hasClass("section-index") ){
-				getCurrentServerInfo();
+				getCurrentServerInfo("", sort);
 			}
 			else if( $("body").hasClass("section-maps") ){
-				getMapList();
+				getMapList("", sort);
 			}
 			$(".speed-admin a.locked").removeClass("locked");
 		}, 2000);
