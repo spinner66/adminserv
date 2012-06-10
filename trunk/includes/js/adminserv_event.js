@@ -65,22 +65,6 @@ $(document).ready(function(){
 	*/
 	else{
 		/**
-		* Scroll doux
-		*/
-		$("a[href*='#']").click(function(){
-			if(location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname){
-				var target = $(this.hash);
-				target = target.length && target || $('[name=' + this.hash.slice(1) +']');
-				if(target.length){
-					var targetOffset = target.offset().top;
-					$("html, body").animate({scrollTop: targetOffset}, 500);
-					return false;
-				}
-			}
-		});
-		
-		
-		/**
 		* Nouveau dossier
 		*/
 		$("a#newfolder").click(function(){
@@ -386,6 +370,18 @@ $(document).ready(function(){
 				$("#matchSettingName").blur(function(){
 					if( $(this).val() == "" ){
 						$(this).val("match_settings");
+					}
+				});
+				
+				// Submit
+				$("#savematchsetting").click(function(){
+					if( $("#nbMapSelected").text() == "0" ){
+						$("html").animate({scrollTop: 0}, 500);
+						error( $(this).data("nomap"), true);
+						return false;
+					}
+					else{
+						return true;
 					}
 				});
 			}
@@ -717,7 +713,7 @@ $(document).ready(function(){
 				if(lines.length > 0){
 					$.each(lines, function(id, line){
 						if(line.className == "no-line"){
-							error( $(this).data("empty"), true);
+							error( $("a.cleanList").data("empty"), true);
 						}
 						else{
 							out = true;

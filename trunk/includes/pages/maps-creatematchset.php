@@ -20,7 +20,7 @@
 		$pageTitle = Utils::t('Create');
 		$matchSetting['name'] = 'match_settings';
 		$gameInfos = AdminServ::getGameInfos();
-		$matchSetting['gameinfos'] = $gameInfos['next'];
+		$matchSetting['gameinfos'] = array(null, $gameInfos['next']);
 		$matchSetting['hotseat'] = array(
 			'GameMode' => 1,
 			'TimeLimit' => 300000,
@@ -41,7 +41,7 @@
 	
 	
 	// ENREGISTREMENT
-	if( isset($_POST['savematchsetting']) ){
+	if( isset($_POST['savematchsetting']) && isset($_SESSION['adminserv']['matchset_maps_selected']) ){
 		// Jeu
 		if(SERVER_VERSION_NAME == 'TmForever'){
 			$CupRoundsPerMap = 'cup_roundsperchallenge';
@@ -115,12 +115,10 @@
 		
 		// Maps
 		$struct['startindex'] = 1;
-		if( isset($_SESSION['adminserv']['matchset_maps_selected']) ){
-			$maps = $_SESSION['adminserv']['matchset_maps_selected']['lst'];
-			if( isset($maps) && is_array($maps) && count($maps) > 0 ){
-				foreach($maps as $id => $values){
-					$struct[$StructMap][$values['FileName']] = $values['UId'];
-				}
+		$maps = $_SESSION['adminserv']['matchset_maps_selected']['lst'];
+		if( isset($maps) && is_array($maps) && count($maps) > 0 ){
+			foreach($maps as $id => $values){
+				$struct[$StructMap][$values['UId']] = $values['FileName'];
 			}
 		}
 		
@@ -130,7 +128,7 @@
 			AdminServ::error(Utils::t('Unable to save the MatchSettings').' : '.$matchSettingName.' ('.$result.')');
 		}
 		else{
-			$action = Utils::t('The MatchSettings !matchSettingName success to create in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$mapsDirectoryPath;
+			$action = Utils::t('The MatchSettings "!matchSettingName" success to create in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$mapsDirectoryPath;
 			AdminServ::info($action);
 			AdminServLogs::add('action', $action);
 			Utils::redirection(false, '?p='.USER_PAGE);
@@ -227,9 +225,9 @@
 		<div class="content gameinfos">
 			<?php
 				// Général
-				echo AdminServUI::getGameInfosGeneralForm(null, $matchSetting['gameinfos']);
+				echo AdminServUI::getGameInfosGeneralForm($matchSetting['gameinfos']);
 				// Modes de jeux
-				echo AdminServUI::getGameInfosGameModeForm(null, $matchSetting['gameinfos']);
+				echo AdminServUI::getGameInfosGameModeForm($matchSetting['gameinfos']);
 			?>
 		</div>
 		
@@ -324,7 +322,7 @@
 		</div>
 		
 		<div class="fright save">
-			<input class="button light" type="submit" name="savematchsetting" id="savematchsetting" value="<?php echo Utils::t('Save'); ?>" />
+			<input class="button light" type="submit" name="savematchsetting" id="savematchsetting" data-nomap="<?php echo Utils::t('No map selected for the MatchSettings.'); ?>" value="<?php echo Utils::t('Save'); ?>" />
 		</div>
 	</section>
 	</form>

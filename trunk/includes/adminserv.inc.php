@@ -354,8 +354,9 @@ abstract class AdminServUI {
 	* @param string $id   -> L'id du champ du tableau GameInfos
 	* @return string HTML
 	*/
-	public static function getGameInfosField($name, $id){
-		global $currGamInf, $nextGamInf;
+	public static function getGameInfosField($gameinfos, $name, $id){
+		if( isset($gameinfos[0]) ){ $currGamInf = $gameinfos[0]; }else{ $currGamInf = null; }
+		if( isset($gameinfos[1]) ){ $nextGamInf = $gameinfos[1]; }else{ $nextGamInf = null; }
 		
 		$out = '<tr>'
 			.'<td class="key"><label for="Next'.$id.'">'.Utils::t($name).'</label></td>';
@@ -381,7 +382,10 @@ abstract class AdminServUI {
 	* @param array $nextGamInf -> Les informations de jeu suivantes
 	* @return string HTML
 	*/
-	public static function getGameInfosGeneralForm($currGamInf, $nextGamInf){
+	public static function getGameInfosGeneralForm($gameinfos){
+		if( isset($gameinfos[0]) ){ $currGamInf = $gameinfos[0]; }else{ $currGamInf = null; }
+		if( isset($gameinfos[1]) ){ $nextGamInf = $gameinfos[1]; }else{ $nextGamInf = null; }
+		
 		$out = '<fieldset class="gameinfos_general">'
 			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/restartrace.png" alt="" />Général</legend>'
 			.'<table>'
@@ -428,7 +432,7 @@ abstract class AdminServUI {
 					.'</td>'
 					.'<td class="preview"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= '><a class="returnDefaultValue" href="?p='. USER_PAGE .'">'.Utils::t('Return to the default value').'</a></td>'
 				.'</tr>'
-				.self::getGameInfosField('All WarmUp duration', 'AllWarmUpDuration')
+				.self::getGameInfosField($gameinfos, 'All WarmUp duration', 'AllWarmUpDuration')
 				.'<tr>'
 					.'<td class="key"><label for="NextDisableRespawn">'.Utils::t('Respawn').'</label></td>';
 					if($currGamInf != null){
@@ -472,14 +476,16 @@ abstract class AdminServUI {
 	* @param array $nextGamInf -> Les informations de jeu suivantes
 	* @return string HTML
 	*/
-	public static function getGameInfosGameModeForm($currGamInf, $nextGamInf){
+	public static function getGameInfosGameModeForm($gameinfos){
+		if( isset($gameinfos[0]) ){ $currGamInf = $gameinfos[0]; }else{ $currGamInf = null; }
+		if( isset($gameinfos[1]) ){ $nextGamInf = $gameinfos[1]; }else{ $nextGamInf = null; }
 		$out = null;
 		
 		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
 			$out .= '<fieldset id="gameMode-script" class="gameinfos_script" hidden="hidden">'
 				.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/options.png" alt="" />'.AdminServ::getGameModeName(0).'</legend>'
 				.'<table class="game_infos">'
-					.self::getGameInfosField('Script name', 'ScriptName')
+					.self::getGameInfosField($gameinfos, 'Script name', 'ScriptName')
 				.'</table>'
 			.'</fieldset>';
 		}
@@ -499,9 +505,9 @@ abstract class AdminServUI {
 					.'</td>'
 					.'<td class="preview"></td>'
 				.'</tr>'
-				.self::getGameInfosField('Points limit', 'RoundsPointsLimit')
-				.self::getGameInfosField('Custom points limit', 'RoundCustomPoints')
-				.self::getGameInfosField('Forced laps', 'RoundsForcedLaps')
+				.self::getGameInfosField($gameinfos, 'Points limit', 'RoundsPointsLimit')
+				.self::getGameInfosField($gameinfos, 'Custom points limit', 'RoundCustomPoints')
+				.self::getGameInfosField($gameinfos, 'Forced laps', 'RoundsForcedLaps')
 			.'</table>'
 		.'</fieldset>'
 		
@@ -520,7 +526,7 @@ abstract class AdminServUI {
 					.'</td>'
 					.'<td class="preview"></td>'
 				.'</tr>'
-				.self::getGameInfosField('Synchronization start period', 'TimeAttackSynchStartPeriod')
+				.self::getGameInfosField($gameinfos, 'Synchronization start period', 'TimeAttackSynchStartPeriod')
 			.'</table>'
 		.'</fieldset>'
 		
@@ -539,26 +545,26 @@ abstract class AdminServUI {
 					.'</td>'
 					.'<td class="preview"></td>'
 				.'</tr>'
-				.self::getGameInfosField('Points limit', 'TeamPointsLimit')
-				.self::getGameInfosField('Maximal points', 'TeamMaxPoints')
+				.self::getGameInfosField($gameinfos, 'Points limit', 'TeamPointsLimit')
+				.self::getGameInfosField($gameinfos, 'Maximal points', 'TeamMaxPoints')
 			.'</table>'
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-laps" class="gameinfos_laps" hidden="hidden">'
 			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_laps.png" alt="" />'.AdminServ::getGameModeName(4, true).'</legend>'
 			.'<table class="game_infos">'
-				.self::getGameInfosField('Number of laps', 'LapsNbLaps')
-				.self::getGameInfosField(Utils::t('Time limit').' <span>('.Utils::t('sec').')</span>', 'LapsTimeLimit')
+				.self::getGameInfosField($gameinfos, 'Number of laps', 'LapsNbLaps')
+				.self::getGameInfosField($gameinfos, Utils::t('Time limit').' <span>('.Utils::t('sec').')</span>', 'LapsTimeLimit')
 			.'</table>'
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-cup" class="gameinfos_cup" hidden="hidden">'
 			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_cup.png" alt="" />'.AdminServ::getGameModeName(6, true).'</legend>'
 			.'<table class="game_infos">'
-				.self::getGameInfosField('Points limit', 'CupPointsLimit')
-				.self::getGameInfosField('Rounds per map', 'CupRoundsPerMap')
-				.self::getGameInfosField('Number of winner', 'CupNbWinners')
-				.self::getGameInfosField('All WarmUp duration', 'CupWarmUpDuration')
+				.self::getGameInfosField($gameinfos, 'Points limit', 'CupPointsLimit')
+				.self::getGameInfosField($gameinfos, 'Rounds per map', 'CupRoundsPerMap')
+				.self::getGameInfosField($gameinfos, 'Number of winner', 'CupNbWinners')
+				.self::getGameInfosField($gameinfos, 'All WarmUp duration', 'CupWarmUpDuration')
 			.'</table>'
 		.'</fieldset>';
 		
@@ -574,22 +580,17 @@ abstract class AdminServUI {
 	*/
 	public static function getPlayerList($currentPlayerLogin = null){
 		global $client;
-		$out = null;
+		$out = -1;
 		
-		if( !$client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
-			$out = -1;
-		}
-		else{
+		if( $client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
 			$playerList = $client->getResponse();
 			if( count($playerList) > 0 ){
+				$out = null;
 				foreach($playerList as $player){
 					if($currentPlayerLogin == $player['Login']){ $selected = ' selected="selected"'; }
 					else{ $selected = null; }
 					$out .= '<option value="'.$player['Login'].'"'.$selected.'>'.TmNick::toText($player['NickName']).'</option>';
 				}
-			}
-			else{
-				$out = -1;
 			}
 		}
 		
@@ -1780,7 +1781,10 @@ abstract class AdminServ {
 						if( in_array(File::getExtension($file), AdminServConfig::$MATCHSET_EXTENSION) ){
 							// Données
 							$matchsetData = self::getMatchSettingsData($path.$file, array('maps'));
-							$matchsetNbmCount = count($matchsetData['maps']);
+							$matchsetNbmCount = 0;
+							if( isset($matchsetData['maps']) ){
+								$matchsetNbmCount = count($matchsetData['maps']);
+							}
 							if($matchsetNbmCount > 1){
 								$matchsetNbm = $matchsetNbmCount . ' '.Utils::t('maps');
 							}
@@ -2751,6 +2755,24 @@ abstract class AdminServPlugin {
 		if($path && $pluginName){
 			$out = $path.$pluginName.'/';
 		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère les paramètres URL du plugin
+	*
+	* @param string $pluginName -> Le nom du dossier plugin
+	* @return string
+	*/
+	public static function getPluginQuery($pluginName = null){
+		$out = null;
+		if($pluginName == null){
+			$pluginName = self::getCurrent();
+		}
+		
+		$out = '?p=plugins&n='.$pluginName;
 		
 		return $out;
 	}
