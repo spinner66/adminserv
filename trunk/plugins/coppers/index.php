@@ -83,7 +83,7 @@
 		$queriesData = $client->getMultiqueryResponse();
 		
 		// Nombre de coppers
-		$nbPlanets = $queriesData['GetServerCoppers'];
+		$nbCoppers = $queriesData['GetServerCoppers'];
 		
 		// Statut du transfert
 		if( $billState = isset($queriesData['GetBillState']) ){
