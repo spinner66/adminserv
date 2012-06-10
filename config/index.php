@@ -4,7 +4,7 @@
 	if( file_exists('./servers.cfg.php') ){
 		require_once './servers.cfg.php';
 	}
-	require_once '.'. AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
+	require_once '../'. AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
 	AdminServUI::getClass();
 	
 	// On vérifie qu'une configuration existe

@@ -89,11 +89,11 @@
 		$queriesData = $client->getMultiqueryResponse();
 		
 		// Nombre de planets
-		$nbPlanets = $queriesData['GetServerCoppers'];
+		$nbPlanets = $queriesData['GetServerPlanets'];
 		
 		// Statut du transfert
-		$billState = $queriesData['GetBillState'];
-		if( count($billState) > 0 ){
+		if( isset($queriesData['GetBillState']) ){
+			$billState = $queriesData['GetBillState'];
 			$transferState = Utils::t('Transaction').' #'.$billState['TransactionId'].' : '.$billState['StateName'];
 		}
 		else{
