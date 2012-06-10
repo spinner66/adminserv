@@ -40,8 +40,7 @@
 	
 	// LECTURE
 	$gameInfos = AdminServ::getGameInfos();
-	$currGamInf = $gameInfos['curr'];
-	$nextGamInf = $gameInfos['next'];
+	$gameInfosData = array($gameInfos['curr'], $gameInfos['next']);
 	
 	
 	// HTML
@@ -54,9 +53,9 @@
 		<div class="content gameinfos">
 			<?php
 				// Général
-				echo AdminServUI::getGameInfosGeneralForm($currGamInf, $nextGamInf);
+				echo AdminServUI::getGameInfosGeneralForm($gameInfosData);
 				// Modes de jeux
-				echo AdminServUI::getGameInfosGameModeForm($currGamInf, $nextGamInf);
+				echo AdminServUI::getGameInfosGameModeForm($gameInfosData);
 			?>
 		</div>
 		<?php if(SERVER_MATCHSET){ ?>

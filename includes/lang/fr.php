@@ -135,7 +135,7 @@ $translate = array(
 	// Maps-creatematchset
 	'Create' => 'Créer',
 	'Unable to save the MatchSettings' => 'Impossible d\'enregistrer le MatchSettings',
-	'The MatchSettings !matchSettingName success to create in the folder' => 'Le MatchSettings !matchSettingName a bien été créé dans le dossier',
+	'The MatchSettings "!matchSettingName" success to create in the folder' => 'Le MatchSettings "!matchSettingName" a bien été créé dans le dossier',
 	'a MatchSettings' => 'un MatchSettings',
 	'MatchSettings name' => 'Nom du MatchSettings',
 	'Maps' => 'Maps',
@@ -156,6 +156,7 @@ $translate = array(
 	'Sort index' => 'Index de tri',
 	'Random map order' => 'Ordre des maps aléatoire',
 	'Default game mode' => 'Mode de jeu par défaut',
+	'No map selected for the MatchSettings.' => 'Aucune map sélectionnée pour le MatchSettings.',
 	// Maps-order
 	'Order' => 'Ordonner',
 	'Automatic sort' => 'Tri automatique',

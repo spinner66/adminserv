@@ -56,6 +56,23 @@
 		AdminServLogs::add('action', 'Edit matchsettings: '.$_POST['matchset'][0]);
 		Utils::redirection(false, '?p=maps-creatematchset'.$hasDirectory.'&f='.$_POST['matchset'][0]);
 	}
+	else if( isset($_POST['deleteMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
+		foreach($_POST['matchset'] as $matchset){
+			if( !File::delete($mapsDirectoryPath.$directory.$matchset) ){
+				AdminServ::error(Utils::t('Unable to delete the playlist').' : '.$matchset);
+				break;
+			}
+			else{
+				AdminServLogs::add('action', 'Delete matchsettings: '.$matchset);
+			}
+		}
+		
+		$hasDirectory = null;
+		if($directory){
+			$hasDirectory = '&d='.$directory;
+		}
+		Utils::redirection(false, '?p='. USER_PAGE . $hasDirectory);
+	}
 	
 	
 	// HTML
@@ -130,6 +147,7 @@
 					<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
+						<input class="button dark" type="submit" name="deleteMatchset" id="deleteMatchset" value="<?php echo Utils::t('Delete'); ?>" />
 						<input class="button dark" type="submit" name="editMatchset" id="editMatchset" value="<?php echo Utils::t('Edit'); ?>" />
 						<input class="button dark" type="submit" name="insertMatchset" id="insertMatchset" value="<?php echo Utils::t('Insert'); ?>" />
 						<input class="button dark" type="submit" name="addMatchset" id="addMatchset" value="<?php echo Utils::t('Add'); ?>" />

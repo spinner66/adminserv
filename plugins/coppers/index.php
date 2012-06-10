@@ -32,26 +32,28 @@
 			$serverToPlayerLogin = trim($_POST['serverToPlayerLogin']);
 			$serverToPlayerLogin2 = trim($_POST['serverToPlayerLogin2']);
 			
-			// Message
-			if($serverToPlayerMessage == Utils::t('Optionnal') ){
-				$serverToPlayerMessage = Utils::t('Transfered by AdminServ');
-			}
-			// Login joueur tapé
-			if($serverToPlayerLogin2 != Utils::t('Player login') ){
-				if( !$client->query('Pay', $serverToPlayerLogin2, $serverToPlayerAmount, $serverToPlayerMessage) ){
-					AdminServ::error();
+			if( $serverToPlayerAmount > 0 ){
+				// Message
+				if($serverToPlayerMessage == Utils::t('Optionnal') ){
+					$serverToPlayerMessage = Utils::t('Transfered by AdminServ');
 				}
+				// Login joueur tapé
+				if($serverToPlayerLogin2 != Utils::t('Player login') ){
+					if( !$client->query('Pay', $serverToPlayerLogin2, $serverToPlayerAmount, $serverToPlayerMessage) ){
+						AdminServ::error();
+					}
+					else{
+						$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+					}
+				}
+				// Login joueur sélectionné
 				else{
-					$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
-				}
-			}
-			// Login joueur sélectionné
-			else{
-				if( !$client->query('Pay', $serverToPlayerLogin, $serverToPlayerAmount, $serverToPlayerMessage) ){
-					AdminServ::error();
-				}
-				else{
-					$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+					if( !$client->query('Pay', $serverToPlayerLogin, $serverToPlayerAmount, $serverToPlayerMessage) ){
+						AdminServ::error();
+					}
+					else{
+						$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+					}
 				}
 			}
 		}
@@ -61,19 +63,23 @@
 			$playerToServerAmount = intval($_POST['playerToServerAmount']);
 			$playerToServerLogin = trim($_POST['playerToServerLogin']);
 			
-			if( !$client->query('SendBill', $playerToServerLogin, $playerToServerAmount, Utils::t('Confirmation of the transfer by AdminServ')) ){
-				AdminServ::error();
-			}else{
-				$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+			if( $playerToServerAmount > 0 ){
+				if( !$client->query('SendBill', $playerToServerLogin, $playerToServerAmount, Utils::t('Confirmation of the transfer by AdminServ'), SERVER_LOGIN) ){
+					AdminServ::error();
+				}else{
+					$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+				}
 			}
 		}
+		
+		Utils::redirection(false, AdminServPlugin::getPluginQuery() );
 	}
 	
 	
 	/* LECTURE */
 	$client->addCall('GetServerCoppers');
 	if( isset($_SESSION['adminserv']['transfer_billid']) && $_SESSION['adminserv']['transfer_billid'] != null){
-		$client->addCall('GetBillState', $_SESSION['adminserv']['transfer_billid']);
+		$client->addCall('GetBillState', array($_SESSION['adminserv']['transfer_billid']) );
 	}
 	
 	if( !$client->multiquery() ){
@@ -86,7 +92,8 @@
 		$nbCoppers = $queriesData['GetServerCoppers'];
 		
 		// Statut du transfert
-		if( $billState = isset($queriesData['GetBillState']) ){
+		$billState = $queriesData['GetBillState'];
+		if( count($billState) > 0 ){
 			$transferState = Utils::t('Transaction').' #'.$billState['TransactionId'].' : '.$billState['StateName'];
 		}
 		else{
@@ -96,6 +103,7 @@
 	
 	// Nombre de joueurs
 	$playerCount = AdminServ::getNbPlayers();
+	$getPlayerListUI = AdminServUI::getPlayerList();
 	
 	$client->Terminate();
 ?>
@@ -157,7 +165,7 @@
 				</td>
 				<td class="value">
 					<select class="width2" name="serverToPlayerLogin" id="serverToPlayerLogin"<?php if($playerCount == 0){ echo ' hidden="hidden"'; } ?>>
-						<?php echo AdminServUI::getPlayerList(); ?>
+						<?php echo $getPlayerListUI; ?>
 						<option value="more"><?php echo Utils::t('Enter another login'); ?></option>
 					</select>
 					<input class="text width2" type="text" name="serverToPlayerLogin2" id="serverToPlayerLogin2" data-default-value="<?php echo Utils::t('Player login'); ?>" value="<?php echo Utils::t('Player login'); ?>"<?php if($playerCount != 0){ echo ' hidden="hidden"'; } ?> />
@@ -183,7 +191,7 @@
 				</td>
 				<td class="value">
 					<select class="width2" name="playerToServerLogin" id="playerToServerLogin">
-						<?php echo AdminServUI::getPlayerList(); ?>
+						<?php echo $getPlayerListUI; ?>
 					</select>
 				</td>
 				<td class="info">

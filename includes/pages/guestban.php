@@ -146,7 +146,7 @@
 					AdminServ::error();
 				}
 				else{
-					AdminServLogs::add('action', 'Add guest player: '.$player);
+					AdminServLogs::add('action', 'Add guest player: '.$playerlogin);
 				}
 			}
 			// Blacklister
@@ -155,7 +155,7 @@
 					AdminServ::error();
 				}
 				else{
-					AdminServLogs::add('action', 'Add blacklist player: '.$player);
+					AdminServLogs::add('action', 'Add blacklist player: '.$playerlogin);
 				}
 			}
 		}
