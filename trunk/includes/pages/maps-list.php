@@ -74,7 +74,7 @@
 					$showMapList = null;
 					
 					// Liste des joueurs
-					if( is_array($mapsList) && count($mapsList) > 0 ){
+					if( is_array($mapsList['lst']) && count($mapsList['lst']) > 0 ){
 						$pathRessources = AdminServConfig::PATH_RESSOURCES;
 						$i = 0;
 						foreach($mapsList['lst'] as $id => $map){

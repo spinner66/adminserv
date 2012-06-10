@@ -322,18 +322,6 @@ abstract class AdminServUI {
 			
 			// Si la configuration contient au moins 1 mode de jeu
 			if( isset(ExtensionConfig::$GAMEMODES) && count(ExtensionConfig::$GAMEMODES) > 0 ){
-				
-				// Pour TMF
-				if(SERVER_VERSION_NAME != 'ManiaPlanet'){
-					unset(ExtensionConfig::$GAMEMODES[0]);
-					$newGameModes = array();
-					foreach(ExtensionConfig::$GAMEMODES as $gameModeId => $gameModeName){
-						$newGameModes[] = $gameModeName;
-					}
-					ExtensionConfig::$GAMEMODES = $newGameModes;
-				}
-				
-				// Liste des modes de jeu
 				foreach(ExtensionConfig::$GAMEMODES as $gameModeId => $gameModeName){
 					if( $gameModeId == $currentGameMode ){
 						$selected = ' selected="selected"';
@@ -487,15 +475,17 @@ abstract class AdminServUI {
 	public static function getGameInfosGameModeForm($currGamInf, $nextGamInf){
 		$out = null;
 		
-		$out .= '<fieldset id="gameMode-script" class="gameinfos_script" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/options.png" alt="" />'.ExtensionConfig::$GAMEMODES[0].'</legend>'
-			.'<table class="game_infos">'
-				.self::getGameInfosField('Script name', 'ScriptName')
-			.'</table>'
-		.'</fieldset>';
+		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+			$out .= '<fieldset id="gameMode-script" class="gameinfos_script" hidden="hidden">'
+				.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/options.png" alt="" />'.AdminServ::getGameModeName(0).'</legend>'
+				.'<table class="game_infos">'
+					.self::getGameInfosField('Script name', 'ScriptName')
+				.'</table>'
+			.'</fieldset>';
+		}
 		
 		$out .= '<fieldset id="gameMode-rounds" class="gameinfos_round" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_rounds.png" alt="" />'.ExtensionConfig::$GAMEMODES[1].'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_rounds.png" alt="" />'.AdminServ::getGameModeName(1, true).'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
 					.'<td class="key"><label for="NextRoundsUseNewRules">'.Utils::t('Use new rules').'</label></td>';
@@ -516,7 +506,7 @@ abstract class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-timeattack" class="gameinfos_timeattack" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_timeattack.png" alt="" />'.ExtensionConfig::$GAMEMODES[2].'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_timeattack.png" alt="" />'.AdminServ::getGameModeName(2, true).'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
 					.'<td class="key"><label for="NextTimeAttackLimit">'.Utils::t('Time limit').' <span>('.Utils::t('sec').')</span></label></td>';
@@ -535,7 +525,7 @@ abstract class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-team" class="gameinfos_team" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_team.png" alt="" />'.ExtensionConfig::$GAMEMODES[3].'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_team.png" alt="" />'.AdminServ::getGameModeName(3, true).'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
 					.'<td class="key"><label for="NextTeamUseNewRules">'.Utils::t('Use new rules').'</label></td>';
@@ -555,7 +545,7 @@ abstract class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-laps" class="gameinfos_laps" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_laps.png" alt="" />'.ExtensionConfig::$GAMEMODES[4].'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_laps.png" alt="" />'.AdminServ::getGameModeName(4, true).'</legend>'
 			.'<table class="game_infos">'
 				.self::getGameInfosField('Number of laps', 'LapsNbLaps')
 				.self::getGameInfosField(Utils::t('Time limit').' <span>('.Utils::t('sec').')</span>', 'LapsTimeLimit')
@@ -563,7 +553,7 @@ abstract class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-cup" class="gameinfos_cup" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_cup.png" alt="" />'.ExtensionConfig::$GAMEMODES[6].'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_cup.png" alt="" />'.AdminServ::getGameModeName(6, true).'</legend>'
 			.'<table class="game_infos">'
 				.self::getGameInfosField('Points limit', 'CupPointsLimit')
 				.self::getGameInfosField('Rounds per map', 'CupRoundsPerMap')
@@ -666,7 +656,7 @@ abstract class AdminServUI {
 			
 			// Liste des dossiers
 			if( file_exists($path) ){
-				if(USER_PAGE == 'maps-matchset'){
+				if( in_array(USER_PAGE, array('maps-matchset', 'maps-creatematchset')) ){
 					$directory = Folder::read($path.$currentPath, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, AdminServConfig::$MATCHSET_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
 				}
 				else{
@@ -874,38 +864,64 @@ abstract class AdminServ {
 					}
 					else{
 						if($fullInit){
+							$client->addCall('GetVersion');
 							$client->addCall('GetSystemInfo');
 							$client->addCall('IsRelayServer');
-							$client->addCall('GetVersion');
 							if( !$client->multiquery() ){
 								self::error();
 							}
 							else{
 								$queriesData = $client->getMultiqueryResponse();
 								
+								// Version
+								$getVersion = $queriesData['GetVersion'];
+								define('SERVER_VERSION_NAME', $getVersion['Name']);
+								define('SERVER_VERSION', $getVersion['Version']);
+								define('SERVER_BUILD', $getVersion['Build']);
+								if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+									define('API_VERSION', $getVersion['ApiVersion']);
+								}
+								
+								// SystemInfo
 								$getSystemInfo = $queriesData['GetSystemInfo'];
 								define('SERVER_LOGIN', $getSystemInfo['ServerLogin']);
 								define('SERVER_PUBLISHED_IP', $getSystemInfo['PublishedIp']);
 								define('SERVER_PORT', $getSystemInfo['Port']);
 								define('SERVER_P2P_PORT', $getSystemInfo['P2PPort']);
-								define('IS_SERVER', $getSystemInfo['IsServer']);
-								define('IS_DEDICATED', $getSystemInfo['IsDedicated']);
+								if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+									define('IS_SERVER', $getSystemInfo['IsServer']);
+									define('IS_DEDICATED', $getSystemInfo['IsDedicated']);
+								}
+								
+								// Relay
 								define('IS_RELAY', $queriesData['IsRelayServer']);
-								$getVersion = $queriesData['GetVersion'];
-								define('SERVER_VERSION_NAME', $getVersion['Name']);
-								define('SERVER_VERSION', $getVersion['Version']);
-								define('SERVER_BUILD', $getVersion['Build']);
-								define('API_VERSION', $getVersion['ApiVersion']);
+								
+								// Protocole : tmtp ou maniaplanet
 								if(SERVER_VERSION_NAME == 'ManiaPlanet'){
 									TmNick::$linkProtocol = 'maniaplanet';
 								}
 								define('LINK_PROTOCOL', TmNick::$linkProtocol);
+								
+								// Mode d'affichage : detail ou simple
 								if( !isset($_SESSION['adminserv']['mode']) ){
 									define('USER_MODE', 'simple');
 								}
 								else{
 									define('USER_MODE', $_SESSION['adminserv']['mode']);
 								}
+								
+								// TRACKMANIA FOREVER
+								if(SERVER_VERSION_NAME == 'TmForever'){
+									
+									// Mode de jeu
+									unset(ExtensionConfig::$GAMEMODES[0]);
+									$newGameModes = array();
+									foreach(ExtensionConfig::$GAMEMODES as $gameModeId => $gameModeName){
+										$newGameModes[] = $gameModeName;
+									}
+									ExtensionConfig::$GAMEMODES = $newGameModes;
+								}
+								
 								return true;
 							}
 						}
@@ -992,22 +1008,24 @@ abstract class AdminServ {
 	* @param int $gameMode -> La réponse de GetGameMode()
 	* @return string
 	*/
-	public static function getGameModeName($gameMode){
-		$out = null;
+	public static function getGameModeName($gameMode, $getManual = false){
+		$out = -1;
 		
 		// On vérifie qu'une configuration existe
 		if( class_exists('ExtensionConfig') ){
 			
 			// Si la configuration contient au moins 1 mode de jeu
 			if( isset(ExtensionConfig::$GAMEMODES) && count(ExtensionConfig::$GAMEMODES) > 0 ){
-				$out = ExtensionConfig::$GAMEMODES[$gameMode];
+				if($getManual && SERVER_VERSION_NAME == 'TmForever'){
+					$gameMode--;
+					if( isset(ExtensionConfig::$GAMEMODES[$gameMode]) ){
+						$out = ExtensionConfig::$GAMEMODES[$gameMode];
+					}
+				}
+				else{
+					$out = ExtensionConfig::$GAMEMODES[$gameMode];
+				}
 			}
-			else{
-				$out = -1;
-			}
-		}
-		else{
-			$out = -1;
 		}
 		
 		// Retour
@@ -1021,17 +1039,14 @@ abstract class AdminServ {
 	/**
 	* Détermine si le mode de jeu fourni en paramètre est le mode par équipe
 	*
-	* @param int $gameModeId      -> ID du mode de jeu à faire tester
-	* @param int $currentGameMode -> ID du mode de jeu courant
+	* @param string $gameModeName    -> Nom du mode de jeu à tester
+	* @param int    $currentGameMode -> ID du mode de jeu courant
 	* @return bool
 	*/
-	public static function isGameMode($gameModeId, $currentGameMode){
+	public static function isGameMode($gameModeName, $currentGameMode){
 		$out = false;
-		if(SERVER_VERSION_NAME == 'TmForever'){
-			$gameModeId--;
-		}
 		
-		if($gameModeId == $currentGameMode){
+		if($gameModeName == self::getGameModeName($currentGameMode) ){
 			$out = true;
 		}
 		
@@ -1082,7 +1097,6 @@ abstract class AdminServ {
 			$queriesData = $client->getMultiqueryResponse();
 			
 			// GameMode
-			$client->query('GetGameMode');
 			$out['srv']['gameModeId'] = $queriesData['GetGameMode'];
 			$out['srv']['gameModeName'] = self::getGameModeName($out['srv']['gameModeId']);
 			
@@ -1104,7 +1118,7 @@ abstract class AdminServ {
 			}
 			
 			// TeamScores (mode team)
-			if( self::isGameMode(3, $out['srv']['gameModeId']) ){
+			if( self::isGameMode('Team', $out['srv']['gameModeId']) ){
 				$client->query('GetCurrentRanking', 2, 0);
 				$currentRanking = $client->getResponse();
 				$out['map']['scores']['blue'] = $currentRanking[0]['Score'];
@@ -1184,7 +1198,7 @@ abstract class AdminServ {
 			// TRI
 			if( is_array($out['ply']) && count($out['ply']) > 0 ){
 				// Si on est en mode équipe, on tri par équipe
-				if( self::isGameMode(3, $out['srv']['gameModeId']) ){
+				if( self::isGameMode('Team', $out['srv']['gameModeId']) ){
 					uasort($out['ply'], 'AdminServSort::sortByTeam');
 				}
 				else{
@@ -1332,19 +1346,31 @@ abstract class AdminServ {
 		global $client;
 		$out = array();
 		
-		$client->addCall('GetGameInfos');
-		// Complétion du tableau gamInf pour ManiaPlanet
-		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-			$client->addCall('GetAllWarmUpDuration');
-			$client->addCall('GetDisableRespawn');
-			$client->addCall('GetForceShowAllOpponents');
-			$client->addCall('GetScriptName');
-			$client->addCall('GetCupPointsLimit');
-			$client->addCall('GetCupRoundsPerMap');
-			$client->addCall('GetCupNbWinners');
-			$client->addCall('GetCupWarmUpDuration');
-			$client->addCall('GetRoundCustomPoints');
+		// Jeu
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$queries = array(
+				'CupRoundsPerMap' => 'GetCupRoundsPerChallenge',
+			);
 		}
+		else{
+			$queries = array(
+				'CupRoundsPerMap' => 'CupRoundsPerMap',
+			);
+		}
+		
+		// Requêtes
+		$client->addCall('GetGameInfos');
+		$client->addCall('GetAllWarmUpDuration');
+		$client->addCall('GetDisableRespawn');
+		$client->addCall('GetForceShowAllOpponents');
+		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+			$client->addCall('GetScriptName');
+		}
+		$client->addCall('GetCupPointsLimit');
+		$client->addCall($queries['CupRoundsPerMap']);
+		$client->addCall('GetCupNbWinners');
+		$client->addCall('GetCupWarmUpDuration');
+		$client->addCall('GetRoundCustomPoints');
 		
 		if( !$client->multiquery() ){
 			self::error();
@@ -1369,14 +1395,16 @@ abstract class AdminServ {
 			$nextGamInf['ForceShowAllOpponents'] = $queriesData['GetForceShowAllOpponents']['NextValue'];
 			
 			// ScriptName
-			$currGamInf['ScriptName'] = $queriesData['GetScriptName']['CurrentValue'];
-			$nextGamInf['ScriptName'] = $queriesData['GetScriptName']['NextValue'];
+			if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+				$currGamInf['ScriptName'] = $queriesData['GetScriptName']['CurrentValue'];
+				$nextGamInf['ScriptName'] = $queriesData['GetScriptName']['NextValue'];
+			}
 			
 			// Mode Cup
 			$currGamInf['CupPointsLimit'] = $queriesData['GetCupPointsLimit']['CurrentValue'];
 			$nextGamInf['CupPointsLimit'] = $queriesData['GetCupPointsLimit']['NextValue'];
-			$currGamInf['CupRoundsPerMap'] = $queriesData['GetCupRoundsPerMap']['CurrentValue'];
-			$nextGamInf['CupRoundsPerMap'] = $queriesData['GetCupRoundsPerMap']['NextValue'];
+			$currGamInf['CupRoundsPerMap'] = $queriesData[$queries['CupRoundsPerMap']]['CurrentValue'];
+			$nextGamInf['CupRoundsPerMap'] = $queriesData[$queries['CupRoundsPerMap']]['NextValue'];
 			$currGamInf['CupNbWinners'] = $queriesData['GetCupNbWinners']['CurrentValue'];
 			$nextGamInf['CupNbWinners'] = $queriesData['GetCupNbWinners']['NextValue'];
 			$currGamInf['CupWarmUpDuration'] = $queriesData['GetCupWarmUpDuration']['CurrentValue'];
@@ -1418,7 +1446,6 @@ abstract class AdminServ {
 		$out = array(
 			'GameMode' => intval($_POST['NextGameMode']),
 			'ChatTime' => TimeDate::secToMillisec( intval($_POST['NextChatTime'] - 8) ),
-			'ScriptName' => Str::replaceChars($_POST['NextScriptName']),
 			'RoundsPointsLimit' => intval($_POST['NextRoundsPointsLimit']),
 			'RoundsUseNewRules' => array_key_exists('NextRoundsUseNewRules', $_POST),
 			'RoundsForcedLaps' => intval($_POST['NextRoundsForcedLaps']),
@@ -1440,6 +1467,9 @@ abstract class AdminServ {
 			'CupNbWinners' => intval($_POST['NextCupNbWinners']),
 			'CupWarmUpDuration' => intval($_POST['NextCupWarmUpDuration'])
 		);
+		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+			$out += array('ScriptName' => Str::replaceChars($_POST['NextScriptName']));
+		}
 		
 		return $out;
 	}
