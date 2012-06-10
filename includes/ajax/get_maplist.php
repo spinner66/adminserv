@@ -11,6 +11,10 @@
 	require_once $pathConfig.'servers.cfg.php';
 	require_once '../adminserv.inc.php';
 	AdminServUI::getClass();
+	$lang = AdminServUI::getLang();
+	if( file_exists('../lang/'.$lang.'.php') ){
+		require_once '../lang/'.$lang.'.php';
+	}
 	
 	// ISSET
 	if( isset($_GET['mode']) ){ $mode = addslashes($_GET['mode']); }else{ $mode = null; }

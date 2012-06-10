@@ -51,7 +51,7 @@
 					<li><a id="scrollToCurrentMap" href="#currentMap"><?php echo Utils::t('Go to the current map'); ?></a></li>
 				<?php } ?>
 				<li><a id="detailMode" href="." data-statusmode="<?php echo USER_MODE; ?>" data-textdetail="<?php echo Utils::t('Detail mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detail mode'); } ?></a></li>
-				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value="" /></li>
+				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($mapsList['lst']) ){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
 		

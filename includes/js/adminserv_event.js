@@ -472,7 +472,7 @@ $(document).ready(function(){
 			
 			// Clic sur les lignes
 			$("#maplist tr").live("click", function(){
-				if( !$(this).hasClass("current") ){
+				if( !$(this).hasClass("current") && !$(this).hasClass("no-line") ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass("selected") ){
 						$(this).removeClass("selected");
