@@ -1,12 +1,24 @@
 <?php
 	// ENREGISTREMENT
 	if( isset($_POST['savesrvopts']) ){
+		// Clés
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$keys = array(
+				'allowMapDownload' => 'AllowChallengeDownload'
+			);
+		}
+		else{
+			$keys = array(
+				'allowMapDownload' => 'AllowMapDownload'
+			);
+		}
+		
 		// Variables
 		$IsP2PUpload = array_key_exists('IsP2PUpload', $_POST);
 		$IsP2PDownload = array_key_exists('IsP2PDownload', $_POST);
 		$NextCallVoteTimeOut = TimeDate::secToMillisec( intval($_POST['NextCallVoteTimeOut']) );
 		$HideServer = array_key_exists('HideServer', $_POST);
-		$AllowMapDownload = array_key_exists('AllowMapDownload', $_POST);
+		$AllowMapDownload = array_key_exists($keys['allowMapDownload'], $_POST);
 		$AutoSaveReplays = array_key_exists('AutoSaveReplays', $_POST);
 		if($_POST['CallVoteRatio'] == 0){ $CallVoteRatio = 0.0; }
 		else if($_POST['CallVoteRatio'] == 1){ $CallVoteRatio = 1.0; }
@@ -24,7 +36,7 @@
 			'NextVehicleNetQuality' => intval($_POST['NextVehicleNetQuality']),
 			'NextCallVoteTimeOut' => $NextCallVoteTimeOut,
 			'CallVoteRatio' => floatval($CallVoteRatio),
-			'AllowMapDownload' => $AllowMapDownload,
+			$keys['allowMapDownload'] => $AllowMapDownload,
 			'AutoSaveReplays' => $AutoSaveReplays,
 			'HideServer' => $HideServer
 		);

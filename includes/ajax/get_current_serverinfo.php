@@ -7,8 +7,8 @@
 	session_start();
 	$pathConfig = '../../'.$_SESSION['adminserv']['path'].'config/';
 	require_once $pathConfig.'adminserv.cfg.php';
-	require_once $pathConfig.'servers.cfg.php';
 	require_once $pathConfig.'extension.cfg.php';
+	require_once $pathConfig.'servers.cfg.php';
 	require_once '../adminserv.inc.php';
 	AdminServUI::getClass();
 	$lang = AdminServUI::getLang();

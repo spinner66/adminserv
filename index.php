@@ -57,8 +57,9 @@
 	
 	// LANG
 	define('USER_LANG', AdminServUI::getLang($lang) );
-	if( file_exists(AdminServConfig::PATH_INCLUDES .'lang/'. USER_LANG .'.php') ){
-		require_once AdminServConfig::PATH_INCLUDES .'lang/'. USER_LANG .'.php';
+	$langFile = AdminServConfig::PATH_INCLUDES .'lang/'. USER_LANG .'.php';
+	if( file_exists($langFile) ){
+		require_once $langFile;
 	}
 	
 	
