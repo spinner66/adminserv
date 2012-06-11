@@ -1166,9 +1166,12 @@ footer {
 	min-height: 511px;
 }
 .section-index .selected-files-option {
-	width: 70%;
+	width: 50%;
 	top: auto;
 	bottom: -25px;
+}
+.section-index .isTeamGameMode .selected-files-option {
+	width: 75%;
 }
 .section-index .options input {
 	margin-top: 10px;

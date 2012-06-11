@@ -5,7 +5,10 @@
 	
 	// INCLUDES
 	session_start();
-	require_once '../../'.$_SESSION['adminserv']['path'].'config/adminserv.cfg.php';
+	$pathConfig = '../../'.$_SESSION['adminserv']['path'].'config/';
+	require_once $pathConfig.'adminserv.cfg.php';
+	require_once $pathConfig.'extension.cfg.php';
+	require_once $pathConfig.'servers.cfg.php';
 	require_once '../adminserv.inc.php';
 	AdminServUI::getClass();
 	
@@ -17,31 +20,35 @@
 	// DATA
 	$out = null;
 	
-	// Faire une sélection
-	if($operation == 'setSelection' && $selection != null){
-		// On récupère tout le dossier et on supprime les maps non sélectionnées
-		$maps = AdminServ::getLocalMapList($path);
-		if( count($selection) > 0 ){
-			foreach($maps['lst'] as $id => $values){
-				if( !in_array($id, $selection) ){
-					unset($maps['lst'][$id]);
+	if( AdminServ::initialize() ){
+		// Faire une sélection
+		if($operation == 'setSelection' && $selection != null){
+			// On récupère tout le dossier et on supprime les maps non sélectionnées
+			$maps = AdminServ::getLocalMapList($path);
+			if( count($selection) > 0 ){
+				foreach($maps['lst'] as $id => $values){
+					if( !in_array($id, $selection) ){
+						unset($maps['lst'][$id]);
+					}
 				}
 			}
+			// Enregistrement de la sélection du MatchSettings
+			AdminServ::saveMatchSettingSelection($maps);
 		}
-		// Enregistrement de la sélection du MatchSettings
-		AdminServ::saveMatchSettingSelection($maps);
-	}
-	
-	// Récupérer le tableau pour faire une sélection
-	else if($operation == 'getSelection'){
-		$out = AdminServ::getLocalMapList($path);
-	}
-	
-	// Sélectionner tout le dossier
-	else{
-		// Import du dossier + enregistrement de la sélection
-		$mapsImport = AdminServ::getLocalMapList($path);
-		AdminServ::saveMatchSettingSelection($mapsImport);
+		
+		// Récupérer le tableau pour faire une sélection
+		else if($operation == 'getSelection'){
+			$out = AdminServ::getLocalMapList($path);
+		}
+		
+		// Sélectionner tout le dossier
+		else{
+			// Import du dossier + enregistrement de la sélection
+			$mapsImport = AdminServ::getLocalMapList($path);
+			AdminServ::saveMatchSettingSelection($mapsImport);
+		}
+		
+		$client->Terminate();
 	}
 	
 	

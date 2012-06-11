@@ -1355,7 +1355,7 @@ abstract class AdminServ {
 		}
 		else{
 			$queries = array(
-				'CupRoundsPerMap' => 'CupRoundsPerMap',
+				'CupRoundsPerMap' => 'GetCupRoundsPerMap',
 			);
 		}
 		
@@ -1693,7 +1693,10 @@ abstract class AdminServ {
 	* @return array
 	*/
 	public static function getLocalMapList($path, $sortBy = null){
+		global $client;
 		$out = array();
+		$pathFromMapsFolder = self::getMapsDirectoryPath();
+		$pathFromMapsFolder = str_replace($pathFromMapsFolder, '', $path);
 		
 		if( class_exists('Folder') && class_exists('GBXChallengeFetcher') ){
 			$directory = Folder::read($path, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
@@ -1716,7 +1719,7 @@ abstract class AdminServ {
 							$out['lst'][$i]['Environnement'] = $env;
 							
 							// Autres
-							$out['lst'][$i]['FileName'] = $file;
+							$out['lst'][$i]['FileName'] = $pathFromMapsFolder.$file;
 							$out['lst'][$i]['UId'] = $Gbx->uid;
 							$out['lst'][$i]['Author'] = $Gbx->author;
 							$out['lst'][$i]['Recent'] = $values['recent'];

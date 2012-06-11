@@ -162,9 +162,9 @@
 			<table>
 				<thead>
 					<tr>
-						<th class="thleft"><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=name"><?php echo Utils::t('Map'); ?></a></th>
-						<th><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=env"><?php echo Utils::t('Environment'); ?></a></th>
-						<th><a href="?p=<?php echo USER_PAGE; ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
+						<th class="thleft"><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=name"><?php echo Utils::t('Map'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=env"><?php echo Utils::t('Environment'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
 					<tr class="table-separation"></tr>
