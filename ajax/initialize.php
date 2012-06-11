@@ -10,8 +10,6 @@
 	if( file_exists($serverConfig) ){
 		require_once $serverConfig;
 	}
-	require_once '../displayserv.inc.php';
-	DisplayServ::getClass();
 	
 	// DATA
 	$out = array();
