@@ -1,16 +1,17 @@
-<?php
-	require_once 'config/displayserv.cfg.php';
-	require_once DisplayServConfig::PATH_INCLUDES .'displayserv.inc.php';
-?>
 <!DOCTYPE html>
 <html lang="fr">
 	<head>
 		<meta charset="UTF-8" />
 		<title>DisplayServ</title>
-		<?php echo DisplayServ::getHeadFiles(); ?>
+		<link rel="stylesheet" href="./ressources/styles/displayserv.css" />
+		<script src="./includes/js/jquery.js"></script>
+		<script src="./includes/js/displayserv.js"></script>
 		<script>
 			$(document).ready(function(){
-				$("#displayserv").displayServ();
+				$("#displayserv").displayServ({
+					refresh: 10,
+					color: "#ffa600",
+				});
 			});
 		</script>
 	</head>

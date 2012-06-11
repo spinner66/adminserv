@@ -1,7 +1,17 @@
 (function($){
-	$.fn.displayServ = function(){
+	$.fn.displayServ = function(options){
+		// Options
 		var _this = $(this);
-		
+		var settings = {
+			refresh: 30,
+			color: null
+		}
+		$.extend(settings, options);
+		settings.refresh = settings.refresh*1000;
+		var color = "";
+		if(settings.color){
+			var color = ' style="color: '+settings.color+';"';
+		}
 		
 		// 1ère étape - Initialiser DisplayServ en créant le html
 		$.getJSON("includes/ajax/initialize.php", function(data){
@@ -12,8 +22,8 @@
 							out += '<li id="ds-server-'+i+'" class="ds-server loading">'
 								+ '<table>'
 									+ '<tr class="ds-header">'
-										+ '<th colspan="2">'+data.label.server+" n°"+(i+1)+'</th>'
-										+ '<th>'+data.label.players+'</th>'
+										+ '<th colspan="2"'+color+'>'+data.label.server+" n°"+(i+1)+'</th>'
+										+ '<th'+color+'>'+data.label.players+'</th>'
 									+ '</tr>'
 									+ '<tr class="ds-space"><td colspan="3"></td></tr>'
 									+ '<tr class="ds-content">'
@@ -86,9 +96,22 @@
 								serverId.find(".ds-servers-players-list").html(playerListTable);
 							}
 						}
+						else{
+							if(data.error){
+								var sid = 0;
+								var serverId = $("#ds-server-"+sid);
+								serverId.removeClass("loading");
+								serverId.find(".ds-server-name").html(data.error);
+							}
+						}
 					}
 				});
 			}
 		});
+		
+		// Refresh
+		/*setInterval(function(){
+			$(this).displayServ(options);
+		}, settings.refresh);*/
 	};
 })(jQuery);
