@@ -2353,7 +2353,8 @@ abstract class AdminServLogs {
 		$type = strtolower($type);
 		$hasPlugin = AdminServPlugin::getCurrent();
 		if($hasPlugin){ $hasPlugin = '['.$hasPlugin.'] '; }else{ $hasPlugin = null; }
-		$str = '['.date('d/m/Y H:i:s').'] ['. USER_PAGE .'] '.$hasPlugin.'['.$_SERVER['REMOTE_ADDR'].'] '.$str."\n";
+		if( defined('USER_PAGE') ){ $userPage = USER_PAGE; }else{ $userPage = 'index'; }
+		$str = '['.date('d/m/Y H:i:s').'] ['.$userPage.'] '.$hasPlugin.'['.$_SERVER['REMOTE_ADDR'].'] '.$str."\n";
 		$path = self::$LOGS_PATH.$type.'.log';
 		
 		if( file_exists($path) ){
