@@ -71,8 +71,6 @@
 				}
 			}
 		}
-		
-		Utils::redirection(false, AdminServPlugin::getPluginQuery() );
 	}
 	
 	

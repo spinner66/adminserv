@@ -78,6 +78,32 @@ abstract class File {
 	
 	
 	/**
+	* Enregistre les données dans un fichier au pointeur
+	*
+	* @param  string $filename -> Le chemin ou nom du fichier
+	* @param  string $data     -> Données à écrire
+	* @param  string $seek     -> Le pointeur pour l'endroit à écrire
+	*/
+	public static function saveAtSeek($filename, $data, $seek = 0){
+		$out = null;
+		
+		if( file_exists($filename) && is_writable($filename) ){
+			$handle = fopen($filename, 'r+');
+			fseek($handle, $seek, SEEK_CUR);
+			if( fwrite($handle, $data) ){
+				$out = true;
+			}
+			fclose($handle);
+		}
+		else{
+			$out = 'No such file or file is not writable';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Renomme un fichier
 	*
 	* @param string $filename    -> Chemin du fichier à renommer

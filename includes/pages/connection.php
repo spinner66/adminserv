@@ -1,6 +1,6 @@
 <?php
-	// Si on ne demande pas de mot de passe pour la config en ligne
-	if( !isset($_SESSION['adminserv']['check_password']) ){
+	// Si on demande le mot de passe pour la config en ligne
+	if( !isset($_SESSION['adminserv']['check_password']) && !isset($_SESSION['adminserv']['get_password']) ){
 		// On vérifie qu'une configuration existe, sinon on la créer
 		if( class_exists('ServerConfig') ){
 			// Si la configuration contient au moins 1 serveur et qu'il n'est pas l'exemple
@@ -55,11 +55,8 @@
 			}
 		}
 	}
-	else{
-		$hasServer = AdminServServerConfig::hasServer();
-		if( !$hasServer ){
-			AdminServ::info('Aucun serveur disponible. Entrez le mot de passe pour accédez à la configuration des serveurs.'); 
-		}
+	else if( isset($_SESSION['adminserv']['get_password']) ){
+		AdminServ::info( Utils::t('It\'s first connection and no server configured. Chooose a password to configure your servers.') );
 	}
 	
 	// HTML
@@ -72,24 +69,41 @@
 	AdminServUI::getHeader();
 	
 	
-	// CONFIG PASSWORD
+	// Demande de password
 	if( isset($_SESSION['adminserv']['check_password']) ){
 ?>
-<section class="config-check-password<?php if($hasServer){ echo ' has-server'; } ?>">
+<section class="config-servers">
 	<form method="post" action="./config/">
 		<fieldset>
-			<legend>Configuration des serveurs</legend>
-			<?php if($hasServer){ ?>
-				<div class="connexion-cancel">
-					<a class="button light" href="./?logout">Annuler</a>
-				</div>
-			<?php } ?>
+			<legend><?php echo Utils::t('Servers configuration'); ?></legend>
+			<div class="connexion-cancel">
+				<a class="button light" href="./?logout"><?php echo Utils::t('Cancel'); ?></a>
+			</div>
 			<div class="connexion-label">
-				<label for="checkPassword">Mot de passe :</label>
+				<label for="checkPassword"><?php echo Utils::t('Password'); ?> :</label>
 				<input class="text" type="password" name="checkPassword" id="checkPassword" value="" />
 			</div>
 			<div class="connexion-login">
-				<input class="button light" type="submit" name="configcheckpassword" id="configcheckpassword" value="Connexion" />
+				<input class="button light" type="submit" name="configcheckpassword" id="configcheckpassword" value="<?php echo Utils::t('Connection'); ?>" />
+			</div>
+		</fieldset>
+	</form>
+</section>
+<?php
+	}
+	// Demande de création password + address
+	else if( isset($_SESSION['adminserv']['get_password']) ){
+?>
+<section class="config-servers no-server">
+	<form method="post" action="./config/">
+		<fieldset>
+			<legend><?php echo Utils::t('Online configuration'); ?></legend>
+			<div class="connexion-label">
+				<label for="savePassword"><?php echo Utils::t('Password'); ?> :</label>
+				<input class="text" type="password" name="savePassword" id="savePassword" value="" />
+			</div>
+			<div class="connexion-login">
+				<input class="button light" type="submit" name="configsavepassword" id="configsavepassword" value="<?php echo Utils::t('Save'); ?>" />
 			</div>
 		</fieldset>
 	</form>

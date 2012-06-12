@@ -13,6 +13,10 @@ $translate = array(
 	'Please put a password.' => 'Veuillez mettre un mot de passe.',
 	'Connection error' => 'Erreur de connexion',
 	'Connection error: invalid session.' => 'Erreur de connexion : session invalide.',
+	'Servers configuration' => 'Configuration des serveurs',
+	'Online configuration' => 'Configuration en ligne',
+	'It\'s first connection and no server configured. Chooose a password to configure your servers.' => 'C\'est votre 1ère connexion et aucun serveur n\'est configuré. Choisissez un mot de passe pour configurer vos serveurs.',
+	'Unable to save the password.' => 'Impossible d\'enregistrer le mot de passe',
 	// General
 	'Current map' => 'Map en cours',
 	'Name' => 'Nom',

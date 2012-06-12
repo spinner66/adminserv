@@ -21,8 +21,8 @@
 		define('USER_PAGE', htmlspecialchars($_GET['p']) );
 	}
 	else{
-		if( isset($_SESSION['adminserv']['check_password']) ){
-			define('USER_PAGE', 'check-password');
+		if( isset($_SESSION['adminserv']['check_password']) || isset($_SESSION['adminserv']['get_password']) ){
+			define('USER_PAGE', 'config-servers');
 		}
 		else{
 			define('USER_PAGE', 'index');

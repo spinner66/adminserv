@@ -7,29 +7,14 @@
 	
 	// VERIFICATION
 	if( class_exists('ServerConfig') ){
-		// Si la configuration contient au moins 1 serveur
-		if( AdminServServerConfig::hasServer() ){
-			// Si on n'autorise pas la configuration en ligne
-			if( OnlineConfig::ACTIVATE !== true ){
-				AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
-				Utils::redirection();
-			}
-			else{
-				if( OnlineConfig::ADD_ONLY === true ){
-					Utils::redirection(false, './?p=addserver');
-				}
-			}
+		// Si on n'autorise pas la configuration en ligne
+		if( OnlineConfig::ACTIVATE !== true ){
+			AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
+			Utils::redirection();
 		}
 		else{
-			// Si on n'autorise pas la configuration en ligne
-			if( OnlineConfig::ACTIVATE !== true ){
-				AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
-				Utils::redirection();
-			}
-			else{
-				if( OnlineConfig::ADD_ONLY === true ){
-					Utils::redirection(false, './?p=addserver');
-				}
+			if( OnlineConfig::ADD_ONLY === true ){
+				Utils::redirection(false, './?p=addserver');
 			}
 		}
 	}

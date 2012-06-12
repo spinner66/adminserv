@@ -34,7 +34,7 @@
 			<h2>Comment installer un plugin ?</h2>
 			<div class="content">
 				<p>Les plugins sont diponibles sur la page de téléchargement du projet AdminServ : <a href="http://code.google.com/p/adminserv/downloads/list">Cliquez-ici</a></p>
-				<p>- Dézippez le plugin et placez son contenu dans le dossier "plugins" d'AdminServ.<br />
+				<p>- Dézippez le plugin et placez son contenu dans le dossier &laquo; plugins &raquo; d'AdminServ.<br />
 				- Dans la configuration Extension, ajoutez le nom du dossier du plugin précédement ajouté.</p>
 				<p>
 					<code>
@@ -47,8 +47,8 @@
 			
 			<h2>Comment créer son plugin ?</h2>
 			<div class="content">
-				<p>Pour créer son plugin, copiez le dossier example et remplacez les valeurs dans le fichier config.ini.<br />
-				Le fichier index.php sera inclu dans la page "plugins" d'AdminServ. A vous de créer une configuration, une classe, et autres ressources puis de les inclures dans ce fichier.</p>
+				<p>Pour créer son plugin, copiez le dossier &laquo; _newplugin &raquo; et remplacez les valeurs dans le fichier config.ini.<br />
+				Le fichier &laquo; index.php &raquo; sera inclu dans la page plugins d'AdminServ. A vous de créer une configuration, une classe, et autres ressources puis de les inclures dans ce fichier.</p>
 			</div>
 		<?php } ?>
 	</section>
