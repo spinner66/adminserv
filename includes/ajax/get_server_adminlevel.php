@@ -7,7 +7,9 @@
 	
 	// INCLUDES
 	session_start();
-	require_once '../../'.$_SESSION['adminserv']['path'].'config/servers.cfg.php';
+	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }
+	else{ $adminservPath = null; }
+	require_once '../../'.$adminservPath.'config/servers.cfg.php';
 	require_once '../adminserv.inc.php';
 	require_once '../class/utils.class.php';
 	

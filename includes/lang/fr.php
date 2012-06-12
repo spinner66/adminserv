@@ -17,6 +17,7 @@ $translate = array(
 	'Online configuration' => 'Configuration en ligne',
 	'It\'s first connection and no server configured. Chooose a password to configure your servers.' => 'C\'est votre 1ère connexion et aucun serveur n\'est configuré. Choisissez un mot de passe pour configurer vos serveurs.',
 	'Unable to save the password.' => 'Impossible d\'enregistrer le mot de passe',
+	'The online configuration is disabled. Use "./config/servers.cfg.php" file.' => 'La configuration en ligne est désactivée. Utilisez le fichier "./config/servers.cfg.php".',
 	// General
 	'Current map' => 'Map en cours',
 	'Name' => 'Nom',

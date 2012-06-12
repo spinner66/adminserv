@@ -29,10 +29,10 @@ class AdminServConfig {
 	
 	/* FILES AND FOLDERS */
 	public static $FOLDERS_OPTIONS = array(
-	'new' => array(true, 'Admin'),
-	'rename' => array(true, 'Admin'),
-	'move' => array(true, 'Admin'),
-	'delete' => array(true, 'SuperAdmin')
+		'new' => array(true, 'Admin'),
+		'rename' => array(true, 'Admin'),
+		'move' => array(true, 'Admin'),
+		'delete' => array(true, 'SuperAdmin')
 	);
 	public static $MAPS_HIDDEN_FOLDERS = array('MatchSettings', 'Replays');
 	public static $MAPS_HIDDEN_FILES = array('db', 'txt', 'xml', 'zip', 'php', 'log');
@@ -53,9 +53,9 @@ class AdminServConfig {
 
 	/* LOGS */
 	public static $LOGS = array(
-	'access' => true,
-	'action' => true,
-	'error' => true
+		'access' => true,
+		'action' => true,
+		'error' => true
 	);
 	
 	/* MULTI ADMINSERV */
