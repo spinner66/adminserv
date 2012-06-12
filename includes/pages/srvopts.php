@@ -52,7 +52,12 @@
 	
 	
 	// LECTURE
-	$client->addCall('GetServerOptions');
+	if(SERVER_VERSION_NAME == 'TmForever'){
+		$client->addCall('GetServerOptions', array(1) );
+	}
+	else{
+		$client->addCall('GetServerOptions');
+	}
 	$client->addCall('GetBuddyNotification', array('') );
 	if( !$client->multiquery() ){
 		AdminServ::error();

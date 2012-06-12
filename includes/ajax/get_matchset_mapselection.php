@@ -7,6 +7,11 @@
 	session_start();
 	require_once '../../'.$_SESSION['adminserv']['path'].'config/adminserv.cfg.php';
 	require_once '../adminserv.inc.php';
+	require_once '../class/utils.class.php';
+	$lang = AdminServUI::getLang();
+	if( file_exists('../lang/'.$lang.'.php') ){
+		require_once '../lang/'.$lang.'.php';
+	}
 	
 	// DATA
 	if( !isset($_SESSION['adminserv']['matchset_maps_selected']) ){
