@@ -124,7 +124,7 @@ abstract class Utils {
 			$out =  explode($separator, $_COOKIE[$cookie_name]);
 			// Si une position est choisie
 			if( is_numeric($data_pos) ){
-				if($out[$data_pos] != null){
+				if( isset($out[$data_pos]) && $out[$data_pos] != null){
 					return $out[$data_pos];
 				}
 			}

@@ -75,7 +75,7 @@
 					}
 				}
 				else{
-					AdminServ::error('Vous n\'êtes pas autorisé à configurer les serveurs.');
+					AdminServ::error( Utils::t('You are not allowed to configure the servers.') );
 					Utils::redirection(false, '..');
 				}
 			}
@@ -103,11 +103,11 @@
 			}
 		}
 		else{
-			AdminServ::info('La configuration en ligne est désactivée. Utilisez le fichier "./config/servers.cfg.php".');
+			AdminServ::info( Utils::t('The online configuration is disabled. Use "./config/servers.cfg.php" file.') );
 			Utils::redirection(false, '..');
 		}
 	}
 	else{
-		Utils::redirection(false, '../?error='.urlencode('Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.'));
+		Utils::redirection(false, '../?error='.urlencode( Utils::t('The servers configuration file doesn\'t reconized by AdminServ.') ) );
 	}
 ?>

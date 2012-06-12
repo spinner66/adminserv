@@ -822,6 +822,7 @@ abstract class AdminServ {
 		}
 		
 		AdminServLogs::add('error', $text);
+		unset($_SESSION['info']);
 		$_SESSION['error'] = $text;
 	}
 	public static function info($text){
