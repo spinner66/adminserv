@@ -8,12 +8,9 @@
 		<script src="./includes/js/displayserv.js"></script>
 		<script>
 			$(document).ready(function(){
-				$("#displayserv").displayServ({
-					refresh: 10,
-					color: "#ffa600",
-				});
+				$("#displayserv").displayServ();
 			});
-		</script>
+		</script> 
 	</head>
 	<body>
 		<div id="displayserv"></div>

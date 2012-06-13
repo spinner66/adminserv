@@ -1,12 +1,6 @@
 <?php
 	// INCLUDES
-	require_once '../../config/displayserv.cfg.php';
-	// ServerConfig
-	if(DisplayServConfig::USE_ADMINSERV_SERVER_CONFIG !== null){
-		$serverConfig = DisplayServConfig::USE_ADMINSERV_SERVER_CONFIG;
-	}else{
-		$serverConfig = '../../config/servers.cfg.php';
-	}
+	$serverConfig = '../../config/servers.cfg.php';
 	if( file_exists($serverConfig) ){
 		require_once $serverConfig;
 	}
