@@ -171,6 +171,7 @@
 				<div class="mapsSelection">
 					<?php
 						$mapsSelectList = '<select name="mapsDirectoryList" id="mapsDirectoryList">';
+						$mapsSelectList .= '<option value="currentServerSelection">Sélection du serveur</option>';
 						$mapsSelectList .= '<option value="'.$mapsDirectoryPath.'">'.Utils::t('Root').'</option>';
 						if( count($directoryList) > 0 ){
 							foreach($directoryList as $dir){

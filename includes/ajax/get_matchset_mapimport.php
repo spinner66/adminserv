@@ -11,6 +11,10 @@
 	require_once $pathConfig.'servers.cfg.php';
 	require_once '../adminserv.inc.php';
 	AdminServUI::getClass();
+	$lang = AdminServUI::getLang();
+	if( file_exists('../lang/'.$lang.'.php') ){
+		require_once '../lang/'.$lang.'.php';
+	}
 	
 	// ISSET
 	if( isset($_GET['path']) ){ $path = addslashes($_GET['path']); }else{ $path = null; }
@@ -20,31 +24,34 @@
 	// DATA
 	$out = null;
 	
-	if( AdminServ::initialize() ){
+	if( AdminServ::initialize() && $path != null ){
+		// Maps
+		if($path == 'currentServerSelection'){
+			$mapsImport = AdminServ::getMapList();
+		}
+		else{
+			$mapsImport = AdminServ::getLocalMapList($path);
+		}
+		
 		// Faire une sélection
-		if($operation == 'setSelection' && $selection != null){
-			// On récupère tout le dossier et on supprime les maps non sélectionnées
-			$maps = AdminServ::getLocalMapList($path);
-			if( count($selection) > 0 ){
-				foreach($maps['lst'] as $id => $values){
+		if($operation == 'setSelection'){
+			// On supprime les maps non sélectionnées
+			if( $selection != null && count($selection) > 0 ){
+				foreach($mapsImport['lst'] as $id => $values){
 					if( !in_array($id, $selection) ){
-						unset($maps['lst'][$id]);
+						unset($mapsImport['lst'][$id]);
 					}
 				}
 			}
-			// Enregistrement de la sélection du MatchSettings
-			AdminServ::saveMatchSettingSelection($maps);
+			else{
+				foreach($mapsImport['lst'] as $id => $values){
+					unset($mapsImport['lst'][$id]);
+				}
+			}
 		}
 		
-		// Récupérer le tableau pour faire une sélection
-		else if($operation == 'getSelection'){
-			$out = AdminServ::getLocalMapList($path);
-		}
-		
-		// Sélectionner tout le dossier
-		else{
-			// Import du dossier + enregistrement de la sélection
-			$mapsImport = AdminServ::getLocalMapList($path);
+		// Enregistrement de la sélection du MatchSettings
+		if($operation != 'getSelection'){
 			AdminServ::saveMatchSettingSelection($mapsImport);
 		}
 		
@@ -54,7 +61,7 @@
 	
 	// Retour
 	if($operation == 'getSelection'){
-		echo json_encode($out);
+		echo json_encode($mapsImport);
 	}
 	else{
 		echo json_encode($_SESSION['adminserv']['matchset_maps_selected']);
