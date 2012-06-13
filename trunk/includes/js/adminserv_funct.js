@@ -763,7 +763,7 @@ function matchset_mapImportSelection(){
 						out += '</td>'
 						+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
 						+'<td>'+map.Author+'</td>';
-						out += '<td class="checkbox">'; if(data.cid != i){ out += '<input type="checkbox" name="map[]" value="'+map.FileName+'" />'; } out += '</td>'
+						out += '<td class="checkbox"><input type="checkbox" name="map[]" value="'+map.FileName+'" /></td>'
 					+'</tr>';
 				});
 				

@@ -6,6 +6,10 @@
 	}
 	require_once '../'. AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
 	AdminServUI::getClass();
+	$lang = AdminServUI::getLang();
+	if( file_exists('../'. AdminServConfig::PATH_INCLUDES .'lang/'.$lang.'.php') ){
+		require_once '../'. AdminServConfig::PATH_INCLUDES .'lang/'.$lang.'.php';
+	}
 	
 	// On vérifie qu'une configuration existe
 	if( class_exists('ServerConfig') ){

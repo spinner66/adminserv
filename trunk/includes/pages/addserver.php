@@ -63,6 +63,7 @@
 				$action = Utils::t('This server has been added.');
 				AdminServ::info($action);
 				AdminServLogs::add('action', $action);
+				Utils::redirection(false, '?p='.USER_PAGE);
 			}
 			else{
 				AdminServ::error( Utils::t('Unable to add the server.') );

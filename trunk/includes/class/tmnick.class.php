@@ -145,11 +145,11 @@ class TmNick {
 							$lstStyle[] = 'color:'.$open;
 						}
 					}else{
-						if($tag == 's'){
+						/*if($tag == 's'){
 							$preContent .= '<span class="tmnick_shadow {$class$}">{$content$}</span><span>';
 							$preContent = str_replace('{$class$}', implode(' ', $lstClass), $preContent);
 							$postContent .= '</span>';
-						}
+						}*/
 						
 						$lstClass[] = self::$m_css[$tag];
 					}
