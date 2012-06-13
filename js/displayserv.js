@@ -1,20 +1,34 @@
 (function($){
 	$.fn.displayServ = function(options){
 		// Options
-		var _this = $(this);
 		var settings = {
+			config: "./config/servers.cfg.php",
+			includes: "./includes/",
+			ressources: "./ressources/",
+			timeout: 3,
 			refresh: 30,
-			color: null
+			color: "",
 		}
 		$.extend(settings, options);
 		settings.refresh = settings.refresh*1000;
-		var color = "";
 		if(settings.color){
-			var color = ' style="color: '+settings.color+';"';
+			settings.color = ' style="color: '+settings.color+';"';
 		}
 		
+		// Refresh
+		$(this).initialize(settings);
+		setInterval(function(){
+			$(this).initialize(settings);
+		}, settings.refresh);
+	};
+})(jQuery);
+
+(function($){
+	$.fn.initialize = function(settings){
+		var _this = $(this);
+		
 		// 1ère étape - Initialiser DisplayServ en créant le html
-		$.getJSON("includes/ajax/initialize.php", function(data){
+		$.getJSON(settings.includes+"ajax/initialize.php", function(data){
 			if(data != null){
 				var out = '<ul class="ds-servers-list">';
 					if(data.servers){
@@ -22,8 +36,9 @@
 							out += '<li id="ds-server-'+i+'" class="ds-server loading">'
 								+ '<table>'
 									+ '<tr class="ds-header">'
-										+ '<th colspan="2"'+color+'>'+data.label.server+" n°"+(i+1)+'</th>'
-										+ '<th'+color+'>'+data.label.players+'</th>'
+										+ '<th class="first"'+settings.color+'>'+data.label.server+" n°"+(i+1)+'</th>'
+										+ '<th class="middle"></th>'
+										+ '<th class="last"'+settings.color+'>'+data.label.players+'</th>'
 									+ '</tr>'
 									+ '<tr class="ds-space"><td colspan="3"></td></tr>'
 									+ '<tr class="ds-content">'
@@ -63,7 +78,7 @@
 				$(_this).html(out);
 				
 				// 2ème étape - Récupérer les données serveur
-				$.getJSON("includes/ajax/get_servers.php", function(data){
+				$.getJSON(settings.includes+"ajax/get_servers.php", function(data){
 					if(data != null){
 						if(data.servers){
 							for(var i = 0; i < data.servers.length; i++){
@@ -108,10 +123,5 @@
 				});
 			}
 		});
-		
-		// Refresh
-		/*setInterval(function(){
-			$(this).displayServ(options);
-		}, settings.refresh);*/
 	};
 })(jQuery);
