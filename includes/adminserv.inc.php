@@ -2352,14 +2352,12 @@ abstract class AdminServLogs {
 	public static function add($type, $str){
 		$out = false;
 		$type = strtolower($type);
-		$hasPlugin = AdminServPlugin::getCurrent();
-		if($hasPlugin){ $hasPlugin = '['.$hasPlugin.'] '; }else{ $hasPlugin = null; }
 		if( defined('USER_PAGE') ){ $userPage = USER_PAGE; }else{ $userPage = 'index'; }
-		$str = '['.date('d/m/Y H:i:s').'] ['.$userPage.'] '.$hasPlugin.'['.$_SERVER['REMOTE_ADDR'].'] '.$str."\n";
+		$str = '['.date('d/m/Y H:i:s').'] ['.$userPage.'] ['.$_SERVER['REMOTE_ADDR'].'] '.utf8_decode($str)."\n";
 		$path = self::$LOGS_PATH.$type.'.log';
 		
 		if( file_exists($path) ){
-			if( File::save($path, $str) !== true ){
+			if( File::save($path, utf8_encode($str) ) !== true ){
 				AdminServ::error( Utils::t('Unable to add log in file:').' '.$type.'.');
 			}
 			else{
@@ -2634,9 +2632,16 @@ abstract class AdminServPlugin {
 	*/
 	public static function getCurrent(){
 		$out = null;
-		if( isset($_GET['n']) && $_GET['n'] != null ){
-			$out = $_GET['n'];
+		
+		if( defined('USER_PAGE') ){
+			$pageEx = explode('-', USER_PAGE);
+			if( count($pageEx) > 0 && isset($pageEx[0]) && $pageEx[0] == 'plugins' ){
+				if( isset($pageEx[1]) && $pageEx[1] != 'list' ){
+					$out = $pageEx[1];
+				}
+			}
 		}
+		
 		return $out;
 	}
 	
@@ -2651,13 +2656,13 @@ abstract class AdminServPlugin {
 	public static function getConfig($pluginName = null, $returnField = null){
 		$out = null;
 		if($pluginName == null){
-			$pluginName = self::getCurrent();
+			$pluginName = CURRENT_PLUGIN;
 		}
 		$path = AdminServConfig::PATH_PLUGINS .$pluginName.'/config.ini';
 		
 		if( file_exists($path) ){
 			$ini = parse_ini_file($path);
-			if($returnField){
+			if($returnField && isset($ini[$returnField]) ){
 				$out = $ini[$returnField];
 			}
 			else{
@@ -2690,7 +2695,7 @@ abstract class AdminServPlugin {
 			$out = '<nav class="vertical-nav">'
 				.'<ul>';
 					foreach($pluginsList as $plugin => $infos){
-						$out .= '<li><a '; if(self::getCurrent() == $plugin){ $out .= 'class="active" '; } $out .= 'href="?p='. USER_PAGE .'&n='.$plugin.'" title="Version : '.$infos['version'].'">'.$infos['name'].'</a></li>';
+						$out .= '<li><a '; if(self::getCurrent() == $plugin){ $out .= 'class="active" '; } $out .= 'href="?p=plugins-'.$plugin.'" title="Version : '.$infos['version'].'">'.$infos['name'].'</a></li>';
 					}
 			$out .= '</ul>'
 			.'</nav>';
@@ -2733,13 +2738,28 @@ abstract class AdminServPlugin {
 	* Inclue tous les fichiers necessaire au fonctionnement du plugin
 	*
 	* @param string $pluginName -> Le nom du dossier plugin
+	* @return html
 	*/
 	public static function getPlugin($pluginName = null){
 		global $client, $translate;
+		if($pluginName == null){
+			$pluginName = CURRENT_PLUGIN;
+		}
 		
 		$file = AdminServConfig::PATH_PLUGINS .$pluginName.'/index.php';
 		if( file_exists($file) ){
-			require_once $file;
+			AdminServUI::getHeader();
+			echo '<section class="plugins hasMenu">'
+				.'<section class="cadre left menu">'
+					.AdminServPlugin::getMenuList()
+				.'</section>'
+				
+				.'<section class="cadre right">'
+					.'<h1>'.self::getConfig($pluginName, 'name').'</h1>';
+					require_once $file;
+				echo '</section>'
+			.'</section>';
+			AdminServUI::getFooter();
 		}
 	}
 	
@@ -2753,31 +2773,13 @@ abstract class AdminServPlugin {
 	public static function getPluginPath($pluginName = null){
 		$out = null;
 		if($pluginName == null){
-			$pluginName = self::getCurrent();
+			$pluginName = CURRENT_PLUGIN;
 		}
 		$path = AdminServConfig::PATH_PLUGINS;
 		
 		if($path && $pluginName){
 			$out = $path.$pluginName.'/';
 		}
-		
-		return $out;
-	}
-	
-	
-	/**
-	* Récupère les paramètres URL du plugin
-	*
-	* @param string $pluginName -> Le nom du dossier plugin
-	* @return string
-	*/
-	public static function getPluginQuery($pluginName = null){
-		$out = null;
-		if($pluginName == null){
-			$pluginName = self::getCurrent();
-		}
-		
-		$out = '?p=plugins&n='.$pluginName;
 		
 		return $out;
 	}

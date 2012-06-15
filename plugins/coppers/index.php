@@ -71,6 +71,9 @@
 				}
 			}
 		}
+		
+		// Redirection
+		Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	
 	

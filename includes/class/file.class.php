@@ -10,7 +10,7 @@ abstract class File {
 	* Récupère l'extension d'un fichier
 	*
 	* @param  string $filename -> Le chemin ou nom du fichier
-	* @return string
+	* @return string "php"
 	*/
 	public static function getExtension($filename){
 		$out = null;

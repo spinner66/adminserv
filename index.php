@@ -63,6 +63,10 @@
 	}
 	
 	
+	// PLUGINS
+	define('CURRENT_PLUGIN', AdminServPlugin::getCurrent() );
+	
+	
 	// INDEX
 	if( isset($_SESSION['adminserv']['sid']) && isset($_SESSION['adminserv']['password']) && isset($_SESSION['adminserv']['adminlevel']) && !isset($_GET['error']) ){
 		
@@ -97,16 +101,21 @@
 			'srvopts',
 			'gameinfos',
 			'chat',
-			'plugins',
+			'plugins-list',
 			'guestban',
 		);
 		$PAGESLIST = array_merge($PAGESLIST, array_keys(ExtensionConfig::$MAPSMENU) );
+		
+		// INCLUDES DES PAGES
 		if( in_array(USER_PAGE, $PAGESLIST) ){
 			unset($PAGESLIST[0]);
 			foreach($PAGESLIST as $page){
 				if(USER_PAGE === $page){
-					include_once AdminServConfig::PATH_INCLUDES .'pages/'.$page.'.php';
-					AdminServLogs::add('access', 'Connected - Access to the page');
+					$file = AdminServConfig::PATH_INCLUDES .'pages/'.$page.'.php';
+					if( file_exists($file) ){
+						include_once $file;
+						AdminServLogs::add('access', 'Connected - Access to the page');
+					}
 					break;
 				}
 			}
@@ -118,7 +127,9 @@
 				Utils::redirection(false, '?p='.USER_PAGE);
 			}
 			else{
-				include_once AdminServConfig::PATH_INCLUDES .'pages/'.$PAGESLIST[0].'.php';
+				if(!CURRENT_PLUGIN){
+					include_once AdminServConfig::PATH_INCLUDES .'pages/'.$PAGESLIST[0].'.php';
+				}
 			}
 		}
 	}
