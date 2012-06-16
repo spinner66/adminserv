@@ -5,7 +5,9 @@
 	
 	// INCLUDES
 	session_start();
-	require_once '../../'.$_SESSION['adminserv']['path'].'config/adminserv.cfg.php';
+	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }
+	else{ $adminservPath = null; }
+	require_once '../../'.$adminservPath.'config/adminserv.cfg.php';
 	require_once '../adminserv.inc.php';
 	require_once '../class/utils.class.php';
 	$lang = AdminServUI::getLang();

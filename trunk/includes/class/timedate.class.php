@@ -241,25 +241,25 @@ abstract class TimeDate {
 			
 			// Création du texte
 			if($seconds < 60){
-				$out .= $seconds.'sec'; if($fullText){ $out .= 'onde'; if($seconds > 1){ $out .= 's'; } }
+				$out .= $seconds.' sec'; if($fullText){ $out .= 'onde'; if($seconds > 1){ $out .= 's'; } }
 			}
 			else if($minutes < 60){
-				$out .= $minutes.'min'; if($fullText){ $out .= 'ute'; if($minutes > 1){ $out .= 's'; } }
+				$out .= $minutes.' min'; if($fullText){ $out .= 'ute'; if($minutes > 1){ $out .= 's'; } }
 			}
 			else if($hours < 24){
-				$out .= $hours.'h'; if($fullText){ $out .= 'eure'; if($hours > 1){ $out .= 's'; } }
+				$out .= $hours.' h'; if($fullText){ $out .= 'eure'; if($hours > 1){ $out .= 's'; } }
 			}
 			else if($days < 7){
-				$out .= $days.'j'; if($fullText){ $out .= 'our'; if($days > 1){ $out .= 's'; } }
+				$out .= $days.' j'; if($fullText){ $out .= 'our'; if($days > 1){ $out .= 's'; } }
 			}
 			else if($weeks < 4){
-				$out .= $weeks.'sem'; if($fullText){ $out .= 'aine'; if($weeks > 1){ $out .= 's'; } }
+				$out .= $weeks.' sem'; if($fullText){ $out .= 'aine'; if($weeks > 1){ $out .= 's'; } }
 			}
 			else if($months < 12){
-				$out .= $months.'mois';
+				$out .= $months.' mois';
 			}
 			else{
-				$out .= $years.'an'; if($years > 1){ $out .= 's'; }
+				$out .= $years.' an'; if($years > 1){ $out .= 's'; }
 			}
 		}
 		// Retour

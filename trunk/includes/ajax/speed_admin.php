@@ -5,7 +5,9 @@
 	
 	// INCLUDES
 	session_start();
-	$pathConfig = '../../'.$_SESSION['adminserv']['path'].'config/';
+	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }
+	else{ $adminservPath = null; }
+	$pathConfig = '../../'.$adminservPath.'config/';
 	require_once $pathConfig.'adminserv.cfg.php';
 	require_once $pathConfig.'extension.cfg.php';
 	require_once $pathConfig.'servers.cfg.php';
