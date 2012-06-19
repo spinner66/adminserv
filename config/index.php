@@ -7,8 +7,9 @@
 	require_once '../'. AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
 	AdminServUI::getClass();
 	$lang = AdminServUI::getLang();
-	if( file_exists('../'. AdminServConfig::PATH_INCLUDES .'lang/'.$lang.'.php') ){
-		require_once '../'. AdminServConfig::PATH_INCLUDES .'lang/'.$lang.'.php';
+	$langFile = '../'. AdminServConfig::PATH_INCLUDES .'lang/'.$lang.'.php';
+	if( file_exists($langFile) ){
+		require_once  $langFile;
 	}
 	
 	// On vérifie qu'une configuration existe
@@ -79,7 +80,7 @@
 					}
 				}
 				else{
-					AdminServ::error( Utils::t('You are not allowed to configure the servers.') );
+					AdminServ::error( Utils::t('You are not allowed to configure the servers') );
 					Utils::redirection(false, '..');
 				}
 			}

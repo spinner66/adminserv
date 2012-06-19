@@ -7,7 +7,7 @@
 		$_SESSION['adminserv']['path'] = basename(__DIR__).'/';
 	}
 	else{
-		$_SESSION['adminserv']['path'] = "";
+		$_SESSION['adminserv']['path'] = null;
 	}
 	if( file_exists('config/servers.cfg.php') ){
 		require_once 'config/servers.cfg.php';
@@ -144,6 +144,11 @@
 			$GLOBALS['page_title'] = 'Configuration';
 			include_once AdminServConfig::PATH_INCLUDES .'pages/addserver.php';
 			AdminServLogs::add('access', 'Configuration - Add server');
+		}
+		else if(USER_PAGE == 'serversconfigpassword'){
+			$GLOBALS['page_title'] = 'Configuration';
+			include_once AdminServConfig::PATH_INCLUDES .'pages/serversconfigpassword.php';
+			AdminServLogs::add('access', 'Configuration - Change server config password');
 		}
 		// CONNEXION
 		else{

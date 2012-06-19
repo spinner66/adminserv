@@ -1647,3 +1647,11 @@ a.tmnick_externallink:hover {
 	text-decoration: none;
 	border-bottom: thin solid Orange;
 }
+
+
+/* DisplayServ
+-------------------- */
+#displayserv {
+	width: 800px;
+	margin: 20px auto 30px;
+}
