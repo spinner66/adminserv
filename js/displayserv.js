@@ -2,9 +2,9 @@
 	$.fn.displayServ = function(options){
 		// Options
 		var settings = {
-			config: "./config/servers.cfg.php",
-			includes: "./includes/",
-			ressources: "./ressources/",
+			config: "config/servers.cfg.php",
+			includes: "includes/",
+			ressources: "ressources/",
 			timeout: 3,
 			refresh: 30,
 			color: "",
@@ -28,7 +28,7 @@
 		var _this = $(this);
 		
 		// 1ère étape - Initialiser DisplayServ en créant le html
-		$.getJSON(settings.includes+"ajax/initialize.php", function(data){
+		$.getJSON(settings.includes+"ajax/initialize.php", {cfg: settings.config}, function(data){
 			if(data != null){
 				var out = '<ul class="ds-servers-list">';
 					if(data.servers){
@@ -78,7 +78,7 @@
 				$(_this).html(out);
 				
 				// 2ème étape - Récupérer les données serveur
-				$.getJSON(settings.includes+"ajax/get_servers.php", function(data){
+				$.getJSON(settings.includes+"ajax/get_servers.php", {cfg: settings.config}, function(data){
 					if(data != null){
 						if(data.servers){
 							for(var i = 0; i < data.servers.length; i++){

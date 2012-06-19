@@ -1,1 +1,1 @@
-<?php$translate = array(	);?>
+<?php$translate = array(	'Server' => 'Serveur',	'Server name' => 'Nom du serveur',	'Server login' => 'Login serveur',	'Connected on' => 'Connecté sur',	'Status' => 'Statut',	'Game mode' => 'Mode de jeu',	'Current map' => 'Map en cours',	'Players' => 'Joueurs',);?>
