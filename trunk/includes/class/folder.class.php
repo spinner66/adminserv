@@ -281,5 +281,23 @@ abstract class Folder {
 		
 		return $out;
 	}
+	
+	
+	public static function checkRights($path, $rights = array(true, true, false) ){
+		$out = array();
+		
+		
+		if($rights[0]){
+			$out[0] = is_readable($path);
+		}
+		if($rights[1]){
+			$out[1] = is_writable($path);
+		}
+		if($rights[2]){
+			$out[2] = is_executable($path);
+		}
+		
+		return $out;
+	}
 }
 ?>

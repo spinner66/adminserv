@@ -40,6 +40,20 @@ abstract class AdminServUI {
 	
 	
 	/**
+	* Vérifie si il y a bien une config de theme
+	*/
+	public static function hasTheme(){
+		$out = false;
+		
+		if( class_exists('ExtensionConfig') && isset(ExtensionConfig::$THEMES) && count(ExtensionConfig::$THEMES) > 0 ){
+			$out = true;
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère le thème courant
 	*
 	* @param string $forceTheme -> Forcer l'utilisation du thème
@@ -84,21 +98,25 @@ abstract class AdminServUI {
 	*/
 	public static function getThemeList($currentTheme = array() ){
 		$out = null;
-		
-		// Thème courant
-		if( count($currentTheme) > 0 ){
-			$currentThemeName = key($currentTheme);
-			$currentThemeColor = current($currentTheme);
-			unset(ExtensionConfig::$THEMES[$currentThemeName]);
+		$list = array();
+		if( self::hasTheme() ){
+			$list = ExtensionConfig::$THEMES;
 		}
 		
-		if(count(ExtensionConfig::$THEMES) > 0){
+		// Thème courant
+		if( count($currentTheme) > 0 && count($list) > 0 ){
+			$currentThemeName = key($currentTheme);
+			$currentThemeColor = current($currentTheme);
+			unset($list[$currentThemeName]);
+		}
+		
+		if( count($list) > 0 ){
 			$out .= '<ul>';
 			// Si il y a un thème courant, on le place en 1er
 			if( count($currentTheme) > 0 ){
 				$out .= '<li><a class="theme-color" style="background-color: '.$currentThemeColor[0].';" href="?th='.$currentThemeName.'" title="'.ucfirst($currentThemeName).'"></a></li>';
 			}
-			foreach(ExtensionConfig::$THEMES as $name => $color){
+			foreach($list as $name => $color){
 				$out .= '<li><a class="theme-color" style="background-color: '.$color[0].';" href="?th='.$name.'" title="'.ucfirst($name).'"></a></li>';
 			}
 			$out .= '</ul>';
@@ -159,22 +177,23 @@ abstract class AdminServUI {
 	*/
 	public static function getLangList($currentLang = array() ){
 		$out = null;
+		$list = ExtensionConfig::$LANG;
 		
 		// Langue courante
 		if( count($currentLang) > 0 ){
 			$currentLangCode = key($currentLang);
 			$currentLangName = current($currentLang);
-			unset(ExtensionConfig::$LANG[$currentLangCode]);
+			unset($list[$currentLangCode]);
 		}
 		
 		// Liste de toutes les langues
-		if(count(ExtensionConfig::$LANG) > 0){
+		if( count($list) > 0 ){
 			$out .= '<ul>';
 			// Si il y a une langue courante, on la place en 1er
 			if( count($currentLang) > 0 ){
 				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$currentLangCode.'.png);" href="?lg='.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
 			}
-			foreach(ExtensionConfig::$LANG as $code => $name){
+			foreach($list as $code => $name){
 				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="?lg='.$code.'" title="'.$name.'"></a></li>';
 			}
 			$out .= '</ul>';
@@ -2385,53 +2404,20 @@ abstract class AdminServServerConfig {
 	
 	
 	/**
-	* Retourne l'identifiant du serveur dans la config
+	* Vérifie les droits pour l'écriture des fichiers de config
 	*
-	* @param  string $serverName -> Le nom du serveur dans la config
-	* @return int
+	* @return array
 	*/
-	public static function getServerId($serverName){
-		$id = 0;
-		$servers = ServerConfig::$SERVERS;
-		$countServers = count($servers);
+	public static function checkRights(){
+		$out = array();
+		$list = array(
+			'./config/' => 777,
+			'./config/adminserv.cfg.php' => 777,
+			'./config/servers.cfg.php' => 777,
+		);
 		
-		// On cherche la position du serveur à partir de son nom
-		if( $countServers > 0 ){
-			foreach($servers as $server_name => $server_values){
-				if($server_name == $serverName){
-					break;
-				}
-				else{
-					$id++;
-				}
-			}
-		}
-		
-		// Si l'id = le nb total de serveur -> pas trouvé
-		if($id == $countServers ){
-			return -1;
-		}else{
-			return $id;
-		}
-	}
-	
-	
-	public static function getServerName($serverId){
-		$out = null;
-		$servers = ServerConfig::$SERVERS;
-		$countServers = count($servers);
-		
-		if( $countServers > 0 ){
-			$i = 0;
-			foreach($servers as $serverName => $serverValues){
-				if($i == $serverId){
-					$out = $serverName;
-					break;
-				}
-				else{
-					$i++;
-				}
-			}
+		foreach($list as $path => $minChmod){
+			$out[$path] = Folder::checkRights($path, $minChmod);
 		}
 		
 		return $out;
@@ -2473,6 +2459,66 @@ abstract class AdminServServerConfig {
 		}
 		else{
 			$out = Utils::t('No server available');
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Retourne l'identifiant du serveur dans la config
+	*
+	* @param  string $serverName -> Le nom du serveur dans la config
+	* @return int
+	*/
+	public static function getServerId($serverName){
+		$id = 0;
+		$servers = ServerConfig::$SERVERS;
+		$countServers = count($servers);
+		
+		// On cherche la position du serveur à partir de son nom
+		if( $countServers > 0 ){
+			foreach($servers as $server_name => $server_values){
+				if($server_name == $serverName){
+					break;
+				}
+				else{
+					$id++;
+				}
+			}
+		}
+		
+		// Si l'id = le nb total de serveur -> pas trouvé
+		if($id == $countServers ){
+			return -1;
+		}else{
+			return $id;
+		}
+	}
+	
+	
+	/**
+	* Retourne le nom du serveur dans la config
+	*
+	* @param  int $serverId -> L'id du serveur dans la config
+	* @return string
+	*/
+	public static function getServerName($serverId){
+		$out = null;
+		$servers = ServerConfig::$SERVERS;
+		$countServers = count($servers);
+		
+		if( $countServers > 0 ){
+			$i = 0;
+			foreach($servers as $serverName => $serverValues){
+				if($i == $serverId){
+					$out = $serverName;
+					break;
+				}
+				else{
+					$i++;
+				}
+			}
 		}
 		
 		return $out;
@@ -2751,7 +2797,7 @@ abstract class AdminServPlugin {
 			AdminServUI::getHeader();
 			echo '<section class="plugins hasMenu">'
 				.'<section class="cadre left menu">'
-					.AdminServPlugin::getMenuList()
+					.self::getMenuList()
 				.'</section>'
 				
 				.'<section class="cadre right">'

@@ -3,7 +3,7 @@ class OnlineConfig {
 	/********************* ONLINE CONFIGURATION *********************/
 	
 	const ACTIVATE = true;
-	const PASSWORD = '0b28a5799a32c687dad2c5183718ceac';
+	const PASSWORD = '1b270a438a72b86bdba4d9fd373d1417';
 	const ADDRESS = '';
 	const ADD_ONLY = false;
 }
@@ -17,6 +17,7 @@ class AdminServConfig {
 	const LOGO = 'logo.png';
 	const DEFAULT_THEME = 'blue';
 	const DEFAULT_LANGUAGE = 'auto'; // Can be fr, en, de, es or auto = automaticaly detection
+	const USE_DISPLAYSERV = true;
 	const AUTOSAVE_MATCHSETTINGS = true;
 	
 	/* ADVANCED */

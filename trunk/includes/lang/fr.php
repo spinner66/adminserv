@@ -325,5 +325,11 @@ $translate = array(
 	'Unable to create log file:' => 'Impossible de créer le fichier de log :',
 	'Unable to add log in file:' => 'Impossible d\'ajouter un log au fichier :',
 	'This server not exists' => 'Ce serveur n\'existe pas',
+	// Changement de mot de passe
+	'Change password' => 'Changer le mot de passe',
+	'Current' => 'Actuel',
+	'New' => 'Nouveau',
+	'The current password doesn\'t match.' => 'Le mot de passe actuel ne correspond pas.',
+	'The password has been changed.' => 'Le mot de passe a bien été changé.',
 );
 ?>
