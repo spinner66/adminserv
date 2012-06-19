@@ -28,7 +28,7 @@
 		var _this = $(this);
 		
 		// 1ère étape - Initialiser DisplayServ en créant le html
-		$.getJSON(settings.includes+"ajax/initialize.php", {cfg: settings.config}, function(data){
+		$.getJSON(settings.includes+"ajax/ds_initialize.php", {cfg: settings.config}, function(data){
 			if(data != null){
 				var out = '<ul class="ds-servers-list">';
 					if(data.servers){
@@ -78,7 +78,7 @@
 				$(_this).html(out);
 				
 				// 2ème étape - Récupérer les données serveur
-				$.getJSON(settings.includes+"ajax/get_servers.php", {cfg: settings.config}, function(data){
+				$.getJSON(settings.includes+"ajax/ds_getservers.php", {cfg: settings.config}, function(data){
 					if(data != null){
 						if(data.servers){
 							for(var i = 0; i < data.servers.length; i++){
