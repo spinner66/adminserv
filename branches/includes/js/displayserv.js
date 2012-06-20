@@ -37,7 +37,11 @@
 								+ '<table>'
 									+ '<tr class="ds-header">'
 										+ '<th class="first"'+settings.color+'>'+data.label.server+" n°"+(i+1)+'</th>'
-										+ '<th class="middle"></th>'
+										+ '<th class="middle">'
+											+ '<div class="ds-server-join">'
+												+ '<a href="">'+data.label.serveraccess+'</a>'
+											+ '</div>'
+										+ '</th>'
 										+ '<th class="last"'+settings.color+'>'+data.label.players+'</th>'
 									+ '</tr>'
 									+ '<tr class="ds-space"><td colspan="3"></td></tr>'
@@ -84,11 +88,14 @@
 							for(var i = 0; i < data.servers.length; i++){
 								var serverId = $("#ds-server-"+i);
 								
+								// Rejoindre
+								serverId.find(".ds-server-join").attr("href", data.servers[i].version.protocol+"://#join="+data.servers[i].serverlogin);
+								
 								// Server infos
 								serverId.find(".ds-server-name").html(data.servers[i].name);
 								serverId.find(".ds-server-login").html(data.servers[i].serverlogin);
-								serverId.find(".ds-server-connect").html(data.servers[i].version);
-								serverId.find(".ds-server-connect").addClass(data.servers[i].version.toLowerCase());
+								serverId.find(".ds-server-connect").html(data.servers[i].version.name);
+								serverId.find(".ds-server-connect").addClass(data.servers[i].version.name.toLowerCase());
 								serverId.find(".ds-server-status").html(data.servers[i].status);
 								serverId.find(".ds-server-gamemode").html(data.servers[i].gamemode);
 								serverId.find(".ds-server-gamemode").addClass(data.servers[i].gamemode.toLowerCase());
