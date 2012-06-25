@@ -20,6 +20,15 @@
 		setInterval(function(){
 			$(this).initialize(settings);
 		}, settings.refresh);
+		
+		// Rejoindre
+		$(this).find(".ds-server").live("click", function(){
+			if( !$(this).hasClass("loading") ){
+				var serverlogin = $(this).find(".ds-server-login").text();
+				var serverprotocol = $(this).find(".ds-server-protocol").text();
+				location.href = serverprotocol+"://#join="+serverlogin;
+			}
+		});
 	};
 })(jQuery);
 
@@ -33,15 +42,11 @@
 				var out = '<ul class="ds-servers-list">';
 					if(data.servers){
 						for(var i = 0; i < data.servers; i++){
-							out += '<li id="ds-server-'+i+'" class="ds-server loading">'
+							out += '<li id="ds-server-'+i+'" class="ds-server loading" title="'+data.label.serveraccess+'">'
 								+ '<table>'
 									+ '<tr class="ds-header">'
 										+ '<th class="first"'+settings.color+'>'+data.label.server+" n°"+(i+1)+'</th>'
-										+ '<th class="middle">'
-											+ '<div class="ds-server-join">'
-												+ '<a href="">'+data.label.serveraccess+'</a>'
-											+ '</div>'
-										+ '</th>'
+										+ '<th class="middle"></th>'
 										+ '<th class="last"'+settings.color+'>'+data.label.players+'</th>'
 									+ '</tr>'
 									+ '<tr class="ds-space"><td colspan="3"></td></tr>'
@@ -62,6 +67,7 @@
 												+ '<li class="ds-server-name"></li>'
 												+ '<li class="ds-server-login"></li>'
 												+ '<li class="ds-server-connect"></li>'
+												+ '<li class="ds-server-protocol"></li>'
 												+ '<li class="ds-server-status"></li>'
 												+ '<li class="ds-server-gamemode"></li>'
 												+ '<li class="ds-server-currentmap"></li>'
@@ -88,14 +94,12 @@
 							for(var i = 0; i < data.servers.length; i++){
 								var serverId = $("#ds-server-"+i);
 								
-								// Rejoindre
-								serverId.find(".ds-server-join").attr("href", data.servers[i].version.protocol+"://#join="+data.servers[i].serverlogin);
-								
 								// Server infos
 								serverId.find(".ds-server-name").html(data.servers[i].name);
 								serverId.find(".ds-server-login").html(data.servers[i].serverlogin);
 								serverId.find(".ds-server-connect").html(data.servers[i].version.name);
 								serverId.find(".ds-server-connect").addClass(data.servers[i].version.name.toLowerCase());
+								serverId.find(".ds-server-protocol").html(data.servers[i].version.protocol);
 								serverId.find(".ds-server-status").html(data.servers[i].status);
 								serverId.find(".ds-server-gamemode").html(data.servers[i].gamemode);
 								serverId.find(".ds-server-gamemode").addClass(data.servers[i].gamemode.toLowerCase());
