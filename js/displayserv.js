@@ -110,12 +110,18 @@
 								var playerListTable = "<table>";
 									if(data.players[i].list.length > 0){
 										$.each(data.players[i].list, function(i, n){
-											playerListTable += '<td>'+n.name+'</td>'
+											var teamImg = "";
+											var className = "";
+											if(n.teamName != ""){
+												className = ' class="imgleft"';
+												teamImg = '<img src="'+settings.ressources+'images/16/team_'+n.teamId+'.png" alt="'+n.teamName+'" />';
+											}
+											playerListTable += '<td'+className+'>'+teamImg+n.name+'</td>'
 											+ '<td>'+n.status+'</td>'
 										});
 									}
 									else{
-										playerListTable += '<td>'+data.players[i].list+'</td>';
+										playerListTable += '<td colspan="2">'+data.players[i].list+'</td>';
 									}
 								playerListTable += "</table>";
 								serverId.removeClass("loading");
