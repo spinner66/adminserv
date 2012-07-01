@@ -52,14 +52,36 @@
 	
 	
 	// THEME
-	define('USER_THEME', AdminServUI::getTheme($theme) );
+	$userTheme = AdminServUI::getTheme($theme);
+	if($theme){
+		if(USER_PAGE == 'index'){
+			Utils::redirection();
+		}
+		else{
+			Utils::redirection(false, '?p='.USER_PAGE);
+		}
+	}
+	else{
+		define('USER_THEME', $userTheme);
+	}
 	
 	
 	// LANG
-	define('USER_LANG', AdminServUI::getLang($lang) );
-	$langFile = AdminServConfig::PATH_INCLUDES .'lang/'. USER_LANG .'.php';
-	if( file_exists($langFile) ){
-		require_once $langFile;
+	$userLang = AdminServUI::getLang($lang);
+	if($lang){
+		if(USER_PAGE == 'index'){
+			Utils::redirection();
+		}
+		else{
+			Utils::redirection(false, '?p='.USER_PAGE);
+		}
+	}
+	else{
+		define('USER_LANG', AdminServUI::getLang($lang) );
+		$langFile = AdminServConfig::PATH_INCLUDES .'lang/'. USER_LANG .'.php';
+		if( file_exists($langFile) ){
+			require_once $langFile;
+		}
 	}
 	
 	

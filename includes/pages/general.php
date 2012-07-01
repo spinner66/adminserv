@@ -147,7 +147,7 @@
 	$client->Terminate();
 	AdminServUI::getHeader();
 ?>
-<section class="cadre left">
+<section class="cadre left<?php if($isTeamGameMode){ echo ' isTeamGameMode'; } ?>">
 	<h1><?php echo Utils::t('Current map'); ?></h1>
 	<form method="post" action=".">
 	<div class="content">
@@ -176,9 +176,9 @@
 				<tr>
 					<td class="key"><?php echo Utils::t('Scores'); ?></td>
 					<td class="value" id="map_teamscore">
-						<img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/team_0.png" alt="" />
+						<span class="team_0" title="<?php echo Utils::t('Blue team'); ?>"></span>
 						<input class="text" type="text" name="ScoreTeamBlue" id="ScoreTeamBlue" value="<?php echo $serverInfo['map']['scores']['blue']; ?>" />
-						<img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/team_1.png" alt="" />
+						<span class="team_1" title="<?php echo Utils::t('Red team'); ?>"></span>
 						<input class="text" type="text" name="ScoreTeamRed" id="ScoreTeamRed" value="<?php echo $serverInfo['map']['scores']['red']; ?>" />
 						<input class="button light" type="submit" name="ForceScores" id="ForceScores" value="Forcer les scores" />
 					</td>
@@ -214,7 +214,7 @@
 				<td class="key"><?php echo Utils::t('Connected on'); ?></td>
 				<td class="value" id="srv_version_name">
 					<?php
-						if(IS_RELAY && isset($mainServerLogin) && $mainServerLogin !== null){
+						if(defined('IS_RELAY') && IS_RELAY && isset($mainServerLogin) && $mainServerLogin !== null){
 							echo $mainServerLogin.' (<span class="'.strtolower(SERVER_VERSION_NAME).'">'. SERVER_VERSION_NAME .'</span>)';
 						}
 						else{
@@ -310,7 +310,7 @@
 						// Ligne
 						$showPlayerList .= '<tr class="'; if($i%2){ $showPlayerList .= 'even'; }else{ $showPlayerList .= 'odd'; } $showPlayerList .= '">';
 							if($isTeamGameMode && USER_MODE == 'detail'){
-								$showPlayerList .= '<td class="detailModeTd imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/team_'.$player['TeamId'].'.png" alt="" />'.$player['TeamName'].'</td>';
+								$showPlayerList .= '<td class="detailModeTd imgleft"><span class="team_'.$player['TeamId'].'" title="'.$player['TeamName'].'"></span>'.$player['TeamName'].'</td>';
 							}
 							
 							$showPlayerList .= '<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>';
