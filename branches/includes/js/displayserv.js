@@ -1,5 +1,7 @@
 (function($){
 	$.fn.displayServ = function(options){
+		var selector = $(this);
+		
 		// Options
 		var settings = {
 			config: "config/servers.cfg.php",
@@ -16,13 +18,13 @@
 		}
 		
 		// Refresh
-		$(this).initialize(settings);
+		selector.initialize(settings);
 		setInterval(function(){
-			$(this).initialize(settings);
+			selector.initialize(settings);
 		}, settings.refresh);
 		
 		// Rejoindre
-		$(this).find(".ds-server").live("click", function(){
+		selector.find(".ds-server").live("click", function(){
 			if( !$(this).hasClass("loading") ){
 				var serverlogin = $(this).find(".ds-server-login").text();
 				var serverprotocol = $(this).find(".ds-server-protocol").text();
@@ -34,7 +36,7 @@
 
 (function($){
 	$.fn.initialize = function(settings){
-		var _this = $(this);
+		var selector = $(this);
 		
 		// 1ère étape - Initialiser DisplayServ en créant le html
 		$.getJSON(settings.includes+"ajax/ds_initialize.php", {cfg: settings.config}, function(data){
@@ -85,17 +87,17 @@
 				out += '</ul>';
 				
 				// Affichage
-				$(_this).html(out);
+				selector.find(".ds-servers-list").remove();
+				selector.html(out);
 				
 				// Calcul de la taille max
-				var maxsize = $(_this).find(".ds-servers-list").width();
+				var maxsize = selector.find(".ds-servers-list").width();
 				if(maxsize < 380){
-					$(_this).find(".ds-servers-list").addClass("max-width-380");
+					selector.find(".ds-servers-list").addClass("max-width-380");
 				}
 				else if(maxsize < 580){
-					$(_this).find(".ds-servers-list").addClass("max-width-580");
+					selector.find(".ds-servers-list").addClass("max-width-580");
 				}
-
 				
 				// 2ème étape - Récupérer les données serveur
 				$.getJSON(settings.includes+"ajax/ds_getservers.php", {cfg: settings.config}, function(data){
