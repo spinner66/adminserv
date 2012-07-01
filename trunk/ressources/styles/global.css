@@ -1148,10 +1148,8 @@ footer {
 #ScoreTeamBlue {
 	margin-right: 25px;
 }
-#map_teamscore img {
-	display: block;
-	float: left;
-	margin: 3px 5px 0 0;
+#map_teamscore span {
+	margin-top: 3px;
 }
 #ForceScores {
 	position: absolute;

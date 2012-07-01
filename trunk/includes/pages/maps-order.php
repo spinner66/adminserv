@@ -21,6 +21,7 @@
 		}
 		else{
 			AdminServLogs::add('action', 'Order map list');
+			Utils::redirection(false, '?p='.USER_PAGE);
 		}
 	}
 	

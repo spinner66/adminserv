@@ -34,6 +34,7 @@
 			}
 			
 			AdminServLogs::add('action', 'Save game infos');
+			Utils::redirection(false, '?p='.USER_PAGE);
 		}
 	}
 	
@@ -60,7 +61,7 @@
 		</div>
 		<?php if(SERVER_MATCHSET){ ?>
 			<div class="fleft options-checkbox">
-				<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if(AdminServConfig::AUTOSAVE_MATCHSETTINGS === true){ echo ' checked="checked"'; } ?> value="" /><label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>"><?php echo Utils::t('Save current MatchSettings'); ?></label>
+				<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if(AdminServConfig::AUTOSAVE_MATCHSETTINGS === true){ echo ' checked="checked"'; } ?> value="" /><label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>"><?php echo Utils::t('Save the current MatchSettings'); ?></label>
 			</div>
 		<?php } ?>
 		<div class="fright save">

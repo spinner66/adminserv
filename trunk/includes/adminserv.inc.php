@@ -110,14 +110,22 @@ abstract class AdminServUI {
 			unset($list[$currentThemeName]);
 		}
 		
+		// Page courante
+		if(USER_PAGE && USER_PAGE != 'index'){
+			$param = '?p='. USER_PAGE .'&th=';
+		}
+		else{
+			$param = '?th=';
+		}
+		
 		if( count($list) > 0 ){
 			$out .= '<ul>';
 			// Si il y a un thème courant, on le place en 1er
 			if( count($currentTheme) > 0 ){
-				$out .= '<li><a class="theme-color" style="background-color: '.$currentThemeColor[0].';" href="?th='.$currentThemeName.'" title="'.ucfirst($currentThemeName).'"></a></li>';
+				$out .= '<li><a class="theme-color" style="background-color: '.$currentThemeColor[0].';" href="'.$param.$currentThemeName.'" title="'.Utils::t( ucfirst($currentThemeName) ).'"></a></li>';
 			}
 			foreach($list as $name => $color){
-				$out .= '<li><a class="theme-color" style="background-color: '.$color[0].';" href="?th='.$name.'" title="'.ucfirst($name).'"></a></li>';
+				$out .= '<li><a class="theme-color" style="background-color: '.$color[0].';" href="'.$param.$name.'" title="'.Utils::t( ucfirst($name) ).'"></a></li>';
 			}
 			$out .= '</ul>';
 		}
@@ -186,15 +194,23 @@ abstract class AdminServUI {
 			unset($list[$currentLangCode]);
 		}
 		
+		// Page courante
+		if(USER_PAGE && USER_PAGE != 'index'){
+			$param = '?p='. USER_PAGE .'&lg=';
+		}
+		else{
+			$param = '?lg=';
+		}
+		
 		// Liste de toutes les langues
 		if( count($list) > 0 ){
 			$out .= '<ul>';
 			// Si il y a une langue courante, on la place en 1er
 			if( count($currentLang) > 0 ){
-				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$currentLangCode.'.png);" href="?lg='.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
+				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$currentLangCode.'.png);" href="'.$param.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
 			}
 			foreach($list as $code => $name){
-				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="?lg='.$code.'" title="'.$name.'"></a></li>';
+				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="'.$param.$code.'" title="'.$name.'"></a></li>';
 			}
 			$out .= '</ul>';
 		}
@@ -258,7 +274,8 @@ abstract class AdminServUI {
 		if(USER_PAGE == 'maps-upload'){
 			$out .= '<link rel="stylesheet" href="'.$path.'styles/fileuploader.css" />';
 		}
-		$out .= '<link rel="stylesheet" href="'.$path.'styles/global.css" />';
+		$out .= '<link rel="stylesheet" href="'.$path.'styles/global.css" />'
+		.'<!--[if IE]><link rel="stylesheet" href="'.$path.'styles/ie.css" /><![endif]-->';
 		if( defined('USER_THEME') ){
 			$out .= '<link rel="stylesheet" href="'.$path.'styles/theme.php?th='. USER_THEME .'" />';
 		}

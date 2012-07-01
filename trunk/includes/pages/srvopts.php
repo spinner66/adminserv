@@ -47,6 +47,7 @@
 		}
 		else{
 			AdminServLogs::add('action', 'Save server options');
+			Utils::redirection(false, '?p='.USER_PAGE);
 		}
 	}
 	

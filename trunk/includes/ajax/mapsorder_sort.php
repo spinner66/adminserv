@@ -38,7 +38,6 @@
 			'cid' => $list['cid'],
 			'lst' => $list['lst'],
 			'nbm' => $list['nbm'],
-			'cfg' => $list['cfg']
 		);
 	}
 	

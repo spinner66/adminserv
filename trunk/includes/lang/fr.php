@@ -91,6 +91,7 @@ $translate = array(
 	'Blue' => 'Bleu',
 	'Orange' => 'Orange',
 	'Pink' => 'Rose',
+	'Purple' => 'Violet',
 	'Grey' => 'Gris',
 	'White' => 'Blanc',
 	'Color' => 'Couleur',
