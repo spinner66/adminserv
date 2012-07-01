@@ -87,6 +87,16 @@
 				// Affichage
 				$(_this).html(out);
 				
+				// Calcul de la taille max
+				var maxsize = $(_this).find(".ds-servers-list").width();
+				if(maxsize < 380){
+					$(_this).find(".ds-servers-list").addClass("max-width-380");
+				}
+				else if(maxsize < 580){
+					$(_this).find(".ds-servers-list").addClass("max-width-580");
+				}
+
+				
 				// 2ème étape - Récupérer les données serveur
 				$.getJSON(settings.includes+"ajax/ds_getservers.php", {cfg: settings.config}, function(data){
 					if(data != null){
@@ -108,20 +118,18 @@
 								
 								// Players
 								var playerListTable = "<table>";
-									if(data.players[i].list.length > 0){
+									if(data.players[i].count.current > 0){
 										$.each(data.players[i].list, function(i, n){
-											var teamImg = "";
-											var className = "";
-											if(n.teamName != ""){
-												className = ' class="imgleft"';
-												teamImg = '<img src="'+settings.ressources+'images/16/team_'+n.teamId+'.png" alt="'+n.teamName+'" />';
+											var teamSpan = "";
+											if(n.gamemode == "Team"){
+												teamSpan = '<span class="team_'+n.teamId+'" title="'+n.teamName+'"></span>';
 											}
-											playerListTable += '<td'+className+'>'+teamImg+n.name+'</td>'
+											playerListTable += '<td>'+teamSpan+n.name+'</td>'
 											+ '<td>'+n.status+'</td>'
 										});
 									}
 									else{
-										playerListTable += '<td colspan="2">'+data.players[i].list+'</td>';
+										playerListTable += '<td class="no-player" colspan="2">'+data.players[i].list+'</td>';
 									}
 								playerListTable += "</table>";
 								serverId.removeClass("loading");
