@@ -28,6 +28,7 @@
 			$out['label']['gamemode'] = Utils::t('Game mode');
 			$out['label']['currentmap'] = Utils::t('Current map');
 			$out['label']['players'] = Utils::t('Players');
+			$out['label']['serveraccess'] = Utils::t('Server access');
 		}
 	}
 	echo json_encode($out);
