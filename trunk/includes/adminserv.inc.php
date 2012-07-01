@@ -1183,7 +1183,7 @@ abstract class AdminServ {
 					$out['ply'][$i]['Login'] = $player['Login'];
 					
 					// PlayerStatus
-					if($player['IsSpectator'] != 0){ $playerStatus = 'Spectateur'; }else{ $playerStatus = 'Joueur'; }
+					if($player['IsSpectator'] != 0){ $playerStatus = Utils::t('Spectator'); }else{ $playerStatus = Utils::t('Player'); }
 					$out['ply'][$i]['PlayerStatus'] = $playerStatus;
 					
 					// Autres

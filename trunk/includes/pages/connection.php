@@ -76,22 +76,22 @@
 	<form method="post" action="./config/">
 		<fieldset>
 			<legend><?php echo Utils::t('Servers configuration'); ?></legend>
-			<div class="connexion-cancel">
-				<a class="button light" href="./?logout"><?php echo Utils::t('Cancel'); ?></a>
-			</div>
-			<div class="connexion-label">
+			<div class="connection-label">
 				<label for="checkPassword"><?php echo Utils::t('Password'); ?> :</label>
 				<input class="text" type="password" name="checkPassword" id="checkPassword" value="" />
 			</div>
-			<div class="connexion-login">
+			<div class="connection-login">
 				<input class="button light" type="submit" name="configcheckpassword" id="configcheckpassword" value="<?php echo Utils::t('Connection'); ?>" />
+			</div>
+			<div class="connection-cancel">
+				<a class="button light" href="./?logout"><?php echo Utils::t('Cancel'); ?></a>
 			</div>
 		</fieldset>
 	</form>
 </section>
 <?php
 	}
-	// Demande de création password + address
+	// Demande de création password
 	else if( isset($_SESSION['adminserv']['get_password']) ){
 ?>
 <section class="config-servers no-server">
@@ -110,6 +110,7 @@
 </section>
 <?php
 	}
+	// Affichage de DisplayServ
 	else{
 ?>
 <section>
