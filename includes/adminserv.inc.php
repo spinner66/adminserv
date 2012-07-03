@@ -2421,16 +2421,17 @@ abstract class AdminServServerConfig {
 	
 	
 	/**
-	* Vérifie les droits pour l'écriture des fichiers de config
+	* Vérifie les droits pour l'écriture/lecture des fichiers de config
 	*
 	* @return array
 	*/
 	public static function checkRights(){
 		$out = array();
 		$list = array(
-			'./config/' => 777,
-			'./config/adminserv.cfg.php' => 777,
-			'./config/servers.cfg.php' => 777,
+			'./config/' => 664,
+			'./config/adminserv.cfg.php' => 664,
+			'./config/servers.cfg.php' => 664,
+			'./logs/' => 664,
 		);
 		
 		foreach($list as $path => $minChmod){
@@ -2665,7 +2666,7 @@ abstract class AdminServPlugin {
 	/**
 	* Détermine si il y a au moins un plugin disponible
 	*
-	* @param string $name -> Test un plugin en particulier
+	* @param string $pluginName -> Test un plugin en particulier
 	* @return bool
 	*/
 	public static function hasPlugin($pluginName = null){
@@ -2776,7 +2777,7 @@ abstract class AdminServPlugin {
 	public static function countPlugins(){
 		$out = array();
 		$pluginsList = array();
-		if( count(ExtensionConfig::$PLUGINS) > 0 ){
+		if( self::hasPlugin() ){
 			foreach(ExtensionConfig::$PLUGINS as $plugin){
 				$pluginInfos = self::getConfig($plugin);
 				if($pluginInfos['game'] == 'all' || $pluginInfos['game'] == SERVER_VERSION_NAME){
