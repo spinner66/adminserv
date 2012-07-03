@@ -16,6 +16,10 @@
 	require_once AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
 	AdminServUI::getClass();
 	
+	
+	$result = AdminServServerConfig::checkRights();
+	AdminServ::dsm($result);
+	
 	// ISSET
 	if( isset($_GET['p']) ){
 		define('USER_PAGE', htmlspecialchars($_GET['p']) );

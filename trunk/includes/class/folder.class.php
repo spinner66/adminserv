@@ -283,18 +283,90 @@ abstract class Folder {
 	}
 	
 	
-	public static function checkRights($path, $rights = array(true, true, false) ){
+	/**
+	* Vérifie les droits par rapport au chmod
+	*/
+	public static function checkRights($path, $minChmod){
 		$out = array();
+		$chars = str_split($minChmod);
 		
+		$i = 0;
+		foreach($chars as $char){
+			if($i == 0){ $group = 'owner'; }
+			else if($i == 1){ $group = 'group'; }
+			else{ $group = 'other'; }
+			$out[$group]['request'] = $char;
+			
+			switch($char){
+				case 7:
+					$out[$group]['result']['r'] = is_readable($path);
+					$out[$group]['result']['w'] = is_writable($path);
+					$out[$group]['result']['x'] = is_executable($path);
+					break;
+				case 6:
+					$out[$group]['result']['r'] = is_readable($path);
+					$out[$group]['result']['w'] = is_writable($path);
+					break;
+				case 5:
+					$out[$group]['result']['r'] = is_readable($path);
+					$out[$group]['result']['x'] = is_executable($path);
+					break;
+				case 4:
+					$out[$group]['result']['r'] = is_readable($path);
+					break;
+				case 3:
+					$out[$group]['result']['w'] = is_writable($path);
+					$out[$group]['result']['x'] = is_executable($path);
+					break;
+				case 2:
+					$out[$group]['result']['w'] = is_writable($path);
+					break;
+				case 1:
+					$out[$group]['result']['x'] = is_executable($path);
+					break;
+				default:
+					$out[$group]['result']['r'] = false;
+					$out[$group]['result']['w'] = false;
+					$out[$group]['result']['x'] = false;
+			}
+			$i++;
+		}
 		
-		if($rights[0]){
-			$out[0] = is_readable($path);
-		}
-		if($rights[1]){
-			$out[1] = is_writable($path);
-		}
-		if($rights[2]){
-			$out[2] = is_executable($path);
+		return $out;
+	}
+	
+	
+	/**
+	* Converti un chmod int (777) en string (rwxrwxrwx)
+	*/
+	public static function chmodToStr($chmod){
+		$out = null;
+		$chars = str_split($chmod);
+		
+		foreach($chars as $char){
+			switch($char){
+				case 7:
+					$out .= 'rwx';
+					break;
+				case 6:
+					$out .= 'rw-';
+					break;
+				case 5:
+					$out .= 'r-x';
+					break;
+				case 4:
+					$out .= 'r--';
+					break;
+				case 3:
+					$out .= '-wx';
+					break;
+				case 2:
+					$out .= '-w-';
+					break;
+				case 1:
+					$out .= '--x';
+					break;
+			}
 		}
 		
 		return $out;
