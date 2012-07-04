@@ -6,6 +6,36 @@
 abstract class AdminServUI {
 	
 	/**
+	* 
+	*/
+	public static function checkRightsResults($results){
+		$out = '<div id="check-rights-results">';
+			if( count($results) > 0 ){
+				foreach($results as $fileName => $fileResults){
+					$out .= '<fieldset>'
+							.'Path: '.$fileName.'<br />'
+							.'Required: ';
+							foreach($fileResults as $grpName => $grpValues){
+								$out .= $grpValues['request'];
+							}
+							$out .= '<br />Results: ';
+							foreach($fileResults as $grpName => $grpValues){
+								foreach($grpValues['result'] as $result){
+									if($result){
+										$out .= $result;
+									}
+								}
+							}
+					$out .= '</fieldset>';
+				}
+			}
+		$out .= '</div>';
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère le titre de l'application
 	*
 	* @param string $type -> Retourner "str" ou "html"
@@ -863,6 +893,31 @@ abstract class AdminServ {
 	}
 	public static function info($text){
 		$_SESSION['info'] = $text;
+	}
+	
+	
+	/**
+	* Vérifie les droits pour l'écriture/lecture des fichiers
+	*
+	* @param array $list -> Liste des fichiers à tester : array('path' => 777)
+	* @return array
+	*/
+	public static function checkRights($list = array() ){
+		$out = array();
+		if( count($list) === 0 ){
+			$list = array(
+				'./config/' => 664,
+				'./config/adminserv.cfg.php' => 664,
+				'./config/servers.cfg.php' => 664,
+				'./logs/' => 664,
+			);
+		}
+		
+		foreach($list as $path => $minChmod){
+			$out[$path] = Folder::checkRights($path, $minChmod);
+		}
+		
+		return $out;
 	}
 	
 	
@@ -2418,28 +2473,6 @@ abstract class AdminServServerConfig {
 	private static $CONFIG_FILENAME = 'servers.cfg.php';
 	private static $CONFIG_START_TEMPLATE = "<?php\nclass ServerConfig {\n\tpublic static \$SERVERS = array(\n\t\t/********************* SERVER CONFIGURATION *********************/\n\t\t\n";
 	private static $CONFIG_END_TEMPLATE =  "\t);\n}\n?>";
-	
-	
-	/**
-	* Vérifie les droits pour l'écriture/lecture des fichiers de config
-	*
-	* @return array
-	*/
-	public static function checkRights(){
-		$out = array();
-		$list = array(
-			'./config/' => 664,
-			'./config/adminserv.cfg.php' => 664,
-			'./config/servers.cfg.php' => 664,
-			'./logs/' => 664,
-		);
-		
-		foreach($list as $path => $minChmod){
-			$out[$path] = Folder::checkRights($path, $minChmod);
-		}
-		
-		return $out;
-	}
 	
 	
 	/**
