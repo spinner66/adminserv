@@ -29,6 +29,7 @@
 			$out['label']['currentmap'] = Utils::t('Current map');
 			$out['label']['players'] = Utils::t('Players');
 			$out['label']['serveraccess'] = Utils::t('Server access');
+			$out['label']['addfavourite'] = Utils::t('Add to favourite');
 		}
 	}
 	echo json_encode($out);
