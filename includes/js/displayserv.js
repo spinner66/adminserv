@@ -22,15 +22,6 @@
 		setInterval(function(){
 			selector.initialize(settings);
 		}, settings.refresh);
-		
-		// Rejoindre
-		selector.find(".ds-server").live("click", function(){
-			if( !$(this).hasClass("loading") ){
-				var serverlogin = $(this).find(".ds-server-login").text();
-				var serverprotocol = $(this).find(".ds-server-protocol").text();
-				location.href = serverprotocol+"://#join="+serverlogin;
-			}
-		});
 	};
 })(jQuery);
 
@@ -44,7 +35,7 @@
 				var out = '<ul class="ds-servers-list">';
 					if(data.servers){
 						for(var i = 0; i < data.servers; i++){
-							out += '<li id="ds-server-'+i+'" class="ds-server loading" title="'+data.label.serveraccess+'">'
+							out += '<li id="ds-server-'+i+'" class="ds-server loading">'
 								+ '<table>'
 									+ '<tr class="ds-header">'
 										+ '<th class="first"'+settings.color+'>'+data.label.server+" n°"+(i+1)+'</th>'
@@ -81,6 +72,12 @@
 										+ '</td>'
 									+ '</tr>'
 								+ '</table>'
+								+ '<div class="ds-server-join-wrap">'
+										+ '<ul>'
+											+ '<li class="ds-server-favourite"><a href="">'+data.label.addfavourite+'</a></li>'
+											+ '<li class="ds-server-join"><a href="">'+data.label.serveraccess+'</a></li>'
+										+ '</ul>'
+								+ '</div>'
 							+ '</li>';
 						}
 					}
@@ -111,12 +108,15 @@
 								serverId.find(".ds-server-login").html(data.servers[i].serverlogin);
 								serverId.find(".ds-server-connect").html(data.servers[i].version.name);
 								serverId.find(".ds-server-connect").addClass(data.servers[i].version.name.toLowerCase());
-								serverId.find(".ds-server-protocol").html(data.servers[i].version.protocol);
 								serverId.find(".ds-server-status").html(data.servers[i].status);
 								serverId.find(".ds-server-gamemode").html(data.servers[i].gamemode);
 								serverId.find(".ds-server-gamemode").addClass(data.servers[i].gamemode.toLowerCase());
 								serverId.find(".ds-server-currentmap").html(data.servers[i].map.name+' <img src="./ressources/images/env/'+data.servers[i].map.env.toLowerCase()+'.png" alt="+data.servers[i].map+" />');
 								serverId.find(".ds-server-players-count").html(data.players[i].count.current+" / "+data.players[i].count.max);
+								
+								// Join
+								serverId.find(".ds-server-join a").attr("href", data.servers[i].version.protocol+"://#join="+data.servers[i].serverlogin);
+								serverId.find(".ds-server-favourite a").attr("href", data.servers[i].version.protocol+"://#addfavourite="+data.servers[i].serverlogin);
 								
 								// Players
 								var playerListTable = "<table>";

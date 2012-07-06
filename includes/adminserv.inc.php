@@ -6,36 +6,6 @@
 abstract class AdminServUI {
 	
 	/**
-	* 
-	*/
-	public static function checkRightsResults($results){
-		$out = '<div id="check-rights-results">';
-			if( count($results) > 0 ){
-				foreach($results as $fileName => $fileResults){
-					$out .= '<fieldset>'
-							.'Path: '.$fileName.'<br />'
-							.'Required: ';
-							foreach($fileResults as $grpName => $grpValues){
-								$out .= $grpValues['request'];
-							}
-							$out .= '<br />Results: ';
-							foreach($fileResults as $grpName => $grpValues){
-								foreach($grpValues['result'] as $result){
-									if($result){
-										$out .= $result;
-									}
-								}
-							}
-					$out .= '</fieldset>';
-				}
-			}
-		$out .= '</div>';
-		
-		return $out;
-	}
-	
-	
-	/**
 	* Récupère le titre de l'application
 	*
 	* @param string $type -> Retourner "str" ou "html"
@@ -902,22 +872,21 @@ abstract class AdminServ {
 	* @param array $list -> Liste des fichiers à tester : array('path' => 777)
 	* @return array
 	*/
-	public static function checkRights($list = array() ){
-		$out = array();
-		if( count($list) === 0 ){
-			$list = array(
-				'./config/' => 664,
-				'./config/adminserv.cfg.php' => 664,
-				'./config/servers.cfg.php' => 664,
-				'./logs/' => 664,
-			);
-		}
+	public static function checkRights($list){
 		
-		foreach($list as $path => $minChmod){
-			$out[$path] = Folder::checkRights($path, $minChmod);
+		if( count($list) > 0 ){
+			foreach($list as $path => $minChmod){
+				$result = Folder::checkRights($path, $minChmod);
+				foreach($result as $grpName => $grpValues){
+					foreach($grpValues['result'] as $bool){
+						if(!$bool){
+							self::error('Le fichier ou dossier n\'a pas les droits requis : '.$path.' => '.$grpName.':'.$grpValues['result']);
+							break;
+						}
+					}
+				}
+			}
 		}
-		
-		return $out;
 	}
 	
 	
