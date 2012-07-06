@@ -4,7 +4,7 @@ class OnlineConfig {
 	
 	const ACTIVATE = true; // Active the online configuration
 	const PASSWORD = '1b270a438a72b86bdba4d9fd373d1417'; // Checking password. This password is generated in MD5
-	const ADDRESS = ''; // Checking address. Can be "localhost", domain name or IP address
+	const ADDRESS = ''; // Checking address. Can be localhost, domain name or IP address
 	const ADD_ONLY = false; // Add only server. Unable to modify or delete
 }
 
@@ -50,7 +50,7 @@ class AdminServConfig {
 	public static $MATCHSET_EXTENSION = array('txt', 'xml'); // MatchSettings extension user in matchsettings page
 	
 	/* PLUGINS */
-	public static $USE_ANOTHER_PLUGINS_LIST = array(); // This one take 2 parameters. 1# activate, true or false. 2# the filename of the plugin list file. In the file: $PLUGINS = array('pluginfoldername', 'etc');
+	public static $USE_ANOTHER_PLUGINS_LIST = array(); // This one take 2 parameters. 1# the filename of the plugin list file. In the file: $PLUGINS = array('pluginfoldername', 'etc'); #2 add or replace method. Default: replace
 
 	/* LOGS */
 	public static $LOGS = array(

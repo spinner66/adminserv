@@ -3,18 +3,28 @@
 	session_start();
 	define('ADMINSERV_VERSION', '2.0');
 	require_once 'config/adminserv.cfg.php';
+	$_SESSION['adminserv']['path'] = null;
 	if(AdminServConfig::MULTI_ADMINSERV){
 		$_SESSION['adminserv']['path'] = basename(__DIR__).'/';
 	}
-	else{
-		$_SESSION['adminserv']['path'] = null;
-	}
 	if( file_exists('config/servers.cfg.php') ){
-		require_once 'config/servers.cfg.php';
+		include_once 'config/servers.cfg.php';
 	}
 	require_once 'config/extension.cfg.php';
 	require_once AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
 	AdminServUI::getClass();
+	
+	
+	// VÉRIFICATION DES DROITS
+	$checkRightsList = array(
+		'./config/' => 664,
+		'./config/adminserv.cfg.php' => 664,
+		'./config/servers.cfg.php' => 664,
+	);
+	if( in_array(true, AdminServConfig::$LOGS) ){
+		$checkRightsList['./logs/'] = 664;
+	}
+	AdminServ::checkRights($checkRightsList);
 	
 	
 	// ISSET
