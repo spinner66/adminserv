@@ -6,7 +6,7 @@
 		}
 		else{
 			$gameDataDirectory = $client->getResponse();
-			$playlistDirectory = Folder::read($gameDataDirectory.'Config', array(), AdminServConfig::$PLAYLIST_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+			$playlistDirectory = Folder::read($gameDataDirectory.'Config', array(), array(), AdminServConfig::RECENT_STATUS_PERIOD);
 		}
 	}
 	
@@ -527,9 +527,16 @@
 				// Liste des playlists
 				if( isset($playlistDirectory['files']) && count($playlistDirectory['files']) > 0 ){
 					$i = 0;
+					$defaultFilename = array(
+						'guestlist.txt',
+						'blacklist.txt',
+						'guestlist.xml',
+						'blacklist.xml',
+					);
 					foreach($playlistDirectory['files'] as $file){
-						$ext = File::getExtension($file['filename']);
-						if($ext == 'txt' || $ext == 'text' || $ext == 'xml'){
+						$ext = File::getDoubleExtension($file['filename']);
+						if( in_array($file['filename'], $defaultFilename) || ($isDoubleExt = in_array($ext, AdminServConfig::$PLAYLIST_EXTENSION)) ){
+							// Playlist data
 							$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
 							if( isset($data['logins']) ){
 								$countDataLogins = count($data['logins']);
@@ -544,9 +551,17 @@
 								$nbPlayers = '0 '.Utils::t('player');
 							}
 							
-							// Ligne
+							// Filename
+							if($isDoubleExt){
+								$filename = substr($file['filename'], 0, -13);
+							}
+							else{
+								$filename = substr($file['filename'], 0, -4);
+							}
+							
+							// Line
 							$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
-								.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.substr($file['filename'], 0, -4).'</span></td>'
+								.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.$filename.'</span></td>'
 								.'<td class="center">'.ucfirst($data['type']).'</td>'
 								.'<td class="center">'.$nbPlayers.'</td>'
 								.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'

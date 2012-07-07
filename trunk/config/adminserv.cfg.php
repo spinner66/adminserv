@@ -24,9 +24,10 @@ class AdminServConfig {
 	const MD5_PASSWORD = false; // if true, the dedicated server password is checked in MD5
 	const LIMIT_PLAYERS_LIST = 250; // Limit to display lines in player list
 	const LIMIT_MAPS_LIST = 1000; // Limit to display lines in maps list
+	const LOCAL_GET_MAPS_ON_SERVER = true; // if true, the current server maps list is loaded in local maps page for change icone in lines. But if you have a lot of maps in server, will better to disable
 	const RECENT_STATUS_PERIOD = 86400; // Recent status period in second for maps/matchsettings/guestban
-	const COOKIE_EXPIRE = 15; // Days of cookie expire
 	const SERVER_CONNECTION_TIMEOUT = 3; // Dedicated server connection timeout in second
+	const COOKIE_EXPIRE = 15; // Days of cookie expire
 	
 	/* FILES AND FOLDERS */
 	public static $FOLDERS_OPTIONS = array( // Actions for the folders in maps page. You can be disable or limit to authorization level
@@ -39,7 +40,6 @@ class AdminServConfig {
 	public static $MAPS_HIDDEN_FILES = array('db', 'txt', 'xml', 'zip', 'php', 'log'); // Files or extensions hidden in maps page
 	public static $MATCHSET_HIDDEN_FOLDERS = array('Campaigns', 'Replays'); // Folders hidden in matchsettings page
 	public static $MATCHSET_HIDDEN_FILES = array('db', 'gbx', 'php', 'log'); // Files or extensions hidden in matchsettings page
-	public static $PLAYLIST_HIDDEN_FILES = array('gbx', 'dedicated_cfg.txt', 'checksum.txt', 'servers.txt', 'php', 'dat', 'log', 'cfg', 'cfg~'); // Files or extensions hidden in guestban page
 	
 	/* UPLOAD */
 	public static $ALLOWED_EXTENSIONS = array('gbx', 'zip', 'rar', '7z', 'gzip'); // Extension allowed to upload
@@ -47,11 +47,13 @@ class AdminServConfig {
 	
 	/* LOCAL */
 	public static $MAP_EXTENSION = array('map.gbx', 'challenge.gbx'); // Double extension used in maps page
-	public static $MATCHSET_EXTENSION = array('txt', 'xml'); // MatchSettings extension user in matchsettings page
+	public static $MATCHSET_EXTENSION = array('txt', 'xml'); // MatchSettings extension used in matchsettings page
+	public static $PLAYLIST_EXTENSION = array('playlist.txt', 'playlist.xml'); // Playlists extension used in guestban page
 	
 	/* PLUGINS */
-	public static $USE_ANOTHER_PLUGINS_LIST = array(); // This one take 2 parameters. 1# the filename of the plugin list file. In the file: $PLUGINS = array('pluginfoldername', 'etc'); #2 add or replace method. Default: replace
-
+	const PLUGINS_LIST = ''; // The filename of other plugin list file in php. In the file: $PLUGINS = array('pluginfoldername', 'etc');
+	const PLUGINS_LIST_TYPE = 'replace'; // add or replace method
+	
 	/* LOGS */
 	public static $LOGS = array(
 		'access' => true,
@@ -61,9 +63,7 @@ class AdminServConfig {
 	
 	/* MULTI ADMINSERV */
 	const MULTI_ADMINSERV = false; // Use more instances of AdminServ
-	
-	/* PATH DIRECTORY */
-	const PATH_INCLUDES = './includes/'; // You can be change the location of the folders (used for multiple AdminServ)
+	const PATH_INCLUDES = './includes/'; // You can be change the location of the folders
 	const PATH_PLUGINS = './plugins/';
 	const PATH_RESSOURCES = './ressources/';
 }

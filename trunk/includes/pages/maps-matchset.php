@@ -14,6 +14,7 @@
 				AdminServLogs::add('action', 'Save matchsettings: '.$matchset);
 			}
 		}
+		Utils::redirection(false, '?p='. USER_PAGE .$hasDirectory);
 	}
 	else if( isset($_POST['loadMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
 		foreach($_POST['matchset'] as $matchset){
@@ -25,6 +26,7 @@
 				AdminServLogs::add('action', 'Load matchsettings: '.$matchset);
 			}
 		}
+		Utils::redirection(false, '?p='. USER_PAGE .$hasDirectory);
 	}
 	else if( isset($_POST['addMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
 		foreach($_POST['matchset'] as $matchset){
@@ -36,6 +38,7 @@
 				AdminServLogs::add('action', 'Append playlist from matchsettings: '.$matchset);
 			}
 		}
+	Utils::redirection(false, '?p='. USER_PAGE .$hasDirectory);
 	}
 	else if( isset($_POST['insertMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
 		foreach($_POST['matchset'] as $matchset){
@@ -47,14 +50,11 @@
 				AdminServLogs::add('action', 'Insert playlist from matchsettings: '.$matchset);
 			}
 		}
+		Utils::redirection(false, '?p='. USER_PAGE .$hasDirectory);
 	}
 	else if( isset($_POST['editMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
-		$hasDirectory = null;
-		if($directory){
-			$hasDirectory = '&d='.$directory;
-		}
 		AdminServLogs::add('action', 'Edit matchsettings: '.$_POST['matchset'][0]);
-		Utils::redirection(false, '?p=maps-creatematchset'.$hasDirectory.'&f='.$_POST['matchset'][0]);
+		Utils::redirection(false, '?p='. USER_PAGE .$hasDirectory.'&f='.$_POST['matchset'][0]);
 	}
 	else if( isset($_POST['deleteMatchset']) && isset($_POST['matchset']) && count($_POST['matchset']) > 0 ){
 		foreach($_POST['matchset'] as $matchset){
@@ -71,7 +71,7 @@
 		if($directory){
 			$hasDirectory = '&d='.$directory;
 		}
-		Utils::redirection(false, '?p='. USER_PAGE . $hasDirectory);
+		Utils::redirection(false, '?p='. USER_PAGE .$hasDirectory);
 	}
 	
 	

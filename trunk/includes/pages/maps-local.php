@@ -17,7 +17,7 @@
 	// ACTIONS
 	if( isset($_POST['addMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			if( !$client->query($queries['add'], $mapsDirectoryPath.$directory.$map) ){
+			if( !$client->query($queries['add'], $mapsDirectoryPath.$map) ){
 				AdminServ::error();
 				break;
 			}
@@ -28,7 +28,7 @@
 	}
 	else if( isset($_POST['insertMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			if( !$client->query($queries['insert'], $mapsDirectoryPath.$directory.$map) ){
+			if( !$client->query($queries['insert'], $mapsDirectoryPath.$map) ){
 				AdminServ::error();
 				break;
 			}
@@ -134,7 +134,6 @@
 	}
 	$mapsList = AdminServ::getLocalMapList($mapsDirectoryPath.$directory, $sort);
 	
-	
 	// HTML
 	$client->Terminate();
 	AdminServUI::getHeader();
@@ -178,9 +177,19 @@
 						$pathRessources = AdminServConfig::PATH_RESSOURCES;
 						$i = 0;
 						foreach($mapsList['lst'] as $id => $map){
-							// Ligne
-							$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($map['Recent']){ $showMapList .= ' recent'; } $showMapList .= '">'
-								.'<td class="imgleft"><img src="'.$pathRessources.'images/16/map.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
+							// Map sur le serveur
+							if($map['OnServer']){
+								$mapImg = 'loadmap';
+								$mapClass = ' onserver';
+							}
+							else{
+								$mapImg = 'map';
+								$mapClass = null;
+							}
+							
+							// Lignes
+							$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($map['Recent']){ $showMapList .= ' recent'; } $showMapList .= $mapClass.'">'
+								.'<td class="imgleft"><img src="'.$pathRessources.'images/16/'.$mapImg.'.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
 								.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
 								.'<td>'.$map['Author'].'</td>'
 								.'<td class="checkbox"><input type="checkbox" name="map[]" value="'.$map['FileName'].'" /></td>'
@@ -199,7 +208,7 @@
 			</table>
 		</div>
 		
-		<div class="options">
+		<div class="options" data-mapisused="La map,est actuellement utilisé par le serveur.">
 			<div class="fleft">
 				<span class="nb-line"><?php echo $mapsList['nbm']['count'].' '.$mapsList['nbm']['title']; ?></span>
 			</div>

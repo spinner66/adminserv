@@ -806,7 +806,7 @@ abstract class AdminServUI {
 						.'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
 						.'<div class="order-map-name" title="'.$map['FileName'].'">'.$map['Name'].'</div>'
 						.'<div class="order-map-env"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</div>'
-						.'<div class="order-map-author"><img src="'.$pathRessources.'images/16/challengeauthor.png" alt="" />'.$map['Author'].'</div>'
+						.'<div class="order-map-author"><img src="'.$pathRessources.'images/16/mapauthor.png" alt="" />'.$map['Author'].'</div>'
 					.'</li>';
 				}
 			}
@@ -1747,6 +1747,73 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Récupère la liste des maps sur le serveur et retourne un champ en particulier
+	*
+	* @global resource $client -> Le client doit être initialisé
+	* @return array
+	*/
+	public static function getMapListField($field){
+		global $client;
+		$out = array();
+		
+		// Méthodes
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$queryName = array(
+				'mapList' => 'GetChallengeList',
+			);
+		}
+		else{
+			$queryName = array(
+				'mapList' => 'GetMapList',
+			);
+		}
+		
+		// Mapslist
+		if( !$client->query($queryName['mapList'], AdminServConfig::LIMIT_MAPS_LIST, 0) ){
+			$out['error'] = Utils::t('Client not initialized');
+		}
+		else{
+			$mapList = $client->getResponse();
+			$countMapList = count($mapList);
+			if( $countMapList > 0 ){
+				$i = 0;
+				foreach($mapList as $map){
+					switch($field){
+						case 'Name':
+							$name = htmlspecialchars($map['Name'], ENT_QUOTES, 'UTF-8');
+							$out[] = TmNick::toHtml($name, 10, true);
+							break;
+						case 'Environnement':
+							$env = $map['Environnement'];
+							if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
+							$out[] = $env;
+							break;
+						case 'UId':
+							$out[] = $map['UId'];
+							break;
+						case 'FileName':
+							$out[] = $map['FileName'];
+							break;
+						case 'Author':
+							$out[] = $map['Author'];
+							break;
+						case 'GoldTime':
+							$out[] = TimeDate::format($map['GoldTime']);
+							break;
+						case 'CopperPrice':
+							$out[] = $map['CopperPrice'];
+							break;
+					}
+					$i++;
+				}
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère la liste des maps en local à partir d'un chemin
 	*
 	* @param string $path   -> Le chemin du dossier à lister
@@ -1756,6 +1823,10 @@ abstract class AdminServ {
 	public static function getLocalMapList($path, $sortBy = null){
 		global $client;
 		$out = array();
+		$currentMapsListUId = null;
+		if(AdminServConfig::LOCAL_GET_MAPS_ON_SERVER){
+			$currentMapsListUId = self::getMapListField('UId');
+		}
 		$pathFromMapsFolder = self::getMapsDirectoryPath();
 		$pathFromMapsFolder = str_replace($pathFromMapsFolder, '', $path);
 		
@@ -1784,6 +1855,14 @@ abstract class AdminServ {
 							$out['lst'][$i]['UId'] = $Gbx->uid;
 							$out['lst'][$i]['Author'] = $Gbx->author;
 							$out['lst'][$i]['Recent'] = $values['recent'];
+							
+							// On server
+							$out['lst'][$i]['OnServer'] = false;
+							if($currentMapsListUId){
+								if( in_array($out['lst'][$i]['UId'], $currentMapsListUId) ){
+									$out['lst'][$i]['OnServer'] = true;
+								}
+							}
 							$i++;
 						}
 					}
@@ -2643,19 +2722,24 @@ abstract class AdminServPlugin {
 	/**
 	* Tente de récupérer une config des plugins à partir d'un autre fichier
 	*/
-	public static function getAnotherPluginsList(){
-		$useAnotherConfig = AdminServConfig::$USE_ANOTHER_PLUGINS_LIST;
+	public static function setPluginsList(){
+		$otherPluginsList = AdminServConfig::PLUGINS_LIST;
 		
-		if( count($useAnotherConfig) > 0 ){
+		if($otherPluginsList){
 			// Récupération du fichier
-			if( isset($useAnotherConfig[0]) && $useAnotherConfig[0] != null && file_exists($useAnotherConfig[0]) ){
-				require_once $useAnotherConfig[0];
+			if( file_exists($otherPluginsList) ){
+				include_once $otherPluginsList;
 				
-				if( isset($useAnotherConfig[1]) && $useAnotherConfig[1] == 'add'){
-					ExtensionConfig::$PLUGINS = array_merge(ExtensionConfig::$PLUGINS, $PLUGINS);
+				if( isset($PLUGINS) ){
+					if(AdminServConfig::PLUGINS_LIST_TYPE == 'add'){
+						ExtensionConfig::$PLUGINS = array_merge(ExtensionConfig::$PLUGINS, $PLUGINS);
+					}
+					else{
+						ExtensionConfig::$PLUGINS = $PLUGINS;
+					}
 				}
 				else{
-					ExtensionConfig::$PLUGINS = $PLUGINS;
+					AdminServ::error( Utils::t('Variable "$PLUGINS" not found.') );
 				}
 			}
 			else{
