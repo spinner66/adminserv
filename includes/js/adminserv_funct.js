@@ -25,6 +25,16 @@ function t(text){
 	text = text.replace('Mb', $("#formUpload").data("mb") );
 	return text;
 }
+function scrollTop(){
+	$("html, body").animate({  
+		scrollTop: 0
+	}, "slow");
+}
+function scrollBottom(){
+	$("html, body").animate({  
+		scrollTop: $(document).height() - $(window).height()
+	}, "slow");
+}
 
 
 /**
@@ -60,7 +70,7 @@ function error(text, hide){
 	if( $("#error").attr("hidden") ){
 		$("#error").removeAttr("hidden");
 	}
-	$("#error").text(text);
+	$("#error").html(text);
 	
 	if(hide){
 		setTimeout(function(){
@@ -408,7 +418,7 @@ function getMapList(mode, sort){
 				// Création du tableau
 				if( typeof(data.lst) == "object" && data.lst.length > 0 ){
 					$.each(data.lst, function(i, map){
-						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } if(data.cid == i){ out += ' current'; } out += '">'
+						out += '<tr'; if(data.cid == i){ out += ' id="currentMap"'; } out += ' class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } if(data.cid == i){ out += ' current'; } out += '">'
 							+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
 								+'<span title="'+map.FileName+'">'+map.Name+'</span>'
 								if(mode == "detail"){
@@ -566,6 +576,7 @@ function slideUpNewFolderForm(){
 	});
 }
 
+
 /**
 * Fait un tri sur la liste des maps pour la page "maps-order"
 */
@@ -584,7 +595,7 @@ function setMapsOrderSort(sort, order){
 							+'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
 							+'<div class="order-map-name" title="'+map.FileName+'">'+map.Name+'</div>'
 							+'<div class="order-map-env"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
-							+'<div class="order-map-author"><img src="'+path_ressources+'images/16/challengeauthor.png" alt="" />'+map.Author+'</div>'
+							+'<div class="order-map-author"><img src="'+path_ressources+'images/16/mapauthor.png" alt="" />'+map.Author+'</div>'
 						+'</li>';
 					}
 				});
@@ -633,7 +644,6 @@ function setMapslistDetailMode(){
 		getMapList("detail", sort);
 		$("#detailMode").text( $("#detailMode").data("textsimple") );
 		$("#maplist table th.detailModeTh").attr("hidden", false);
-		//$("#maplist table th.firstTh").removeClass("thleft");
 		$("#maplist").addClass("loading");
 		$("#detailMode").data("statusmode", "detail");
 	}
@@ -641,7 +651,6 @@ function setMapslistDetailMode(){
 		getMapList("simple", sort);
 		$("#detailMode").text( $("#detailMode").data("textdetail") );
 		$("#maplist table th.detailModeTh").attr("hidden", true);
-		//$("#maplist table th.firstTh").addClass("thleft");
 		$("#maplist").addClass("loading");
 		$("#detailMode").data("statusmode", "simple");
 	}
@@ -728,6 +737,34 @@ function setMapslistDetailMode(){
 		}
 	};
 })(jQuery);
+
+
+/**
+* Récupère les valeurs des lignes sélectionnées
+*
+* @return array JSON
+*/
+function getJsonSelectedLines(){
+	var selectedFiles = $(".cadre table tbody tr.selected");
+	var files = "[";
+	
+	if(selectedFiles.length > 1){
+		$.each(selectedFiles, function(i, n){
+			if(i == selectedFiles.length-1){
+				files += '"'+n.children[3].children[0].value+'"';
+			}
+			else{
+				files += '"'+n.children[3].children[0].value+'",';
+			}
+		});
+	}
+	else{
+		files += '"'+selectedFiles.find(".checkbox input").val()+'"';
+	}
+	files += "]";
+	
+	return files;
+}
 
 
 /**

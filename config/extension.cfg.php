@@ -2,7 +2,13 @@
 class ExtensionConfig {
 	/********************* EXTENSION CONFIGURATION *********************/
 	
-	// Liste des thèmes de couleurs
+	// Plugins list installed
+	public static $PLUGINS = array(
+		'planets',
+		'coppers',
+	);
+	
+	// Themes color list
 	public static $THEMES = array(
 		'blue' => array(
 			'#5e9cd5',
@@ -27,7 +33,7 @@ class ExtensionConfig {
 	);
 	
 	
-	// Liste des langues utilisable
+	// Available language list
 	public static $LANG = array(
 		'fr' => 'Français',
 		'en' => 'English',
@@ -36,7 +42,7 @@ class ExtensionConfig {
 	);
 	
 	
-	// Liste des modes de jeu
+	// Game modes list
 	public static $GAMEMODES = array(
 		0 => 'Script',
 		1 => 'Rounds',
@@ -48,7 +54,7 @@ class ExtensionConfig {
 	);
 	
 	
-	// Liste du menu des pages "maps"
+	// Menu list in maps page
 	public static $MAPSMENU = array(
 		'maps-list' => 'Liste',
 		'maps-local' => 'Local',
@@ -56,13 +62,6 @@ class ExtensionConfig {
 		'maps-order' => 'Ordonner',
 		'maps-matchset' => 'MatchSettings',
 		'maps-creatematchset' => 'Créer un MatchSettings'
-	);
-	
-	
-	// Liste des plugins installés
-	public static $PLUGINS = array(
-		'planets',
-		'coppers',
 	);
 }
 ?>

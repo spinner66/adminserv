@@ -174,6 +174,18 @@ $(document).ready(function(){
 		
 		
 		/**
+		* Scroll doux
+		*/
+		$("a[href^=#]").click(function(){
+			var target = $(this).attr("href");
+			$("html, body").animate({  
+				scrollTop: $(target).offset().top - 100
+			}, "slow");
+			return false;
+		});
+		
+		
+		/**
 		* Général
 		*/
 		if( $("body").hasClass("section-index") ){
@@ -518,20 +530,17 @@ $(document).ready(function(){
 				if( $(this).children("input").val() == "local" ){
 					$("input#GotoListMaps").attr("checked", false);
 				}
-				initializeUploader(); // TODO : plutot mettre à jour les paramères
-				
-				/*uploader.setParams({
+				uploader.setParams({
 					type: $(this).children("input").val(),
-				});*/
+				});
 			});
 			
 			// Options
 			$(".options-checkbox input, .options-checkbox label").click(function(){
-				/*uploader.setParams({
+				uploader.setParams({
 					mset: ( $("#SaveCurrentMatchSettings").attr("checked") ) ? true : false,
 					gtlm: ( $("#GotoListMaps").attr("checked") ) ? true : false
-				});*/
-				initializeUploader(); // TODO : plutot mettre à jour les paramères
+				});
 			});
 		}
 		/**
@@ -568,14 +577,22 @@ $(document).ready(function(){
 			
 			// Renommer
 			$("#renameMap").click(function(){
-				if( $(this).hasClass("active") ){
-					slideUpRenameForm();
+				if( !$("#maplist tr.selected").hasClass("onserver") ){
+					if( $(this).hasClass("active") ){
+						slideUpRenameForm();
+					}
+					else{
+						if( $("#moveMap").hasClass("active") ){
+							slideUpMoveForm();
+						}
+						slideDownRenameForm();
+					}
 				}
 				else{
-					if( $("#moveMap").hasClass("active") ){
-						slideUpMoveForm();
-					}
-					slideDownRenameForm();
+					var mapTextError = $(".local .options").data("mapisused").split(",");
+					var mapName = $("#maplist tr.selected td span").html();
+					error(mapTextError[0]+" "+mapName+" "+mapTextError[1]);
+					scrollTop();
 				}
 			});
 			$("#renameMapCancel").live("click", function(){
@@ -584,14 +601,22 @@ $(document).ready(function(){
 			
 			// Déplacer
 			$("#moveMap").click(function(){
-				if( $(this).hasClass("active") ){
-					slideUpMoveForm();
+				if( !$("#maplist tr.selected").hasClass("onserver") ){
+					if( $(this).hasClass("active") ){
+						slideUpMoveForm();
+					}
+					else{
+						if( $("#renameMap").hasClass("active") ){
+							slideUpRenameForm();
+						}
+						slideDownMoveForm();
+					}
 				}
 				else{
-					if( $("#renameMap").hasClass("active") ){
-						slideUpRenameForm();
-					}
-					slideDownMoveForm();
+					var mapTextError = $(".local .options").data("mapisused").split(",");
+					var mapName = $("#maplist tr.selected td span").html();
+					error(mapTextError[0]+" "+mapName+" "+mapTextError[1]);
+					scrollTop();
 				}
 			});
 			$("#moveMapCancel").live("click", function(){
@@ -600,7 +625,16 @@ $(document).ready(function(){
 			
 			// Supprimer
 			$("#deleteMap").click(function(){
-				return confirm( $(this).data("confirm") );
+				if( !$("#maplist tr.selected").hasClass("onserver") ){
+					return confirm( $(this).data("confirm") );
+				}
+				else{
+					var mapTextError = $(".local .options").data("mapisused").split(",");
+					var mapName = $("#maplist tr.selected td span").html();
+					error(mapTextError[0]+" "+mapName+" "+mapTextError[1]);
+					scrollTop();
+					return false;
+				}
 			});
 		}
 		/**

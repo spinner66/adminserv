@@ -201,6 +201,7 @@ $translate = array(
 	'plugin installed' => 'plugin installé',
 	'plugins installed' => 'plugins installés',
 	'Cannot include another plugins config file.' => 'Impossible d\'inclure un autre fichier de config pour les plugins.',
+	'Variable "$PLUGINS" not found.' => 'Variable "$PLUGINS" non trouvée.',
 	// Guest-ban
 	'Unable to delete the playlist' => 'Impossible de supprimer la playlist',
 	'Player login' => 'Login joueur',
