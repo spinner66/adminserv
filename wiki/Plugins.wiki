@@ -1,4 +1,2 @@
 #summary introduction sur les plugins
 #labels Phase-Implementation
-
-#sidebar NameOfPage
