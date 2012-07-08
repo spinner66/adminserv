@@ -57,7 +57,7 @@ $translate = array(
 	'Blue team' => 'Équipe bleue',
 	'Blue' => 'Bleue',
 	'Red' => 'Rouge',
-	'[Admin] The scores have been modified : $00fblue team $fffhas !scoreTeamBlue and $f00red team $fffhas !scoreTeamRed' => '[Admin] Les scores ont été modifiés : l\'$00féquipe bleue$fff à !scoreTeamBlue et l\'$f00équipe rouge $fffà !scoreTeamRed',
+	'The scores have been modified : $00fblue team $fffhas !scoreTeamBlue and $f00red team $fffhas !scoreTeamRed' => 'Les scores ont été modifiés : l\'$00féquipe bleue$fff à !scoreTeamBlue et l\'$f00équipe rouge $fffà !scoreTeamRed',
 	// ServerOptions
 	'Server options' => 'Options du serveur',
 	'General' => 'Général',

@@ -864,10 +864,10 @@ $(document).ready(function(){
 					$(this).val( $(this).data("playlistname") );
 				}
 				else{
-					var extTXT = val.indexOf(".txt");
-					var extXML = val.indexOf(".xml");
+					var extTXT = val.indexOf(".playlist.txt");
+					var extXML = val.indexOf(".playlist.xml");
 					if(extTXT === -1 && extXML === -1){
-						$(this).val(val+".txt");
+						$(this).val(val+".playlist.txt");
 					}
 				}
 			});

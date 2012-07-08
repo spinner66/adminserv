@@ -26,6 +26,10 @@ class ExtensionConfig {
 			'#b15cd5',
 			'#e5c4f3'
 		),
+		'red' => array(
+			'#ea4f4f',
+			'#ffc0c0'
+		),
 		'black' => array(
 			'#727272',
 			'#d4d4d4'
