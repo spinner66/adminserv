@@ -28,11 +28,11 @@
 			if($nickname != null){
 				Utils::addCookieData('adminserv_user', array(USER_THEME, USER_LANG, $nickname, $color), AdminServConfig::COOKIE_EXPIRE);
 				if( substr($nickname, 0, 1) !== '$' ){ $nickname = '$fff'.$nickname; }
-				$nickname = '$z$s'.str_replace('$s', '', $nickname).'$fff]$z$s';
+				$nickname = ':$z$s'.str_replace('$s', '', $nickname).'$fff$z$s';
 			}
 			
 			// Affichage du message final
-			$message = '[Admin]'.$nickname.' '.$color.$message;
+			$message = '<Admin'.$nickname.'> '.$color.$message;
 			
 			// Destination
 			$_SESSION['adminserv']['chat_dst'] = $destination;

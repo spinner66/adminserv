@@ -225,6 +225,8 @@
 				AdminServLogs::add('action', 'Delete playlist: '.$playlist);
 			}
 		}
+		
+		Utils::redirection(false, '?p='. USER_PAGE);
 	}
 	else if( isset($_POST['createPlaylistValid']) && isset($_POST['createPlaylistName']) && $_POST['createPlaylistName'] != null ){
 		// Fichier
@@ -248,6 +250,8 @@
 				AdminServLogs::add('action', 'Create playlist (blacklist): '.$filename);
 			}
 		}
+		
+		Utils::redirection(false, '?p='. USER_PAGE);
 	}
 	
 	// LECTURE

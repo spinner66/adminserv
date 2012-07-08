@@ -1067,7 +1067,8 @@ abstract class AdminServ {
 	/**
 	* Récupère le nom du game mode
 	*
-	* @param int $gameMode -> La réponse de GetGameMode()
+	* @param int  $gameMode  -> La réponse de GetGameMode()
+	* @param bool $getManual -> Forcer la récupération manuelle du nom à partir du numéro dans la config
 	* @return string
 	*/
 	public static function getGameModeName($gameMode, $getManual = false){
@@ -1120,6 +1121,7 @@ abstract class AdminServ {
 	* Récupère les informations du serveur actuel (map, serveur, stats, joueurs)
 	*
 	* @global resource $client -> Le client doit être initialisé
+	* @param  string   $sortBy -> Le tri à faire sur la liste
 	* @return array
 	*/
 	public static function getCurrentServerInfo($sortBy = null){
@@ -1588,7 +1590,7 @@ abstract class AdminServ {
 	*/
 	public static function clearChatServerLine($line){
 		$char = substr(utf8_decode($line), 0, 1);
-		if($char == '[' || $char == '/' || substr($line, 0, 11) == '$99F[Admin]' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
+		if($char == '<' || $char == '/' || substr($line, 0, 11) == '$99F[Admin]' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
 			return $line;
 		}
 	}
@@ -1658,6 +1660,7 @@ abstract class AdminServ {
 	* Récupère la liste des maps sur le serveur
 	*
 	* @global resource $client -> Le client doit être initialisé
+	* @param  string   $sortBy -> Le tri à faire sur la liste
 	* @return array
 	*/
 	public static function getMapList($sortBy = null){
@@ -2249,6 +2252,7 @@ abstract class AdminServ {
 		$out = array();
 		
 		// Chargement du fichier XML
+		$xml = null;
 		if( @file_exists($filename) ){
 			if( !($xml = @simplexml_load_file($filename)) ){
 				$out['error'] = 'simplexml_load_file error';

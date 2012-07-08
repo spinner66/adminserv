@@ -4,7 +4,7 @@ class OnlineConfig {
 	
 	const ACTIVATE = true; // Active the online configuration
 	const PASSWORD = '1b270a438a72b86bdba4d9fd373d1417'; // Checking password. This password is generated in MD5
-	const ADDRESS = ''; // Checking address. Can be localhost, domain name or IP address
+	const ADDRESS = ''; // Checking address. Can be localhost or IP address
 	const ADD_ONLY = false; // Add only server. Unable to modify or delete
 }
 

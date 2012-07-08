@@ -98,11 +98,11 @@
 	<form method="post" action="./config/">
 		<fieldset>
 			<legend><?php echo Utils::t('Online configuration'); ?></legend>
-			<div class="connexion-label">
+			<div class="connection-label">
 				<label for="savePassword"><?php echo Utils::t('Password'); ?> :</label>
 				<input class="text" type="password" name="savePassword" id="savePassword" value="" />
 			</div>
-			<div class="connexion-login">
+			<div class="connection-login">
 				<input class="button light" type="submit" name="configsavepassword" id="configsavepassword" value="<?php echo Utils::t('Save'); ?>" />
 			</div>
 		</fieldset>

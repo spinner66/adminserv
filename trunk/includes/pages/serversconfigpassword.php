@@ -30,7 +30,7 @@
 			AdminServ::error( Utils::t('The current password doesn\'t match.') );
 		}
 		else{
-			if( ($result = File::saveAtSeek($pathConfig.'adminserv.cfg.php', $new, 145)) !== true ){
+			if( ($result = File::saveAtSeek($pathConfig.'adminserv.cfg.php', $new, 180)) !== true ){
 				AdminServ::error( Utils::t('Unable to save the password.').' ('.$result.')');
 			}
 			else{

@@ -88,7 +88,7 @@
 			else{
 				if( isset($_POST['configsavepassword']) ){
 					$password = md5($_POST['savePassword']);
-					if( ($result = File::saveAtSeek('./adminserv.cfg.php', $password, 145)) !== true ){
+					if( ($result = File::saveAtSeek('./adminserv.cfg.php', $password, 180)) !== true ){
 						AdminServ::error( Utils::t('Unable to save the password.').' ('.$result.')');
 						Utils::redirection(false, '..');
 					}
