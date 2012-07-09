@@ -6,7 +6,7 @@
 		}
 		else{
 			$gameDataDirectory = $client->getResponse();
-			$playlistDirectory = Folder::read($gameDataDirectory.'Config', array(), array(), AdminServConfig::RECENT_STATUS_PERIOD);
+			$playlistDirectory = Folder::read($gameDataDirectory.'Config', array(), array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
 		}
 	}
 	
