@@ -1065,6 +1065,61 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Retourne un lien protocol TM ou ManiaPlanet suivant l'environnement
+	*
+	* @param string $linkType  -> Type de lien : #join=server_login ou /:manialink_name
+	* @param string $gameTitle -> Le nom du jeu : TMCanyon, SMStorm, etc
+	* @return string
+	*/
+	public static function getProtocolLink($linkType, $gameTitle){
+		$protocolName = 'maniaplanet';
+		$protocolSeparator = '://';
+		$protocolSeparatorTitle = '@';
+		if( defined('LINK_PROTOCOL') && LINK_PROTOCOL ){
+			$protocolName = LINK_PROTOCOL;
+		}
+		$game = self::getGameFromEnv($env);
+		$title = $game['abbr'].ucfirst($env);
+		
+		return $protocolName.$protocolSeparator.$linkType.$protocolSeparatorTitle.$title;
+	}
+	
+	
+	/**
+	* Récupère le nom et l'abrévation du jeu en fonction de son environnement
+	*
+	* @param string $env -> Le nom de l'environnement
+	* @return array
+	*/
+	public static function getGameFromEnv($env){
+		$out = array();
+		$env = strtolower($env);
+		
+		switch($env){
+			case 'alpine':
+			case 'bay':
+			case 'canyon':
+			case 'coast':
+			case 'desert':
+			case 'island':
+			case 'rally':
+			case 'snow':
+			case 'speed':
+			case 'stadium':
+				$out['name'] = 'TrackMania';
+				$out['abbr'] = 'TM';
+				break;
+			case 'storm':
+				$out['name'] = 'ShootMania';
+				$out['abbr'] = 'SM';
+				break;
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère le nom du game mode
 	*
 	* @param int  $gameMode  -> La réponse de GetGameMode()

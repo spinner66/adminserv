@@ -12,6 +12,11 @@
 			AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
 			Utils::redirection();
 		}
+		else{
+			if( OnlineConfig::ADD_ONLY === true || OnlineConfig::PASSWORD == null ){
+				Utils::redirection(false, './?p=addserver');
+			}
+		}
 	}
 	else{
 		AdminServ::error( Utils::t('The servers configuration file doesn\'t reconized by AdminServ.') );
