@@ -19,9 +19,9 @@
 		
 		// Refresh
 		selector.initialize(settings);
-		/*setInterval(function(){
+		setInterval(function(){
 			selector.initialize(settings);
-		}, settings.refresh);*/
+		}, settings.refresh);
 	};
 })(jQuery);
 
