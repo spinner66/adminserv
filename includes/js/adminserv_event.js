@@ -55,7 +55,7 @@ $(document).ready(function(){
 			// Connexion
 			$(document).keypress(function(event){
 				if(event.keyCode == 13){
-					$("#connexion form").submit();
+					$("#connection form").submit();
 				}
 			});
 		}
