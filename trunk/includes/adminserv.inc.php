@@ -694,10 +694,10 @@ abstract class AdminServUI {
 			// Liste des dossiers
 			if( file_exists($path) ){
 				if( in_array(USER_PAGE, array('maps-matchset', 'maps-creatematchset')) ){
-					$directory = Folder::read($path.$currentPath, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, AdminServConfig::$MATCHSET_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+					$directory = Folder::read($path.$currentPath, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
 				}
 				else{
-					$directory = Folder::read($path.$currentPath, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+					$directory = Folder::read($path.$currentPath, AdminServConfig::$MAPS_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
 				}
 				
 				if( is_array($directory) ){
@@ -1889,7 +1889,7 @@ abstract class AdminServ {
 		$pathFromMapsFolder = str_replace($pathFromMapsFolder, '', $path);
 		
 		if( class_exists('Folder') && class_exists('GBXChallengeFetcher') ){
-			$directory = Folder::read($path, AdminServConfig::$MAPS_HIDDEN_FOLDERS, AdminServConfig::$MAPS_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+			$directory = Folder::read($path, AdminServConfig::$MAPS_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
 			if( is_array($directory) ){
 				$countMapList = count($directory['files']);
 				if($countMapList > 0){
@@ -1973,7 +1973,7 @@ abstract class AdminServ {
 		$out = array();
 		
 		if( class_exists('Folder') && class_exists('File') ){
-			$directory = Folder::read($path, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, AdminServConfig::$MATCHSET_HIDDEN_FILES, AdminServConfig::RECENT_STATUS_PERIOD);
+			$directory = Folder::read($path, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
 			if( is_array($directory) ){
 				$countMatchsetList = count($directory['files']);
 				if($countMatchsetList > 0){

@@ -25,9 +25,9 @@ class AdminServConfig {
 	const LIMIT_PLAYERS_LIST = 250; // Limit to display lines in player list
 	const LIMIT_MAPS_LIST = 1000; // Limit to display lines in maps list
 	const LOCAL_GET_MAPS_ON_SERVER = true; // if true, the current server maps list is loaded in local maps page for change icone in lines. But if you have a lot of maps in server, will better to disable
-	const RECENT_STATUS_PERIOD = 86400; // Recent status period in second for maps/matchsettings/guestban
+	const RECENT_STATUS_PERIOD = 24; // Recent status period in hour for maps/matchsettings/guestban
 	const SERVER_CONNECTION_TIMEOUT = 3; // Dedicated server connection timeout in second
-	const COOKIE_EXPIRE = 15; // Days of cookie expire
+	const COOKIE_EXPIRE = 30; // Days of cookie expire
 	
 	/* FILES AND FOLDERS */
 	public static $FOLDERS_OPTIONS = array( // Actions for the folders in maps page. You can be disable or limit to authorization level
@@ -37,22 +37,14 @@ class AdminServConfig {
 		'delete' => array(true, 'SuperAdmin')
 	);
 	public static $MAPS_HIDDEN_FOLDERS = array('MatchSettings', 'Replays'); // Folders hidden in maps page
-	public static $MAPS_HIDDEN_FILES = array('db', 'txt', 'xml', 'zip', 'php', 'log'); // Files or extensions hidden in maps page
 	public static $MATCHSET_HIDDEN_FOLDERS = array('Campaigns', 'Replays'); // Folders hidden in matchsettings page
-	public static $MATCHSET_HIDDEN_FILES = array('db', 'gbx', 'php', 'log'); // Files or extensions hidden in matchsettings page
+	public static $MAP_EXTENSION = array('map.gbx', 'challenge.gbx'); // Double extension used in maps page
+	public static $MATCHSET_EXTENSION = array('txt'); // MatchSettings extension used in matchsettings page
+	public static $PLAYLIST_EXTENSION = array('playlist.txt'); // Playlists extension used in guestban page
 	
 	/* UPLOAD */
 	public static $ALLOWED_EXTENSIONS = array('gbx', 'zip', 'rar', '7z', 'gzip'); // Extension allowed to upload
 	const SIZE_LIMIT = 'auto'; // Limit size per file in MB. If auto, the limit size in php.ini config file is used
-	
-	/* LOCAL */
-	public static $MAP_EXTENSION = array('map.gbx', 'challenge.gbx'); // Double extension used in maps page
-	public static $MATCHSET_EXTENSION = array('txt', 'xml'); // MatchSettings extension used in matchsettings page
-	public static $PLAYLIST_EXTENSION = array('playlist.txt', 'playlist.xml'); // Playlists extension used in guestban page
-	
-	/* PLUGINS */
-	const PLUGINS_LIST = ''; // The filename of other plugin list file in php. In the file: $PLUGINS = array('pluginfoldername', 'etc');
-	const PLUGINS_LIST_TYPE = 'replace'; // add or replace method
 	
 	/* LOGS */
 	public static $LOGS = array(
@@ -66,6 +58,10 @@ class AdminServConfig {
 	const PATH_INCLUDES = './includes/'; // You can be change the location of the folders
 	const PATH_PLUGINS = './plugins/';
 	const PATH_RESSOURCES = './ressources/';
+	
+	/* PLUGINS */
+	const PLUGINS_LIST = ''; // The filename of other plugin list file in php. In the file: $PLUGINS = array('pluginfoldername', 'etc');
+	const PLUGINS_LIST_TYPE = 'replace'; // add or replace method
 }
 
 class DataBaseConfig {

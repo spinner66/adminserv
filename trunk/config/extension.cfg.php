@@ -32,7 +32,7 @@ class ExtensionConfig {
 		),
 		'black' => array(
 			'#727272',
-			'#d4d4d4'
+			'#dedede'
 		)
 	);
 	

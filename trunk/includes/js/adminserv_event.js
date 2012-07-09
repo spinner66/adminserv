@@ -865,8 +865,7 @@ $(document).ready(function(){
 				}
 				else{
 					var extTXT = val.indexOf(".playlist.txt");
-					var extXML = val.indexOf(".playlist.xml");
-					if(extTXT === -1 && extXML === -1){
+					if(extTXT === -1){
 						$(this).val(val+".playlist.txt");
 					}
 				}
