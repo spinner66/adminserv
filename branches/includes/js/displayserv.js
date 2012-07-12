@@ -75,7 +75,7 @@
 								+ '<div class="ds-server-join-wrap">'
 										+ '<ul>'
 											+ '<li class="ds-server-favourite"><a href="">'+data.label.addfavourite+'</a></li>'
-											+ '<li class="ds-server-join"><a href="">'+data.label.serveraccess+'</a></li>'
+											+ '<li class="ds-server-join"><a href="">'+data.label.accessserver+'</a></li>'
 										+ '</ul>'
 								+ '</div>'
 							+ '</li>';
