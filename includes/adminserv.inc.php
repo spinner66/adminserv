@@ -440,7 +440,7 @@ abstract class AdminServUI {
 					.'<td class="preview"></td>'
 				.'</tr>'
 				.'<tr>'
-					.'<td class="key"><label for="NextChatTime">'.Utils::t('End map time').' <span>('.Utils::t('sec').')</span></label></td>';
+					.'<td class="key"><label for="NextChatTime">'.Utils::t('Map end time').' <span>('.Utils::t('sec').')</span></label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
 							.'<input class="text width2" type="text" name="CurrChatTime" id="CurrChatTime" readonly="readonly" value="'.TimeDate::millisecToSec($currGamInf['ChatTime'] + 8000).'" />'
@@ -452,7 +452,7 @@ abstract class AdminServUI {
 					.'<td class="preview"></td>'
 				.'</tr>'
 				.'<tr>'
-					.'<td class="key"><label for="NextFinishTimeout">'.Utils::t('End round/lap time').' <span>('.Utils::t('sec').')</span></label></td>';
+					.'<td class="key"><label for="NextFinishTimeout">'.Utils::t('Round/lap end time').' <span>('.Utils::t('sec').')</span></label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
 							.'<input class="text width2" type="text" name="CurrFinishTimeout" id="CurrFinishTimeout" readonly="readonly" value="'; if($currGamInf['FinishTimeout'] == 0){ $out .= Utils::t('Default').' (15'.Utils::t('sec'); }else if($currGamInf['FinishTimeout'] == 1){ $out .= Utils::t('Auto (based on map)'); }else{ $out .= TimeDate::millisecToSec($currGamInf['FinishTimeout']); } $out .= '" />'
@@ -482,15 +482,15 @@ abstract class AdminServUI {
 					.'<td class="preview"></td>'
 				.'</tr>'
 				.'<tr>'
-					.'<td class="key"><label for="NextForceShowAllOpponents">'.Utils::t('Force show all opponents').'</label></td>';
+					.'<td class="key"><label for="NextForceShowAllOpponents">'.Utils::t('Force show of all opponents').'</label></td>';
 					if($currGamInf != null){
 						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrForceShowAllOpponents" id="CurrForceShowAllOpponents" readonly="readonly" value="'; if($currGamInf['ForceShowAllOpponents'] == 0){ $out .= Utils::t('Allow player choose'); }else if($currGamInf['ForceShowAllOpponents'] == 1){ $out .= Utils::t('All opponents'); }else{ $out .= $currGamInf['ForceShowAllOpponents'].' '.Utils::t('minimal opponents'); } $out .= '" />'
+							.'<input class="text width2" type="text" name="CurrForceShowAllOpponents" id="CurrForceShowAllOpponents" readonly="readonly" value="'; if($currGamInf['ForceShowAllOpponents'] == 0){ $out .= Utils::t('Let player choose'); }else if($currGamInf['ForceShowAllOpponents'] == 1){ $out .= Utils::t('All opponents'); }else{ $out .= $currGamInf['ForceShowAllOpponents'].' '.Utils::t('minimal opponents'); } $out .= '" />'
 						.'</td>';
 					}
 					$out .= '<td class="value next">'
 						.'<select class="width2" name="NextForceShowAllOpponents" id="NextForceShowAllOpponents"'; if($nextGamInf['ForceShowAllOpponents'] > 1){ $out .= ' hidden="hidden"'; } $out .= '>'
-							.'<option value="0"'; if($nextGamInf['ForceShowAllOpponents'] == 0){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('Allow player choose').'</option>'
+							.'<option value="0"'; if($nextGamInf['ForceShowAllOpponents'] == 0){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('Let player choose').'</option>'
 							.'<option value="1"'; if($nextGamInf['ForceShowAllOpponents'] == 1){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('All opponents').'</option>'
 							.'<option value="more">'.Utils::t('Choose opponents number').'</option>'
 						.'</select>'
@@ -543,7 +543,7 @@ abstract class AdminServUI {
 				.'</tr>'
 				.self::getGameInfosField($gameinfos, 'Points limit', 'RoundsPointsLimit')
 				.self::getGameInfosField($gameinfos, 'Custom points limit', 'RoundCustomPoints')
-				.self::getGameInfosField($gameinfos, 'Forced laps', 'RoundsForcedLaps')
+				.self::getGameInfosField($gameinfos, 'Force laps', 'RoundsForcedLaps')
 			.'</table>'
 		.'</fieldset>'
 		
@@ -562,7 +562,7 @@ abstract class AdminServUI {
 					.'</td>'
 					.'<td class="preview"></td>'
 				.'</tr>'
-				.self::getGameInfosField($gameinfos, 'Synchronization start period', 'TimeAttackSynchStartPeriod')
+				.self::getGameInfosField($gameinfos, 'Start synchronization period', 'TimeAttackSynchStartPeriod')
 			.'</table>'
 		.'</fieldset>'
 		
@@ -1448,7 +1448,7 @@ abstract class AdminServ {
 			}
 		}
 		else{
-			$out = Utils::t('Command not recognized');
+			$out = Utils::t('Unknown command');
 		}
 		
 		return $out;
@@ -2134,7 +2134,7 @@ abstract class AdminServ {
 		
 		// Création XML
 		if( ! @$newXMLObject = simplexml_load_string($out) ){
-			$out = Utils::t('Convert text->XML error');
+			$out = Utils::t('text->XML conversion error');
 		}
 		else{
 			if( !$newXMLObject->asXML($filename) ){
@@ -2517,7 +2517,7 @@ abstract class AdminServLogs {
 				}
 			}
 			else{
-				AdminServ::error( Utils::t('The folder "logs" not exists.') );
+				AdminServ::error( Utils::t('The folder "logs" does not exist.') );
 			}
 		}
 		
@@ -2612,7 +2612,7 @@ abstract class AdminServServerConfig {
 				$out = ServerConfig::$SERVERS[$serverName];
 			}
 			else{
-				$out = Utils::t('This server not exists');
+				$out = Utils::t('This server does not exist');
 			}
 		}
 		else{

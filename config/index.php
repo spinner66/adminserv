@@ -89,7 +89,7 @@
 				if( isset($_POST['configsavepassword']) ){
 					$password = md5($_POST['savePassword']);
 					if( ($result = File::saveAtSeek('./adminserv.cfg.php', $password, 180)) !== true ){
-						AdminServ::error( Utils::t('Unable to save the password.').' ('.$result.')');
+						AdminServ::error( Utils::t('Unable to save password.').' ('.$result.')');
 						Utils::redirection(false, '..');
 					}
 					else{
@@ -113,6 +113,6 @@
 		}
 	}
 	else{
-		Utils::redirection(false, '../?error='.urlencode( Utils::t('The servers configuration file doesn\'t reconized by AdminServ.') ) );
+		Utils::redirection(false, '../?error='.urlencode( Utils::t('The servers configuration file isn\'t recognized by AdminServ.') ) );
 	}
 ?>

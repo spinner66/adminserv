@@ -23,7 +23,7 @@
 			<ul>
 				<li class="selected">
 					<input class="text" type="radio" name="transferMode" id="transferModeAdd" value="add" checked="checked" />
-					<div class="name"><span><?php echo Utils::t('Add'); ?></span> <?php echo Utils::t('at end of the list'); ?></div>
+					<div class="name"><span><?php echo Utils::t('Add'); ?></span> <?php echo Utils::t('at the end of list'); ?></div>
 				</li>
 				<li>
 					<input class="text" type="radio" name="transferMode" id="transferModeInsert" value="insert" />
@@ -47,13 +47,13 @@
 			<?php } ?>
 				<li>
 					<input class="text inline" type="checkbox" name="GotoListMaps" id="GotoListMaps" value="maps" />
-					<label for="GotoListMaps"><?php echo Utils::t('Go to the list map after finish upload'); ?></label>
+					<label for="GotoListMaps"><?php echo Utils::t('Go to the maps list when upload is complete'); ?></label>
 				</li>
 			</ul>
 		</div>
 		
 		<h2><?php echo Utils::t('Upload'); ?></h2>
-		<div id="formUpload" class="loader" data-mapspagename="maps-list" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-failed="<?php echo Utils::t('Failed'); ?>" data-uploadfile="<?php echo Utils::t('Upload a file'); ?>" data-dropfiles="<?php echo Utils::t('Drop files here to upload'); ?>" data-uploadnotfinish="<?php echo Utils::t('Upload not finish'); ?>" data-from="<?php echo Utils::t('from'); ?>" data-kb="<?php echo Utils::t('Kb'); ?>" data-mb="<?php echo Utils::t('Mb'); ?>" data-type-error="<?php echo Utils::t('{file} has invalid extension. Only {extensions} are allowed.'); ?>" data-size-error="<?php echo Utils::t('{file} is too large, maximum file size is {sizeLimit}.'); ?>" data-minsize-error="<?php echo Utils::t('{file} is too small, minimum file size is {minSizeLimit}.'); ?>" data-empty-error="<?php echo Utils::t('{file} is empty, please select files again without it.'); ?>" data-onleave="<?php echo Utils::t('The files are being uploaded, if you leave now the upload will be cancelled.'); ?>"></div>
+		<div id="formUpload" class="loader" data-mapspagename="maps-list" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-failed="<?php echo Utils::t('Failed'); ?>" data-uploadfile="<?php echo Utils::t('Upload a file'); ?>" data-dropfiles="<?php echo Utils::t('Drop files here to upload'); ?>" data-uploadnotfinished="<?php echo Utils::t('Upload not finished'); ?>" data-from="<?php echo Utils::t('from'); ?>" data-kb="<?php echo Utils::t('Kb'); ?>" data-mb="<?php echo Utils::t('Mb'); ?>" data-type-error="<?php echo Utils::t('{file} has invalid extension. Only {extensions} are allowed.'); ?>" data-size-error="<?php echo Utils::t('{file} is too large, maximum file size is {sizeLimit}.'); ?>" data-minsize-error="<?php echo Utils::t('{file} is too small, minimum file size is {minSizeLimit}.'); ?>" data-empty-error="<?php echo Utils::t('{file} is empty, please select files again without it.'); ?>" data-onleave="<?php echo Utils::t('The file was not uploaded. Upload has been cancelled or a server error occurred.'); ?>"></div>
 	</section>
 </section>
 <?php

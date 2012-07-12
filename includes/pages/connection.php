@@ -42,7 +42,7 @@
 					Utils::redirection(false, './config/');
 				}
 				else{
-					AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
+					AdminServ::info( Utils::t('No server available. To add one, configure "config/servers.cfg.php" file.') );
 				}
 			}
 		}
@@ -51,12 +51,12 @@
 				Utils::redirection(false, './config/');
 			}
 			else{
-				AdminServ::error( Utils::t('The servers configuration file doesn\'t reconized by AdminServ.') );
+				AdminServ::error( Utils::t('The servers configuration file isn\'t recognized by AdminServ.') );
 			}
 		}
 	}
 	else if( isset($_SESSION['adminserv']['get_password']) ){
-		AdminServ::info( Utils::t('It\'s first connection and no server configured. Chooose a password to configure your servers.') );
+		AdminServ::info( Utils::t('It\'s your first connection and no server configured. Choose a password to configure your servers.') );
 	}
 	
 	// HTML
