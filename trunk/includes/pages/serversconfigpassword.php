@@ -36,7 +36,7 @@
 		}
 		else{
 			if( ($result = File::saveAtSeek($pathConfig.'adminserv.cfg.php', $new, 180)) !== true ){
-				AdminServ::error( Utils::t('Unable to save the password.').' ('.$result.')');
+				AdminServ::error( Utils::t('Unable to save password.').' ('.$result.')');
 			}
 			else{
 				$info = Utils::t('The password has been changed.');

@@ -206,7 +206,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="key"><label for="HideServer"><?php echo Utils::t('Hide server'); ?></label></td>
+						<td class="key"><label for="HideServer"><?php echo Utils::t('Hidden server'); ?></label></td>
 						<td class="value" colspan="4">
 							<input class="text" type="checkbox" name="HideServer" id="HideServer"<?php if($srvOpt['HideServer'] != 0){ echo ' checked="checked"'; } ?> value="" />
 						</td>

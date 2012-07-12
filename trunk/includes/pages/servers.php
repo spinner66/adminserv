@@ -9,7 +9,7 @@
 	if( class_exists('ServerConfig') ){
 		// Si on n'autorise pas la configuration en ligne
 		if( OnlineConfig::ACTIVATE !== true ){
-			AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
+			AdminServ::info( Utils::t('No server available. To add one, configure "config/servers.cfg.php" file.') );
 			Utils::redirection();
 		}
 		else{
@@ -19,7 +19,7 @@
 		}
 	}
 	else{
-		AdminServ::error( Utils::t('The servers configuration file doesn\'t reconized by AdminServ.') );
+		AdminServ::error( Utils::t('The servers configuration file isn\'t recognized by AdminServ.') );
 		Utils::redirection();
 	}
 	

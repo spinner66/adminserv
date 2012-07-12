@@ -9,12 +9,12 @@
 	if( class_exists('ServerConfig') ){
 		// Si on n'autorise pas la configuration en ligne
 		if( OnlineConfig::ACTIVATE !== true ){
-			AdminServ::info( Utils::t('No server available. For add this, configure "config/servers.cfg.php" file.') );
+			AdminServ::info( Utils::t('No server available. To add one, configure "config/servers.cfg.php" file.') );
 			Utils::redirection();
 		}
 	}
 	else{
-		AdminServ::error( Utils::t('The servers configuration file doesn\'t reconized by AdminServ.') );
+		AdminServ::error( Utils::t('The servers configuration file isn\'t recognized by AdminServ.') );
 		Utils::redirection();
 	}
 	
@@ -106,7 +106,7 @@
 	<form method="post" action="?p=<?php echo USER_PAGE; if($id !== -1){ echo '&id='.$id; } ?>">
 		<div class="content">
 			<fieldset>
-				<legend><?php echo Utils::t('Connection informations'); ?></legend>
+				<legend><?php echo Utils::t('Connection information'); ?></legend>
 				<table>
 					<tr>
 						<td class="key"><label for="addServerName"><?php echo Utils::t('Server name'); ?></label></td>
@@ -132,14 +132,14 @@
 							<input class="text width3" type="text" name="addServerPort" id="addServerPort" value="<?php echo $serverPort; ?>" />
 						</td>
 						<td class="info">
-							<?php echo Utils::t('Port for remotely control'); ?>
+							<?php echo Utils::t('Port for remote control'); ?>
 						</td>
 					</tr>
 				</table>
 			</fieldset>
 			
 			<fieldset>
-				<legend><?php echo Utils::t('Optionnal informations'); ?></legend>
+				<legend><?php echo Utils::t('Optionnal information'); ?></legend>
 				<table>
 					<tr>
 						<td class="key"><label for="addServerMatchSet"><?php echo Utils::t('Server MatchSettings'); ?></label></td>
@@ -159,8 +159,8 @@
 							<?php echo Utils::t('Possible values for the admin level:'); ?><br />
 							<?php echo Utils::t('all => all access'); ?><br />
 							<?php echo Utils::t('local => local network access'); ?><br />
-							<?php echo Utils::t('192.168.0.1, 192.168.0.2 => one or more IP address access'); ?><br />
-							<?php echo Utils::t('none => removed of the access list'); ?>
+							<?php echo Utils::t('192.168.0.1, 192.168.0.2 => access to one or more IP address'); ?><br />
+							<?php echo Utils::t('none => removed from the access list'); ?>
 						</td>
 					</tr>
 					<tr>

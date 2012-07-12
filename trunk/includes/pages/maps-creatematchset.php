@@ -128,7 +128,7 @@
 			AdminServ::error(Utils::t('Unable to save the MatchSettings').' : '.$matchSettingName.' ('.$result.')');
 		}
 		else{
-			$action = Utils::t('The MatchSettings "!matchSettingName" success to create in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$mapsDirectoryPath;
+			$action = Utils::t('The MatchSettings "!matchSettingName" was successfully created in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$mapsDirectoryPath;
 			AdminServ::info($action);
 			AdminServLogs::add('action', $action);
 			Utils::redirection(false, '?p='.USER_PAGE);
@@ -203,7 +203,7 @@
 				<div class="mapsSelected">
 					<p><?php echo Utils::t('MatchSettings selected maps:'); ?> <span id="nbMapSelected"><?php echo $matchSetting['nbm']; ?></span></p>
 					<input class="button light" type="button" name="mapSelection" id="mapSelection" value="<?php echo Utils::t('View the MatchSettings selection'); ?>" />
-					<div id="mapSelectionDialog" data-title="Sélection du MatchSettings" data-remove="<?php echo Utils::t('Remove map of the selection'); ?>" data-close="<?php echo Utils::t('Close'); ?>" hidden="hidden">
+					<div id="mapSelectionDialog" data-title="Sélection du MatchSettings" data-remove="<?php echo Utils::t('Remove map from the selection'); ?>" data-close="<?php echo Utils::t('Close'); ?>" hidden="hidden">
 						<table>
 							<thead>
 								<tr>
@@ -222,7 +222,7 @@
 			</fieldset>
 		</div>
 		
-		<h2><?php echo Utils::t('Game informations'); ?></h2>
+		<h2><?php echo Utils::t('Game information'); ?></h2>
 		<div class="content gameinfos">
 			<?php
 				// Général

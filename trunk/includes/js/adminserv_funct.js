@@ -359,7 +359,7 @@ function initializeUploader(){
 		'</li>',
 		onProgress: function(id, fileName, loaded, total){
 			window.onbeforeunload = function(){
-				return $("#formUpload").data('uploadnotfinish');
+				return $("#formUpload").data('uploadnotfinished');
 			}
 			$.each( $(".qq-upload-list li"), function(key, value){
 				// Récupèration des données

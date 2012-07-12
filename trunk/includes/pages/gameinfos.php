@@ -49,7 +49,7 @@
 	AdminServUI::getHeader();
 ?>
 <section class="cadre">
-	<h1><?php echo Utils::t('Game informations'); ?></h1>
+	<h1><?php echo Utils::t('Game information'); ?></h1>
 	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 		<div class="content gameinfos">
 			<?php
