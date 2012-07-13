@@ -125,6 +125,14 @@
 			}
 		}
 	}
+	// Save MatchSettings
+	if( (isset($_POST['addMap']) || isset($_POST['insertMap'])) && SERVER_MATCHSET ){
+		if( isset($_POST['SaveCurrentMatchSettings']) && array_key_exists('SaveCurrentMatchSettings', $_POST) ){
+			if( !$client->query('SaveMatchSettings', $mapsDirectoryPath . SERVER_MATCHSET) ){
+				AdminServ::error();
+			}
+		}
+	}
 	
 	
 	// MAPLIST
@@ -208,7 +216,7 @@
 			</table>
 		</div>
 		
-		<div class="options" data-mapisused="La map,est actuellement utilisé par le serveur.">
+		<div class="options" data-mapisused="<?php echo Utils::t('The map,is actually used by the server.'); ?>">
 			<div class="fleft">
 				<span class="nb-line"><?php echo $mapsList['nbm']['count'].' '.$mapsList['nbm']['title']; ?></span>
 			</div>
@@ -217,7 +225,7 @@
 					<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 					<span class="selected-files-count">(0)</span>
 					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="<?php echo Utils::t('Delete'); ?>" data-confirm="<?php echo Utils::t('Do yo really want to remove this selection?'); ?>" />
+						<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="<?php echo Utils::t('Delete'); ?>" data-confirm="<?php echo Utils::t('Do you really want to remove this selection?'); ?>" />
 						<input class="button dark" type="button" name="moveMap" id="moveMap" value="<?php echo Utils::t('Move'); ?>" />
 						<input class="button dark" type="button" name="renameMap" id="renameMap" value="<?php echo Utils::t('Rename'); ?>" />
 						<input class="button dark" type="submit" name="downloadMap" id="downloadMap" value="<?php echo Utils::t('Download'); ?>" />
@@ -229,6 +237,11 @@
 			<div id="form-rename-map" class="option-form" hidden="hidden" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-rename="<?php echo Utils::t('Rename'); ?>" data-autorename="<?php echo Utils::t('Replace the specials characters'); ?>"></div>
 			<div id="form-move-map" class="option-form" hidden="hidden" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-move="<?php echo Utils::t('Move'); ?>" data-inthefolder="<?php echo Utils::t('in the folder:'); ?>" data-root="<?php echo Utils::t('Root'); ?>"></div>
 		</div>
+		<?php if(SERVER_MATCHSET){ ?>
+			<div class="fleft options-checkbox">
+				<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if(AdminServConfig::AUTOSAVE_MATCHSETTINGS === true){ echo ' checked="checked"'; } ?> value="" /><label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>"><?php echo Utils::t('Save the current MatchSettings'); ?></label>
+			</div>
+		<?php } ?>
 		</form>
 	</section>
 </section>

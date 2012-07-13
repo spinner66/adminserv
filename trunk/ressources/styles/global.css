@@ -1421,6 +1421,13 @@ footer {
 
 
 
+/* Page Maps-local
+------------------*/
+.section-maps-local .options-checkbox {
+	margin-top: 10px;
+}
+
+
 /* Page upload
 ------------------*/
 .section-maps-upload .path {
