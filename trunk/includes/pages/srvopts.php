@@ -70,10 +70,10 @@
 		$srvOpt['NameHtml'] = TmNick::toHtml($srvOpt['Name'], 10, false, false, '#666');
 		$srvOpt['Comment'] = stripslashes($srvOpt['Comment']);
 		$srvOpt['CommentHtml'] = TmNick::toHtml('$i'.nl2br($srvOpt['Comment']), 10, false, false, '#666');
-		if($srvOpt['CurrentLadderMode'] !== 0){ $srvOpt['CurrentLadderModeName'] = 'Forcé'; }
-		else{ $srvOpt['CurrentLadderModeName'] = 'Inactif'; }
-		if($srvOpt['CurrentVehicleNetQuality'] !== 0){ $srvOpt['CurrentVehicleNetQualityName'] = 'Haute'; }
-		else{ $srvOpt['CurrentVehicleNetQualityName'] = 'Rapide'; }
+		if($srvOpt['CurrentLadderMode'] !== 0){ $srvOpt['CurrentLadderModeName'] = Utils::t('Forced'); }
+		else{ $srvOpt['CurrentLadderModeName'] = Utils::t('Inactive'); }
+		if($srvOpt['CurrentVehicleNetQuality'] !== 0){ $srvOpt['CurrentVehicleNetQualityName'] = Utils::t('High'); }
+		else{ $srvOpt['CurrentVehicleNetQualityName'] = Utils::t('Fast'); }
 		$srvOpt['BuddyNotification'] = $queriesData['GetBuddyNotification'];
 	}
 	
@@ -165,8 +165,8 @@
 						<td class="value">
 							<select class="width1" name="NextLadderMode" id="NextLadderMode">
 								<?php
-									echo '<option value="0"'; if($srvOpt['NextLadderMode'] == 0){ echo ' selected="selected"'; } echo '>Inactif</option>';
-									echo '<option value="1"'; if($srvOpt['NextLadderMode'] == 1){ echo ' selected="selected"'; } echo '>Forcé</option>';
+									echo '<option value="0"'; if($srvOpt['NextLadderMode'] == 0){ echo ' selected="selected"'; } echo '>'.Utils::t('Inactive').'</option>';
+									echo '<option value="1"'; if($srvOpt['NextLadderMode'] == 1){ echo ' selected="selected"'; } echo '>'.Utils::t('Forced').'</option>';
 								?>
 							</select>
 						</td>
@@ -181,8 +181,8 @@
 						<td class="value">
 							<select class="width1" name="NextVehicleNetQuality" id="NextVehicleNetQuality">
 								<?php
-									echo '<option value="0"'; if($srvOpt['NextVehicleNetQuality'] == 0){ echo ' selected="selected"'; } echo '>Rapide</option>';
-									echo '<option value="1"'; if($srvOpt['NextVehicleNetQuality'] == 1){ echo ' selected="selected"'; } echo '>Haute</option>';
+									echo '<option value="0"'; if($srvOpt['NextVehicleNetQuality'] == 0){ echo ' selected="selected"'; } echo '>'.Utils::t('Fast').'</option>';
+									echo '<option value="1"'; if($srvOpt['NextVehicleNetQuality'] == 1){ echo ' selected="selected"'; } echo '>'.Utils::t('High').'</option>';
 								?>
 							</select>
 						</td>
