@@ -8,9 +8,9 @@
 	AdminServUI::getClass();
 	
 	// ISSET
- 	if( isset($_GET['srt']) ){ $sort = $_GET['srt']; }else{ $sort = null; }
-	if( isset($_GET['ord']) ){ $order = $_GET['ord']; }else{ $order = 'asc'; }
-	if( isset($_GET['lst']) ){ $list = $_GET['lst']; }else{ $list = null; }
+ 	if( isset($_POST['srt']) ){ $sort = $_POST['srt']; }else{ $sort = null; }
+	if( isset($_POST['ord']) ){ $order = $_POST['ord']; }else{ $order = 'asc'; }
+	if( isset($_POST['lst']) ){ $list = $_POST['lst']; }else{ $list = null; }
 	
 	// HTML
 	$out = null;

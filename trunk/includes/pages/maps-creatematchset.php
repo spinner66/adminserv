@@ -164,6 +164,7 @@
 		
 		<h2><?php echo Utils::t('MatchSettings name'); ?></h2>
 		<input class="text width3" type="text" name="matchSettingName" id="matchSettingName" value="<?php echo $matchSetting['name']; ?>" />
+		<p id="matchSettingNameExists" hidden="hidden">Le nom du MatchSetting existe déjà ! Il sera écrasé.</p>
 		
 		<h2><?php echo Utils::t('Maps'); ?></h2>
 		<div class="content maps">

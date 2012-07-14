@@ -16,7 +16,7 @@
 					$adminLevel = addslashes( htmlspecialchars($_POST['as_adminlevel']) );
 					
 					// Vérification des valeurs
-					if($password === null){
+					if($password == null){
 						AdminServ::error( Utils::t('Please put a password.') );
 					}
 					else{

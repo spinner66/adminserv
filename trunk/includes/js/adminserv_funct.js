@@ -586,10 +586,9 @@ function setMapsOrderSort(sort, order){
 	var path_ressources = getRessourcesPath();
 	var list = $("#jsonlist").val();
 	
-	$.getJSON(getIncludesPath()+"ajax/mapsorder_sort.php", {srt: sort, ord: order, lst: list}, function(data){
+	$.post(getIncludesPath()+"ajax/mapsorder_sort.php", {srt: sort, ord: order, lst: list}, function(data){
 		if(data != null){
 			var out = "";
-			
 			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
 				$.each(data.lst, function(id, map){
 					if(data.cid != id){
@@ -609,7 +608,7 @@ function setMapsOrderSort(sort, order){
 				$("#sortableMapList").removeClass("loading");
 			}
 		}
-	});
+	}, "json");
 }
 
 
@@ -772,6 +771,22 @@ function getJsonSelectedLines(){
 /**
 * MATCHSETTINGS
 */
+
+/**
+* Vérifie si le nom du MatchSettings n'existe pas déjà
+*
+* @param string filename -> Le nom du fichier
+*/
+function matchset_getFileExists(filename){
+	$.getJSON(getIncludesPath()+"ajax/get_matchset_fileexists.php", {path: getPath(), name: filename}, function(response){
+		if(response){
+			$("#matchSettingNameExists").attr("hidden", false);
+		}
+		else{
+			$("#matchSettingNameExists").attr("hidden", true);
+		}
+	});
+}
 
 /**
 * Récupère la liste des maps en local pour la création d'un matchSettings
