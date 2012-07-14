@@ -67,43 +67,41 @@
 						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=cost"><?php echo Utils::t('Cost'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
-					<tr class="table-separation"></tr>
 				</thead>
 				<tbody>
-				<?php
-					$showMapList = null;
-					
-					// Liste des joueurs
-					if( is_array($mapsList['lst']) && count($mapsList['lst']) > 0 ){
-						$pathRessources = AdminServConfig::PATH_RESSOURCES;
-						$i = 0;
-						foreach($mapsList['lst'] as $id => $map){
-							// Ligne
-							$showMapList .= '<tr'; if($id == $mapsList['cid']){ $showMapList .= ' id="currentMap"'; } $showMapList .= ' class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($id == $mapsList['cid']){ $showMapList .= ' current'; } $showMapList .= '">'
-								.'<td class="imgleft"><img src="'.$pathRessources.'images/16/map.png" alt="" />'
-									.'<span title="'.$map['FileName'].'">'.$map['Name'].'</span>';
-									if(USER_MODE == 'detail'){
-										$showMapList .= '<span class="detailModeTd">'.$map['UId'].'</span>';
-									}
-								$showMapList .= '</td>'
-								.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
-								.'<td>'.$map['Author'].'</td>';
-								if(USER_MODE == 'detail'){
-									$showMapList .= '<td>'.$map['GoldTime'].'</td>'
-									.'<td>'.$map['CopperPrice'].'</td>';
-								}
-								$showMapList .= '<td class="checkbox">'; if($id != $mapsList['cid']){ $showMapList .= '<input type="checkbox" name="map[]" value="'.$map['FileName'].'" />'; } $showMapList .= '</td>'
-							.'</tr>';
-							$i++;
+					<tr class="table-separation"><td colspan="6"></td></tr>
+					<?php
+						$showMapList = null;
+						
+						// Liste des joueurs
+						if( is_array($mapsList['lst']) && count($mapsList['lst']) > 0 ){
+							$pathRessources = AdminServConfig::PATH_RESSOURCES;
+							$i = 0;
+							foreach($mapsList['lst'] as $id => $map){
+								// Ligne
+								$showMapList .= '<tr'; if($id == $mapsList['cid']){ $showMapList .= ' id="currentMap"'; } $showMapList .= ' class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($id == $mapsList['cid']){ $showMapList .= ' current'; } $showMapList .= '">'
+									.'<td class="imgleft"><img src="'.$pathRessources.'images/16/map.png" alt="" />'
+										.'<span title="'.$map['FileName'].'">'.$map['Name'].'</span>';
+										if(USER_MODE == 'detail'){
+											$showMapList .= '<span class="detailModeTd">'.$map['UId'].'</span>';
+										}
+									$showMapList .= '</td>'
+									.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
+									.'<td>'.$map['Author'].'</td>'
+									.'<td'; if(USER_MODE == 'simple'){ $showMapList .= ' hidden="hidden"'; } $showMapList .= '>'.$map['GoldTime'].'</td>'
+									.'<td'; if(USER_MODE == 'simple'){ $showMapList .= ' hidden="hidden"'; } $showMapList .= '>'.$map['CopperPrice'].'</td>'
+									.'<td class="checkbox">'; if($id != $mapsList['cid']){ $showMapList .= '<input type="checkbox" name="map[]" value="'.$map['FileName'].'" />'; } $showMapList .= '</td>'
+								.'</tr>';
+								$i++;
+							}
 						}
-					}
-					else{
-						$showMapList .= '<tr class="no-line"><td class="center" colspan="4">'.$mapsList['lst'].'</td></tr>';
-					}
-					
-					// Affichage
-					echo $showMapList;
-				?>
+						else{
+							$showMapList .= '<tr class="no-line"><td class="center" colspan="6">'.$mapsList['lst'].'</td></tr>';
+						}
+						
+						// Affichage
+						echo $showMapList;
+					?>
 				</tbody>
 			</table>
 		</div>

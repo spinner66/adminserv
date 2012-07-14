@@ -290,7 +290,7 @@
 					<?php if($isTeamGameMode){ ?>
 						<th class="detailModeTh thleft"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=team"><?php echo Utils::t('Team'); ?></a></th>
 					<?php } ?>
-					<th class="firstTh <?php if(USER_MODE == 'simple'){ echo 'thleft'; } ?>"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
+					<th class="firstTh <?php if(USER_MODE == 'simple' || !$isTeamGameMode){ echo 'thleft'; } ?>"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
 					<?php if(!$isTeamGameMode){ ?>
 						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=ladder"><?php echo Utils::t('Ladder'); ?></a></th>
 					<?php } ?>
@@ -298,40 +298,40 @@
 					<th><a href="?sort=status"><?php echo Utils::t('Status'); ?></a></th>
 					<th class="thright"></th>
 				</tr>
-				<tr class="table-separation"></tr>
 			</thead>
 			<tbody>
-			<?php
-				$showPlayerList = null;
-				
-				// Liste des joueurs
-				if( is_array($serverInfo['ply']) && count($serverInfo['ply']) > 0 ){
-					$i = 0;
-					foreach($serverInfo['ply'] as $player){
-						// Ligne
-						$showPlayerList .= '<tr class="'; if($i%2){ $showPlayerList .= 'even'; }else{ $showPlayerList .= 'odd'; } $showPlayerList .= '">';
-							if($isTeamGameMode && USER_MODE == 'detail'){
-								$showPlayerList .= '<td class="detailModeTd imgleft"><span class="team_'.$player['TeamId'].'" title="'.$player['TeamName'].'"></span>'.$player['TeamName'].'</td>';
-							}
-							
-							$showPlayerList .= '<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>';
-							if(!$isTeamGameMode){
-								$showPlayerList .= '<td class="detailModeTd imgleft"'; if(USER_MODE == 'simple'){ $showPlayerList .= ' hidden="hidden"'; } $showPlayerList .= '><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/leagueladder.png" alt="" />'.$player['LadderRanking'].'</td>';
-							}
-							$showPlayerList .= '<td>'.$player['Login'].'</td>'
-							.'<td>'.$player['PlayerStatus'].'</td>'
-							.'<td class="checkbox"><input type="checkbox" name="player[]" value="'.$player['Login'].'" /></td>'
-						.'</tr>';
-						$i++;
+				<tr class="table-separation"><td colspan="<?php if($isTeamGameMode){ echo '6'; }else{ echo '5'; } ?>"></td></tr>
+				<?php
+					$showPlayerList = null;
+					
+					// Liste des joueurs
+					if( is_array($serverInfo['ply']) && count($serverInfo['ply']) > 0 ){
+						$i = 0;
+						foreach($serverInfo['ply'] as $player){
+							// Ligne
+							$showPlayerList .= '<tr class="'; if($i%2){ $showPlayerList .= 'even'; }else{ $showPlayerList .= 'odd'; } $showPlayerList .= '">';
+								if($isTeamGameMode && USER_MODE == 'detail'){
+									$showPlayerList .= '<td class="detailModeTd imgleft"><span class="team_'.$player['TeamId'].'" title="'.$player['TeamName'].'"></span>'.$player['TeamName'].'</td>';
+								}
+								
+								$showPlayerList .= '<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>';
+								if(!$isTeamGameMode){
+									$showPlayerList .= '<td class="detailModeTd imgleft"'; if(USER_MODE == 'simple'){ $showPlayerList .= ' hidden="hidden"'; } $showPlayerList .= '><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/leagueladder.png" alt="" />'.$player['LadderRanking'].'</td>';
+								}
+								$showPlayerList .= '<td>'.$player['Login'].'</td>'
+								.'<td>'.$player['PlayerStatus'].'</td>'
+								.'<td class="checkbox"><input type="checkbox" name="player[]" value="'.$player['Login'].'" /></td>'
+							.'</tr>';
+							$i++;
+						}
 					}
-				}
-				else{
-					$showPlayerList .= '<tr class="no-line"><td class="center" colspan="4">'.$serverInfo['ply'].'</td></tr>';
-				}
-				
-				// Affichage
-				echo $showPlayerList;
-			?>
+					else{
+						$showPlayerList .= '<tr class="no-line"><td class="center" colspan="'; if($isTeamGameMode){ $showPlayerList .= '6'; }else{ $showPlayerList .= '5'; } $showPlayerList .= '">'.$serverInfo['ply'].'</td></tr>';
+					}
+					
+					// Affichage
+					echo $showPlayerList;
+				?>
 			</tbody>
 		</table>
 	</div>

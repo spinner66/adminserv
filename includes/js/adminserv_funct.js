@@ -206,6 +206,7 @@ function getCurrentServerInfo(mode, sort){
 				var out = "";
 				
 				// Création du tableau
+				out += '<tr class="table-separation"><td colspan="'; if(isTeamGameMode){ out += '6'; }else{ out += '5'; } out += '"></td></tr>';
 				if( typeof(data.ply) == "object" && data.ply.length > 0 ){
 					$.each(data.ply, function(i, player){
 						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">';
@@ -230,7 +231,7 @@ function getCurrentServerInfo(mode, sort){
 					if( !$("input#checkAll").attr("disabled") ){
 						$("input#checkAll").attr("disabled", true);
 					}
-					out += '<tr class="no-line"><td class="center" colspan="4">'+data.ply+'</td></tr>';
+					out += '<tr class="no-line"><td class="center" colspan="'; if(isTeamGameMode){ out += '6'; }else{ out += '5'; } out += '">'+data.ply+'</td></tr>';
 				}
 				
 				// HTML
@@ -416,6 +417,7 @@ function getMapList(mode, sort){
 				var out = "";
 				
 				// Création du tableau
+				out += '<tr class="table-separation"><td colspan="6"></td></tr>';
 				if( typeof(data.lst) == "object" && data.lst.length > 0 ){
 					$.each(data.lst, function(i, map){
 						out += '<tr'; if(data.cid == i){ out += ' id="currentMap"'; } out += ' class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } if(data.cid == i){ out += ' current'; } out += '">'
@@ -443,7 +445,7 @@ function getMapList(mode, sort){
 					if( !$("input#checkAll").attr("disabled") ){
 						$("input#checkAll").attr("disabled", true);
 					}
-					out += '<tr class="no-line"><td class="center" colspan="'; if(mode == "detail"){ out += '6'; }else{ out += '4'; } out +='">'+data.lst+'</td></tr>';
+					out += '<tr class="no-line"><td class="center" colspan="6">'+data.lst+'</td></tr>';
 				}
 				
 				// HTML
@@ -792,6 +794,7 @@ function matchset_mapImportSelection(){
 			var out = "";
 			
 			// Création du tableau
+			out += '<tr class="table-separation"><td colspan="4"></td></tr>';
 			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
 				$.each(data.lst, function(i, map){
 					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
@@ -873,6 +876,7 @@ function matchset_mapSelection(removeId){
 			var out = "";
 			
 			// Création du tableau
+			out += '<tr class="table-separation"><td colspan="4"></td></tr>';
 			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
 				$.each(data.lst, function(i, map){
 					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'

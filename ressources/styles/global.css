@@ -675,7 +675,8 @@ tr.no-line {
 	font-style: italic;
 	text-align: center;
 }
-tr.no-line:hover {
+tr.no-line:hover,
+tr.table-separation {
 	background: none !important;
 	cursor: auto !important;
 }
@@ -1559,7 +1560,11 @@ footer {
 	margin: 0;
 }
 #form-new-playlist {
+	display: block;
 	margin: 6px 0 8px;
+}
+#form-new-playlist[hidden=hidden] {
+	display: none !important;
 }
 #form-new-playlist select {
 	width: 120px;

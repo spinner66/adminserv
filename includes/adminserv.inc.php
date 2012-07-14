@@ -112,7 +112,7 @@ abstract class AdminServUI {
 		
 		// Page courante
 		if(USER_PAGE && USER_PAGE != 'index'){
-			$param = '?p='. USER_PAGE .'&th=';
+			$param = '?p='. USER_PAGE .'&amp;th=';
 		}
 		else{
 			$param = '?th=';
@@ -122,10 +122,10 @@ abstract class AdminServUI {
 			$out .= '<ul>';
 			// Si il y a un thème courant, on le place en 1er
 			if( count($currentTheme) > 0 ){
-				$out .= '<li><a class="theme-color" style="background-color: '.$currentThemeColor[0].';" href="'.$param.$currentThemeName.'" title="'.Utils::t( ucfirst($currentThemeName) ).'"></a></li>';
+				$out .= '<li><a tabindex="-1" class="theme-color" style="background-color: '.$currentThemeColor[0].';" href="'.$param.$currentThemeName.'" title="'.Utils::t( ucfirst($currentThemeName) ).'"></a></li>';
 			}
 			foreach($list as $name => $color){
-				$out .= '<li><a class="theme-color" style="background-color: '.$color[0].';" href="'.$param.$name.'" title="'.Utils::t( ucfirst($name) ).'"></a></li>';
+				$out .= '<li><a tabindex="-1" class="theme-color" style="background-color: '.$color[0].';" href="'.$param.$name.'" title="'.Utils::t( ucfirst($name) ).'"></a></li>';
 			}
 			$out .= '</ul>';
 		}
@@ -196,7 +196,7 @@ abstract class AdminServUI {
 		
 		// Page courante
 		if(USER_PAGE && USER_PAGE != 'index'){
-			$param = '?p='. USER_PAGE .'&lg=';
+			$param = '?p='. USER_PAGE .'&amp;lg=';
 		}
 		else{
 			$param = '?lg=';
@@ -207,10 +207,10 @@ abstract class AdminServUI {
 			$out .= '<ul>';
 			// Si il y a une langue courante, on la place en 1er
 			if( count($currentLang) > 0 ){
-				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$currentLangCode.'.png);" href="'.$param.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
+				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$currentLangCode.'.png);" href="'.$param.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
 			}
 			foreach($list as $code => $name){
-				$out .= '<li><a class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="'.$param.$code.'" title="'.$name.'"></a></li>';
+				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="'.$param.$code.'" title="'.$name.'"></a></li>';
 			}
 			$out .= '</ul>';
 		}
@@ -732,7 +732,7 @@ abstract class AdminServUI {
 					if( count($directory['folders']) > 0 ){
 						foreach($directory['folders'] as $dir => $values){
 							$out .= '<li>'
-								.'<a href="./?p='. USER_PAGE .'&amp;d='.$currentPath.$dir.'/">'
+								.'<a href="./?p='. USER_PAGE .'&amp;d='.urlencode($currentPath.$dir).'/">'
 									.'<span class="dir-name">'.$dir.'</span>'
 									.'<span class="dir-info">'.$values['nb_file'].'</span>'
 								.'</a>'

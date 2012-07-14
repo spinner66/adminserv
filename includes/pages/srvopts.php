@@ -60,6 +60,7 @@
 		$client->addCall('GetServerOptions');
 	}
 	$client->addCall('GetBuddyNotification', array('') );
+	$client->addCall('GetHideServer');
 	if( !$client->multiquery() ){
 		AdminServ::error();
 	}
@@ -75,6 +76,7 @@
 		if($srvOpt['CurrentVehicleNetQuality'] !== 0){ $srvOpt['CurrentVehicleNetQualityName'] = Utils::t('High'); }
 		else{ $srvOpt['CurrentVehicleNetQualityName'] = Utils::t('Fast'); }
 		$srvOpt['BuddyNotification'] = $queriesData['GetBuddyNotification'];
+		$srvOpt['HideServer'] = $queriesData['GetHideServer'];
 	}
 	
 	
@@ -173,11 +175,11 @@
 						<td class="preview"></td>
 					</tr>
 					<tr>
-						<td class="key"><label for="NextVehicleNetQuality"><?php echo Utils::t('Vehicles quality'); ?></td>
+						<td class="key"><label for="NextVehicleNetQuality"><?php echo Utils::t('Vehicles quality'); ?></label></td>
 						<td class="value col2">
 							<input class="text width1" type="text" name="CurrentVehicleNetQuality" id="CurrentVehicleNetQuality" readonly="readonly" value="<?php echo $srvOpt['CurrentVehicleNetQualityName']; ?>" />
 						</td>
-						<td class="key col3"><label for="NextVehicleNetQuality"><?php echo Utils::t('Next value'); ?></td>
+						<td class="key col3"><label for="NextVehicleNetQuality"><?php echo Utils::t('Next value'); ?></label></td>
 						<td class="value">
 							<select class="width1" name="NextVehicleNetQuality" id="NextVehicleNetQuality">
 								<?php

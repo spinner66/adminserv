@@ -32,10 +32,10 @@
 		// 1ère étape - Initialiser DisplayServ en créant le html
 		$.getJSON(settings.includes+"ajax/ds_initialize.php", {cfg: settings.config}, function(data){
 			if(data != null){
-				var out = '<ul class="ds-servers-list">';
+				var out = '<ul class="ds-servers-list loading">';
 					if(data.servers){
 						for(var i = 0; i < data.servers; i++){
-							out += '<li id="ds-server-'+i+'" class="ds-server loading">'
+							out += '<li id="ds-server-'+i+'" class="ds-server">'
 								+ '<table>'
 									+ '<tr class="ds-header">'
 										+ '<th class="first"'+settings.color+'>'+data.label.server+" n°"+(i+1)+'</th>'
@@ -97,55 +97,58 @@
 				}
 				
 				// 2ème étape - Récupérer les données serveur
-				$.getJSON(settings.includes+"ajax/ds_getservers.php", {cfg: settings.config}, function(data){
+				$.getJSON(settings.includes+"ajax/ds_getservers.php", {cfg: settings.config, rsc: settings.ressources}, function(data){
 					if(data != null){
 						if(data.servers){
 							for(var i = 0; i < data.servers.length; i++){
 								var serverId = $("#ds-server-"+i);
 								
 								// Server infos
-								serverId.find(".ds-server-name").html(data.servers[i].name);
-								serverId.find(".ds-server-login").html(data.servers[i].serverlogin);
-								serverId.find(".ds-server-connect").html(data.servers[i].version.name);
-								serverId.find(".ds-server-connect").addClass(data.servers[i].version.name.toLowerCase());
-								serverId.find(".ds-server-status").html(data.servers[i].status);
-								serverId.find(".ds-server-gamemode").html(data.servers[i].gamemode);
-								serverId.find(".ds-server-gamemode").addClass(data.servers[i].gamemode.toLowerCase());
-								serverId.find(".ds-server-currentmap").html(data.servers[i].map.name+' <img src="./ressources/images/env/'+data.servers[i].map.env.toLowerCase()+'.png" alt="+data.servers[i].map+" />');
-								serverId.find(".ds-server-players-count").html(data.players[i].count.current+" / "+data.players[i].count.max);
-								
-								// Join
-								serverId.find(".ds-server-join a").attr("href", data.servers[i].version.protocol+"://#join="+data.servers[i].serverlogin);
-								serverId.find(".ds-server-favourite a").attr("href", data.servers[i].version.protocol+"://#addfavourite="+data.servers[i].serverlogin);
-								
-								// Players
-								var playerListTable = "<table>";
-									if(data.players[i].count.current > 0){
-										$.each(data.players[i].list, function(i, n){
-											var teamSpan = "";
-											if(n.gamemode == "Team"){
-												teamSpan = '<span class="team_'+n.teamId+'" title="'+n.teamName+'"></span>';
-											}
-											playerListTable += '<td>'+teamSpan+n.name+'</td>'
-											+ '<td>'+n.status+'</td>'
-										});
+								if(data.servers[i].error){
+									serverId.find(".ds-server-name").html(data.servers[i].error);
+									serverId.find(".ds-server-join-wrap").remove();
+								}
+								else{
+									serverId.find(".ds-server-name").html(data.servers[i].name);
+									serverId.find(".ds-server-login").html(data.servers[i].serverlogin);
+									serverId.find(".ds-server-connect").html(data.servers[i].version.name);
+									serverId.find(".ds-server-connect").addClass(data.servers[i].version.name.toLowerCase());
+									serverId.find(".ds-server-status").html(data.servers[i].status);
+									serverId.find(".ds-server-gamemode").html(data.servers[i].gamemode);
+									serverId.find(".ds-server-gamemode").addClass(data.servers[i].gamemode.toLowerCase());
+									var envImg = "";
+									if(data.servers[i].map.env.filename != null){
+										var envImg = ' <img src="'+data.servers[i].map.env.filename+'" alt="('+data.servers[i].map.env.name+')" title="'+data.servers[i].map.env.name+'" />';
 									}
-									else{
-										playerListTable += '<td class="no-player" colspan="2">'+data.players[i].list+'</td>';
-									}
-								playerListTable += "</table>";
-								serverId.removeClass("loading");
-								serverId.find(".ds-servers-players-list").html(playerListTable);
+									serverId.find(".ds-server-currentmap").html(data.servers[i].map.name + envImg);
+									serverId.find(".ds-server-players-count").html(data.players[i].count.current+" / "+data.players[i].count.max);
+									
+									// Join
+									serverId.find(".ds-server-join a").attr("href", data.servers[i].version.protocol+"://#join="+data.servers[i].serverlogin);
+									serverId.find(".ds-server-favourite a").attr("href", data.servers[i].version.protocol+"://#addfavourite="+data.servers[i].serverlogin);
+									
+									// Players
+									var playerListTable = "<table>";
+										if(data.players[i].count.current > 0){
+											$.each(data.players[i].list, function(i, n){
+												var teamSpan = "";
+												if(n.gamemode == "Team"){
+													teamSpan = '<span class="team_'+n.teamId+'" title="'+n.teamName+'"></span>';
+												}
+												playerListTable += '<td>'+teamSpan+n.name+'</td>'
+												+ '<td>'+n.status+'</td>'
+											});
+										}
+										else{
+											playerListTable += '<td class="no-player" colspan="2">'+data.players[i].list+'</td>';
+										}
+									playerListTable += "</table>";
+									serverId.find(".ds-servers-players-list").html(playerListTable);
+								}
 							}
 						}
-						else{
-							if(data.error){
-								var sid = 0;
-								var serverId = $("#ds-server-"+sid);
-								serverId.removeClass("loading");
-								serverId.find(".ds-server-name").html(data.error);
-							}
-						}
+						
+						selector.find(".ds-servers-list").removeClass("loading");
 					}
 				});
 			}

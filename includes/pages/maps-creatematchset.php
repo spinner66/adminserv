@@ -192,7 +192,6 @@
 									<th><?php echo Utils::t('Author'); ?></th>
 									<th class="thright"><input type="checkbox" name="checkAllMapImport" id="checkAllMapImport" value="" /></th>
 								</tr>
-								<tr class="table-separation"></tr>
 							</thead>
 							<tbody>
 							</tbody>
@@ -212,7 +211,6 @@
 									<th><?php echo Utils::t('Author'); ?></th>
 									<th class="thright"></th>
 								</tr>
-								<tr class="table-separation"></tr>
 							</thead>
 							<tbody>
 							</tbody>
