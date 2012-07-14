@@ -328,6 +328,14 @@ $(document).ready(function(){
 			* Create MatchSettings
 			*/
 			if( $("body").hasClass("section-maps-creatematchset") ){
+				// Nom du matchSetting
+				$("#matchSettingName").keyup(function(event){
+					var key = event.keyCode;
+					if(key != 13 && key != 37 && key != 39){
+						matchset_getFileExists( $(this).val() );
+					}
+				});
+				
 				// Importer tout le dossier
 				$("#mapImport").click(function(){
 					$(".creatematchset .maps").addClass("loading");
