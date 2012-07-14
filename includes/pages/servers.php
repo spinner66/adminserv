@@ -89,7 +89,7 @@
 				<th><?php echo Utils::t('Port'); ?></th>
 				<th><?php echo Utils::t('MatchSettings'); ?></th>
 				<th><?php echo Utils::t('SuperAdmin level'); ?></th>
-				<th><?php echo Utils::t('Admin level'); ?></th>
+				<th><?php echo ucwords( Utils::t('Admin level') ); ?></th>
 				<th><?php echo Utils::t('User level'); ?></th>
 				<th class="thright"><?php echo Utils::t('Manage'); ?></th>
 			</tr>
