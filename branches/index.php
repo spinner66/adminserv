@@ -8,7 +8,9 @@
 		<script src="./includes/js/displayserv.js"></script>
 		<script>
 			$(document).ready(function(){
-				$("#displayserv").displayServ();
+				$("#displayserv").displayServ({
+					config: "../adminserv2/config/servers.cfg.php"
+				});
 			});
 		</script> 
 	</head>
