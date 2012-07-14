@@ -108,33 +108,33 @@
 						<th><a href="?sort=mtime"><?php echo Utils::t('Modified'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
-					<tr class="table-separation"></tr>
 				</thead>
 				<tbody>
-				<?php
-					$showMatchsetList = null;
-					
-					// Liste des matchsettings
-					if( is_array($matchsetList['lst']) && count($matchsetList['lst']) > 0 ){
-						$i = 0;
-						foreach($matchsetList['lst'] as $id => $matchset){
-							// Ligne
-							$showMatchsetList .= '<tr class="'; if($i%2){ $showMatchsetList .= 'even'; }else{ $showMatchsetList .= 'odd'; } if($matchset['Recent']){ $showMatchsetList .= ' recent'; } $showMatchsetList .= '">'
-								.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$matchset['FileName'].'">'.$matchset['Name'].'</span></td>'
-								.'<td>'.$matchset['Nbm'].'</td>'
-								.'<td>'.date('d/m/Y', $matchset['Mtime']).'</td>'
-								.'<td class="checkbox"><input type="checkbox" name="matchset[]" value="'.$matchset['FileName'].'" /></td>'
-							.'</tr>';
-							$i++;
+					<tr class="table-separation"><td colspan="4"></td></tr>
+					<?php
+						$showMatchsetList = null;
+						
+						// Liste des matchsettings
+						if( is_array($matchsetList['lst']) && count($matchsetList['lst']) > 0 ){
+							$i = 0;
+							foreach($matchsetList['lst'] as $id => $matchset){
+								// Ligne
+								$showMatchsetList .= '<tr class="'; if($i%2){ $showMatchsetList .= 'even'; }else{ $showMatchsetList .= 'odd'; } if($matchset['Recent']){ $showMatchsetList .= ' recent'; } $showMatchsetList .= '">'
+									.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$matchset['FileName'].'">'.$matchset['Name'].'</span></td>'
+									.'<td>'.$matchset['Nbm'].'</td>'
+									.'<td>'.date('d/m/Y', $matchset['Mtime']).'</td>'
+									.'<td class="checkbox"><input type="checkbox" name="matchset[]" value="'.$matchset['FileName'].'" /></td>'
+								.'</tr>';
+								$i++;
+							}
 						}
-					}
-					else{
-						$showMatchsetList .= '<tr class="no-line"><td class="center" colspan="4">'.$matchsetList['lst'].'</td></tr>';
-					}
-					
-					// Affichage
-					echo $showMatchsetList;
-				?>
+						else{
+							$showMatchsetList .= '<tr class="no-line"><td class="center" colspan="4">'.$matchsetList['lst'].'</td></tr>';
+						}
+						
+						// Affichage
+						echo $showMatchsetList;
+					?>
 				</tbody>
 			</table>
 		</div>

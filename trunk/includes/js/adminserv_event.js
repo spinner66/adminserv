@@ -842,14 +842,23 @@ $(document).ready(function(){
 			$("#clickNewPlaylist").click(function(){
 				var selector = $("#form-new-playlist");
 				if( selector.attr("hidden") ){
-					selector.slideDown("fast");
+					selector.animate({
+						height: "25px",
+						marginTop: "6px",
+						marginBottom: "6px"
+					}, "fast");
 					selector.removeAttr("hidden");
 					$(this).text( $(this).data("cancel") );
 				}
 				else{
-					selector.slideUp("fast");
-					selector.attr("hidden", true);
-					$(this).text( $(this).data("newplaylist") );
+					selector.animate({
+						height: "0",
+						marginTop: "0",
+						marginBottom: "0"
+					}, "fast", function(){
+						$(this).attr("hidden", true);
+						$("#clickNewPlaylist").text( $("#clickNewPlaylist").data("newplaylist") );
+					});
 				}
 				return false;
 			});

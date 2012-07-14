@@ -174,44 +174,44 @@
 						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
-					<tr class="table-separation"></tr>
 				</thead>
 				<tbody>
-				<?php
-					$showMapList = null;
-					
-					// Liste des maps local
-					if( is_array($mapsList['lst']) && count($mapsList['lst']) > 0 ){
-						$pathRessources = AdminServConfig::PATH_RESSOURCES;
-						$i = 0;
-						foreach($mapsList['lst'] as $id => $map){
-							// Map sur le serveur
-							if($map['OnServer']){
-								$mapImg = 'loadmap';
-								$mapClass = ' onserver';
+					<tr class="table-separation"><td colspan="4"></td></tr>
+					<?php
+						$showMapList = null;
+						
+						// Liste des maps local
+						if( is_array($mapsList['lst']) && count($mapsList['lst']) > 0 ){
+							$pathRessources = AdminServConfig::PATH_RESSOURCES;
+							$i = 0;
+							foreach($mapsList['lst'] as $id => $map){
+								// Map sur le serveur
+								if($map['OnServer']){
+									$mapImg = 'loadmap';
+									$mapClass = ' onserver';
+								}
+								else{
+									$mapImg = 'map';
+									$mapClass = null;
+								}
+								
+								// Lignes
+								$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($map['Recent']){ $showMapList .= ' recent'; } $showMapList .= $mapClass.'">'
+									.'<td class="imgleft"><img src="'.$pathRessources.'images/16/'.$mapImg.'.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
+									.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
+									.'<td>'.$map['Author'].'</td>'
+									.'<td class="checkbox"><input type="checkbox" name="map[]" value="'.$map['FileName'].'" /></td>'
+								.'</tr>';
+								$i++;
 							}
-							else{
-								$mapImg = 'map';
-								$mapClass = null;
-							}
-							
-							// Lignes
-							$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($map['Recent']){ $showMapList .= ' recent'; } $showMapList .= $mapClass.'">'
-								.'<td class="imgleft"><img src="'.$pathRessources.'images/16/'.$mapImg.'.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
-								.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
-								.'<td>'.$map['Author'].'</td>'
-								.'<td class="checkbox"><input type="checkbox" name="map[]" value="'.$map['FileName'].'" /></td>'
-							.'</tr>';
-							$i++;
 						}
-					}
-					else{
-						$showMapList .= '<tr class="no-line"><td class="center" colspan="4">'.$mapsList['lst'].'</td></tr>';
-					}
-					
-					// Affichage
-					echo $showMapList;
-				?>
+						else{
+							$showMapList .= '<tr class="no-line"><td class="center" colspan="4">'.$mapsList['lst'].'</td></tr>';
+						}
+						
+						// Affichage
+						echo $showMapList;
+					?>
 				</tbody>
 			</table>
 		</div>

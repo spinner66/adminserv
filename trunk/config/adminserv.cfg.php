@@ -43,7 +43,7 @@ class AdminServConfig {
 	public static $PLAYLIST_EXTENSION = array('playlist.txt'); // Playlists extension used in guestban page
 	
 	/* UPLOAD */
-	public static $ALLOWED_EXTENSIONS = array('gbx', 'zip', 'rar', '7z', 'gzip'); // Extension allowed to upload
+	public static $ALLOWED_EXTENSIONS = array('gbx'); // Extension allowed to upload
 	const SIZE_LIMIT = 'auto'; // Limit size per file in MB. If auto, the limit size in php.ini config file is used
 	
 	/* LOGS */
