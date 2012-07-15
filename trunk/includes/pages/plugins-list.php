@@ -39,8 +39,8 @@
 		
 		<h2>Comment créer son plugin ?</h2>
 		<div class="content">
-			<p>Pour créer son plugin, copiez le dossier &laquo; _newplugin &raquo; et remplacez les valeurs dans le fichier config.ini.<br />
-			Le fichier &laquo; index.php &raquo; sera inclu dans la page plugins d'AdminServ. A vous de créer une configuration, une classe, et autres ressources puis de les inclures dans ce fichier.</p>
+			<p>Pour créer son plugin, allez dans le dossier &laquo; Plugins  &raquo; et dupliquez le dossier &laquo; _newplugin &raquo. Remplacez les valeurs dans le fichier config.ini ainsi que le nom du dossier.<br />
+			Le fichier &laquo; index.php &raquo; est le fichier principal du plugin. A vous de créer les ressources (classes, js, css) puis de les inclures dans ce fichier.</p>
 		</div>
 	</section>
 </section>

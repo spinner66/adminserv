@@ -163,8 +163,8 @@
 		</div>
 		
 		<h2><?php echo Utils::t('MatchSettings name'); ?></h2>
-		<input class="text width3" type="text" name="matchSettingName" id="matchSettingName" value="<?php echo $matchSetting['name']; ?>" />
-		<p id="matchSettingNameExists" hidden="hidden">Le nom du MatchSetting existe déjà ! Il sera écrasé.</p>
+		<input class="text" type="text" name="matchSettingName" id="matchSettingName" value="<?php echo $matchSetting['name']; ?>" />
+		<p class="ui-state-error" id="matchSettingNameExists" hidden="hidden"><span class="ui-icon ui-icon-alert"></span><?php echo Utils::t('The MatchSettings name already exist! It will be overwritten.'); ?></p>
 		
 		<h2><?php echo Utils::t('Maps'); ?></h2>
 		<div class="content maps">

@@ -55,7 +55,7 @@
 		<select name="chatColor" id="chatColor" title="<?php echo Utils::t('Default color: yellow'); ?>">
 			<?php echo $chatColorOptions; ?>
 		</select>
-		<input class="text width4" type="text" name="chatMessage" id="chatMessage" value="<?php echo Utils::t('Message'); ?>" data-default-value="<?php echo Utils::t('Message'); ?>" />
+		<input class="text" type="text" name="chatMessage" id="chatMessage" value="<?php echo Utils::t('Message'); ?>" data-default-value="<?php echo Utils::t('Message'); ?>" />
 		<select name="chatDestination" id="chatDestination" title="<?php echo $destTitle; ?>">
 			<option value="server"><?php echo Utils::t('Destination'); ?></option>
 			<?php echo $playerList; ?>

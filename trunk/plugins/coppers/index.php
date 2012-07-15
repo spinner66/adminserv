@@ -108,6 +108,7 @@
 	
 	$client->Terminate();
 ?>
+<link rel="stylesheet" href="<?php echo $path; ?>styles/coppers.css" />
 <script src="<?php echo $path; ?>js/event.js"></script>
 
 <h2><?php echo Utils::t('Infos'); ?></h2>
@@ -157,7 +158,7 @@
 					<label for="serverToPlayerMessage"><?php echo Utils::t('Message'); ?></label>
 				</td>
 				<td class="value">
-					<input class="text width4" type="text" name="serverToPlayerMessage" id="serverToPlayerMessage" data-default-value="<?php echo Utils::t('Optionnal'); ?>" value="<?php echo Utils::t('Optionnal'); ?>" />
+					<input class="text width2" type="text" name="serverToPlayerMessage" id="serverToPlayerMessage" data-default-value="<?php echo Utils::t('Optionnal'); ?>" value="<?php echo Utils::t('Optionnal'); ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -183,7 +184,7 @@
 					<label for="playerToServerAmount"><?php echo Utils::t('Amount'); ?></label>
 				</td>
 				<td class="value">
-					<input class="text width2" type="text" name="playerToServerAmount" id="playerToServerAmount" value="" />
+					<input class="text width1" type="text" name="playerToServerAmount" id="playerToServerAmount" value="" />
 				</td>
 			</tr>
 			<tr>
@@ -191,7 +192,7 @@
 					<label for="playerToServerLogin"><i><?php echo SERVER_LOGIN; ?></i> ←</label>
 				</td>
 				<td class="value">
-					<select class="width2" name="playerToServerLogin" id="playerToServerLogin">
+					<select class="width1" name="playerToServerLogin" id="playerToServerLogin">
 						<?php echo $getPlayerListUI; ?>
 					</select>
 				</td>

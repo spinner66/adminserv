@@ -781,9 +781,12 @@ function matchset_getFileExists(filename){
 	$.getJSON(getIncludesPath()+"ajax/get_matchset_fileexists.php", {path: getPath(), name: filename}, function(response){
 		if(response){
 			$("#matchSettingNameExists").attr("hidden", false);
+			$("#matchSettingNameExists").hide();
+			$("#matchSettingNameExists").fadeIn("fast");
 		}
 		else{
 			$("#matchSettingNameExists").attr("hidden", true);
+			$("#matchSettingNameExists").fadeOut("fast");
 		}
 	});
 }
