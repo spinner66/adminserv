@@ -166,6 +166,7 @@ $translate = array(
 	'Random map order' => 'Ordre des maps aléatoire',
 	'Default game mode' => 'Mode de jeu par défaut',
 	'No map selected for the MatchSettings.' => 'Aucune map sélectionnée pour le MatchSettings.',
+	'The MatchSettings name already exist! It will be overwritten.' => 'Le nom du MatchSettings existe déjà ! Il sera écrasé.',
 	// Maps-order
 	'Order' => 'Ordonner',
 	'Automatic sort' => 'Tri automatique',
@@ -205,6 +206,14 @@ $translate = array(
 	'plugins installed' => 'plugins installés',
 	'Cannot include another plugins config file.' => 'Impossible d\'inclure un autre fichier de config pour les plugins.',
 	'Variable "$PLUGINS" not found.' => 'Variable "$PLUGINS" non trouvée.',
+	'' => 'Les plugins sont des extensions permettant d\'ajouter des fonctionnalités pour AdminServ.',
+	'How install a plugin?' => 'Comment installer un plugin ?',
+	'' => 'Les plugins sont diponibles sur la page de téléchargement du projet AdminServ :',
+	'Click here' => 'Cliquez-ici',
+	'' => 'Dézippez le plugin et placez son contenu dans le dossier &laquo; plugins &raquo; d\'AdminServ.',
+	'' => 'Dans la configuration Extension, ajoutez le nom du dossier du plugin précédement ajouté.',
+	'How create your plugin?' => 'Comment créer son plugin ?',
+	'' => 'Pour créer son plugin, allez dans le dossier &laquo; Plugins  &raquo; et dupliquez le dossier &laquo; _newplugin &raquo. Remplacez les valeurs dans le fichier config.ini ainsi que le nom du dossier.<br />Le fichier &laquo; index.php &raquo; est le fichier principal du plugin. A vous de créer les ressources (classes, js, css) puis de les inclures dans ce fichier.',
 	// Guest-ban
 	'Unable to delete the playlist' => 'Impossible de supprimer la playlist',
 	'Player login' => 'Login joueur',

@@ -27,7 +27,7 @@ ul {
 ul li {
 	list-style: none;
 }
-*[hidden="hidden"] {
+[hidden="hidden"] {
 	display: none;
 }
 
@@ -258,11 +258,12 @@ header {
 #connection-inner,
 .menu-principal {
 	clear: both;
-	height: 26px;
-	padding: 5px 0;
+	height: 100%;
+	padding: 5px 0 9px;
 	background: #fff;
 	border: 1px solid #ddd;
 	border-width: 0 1px 1px;
+	overflow: hidden;
 	-webkit-border-radius: 0 0 5px 5px;
 	-moz-border-radius: 0 0 5px 5px;
 	-o-border-radius: 0 0 5px 5px;
@@ -507,27 +508,22 @@ input[disabled="disabled"] {
 input.width1,
 textarea.width1,
 select.width1 {
-	width: 80px;
+	width: 86%;
 }
 select.width1 {
-	width: 92px;
+	width: 96%;
 }
 input.width2,
 textarea.width2 {
-	width: 190px;
+	width: 80%;
 }
 select.width2 {
-	width: 202px;
+	width: 84.75%;
 }
 input.width3,
-textarea.width3 {
-	width: 310px;
-}
+textarea.width3,
 select.width3 {
-	width: 302px;
-}
-input.width4 {
-	width: 400px;
+	width: 95%;
 }
 
 
@@ -1203,10 +1199,13 @@ footer {
 	width: 100px;
 }
 .section-srvopts .preview {
-	padding-top: 5px;
+	padding: 5px 0 0 10px;
 	width: 40%;
 	text-align: left;
 	vertical-align: top;
+}
+#CallVoteRatio {
+	width: 12%;
 }
 
 /* Page Game infos
@@ -1274,7 +1273,13 @@ footer {
 .section-chat #chatColor,
 .section-chat #chatDestination,
 .section-chat #chatSend {
-	width: 108px;
+	width: 12%;
+}
+.section-chat #chatNickname {
+	width: 15%;
+}
+.section-chat #chatMessage {
+	width: 38%;
 }
 .section-chat #chatSend {
 	margin: 0;
@@ -1486,6 +1491,20 @@ footer {
 
 /* Page Maps Create MatchSettings
 ---------------------- */
+.section-maps-creatematchset #matchSettingName {
+	width: 250px;
+}
+.section-maps-creatematchset #matchSettingNameExists {
+	float: right;
+	font-size: .85em;
+	margin: 4px 0;
+	line-height: 16px;
+	padding: 0 3px 0 2px;
+}
+.section-maps-creatematchset #matchSettingNameExists span {
+	float: left;
+	margin-right: 3px;
+}
 .section-maps-creatematchset td.key,
 .section-maps-creatematchset td.value {
 	width: 40%;

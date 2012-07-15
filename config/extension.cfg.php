@@ -14,21 +14,21 @@ class ExtensionConfig {
 			'#5e9cd5',
 			'#d9e8ff'
 		),
-		'orange' => array(
-			'#ffa600',
-			'#ffe3b0'
-		),
 		'green' => array(
 			'#8aca1b',
 			'#d1e9a8'
 		),
-		'purple' => array(
-			'#b15cd5',
-			'#e5c4f3'
-		),
 		'red' => array(
 			'#ea4f4f',
 			'#ffc0c0'
+		),
+		'orange' => array(
+			'#ffa600',
+			'#ffe3b0'
+		),
+		'purple' => array(
+			'#b15cd5',
+			'#e5c4f3'
 		),
 		'black' => array(
 			'#727272',
