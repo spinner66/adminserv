@@ -130,6 +130,14 @@
 			}
 		}
 	}
+	else if( isset($_POST['CancelVote']) ){
+		if( !$client->query('CancelVote') ){
+			AdminServ::error();
+		}
+		else{
+			Utils::redirection();
+		}
+	}
 	
 	
 	// Info serveur
@@ -173,6 +181,15 @@
 				<td class="key"><?php echo Utils::t('Game mode'); ?></td>
 				<td class="value <?php echo strtolower($serverInfo['srv']['gameModeName']); ?>" id="map_gamemode"><?php echo $serverInfo['srv']['gameModeName']; ?></td>
 			</tr>
+			<?php if($serverInfo['map']['callvote']['login']){ ?>
+				<tr>
+					<td class="key"><?php echo Utils::t('Current vote'); ?></td>
+					<td class="value" id="map_currentcallvote">
+						<?php echo $serverInfo['map']['callvote']['login'].' : '.$serverInfo['map']['callvote']['cmdname'].' ('.$serverInfo['map']['callvote']['cmdparam'].')'; ?>
+						<input class="button light" type="submit" name="CancelVote" id="CancelVote" value="<?php echo Utils::t('Cancel vote'); ?>" />
+					</td>
+				</tr>
+			<?php } ?>
 			<?php if($isTeamGameMode){ ?>
 				<tr>
 					<td class="key"><?php echo Utils::t('Scores'); ?></td>

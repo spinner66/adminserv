@@ -1204,6 +1204,7 @@ abstract class AdminServ {
 		$client->addCall('GetGameMode');
 		$client->addCall('GetServerName');
 		$client->addCall('GetStatus');
+		$client->addCall('GetCurrentCallVote');
 		if( self::isAdminLevel('SuperAdmin') ){
 			$client->addCall('GetNetworkStats');
 		}
@@ -1236,6 +1237,11 @@ abstract class AdminServ {
 			else{
 				$out['map']['thumb'] = null;
 			}
+			
+			// CurrentCallVote
+			$out['map']['callvote']['login'] = $queriesData['GetCurrentCallVote']['CallerLogin'];
+			$out['map']['callvote']['cmdname'] = $queriesData['GetCurrentCallVote']['CmdName'];
+			$out['map']['callvote']['cmdparam'] = $queriesData['GetCurrentCallVote']['CmdParam'];
 			
 			// TeamScores (mode team)
 			if( self::isGameMode('Team', $out['srv']['gameModeId']) ){
@@ -1298,6 +1304,9 @@ abstract class AdminServ {
 					$out['ply'][$i]['Score'] = $rankingList[$i]['Score'];
 					$out['ply'][$i]['NbrLapsFinished'] = $rankingList[$i]['NbrLapsFinished'];
 					$out['ply'][$i]['LadderScore'] = $rankingList[$i]['LadderScore'];
+					if($player['LadderRanking'] == -1){
+						$player['LadderRanking'] = Utils::t('Not rated');
+					}
 					$out['ply'][$i]['LadderRanking'] = $player['LadderRanking'];
 					$i++;
 				}

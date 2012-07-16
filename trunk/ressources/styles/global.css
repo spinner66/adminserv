@@ -292,7 +292,6 @@ header {
 /* Connexion
 -------------------------------*/
 #connection-inner {
-	height: 38px;
 	padding: 0 5px;
 }
 #connection-inner .connection-label,
@@ -1140,24 +1139,36 @@ footer {
 	display: block;
 	width: 128px;
 }
+#map_currentcallvote {
+	display: block;
+	height: 35px;
+	line-height: 35px;
+	width: 157%;
+}
+#CancelVote {
+	float: right;
+	margin-top: 3px;
+}
 #map_teamscore {
-	height: 36px;
+	display: block;
+	height: 28px;
+	padding: 5px 0 4px 9px;
+	width: 157%;
+}
+#map_teamscore span {
+	margin-top: 6px;
 }
 #map_teamscore .text {
 	float: left;
-	width: 50px;
+	width: 15%;
 	text-align: center;
+	margin-top: 2px;
 }
 #ScoreTeamBlue {
 	margin-right: 25px;
 }
-#map_teamscore span {
-	margin-top: 3px;
-}
 #ForceScores {
-	position: absolute;
-	top: 150px;
-	right: 15px;
+	float: right;
 }
 #playerlist {
 	min-height: 433px;
@@ -1571,6 +1582,9 @@ footer {
 	float: left;
 	margin-right: 24px;
 }
+.section-guestban .addPlayer input.text {
+	width: 41%;
+}
 .section-guestban .addPlayer select.addPlayerTypeList {
 	width: 120px;
 }
@@ -1705,6 +1719,6 @@ a.tmnick_externallink:hover {
 /* DisplayServ
 -------------------- */
 #displayserv {
-	width: 800px;
+	width: 80%;
 	margin: 20px auto 30px;
 }
