@@ -84,7 +84,7 @@
 	
 	
 	// LANG
-	$userLang = AdminServUI::getLang($lang);
+	$userLanguage = AdminServUI::getLang($lang);
 	if($lang){
 		if(USER_PAGE == 'index'){
 			Utils::redirection();
@@ -94,7 +94,7 @@
 		}
 	}
 	else{
-		define('USER_LANG', AdminServUI::getLang($lang) );
+		define('USER_LANG', $userLanguage);
 		$langFile = AdminServConfig::PATH_INCLUDES .'lang/'. USER_LANG .'.php';
 		if( file_exists($langFile) ){
 			require_once $langFile;
