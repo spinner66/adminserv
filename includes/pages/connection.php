@@ -25,7 +25,7 @@
 						$_SESSION['adminserv']['name'] = $serverName;
 						$_SESSION['adminserv']['password'] = $password;
 						$_SESSION['adminserv']['adminlevel'] = $adminLevel;
-						Utils::addCookieData('adminserv', array($_SESSION['adminserv']['sid'], $adminLevel, Utils::readCookieData('adminserv', 2), Utils::readCookieData('adminserv', 3), Utils::readCookieData('adminserv', 4), Utils::readCookieData('adminserv', 5) ), AdminServConfig::COOKIE_EXPIRE);
+						Utils::addCookieData('adminserv', array($_SESSION['adminserv']['sid'], $adminLevel), AdminServConfig::COOKIE_EXPIRE);
 						
 						// Redirection
 						if($_SESSION['adminserv']['sid'] != -1 && $_SESSION['adminserv']['name'] != null && $_SESSION['adminserv']['password'] != null && $_SESSION['adminserv']['adminlevel'] != null){
