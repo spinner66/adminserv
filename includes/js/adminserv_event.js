@@ -45,6 +45,27 @@ $(document).ready(function(){
 				}
 			});
 		}
+		else if( $("body").hasClass("section-servers-order") ){
+			// Tri manuel
+			$("#sortableServersList").sortable({
+				placeholder: "ui-state-highlight",
+				revert: true,
+				zIndex: 9999
+			});
+			$("#reset").click(function(){
+				location.href = $(".section-servers-order .cadre form").attr("action");
+			});
+			$("#save").click(function(){
+				var listStr = "";
+				var list = $("#sortableServersList li .order-server-name");
+				if( list.length > 0 ){
+					$.each(list, function(i, n){
+						listStr += n.textContent+",";
+					});
+					$("#list").val(listStr.substring(0, listStr.length-1));
+				}
+			});
+		}
 		else if( $("body").hasClass("section-index") ){
 			// Adminlevel
 			getServerAdminLevel();
@@ -739,7 +760,7 @@ $(document).ready(function(){
 					$.each(list, function(i, n){
 						listStr += n.title+",";
 					});
-				$("#list").val(listStr.substring(0, listStr.length-1));
+					$("#list").val(listStr.substring(0, listStr.length-1));
 				}
 			});
 		}

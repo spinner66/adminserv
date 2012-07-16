@@ -84,8 +84,8 @@
 	<table id="serverList">
 		<thead>
 			<tr>
-				<th class="thleft"><a href="?sort="><?php echo Utils::t('Server name'); ?></a></th>
-				<th><a href="?sort="><?php echo Utils::t('Address'); ?></a></th>
+				<th class="thleft"><?php echo Utils::t('Server name'); ?></th>
+				<th><?php echo Utils::t('Address'); ?></th>
 				<th><?php echo Utils::t('Port'); ?></th>
 				<th><?php echo Utils::t('MatchSettings'); ?></th>
 				<th><?php echo Utils::t('SuperAdmin level'); ?></th>

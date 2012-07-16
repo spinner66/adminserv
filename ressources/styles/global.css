@@ -1457,7 +1457,7 @@ footer {
 
 /* Page Maps-Order
 ---------------------- */
-#sortableMapList li {
+.ui-sortable li {
 	color: #666;
 	font-weight: normal;
 	cursor: pointer;
@@ -1470,23 +1470,28 @@ footer {
 	-o-border-radius: 3px;
 	border-radius: 3px;
 }
-#sortableMapList li:hover {
-	background: #D9E8FF;
+.ui-sortable li:hover {
+	background: #d9e8ff;
 }
-#sortableMapList li div {
+.ui-sortable li div {
 	float: left;
 }
-#sortableMapList li .order-map-name {
+.ui-sortable li .order-map-name,
+.ui-sortable li .order-server-name {
 	width: 50%;
 	padding: 0 10px;
 }
-#sortableMapList li .order-map-env,
-#sortableMapList li .order-map-author {
+.ui-sortable li .order-server-name {
+	font-weight: bold;
+}
+.ui-sortable li .order-server-addr-port,
+.ui-sortable li .order-map-env,
+.ui-sortable li .order-map-author {
 	width: 20%;
 	padding: 0 10px;
 }
-#sortableMapList li .order-map-env img,
-#sortableMapList li .order-map-author img {
+.ui-sortable li .order-map-env img,
+.ui-sortable li .order-map-author img {
 	margin: 0 5px -3px 0;
 }
 .autoSortMode.options-radio-inline li {

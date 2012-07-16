@@ -55,7 +55,7 @@
 		// Filename
 		$matchSettingName = Str::replaceChars($_POST['matchSettingName']);
 		$matchSettingExtension = File::getExtension($matchSettingName);
-		if($matchSettingExtension == 'txt' || $matchSettingExtension == 'xml'){
+		if($matchSettingExtension == 'txt'){
 			$filename = $mapsDirectoryPath.$matchSettingName;
 		}
 		else{
@@ -118,7 +118,7 @@
 		$maps = $_SESSION['adminserv']['matchset_maps_selected']['lst'];
 		if( isset($maps) && is_array($maps) && count($maps) > 0 ){
 			foreach($maps as $id => $values){
-				$struct[$StructMap][$values['UId']] = $values['FileName'];
+				$struct[$StructMap][] = $values['FileName'];
 			}
 		}
 		

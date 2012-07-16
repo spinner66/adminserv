@@ -106,6 +106,15 @@
 	define('CURRENT_PLUGIN', AdminServPlugin::getCurrent() );
 	
 	
+	// CONFIG PAGES LIST
+	$CONFIGPAGESLIST = array(
+		'servers',
+		'addserver',
+		'servers-order',
+		'serversconfigpassword',
+	);
+	
+	
 	// INDEX
 	if( isset($_SESSION['adminserv']['sid']) && isset($_SESSION['adminserv']['password']) && isset($_SESSION['adminserv']['adminlevel']) && !isset($_GET['error']) ){
 		
@@ -159,7 +168,7 @@
 			}
 		}
 		else{
-			if(USER_PAGE == 'servers' || USER_PAGE == 'addserver'){
+			if( in_array(USER_PAGE, $CONFIGPAGESLIST) ){
 				session_unset();
 				session_destroy();
 				Utils::redirection(false, '?p='.USER_PAGE);
@@ -173,20 +182,18 @@
 	}
 	else{
 		// CONFIG
-		if(USER_PAGE == 'servers'){
-			$GLOBALS['page_title'] = 'Configuration';
-			include_once AdminServConfig::PATH_INCLUDES .'pages/servers.php';
-			AdminServLogs::add('access', 'Configuration - Server list');
-		}
-		else if(USER_PAGE == 'addserver'){
-			$GLOBALS['page_title'] = 'Configuration';
-			include_once AdminServConfig::PATH_INCLUDES .'pages/addserver.php';
-			AdminServLogs::add('access', 'Configuration - Add server');
-		}
-		else if(USER_PAGE == 'serversconfigpassword'){
-			$GLOBALS['page_title'] = 'Configuration';
-			include_once AdminServConfig::PATH_INCLUDES .'pages/serversconfigpassword.php';
-			AdminServLogs::add('access', 'Configuration - Change server config password');
+		if( in_array(USER_PAGE, $CONFIGPAGESLIST) ){
+			foreach($CONFIGPAGESLIST as $page){
+				if(USER_PAGE === $page){
+					$file = AdminServConfig::PATH_INCLUDES .'pages/'.$page.'.php';
+					if( file_exists($file) ){
+						$GLOBALS['page_title'] = 'Configuration';
+						include_once $file;
+						AdminServLogs::add('access', 'Configuration - '.ucfirst($page) );
+					}
+					break;
+				}
+			}
 		}
 		// CONNEXION
 		else{
