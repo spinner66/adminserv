@@ -2119,7 +2119,7 @@ abstract class AdminServ {
 	*  [startindex] => 1
 	*  [map] => Array
 	*   (
-	*    [8bDoQMwzUllV0D9eu7hSth3rQs6] => name.Map.Gbx
+	*    name.Map.Gbx
 	*    etc...
 	*   )
 	* )
@@ -2158,10 +2158,9 @@ abstract class AdminServ {
 			// Maps
 			$out .= "\t<startindex>".$struct['startindex']."</startindex>\n";
 			if( isset($struct[$mapField]) && count($struct[$mapField]) > 0 ){
-				foreach($struct[$mapField] as $ident => $file){
+				foreach($struct[$mapField] as $file){
 					$out .= "\t<$mapField>\n"
 						."\t\t<file>$file</file>\n"
-						."\t\t<ident>$ident</ident>\n"
 					."\t</$mapField>\n";
 				}
 			}
@@ -2274,7 +2273,7 @@ abstract class AdminServ {
 				$out['StartIndex'] = (string)$xml->startindex;
 				if( isset($xml->$mapsField) && count($xml->$mapsField) > 0 ){
 					foreach($xml->$mapsField as $map){
-						$out['maps'][(string)$map->ident] = (string)$map->file;
+						$out['maps'][] = (string)$map->file;
 					}
 				}
 			}
@@ -2288,7 +2287,7 @@ abstract class AdminServ {
 	* Met en forme les données des maps du MatchSettings
 	*
 	* @global resource $client -> Le client doit être initialisé
-	* @param  array    $maps   -> Le tableau extrait du matchsettings : assoc array(ident => filename)
+	* @param  array    $maps   -> Le tableau extrait du matchsettings
 	* @return array
 	*/
 	public static function getMapListFromMatchSetting($maps){
