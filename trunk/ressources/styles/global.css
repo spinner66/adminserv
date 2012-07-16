@@ -663,7 +663,7 @@ tr {
 	height: 20px;
 }
 tr.table-separation {
-	height: 5px;
+	height: 5px !important;
 }
 tr.no-line {
 	font-style: italic;

@@ -13,6 +13,10 @@
 	}
 	require_once 'config/extension.cfg.php';
 	require_once AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
+	if( !AdminServ::checkPHPVersion() ){
+		echo '<b>This PHP version is not compatible with AdminServ.</b><br />Your PHP version: '.phpversion().'<br />PHP version required: 5.3';
+		exit;
+	}
 	AdminServUI::getClass();
 	
 	
@@ -50,8 +54,8 @@
 	if( isset($_GET['i']) ){ $index = intval($_GET['i']); }else{ $index = -1; }
 	if( isset($_GET['id']) ){ $id = intval($_GET['id']); }else{ $id = -1; }
 	if( isset($_GET['d']) ){ $directory = addslashes( urldecode($_GET['d']) ); }else{ $directory = null; }
-	if( isset($_GET['th']) ){ $theme = addslashes($_GET['th']); }else{ $theme = null; }
-	if( isset($_GET['lg']) ){ $lang = addslashes($_GET['lg']); }else{ $lang = null; }
+	if( isset($_GET['th']) ){ $forceTheme = addslashes($_GET['th']); }else{ $forceTheme = null; }
+	if( isset($_GET['lg']) ){ $forceLang = addslashes($_GET['lg']); }else{ $forceLang = null; }
 	
 	
 	// DÉCONNEXION
@@ -69,8 +73,8 @@
 	
 	
 	// THEME
-	$userTheme = AdminServUI::getTheme($theme);
-	if($theme){
+	$userTheme = AdminServUI::getTheme($forceTheme);
+	if($forceTheme){
 		if(USER_PAGE == 'index'){
 			Utils::redirection();
 		}
@@ -84,8 +88,8 @@
 	
 	
 	// LANG
-	$userLanguage = AdminServUI::getLang($lang);
-	if($lang){
+	$userLanguage = AdminServUI::getLang($forceLang);
+	if($forceLang){
 		if(USER_PAGE == 'index'){
 			Utils::redirection();
 		}

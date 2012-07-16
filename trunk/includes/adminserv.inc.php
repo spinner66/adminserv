@@ -883,20 +883,32 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Vérifie la version de PHP
+	*/
+	public static function checkPHPVersion(){
+		if(PHP_MAJOR_VERSION < 5 && PHP_MINOR_VERSION < 3){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	
+	/**
 	* Vérifie les droits pour l'écriture/lecture des fichiers
 	*
 	* @param array $list -> Liste des fichiers à tester : array('path' => 777)
 	* @return array
 	*/
 	public static function checkRights($list){
-		
 		if( count($list) > 0 ){
 			foreach($list as $path => $minChmod){
 				$result = Folder::checkRights($path, $minChmod);
 				foreach($result as $grpName => $grpValues){
 					foreach($grpValues['result'] as $bool){
 						if(!$bool){
-							self::error('Le fichier ou dossier n\'a pas les droits requis : '.$path.' => '.$grpName.':'.$grpValues['result']);
+							self::error('Le fichier ou le dossier n\'a pas les droits requis : '.$path.' ('.$grpName.':'.$minChmod.')');
 							break;
 						}
 					}
