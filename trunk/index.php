@@ -1,7 +1,7 @@
 <?php
 	// INCLUDES
 	session_start();
-	define('ADMINSERV_TIMER', false);
+	define('ADMINSERV_TIMER', true);
 	define('ADMINSERV_VERSION', '2.0');
 	require_once 'config/adminserv.cfg.php';
 	$_SESSION['adminserv']['path'] = null;
@@ -112,7 +112,6 @@
 		// SWITCHS
 		if( isset($_GET['switch']) && $_GET['switch'] != null ){
 			$_SESSION['adminserv']['sid'] = AdminServServerConfig::getServerId($_GET['switch']);
-			AdminServ::dsm($_SESSION['adminserv']['sid']);
 			$_SESSION['adminserv']['name'] = $_GET['switch'];
 			Utils::addCookieData('adminserv', array($_SESSION['adminserv']['sid'], Utils::readCookieData('adminserv', 1)), AdminServConfig::COOKIE_EXPIRE);
 			if(USER_PAGE && USER_PAGE != 'index'){

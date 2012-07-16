@@ -7,6 +7,11 @@
 	
 	// Chargement du plugin
 	if(CURRENT_PLUGIN){
-		AdminServPlugin::getPlugin();
+		if( AdminServPlugin::hasPlugin(CURRENT_PLUGIN) ){
+			AdminServPlugin::getPlugin();
+		}
+		else{
+			Utils::redirection(false, '?p=plugins-list');
+		}
 	}
 ?>

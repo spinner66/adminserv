@@ -2844,13 +2844,18 @@ abstract class AdminServPlugin {
 		
 		if( class_exists('ExtensionConfig') ){
 			if( isset(ExtensionConfig::$PLUGINS) && count(ExtensionConfig::$PLUGINS) > 0 ){
-				if($pluginName){
-					if( in_array($pluginName, ExtensionConfig::$PLUGINS) ){
-						$out = true;
+				foreach(ExtensionConfig::$PLUGINS as $plugin){
+					$pluginConfig = self::getConfig($plugin);
+					if( ($pluginConfig['game'] == SERVER_VERSION_NAME || $pluginConfig['game'] == 'all') && AdminServ::isAdminLevel($pluginConfig['adminlevel']) ){
+						if($pluginName){
+							if($pluginName == $plugin){
+								$out = true;
+							}
+						}
+						else{
+							$out = true;
+						}
 					}
-				}
-				else{
-					$out = true;
 				}
 			}
 		}
@@ -2919,7 +2924,7 @@ abstract class AdminServPlugin {
 		if( count(ExtensionConfig::$PLUGINS) > 0 ){
 			foreach(ExtensionConfig::$PLUGINS as $plugin){
 				$pluginInfos = self::getConfig($plugin);
-				if($pluginInfos['game'] == 'all' || $pluginInfos['game'] == SERVER_VERSION_NAME){
+				if( ($pluginInfos['game'] == 'all' || $pluginInfos['game'] == SERVER_VERSION_NAME) && AdminServ::isAdminLevel($pluginInfos['adminlevel']) ){
 					$pluginsList[$plugin] = $pluginInfos;
 				}
 			}
