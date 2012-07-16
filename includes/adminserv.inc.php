@@ -1920,23 +1920,33 @@ abstract class AdminServ {
 				if($countMapList > 0){
 					$i = 0;
 					foreach($directory['files'] as $file => $values){
-						if( in_array(File::getDoubleExtension($file), AdminServConfig::$MAP_EXTENSION) ){
+						$dbExt = File::getDoubleExtension($file);
+						if( in_array($dbExt, AdminServConfig::$MAP_EXTENSION) ){
 							// Données
 							$Gbx = new GBXChallengeFetcher($path.$file, true);
 							
 							// Name
-							$name = htmlspecialchars($Gbx->name, ENT_QUOTES, 'UTF-8');
+							$filename = $Gbx->name;
+							if($filename == 'read error'){
+								$filename = str_ireplace('.'.$dbExt, '', $file);
+							}
+							$name = htmlspecialchars($filename, ENT_QUOTES, 'UTF-8');
 							$out['lst'][$i]['Name'] = TmNick::toHtml($name, 10, true);
 							
 							// Environnement
 							$env = $Gbx->envir;
+							if($env == 'read error'){ $env = null; }
 							if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
 							$out['lst'][$i]['Environnement'] = $env;
 							
 							// Autres
 							$out['lst'][$i]['FileName'] = $pathFromMapsFolder.$file;
-							$out['lst'][$i]['UId'] = $Gbx->uid;
-							$out['lst'][$i]['Author'] = $Gbx->author;
+							$uid = $Gbx->uid;
+							if($uid == 'read error'){ $uid = null; }
+							$out['lst'][$i]['UId'] = $uid;
+							$author = $Gbx->author;
+							if($author == 'read error'){ $author = null; }
+							$out['lst'][$i]['Author'] = $author;
 							$out['lst'][$i]['Recent'] = $values['recent'];
 							
 							// On server
