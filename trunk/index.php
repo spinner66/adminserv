@@ -24,7 +24,6 @@
 	
 	// VÉRIFICATION DES DROITS
 	$checkRightsList = array(
-		'./config/' => 664,
 		'./config/adminserv.cfg.php' => 664,
 		'./config/servers.cfg.php' => 664,
 	);
