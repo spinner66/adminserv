@@ -37,6 +37,10 @@ footer,
 #as_password {
 	width: 97.5%;
 }
+#connection-inner,
+.menu-principal {
+	height: 100%;
+}
 #connection-inner .connection-label,
 #connection-inner .connection-login {
 	width: 99%;
