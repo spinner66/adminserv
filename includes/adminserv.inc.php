@@ -868,6 +868,21 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Temps de chargement de page
+	*/
+	public static function startTimer(){
+		global $timeStart;
+		$timeStart = microtime(true);
+	}
+	public static function endTimer(){
+		global $timeStart;
+		$timeEnd = microtime(true);
+		$time = $timeEnd - $timeStart;
+		return number_format($time, 3);
+	}
+	
+	
+	/**
 	* Vérifie les droits pour l'écriture/lecture des fichiers
 	*
 	* @param array $list -> Liste des fichiers à tester : array('path' => 777)
