@@ -1,6 +1,7 @@
 <?php
 	// INCLUDES
 	session_start();
+	define('ADMINSERV_TIMER', false);
 	define('ADMINSERV_VERSION', '2.0');
 	require_once 'config/adminserv.cfg.php';
 	$_SESSION['adminserv']['path'] = null;
@@ -13,6 +14,12 @@
 	require_once 'config/extension.cfg.php';
 	require_once AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
 	AdminServUI::getClass();
+	
+	
+	// LOAD TIME
+	if(ADMINSERV_TIMER){
+		AdminServ::startTimer();
+	}
 	
 	
 	// VÉRIFICATION DES DROITS
