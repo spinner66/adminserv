@@ -4,10 +4,6 @@
 	define('ADMINSERV_TIMER', true);
 	define('ADMINSERV_VERSION', '2.0');
 	require_once 'config/adminserv.cfg.php';
-	$_SESSION['adminserv']['path'] = null;
-	if(AdminServConfig::MULTI_ADMINSERV){
-		$_SESSION['adminserv']['path'] = basename(__DIR__).'/';
-	}
 	if( file_exists('config/servers.cfg.php') ){
 		include_once 'config/servers.cfg.php';
 	}
@@ -16,6 +12,10 @@
 	if( !AdminServ::checkPHPVersion() ){
 		echo '<b>This PHP version is not compatible with AdminServ.</b><br />Your PHP version: '.phpversion().'<br />PHP version required: 5.3';
 		exit;
+	}
+	$_SESSION['adminserv']['path'] = null;
+	if(AdminServConfig::MULTI_ADMINSERV){
+		$_SESSION['adminserv']['path'] = basename(__DIR__).'/';
 	}
 	AdminServUI::getClass();
 	
@@ -28,11 +28,11 @@
 	
 	// VÉRIFICATION DES DROITS
 	$checkRightsList = array(
-		'./config/adminserv.cfg.php' => 664,
-		'./config/servers.cfg.php' => 664,
+		'./config/adminserv.cfg.php' => 666,
+		'./config/servers.cfg.php' => 666,
 	);
 	if( in_array(true, AdminServConfig::$LOGS) ){
-		$checkRightsList['./logs/'] = 664;
+		$checkRightsList['./logs/'] = 777;
 	}
 	AdminServ::checkRights($checkRightsList);
 	

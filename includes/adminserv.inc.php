@@ -649,14 +649,17 @@ abstract class AdminServUI {
 		$out = null;
 		$list = ExtensionConfig::$MAPSMENU;
 		$excludeLocalPage = array('maps-local', 'maps-matchset', 'maps-creatematchset');
+		if( !IS_LOCAL ){
+			foreach($excludeLocalPage as $page){
+				unset($list[$page]);
+			}
+		}
 		
 		if( count($list) > 0 ){
 			$out = '<nav class="vertical-nav">'
 				.'<ul>';
 					foreach($list as $page => $title){
-						if( !in_array($page, $excludeLocalPage) && (defined('IS_LOCAL') && !IS_LOCAL) ){
-							$out .= '<li><a '; if(USER_PAGE == $page){ $out .= 'class="active" '; } $out .= 'href="?p='.$page; if($directory){ $out .= '&amp;d='.$directory; } $out .= '">'.$title.'</a></li>';
-						}
+						$out .= '<li><a '; if(USER_PAGE == $page){ $out .= 'class="active" '; } $out .= 'href="?p='.$page; if($directory){ $out .= '&amp;d='.$directory; } $out .= '">'.$title.'</a></li>';
 					}
 			$out .= '</ul>'
 			.'</nav>';
@@ -2556,6 +2559,7 @@ abstract class AdminServLogs {
 	*/
 	public static function initialize(){
 		$out = false;
+		$error = null;
 		
 		if( in_array(true, AdminServConfig::$LOGS) ){
 			if( file_exists(self::$LOGS_PATH) ){
@@ -2563,12 +2567,15 @@ abstract class AdminServLogs {
 					$out = true;
 				}
 				else{
-					AdminServ::error( Utils::t('The folder "logs" is not writable.') );
+					$error = Utils::t('The folder "logs" is not writable.');
 				}
 			}
 			else{
-				AdminServ::error( Utils::t('The folder "logs" does not exist.') );
+				$error = Utils::t('The folder "logs" does not exist.');
 			}
+			
+			
+
 		}
 		
 		if($out){
@@ -2577,12 +2584,21 @@ abstract class AdminServLogs {
 					$path = self::$LOGS_PATH.$file.'.log';
 					if($activate && !file_exists($path) ){
 						if( File::save($path) !== true ){
-							AdminServ::error( Utils::t('Unable to create log file:').' '.$file.'.');
+							$error = Utils::t('Unable to create log file:').' '.$file.'.';
 							$out = false;
 							break;
 						}
 					}
 				}
+			}
+		}
+		
+		if($error){
+			if($_SESSION['error'] != null){
+				$_SESSION['error'] .= '<br />'.$error;
+			}
+			else{
+				$_SESSION['error'] = $error;
 			}
 		}
 		
@@ -2606,7 +2622,13 @@ abstract class AdminServLogs {
 		
 		if( file_exists($path) ){
 			if( File::save($path, utf8_encode($str) ) !== true ){
-				AdminServ::error( Utils::t('Unable to add log in file:').' '.$type.'.');
+				$error = Utils::t('Unable to add log in file:').' '.$type.'.';
+				if($_SESSION['error'] != null){
+					$_SESSION['error'] .= '<br />'.$error;
+				}
+				else{
+					$_SESSION['error'] = $error;
+				}
 			}
 			else{
 				$out = true;

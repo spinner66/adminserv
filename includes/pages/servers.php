@@ -64,11 +64,15 @@
 	if( isset($_POST['deleteserver']) ){
 		$servers = ServerConfig::$SERVERS;
 		unset($servers[$_POST['server'][0]]);
-		AdminServServerConfig::saveServerConfig(array(), -1, $servers);
-		$action = Utils::t('The "!serverName" server has been deleted.', array('!serverName' => $_POST['server'][0]));
-		AdminServ::info($action);
-		AdminServLogs::add('action', $action);
-		Utils::redirection(false, '?p='.USER_PAGE);
+		if( ($result = AdminServServerConfig::saveServerConfig(array(), -1, $servers)) !== true ){
+			AdminServ::error( Utils::t('Unable to delete server.').' ('.$result.')');
+		}
+		else{
+			$action = Utils::t('The "!serverName" server has been deleted.', array('!serverName' => $_POST['server'][0]));
+			AdminServ::info($action);
+			AdminServLogs::add('action', $action);
+			Utils::redirection(false, '?p='.USER_PAGE);
+		}
 	}
 	
 	

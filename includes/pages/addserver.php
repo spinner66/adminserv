@@ -47,26 +47,27 @@
 		
 		// Édition
 		if($id !== -1){
-			if( AdminServServerConfig::saveServerConfig($serverData, $id) ){
+			if( ($result = AdminServServerConfig::saveServerConfig($serverData, $id)) !== true ){
+				AdminServ::error( Utils::t('Unable to modify the server.').' ('.$result.')');
+			}
+			else{
 				$action = Utils::t('This server has been modified.');
 				AdminServ::info($action);
 				AdminServLogs::add('action', $action);
 				Utils::redirection(false, '?p=servers');
-			}
-			else{
-				AdminServ::error( Utils::t('Unable to modify the server.') );
+				
 			}
 		}
 		else{
 			// Ajout
-			if( AdminServServerConfig::saveServerConfig($serverData) ){
+			if( ($result = AdminServServerConfig::saveServerConfig($serverData)) !== true ){
+				AdminServ::error( Utils::t('Unable to add the server.').' ('.$result.')');
+			}
+			else{
 				$action = Utils::t('This server has been added.');
 				AdminServ::info($action);
 				AdminServLogs::add('action', $action);
 				Utils::redirection(false, '?p='.USER_PAGE);
-			}
-			else{
-				AdminServ::error( Utils::t('Unable to add the server.') );
 			}
 		}
 	}
