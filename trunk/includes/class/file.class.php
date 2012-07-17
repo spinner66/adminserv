@@ -60,7 +60,7 @@ abstract class File {
 				$out = true;
 			}
 			else{
-				$out = 'Impossible d\'écrire les données dans le fichier.';
+				$out = 'No such file or file is not writable';
 			}
 		}
 		else{
@@ -69,7 +69,7 @@ abstract class File {
 				fclose($handle);
 			}
 			else{
-				$out = 'Impossible de créer le fichier.';
+				$out = 'No such file or file is not writable';
 			}
 		}
 		
@@ -117,11 +117,11 @@ abstract class File {
 				$out = true;
 			}
 			else{
-				$out = 'Impossible de renommer le fichier.';
+				$out = 'Unable to rename file';
 			}
 		}
 		else{
-			$out = 'Le fichier n\'existe pas.';
+			$out = 'No such file';
 		}
 		
 		return $out;
@@ -141,11 +141,11 @@ abstract class File {
 				$out = true;
 			}
 			else{
-				$out = 'Impossible de supprimer le fichier.';
+				$out = 'Unable to delete file';
 			}
 		}
 		else{
-			$out = 'Le fichier n\'existe pas.';
+			$out = 'No such file';
 		}
 		
 		return $out;
@@ -159,9 +159,8 @@ abstract class File {
 	* @param int    $fileSize   -> Taille du fichier, si null = automatique
 	*/
 	public static function sendDownloadHeaders($pathToFile, $fileSize = null){
-		// On protèges les données
 		$path_parts = pathinfo($pathToFile);
-		$filename = htmlspecialchars( trim($path_parts['basename']), ENT_QUOTES, "UTF-8");
+		$filename = htmlspecialchars( trim($path_parts['basename']), ENT_QUOTES, 'UTF-8');
 		$path = $path_parts['dirname'].'/';
 		
 		// Headers
@@ -170,13 +169,15 @@ abstract class File {
 		header('Content-Transfer-Encoding: binary');
 		if($fileSize != null){
 			header('Content-Length: '.$fileSize);
-		}else{
+		}
+		else{
 			header('Content-Length: '.filesize($pathToFile));
 		}
 		header('Pragma: no-cache');
 		if( preg_match('/MSIE/i', $_SERVER['HTTP_USER_AGENT']) ){
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-		}else{
+		}
+		else{
 			header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 		}
 		header('Expires: 0');
