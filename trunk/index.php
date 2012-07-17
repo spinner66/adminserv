@@ -1,8 +1,8 @@
 <?php
 	// INCLUDES
 	session_start();
-	define('ADMINSERV_TIMER', true);
-	define('ADMINSERV_VERSION', '2.0');
+	define('ADMINSERV_TIMER', false);
+	define('ADMINSERV_VERSION', '2.0b3');
 	require_once 'config/adminserv.cfg.php';
 	if( file_exists('config/servers.cfg.php') ){
 		include_once 'config/servers.cfg.php';
@@ -32,7 +32,8 @@
 		'./config/servers.cfg.php' => 666,
 	);
 	if( in_array(true, AdminServConfig::$LOGS) ){
-		$checkRightsList['./logs/'] = 777;
+		if( Utils::isLinuxServer() ){ $checkRightsList['./logs/'] = 777; }
+		else{ $checkRightsList['./logs/'] = 666; }
 	}
 	AdminServ::checkRights($checkRightsList);
 	
