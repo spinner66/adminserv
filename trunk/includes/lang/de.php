@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $translate = array(
 	// Header
 	'Access server' => 'Auf Server zugreifen',
