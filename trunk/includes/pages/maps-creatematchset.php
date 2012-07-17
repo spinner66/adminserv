@@ -118,7 +118,7 @@
 		$maps = $_SESSION['adminserv']['matchset_maps_selected']['lst'];
 		if( isset($maps) && is_array($maps) && count($maps) > 0 ){
 			foreach($maps as $id => $values){
-				$struct[$StructMap][] = $values['FileName'];
+				$struct[$StructMap][$values['UId']] = $values['FileName'];
 			}
 		}
 		
