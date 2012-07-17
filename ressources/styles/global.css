@@ -1102,6 +1102,12 @@ footer {
 .section-addserver table .value {
 	width: 340px;
 }
+.section-addserver input.width3 {
+	width: 90%;
+}
+.section-serversconfigpassword input.width3 {
+	width: 30%;
+}
 .section-servers table tbody tr {
 	height: 22px;
 }

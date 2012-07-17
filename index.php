@@ -175,7 +175,7 @@
 			if( in_array(USER_PAGE, $CONFIGPAGESLIST) ){
 				session_unset();
 				session_destroy();
-				Utils::redirection(false, '?p='.USER_PAGE);
+				Utils::redirection(false, './config/');
 			}
 			else{
 				if(!CURRENT_PLUGIN){
