@@ -642,18 +642,21 @@ abstract class AdminServUI {
 	/**
 	* Retourne une liste html pour un menu
 	*
-	* @param array $list -> array('nom_de_la_page' => 'Nom du lien')
 	* @return html
 	*/
-	public static function getMenuList($list){
+	public static function getMapsMenuList(){
 		global $directory;
 		$out = null;
+		$list = ExtensionConfig::$MAPSMENU;
+		$excludeLocalPage = array('maps-local', 'maps-matchset', 'maps-creatematchset');
 		
 		if( count($list) > 0 ){
 			$out = '<nav class="vertical-nav">'
 				.'<ul>';
 					foreach($list as $page => $title){
-						$out .= '<li><a '; if(USER_PAGE == $page){ $out .= 'class="active" '; } $out .= 'href="?p='.$page; if($directory){ $out .= '&amp;d='.$directory; } $out .= '">'.$title.'</a></li>';
+						if( !in_array($page, $excludeLocalPage) && (defined('IS_LOCAL') && !IS_LOCAL) ){
+							$out .= '<li><a '; if(USER_PAGE == $page){ $out .= 'class="active" '; } $out .= 'href="?p='.$page; if($directory){ $out .= '&amp;d='.$directory; } $out .= '">'.$title.'</a></li>';
+						}
 					}
 			$out .= '</ul>'
 			.'</nav>';

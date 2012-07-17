@@ -148,7 +148,7 @@
 ?>
 <section class="maps hasMenu hasFolders">
 	<section class="cadre left menu">
-		<?php echo AdminServUI::getMenuList(ExtensionConfig::$MAPSMENU); ?>
+		<?php echo AdminServUI::getMapsMenuList(); ?>
 	</section>
 	
 	<section class="cadre middle folders">
