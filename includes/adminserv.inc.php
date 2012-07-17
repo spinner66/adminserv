@@ -1263,7 +1263,7 @@ abstract class AdminServ {
 			
 			// MapThumbnail
 			$mapsDirectory = $queriesData['GetMapsDirectory'];
-			if($mapsDirectory){
+			if($mapsDirectory && $currentMapInfo['FileName'] != null){
 				$Gbx = new GBXChallengeFetcher($mapsDirectory.$currentMapInfo['FileName'], true, true);
 				$out['map']['thumb'] = base64_encode($Gbx->thumbnail);
 			}
