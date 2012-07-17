@@ -496,118 +496,120 @@
 		</form>
 	</div>
 	
-	<div id="playlists">
-		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
-			<h1><?php echo Utils::t('Playlists'); ?>
-				<span id="form-new-playlist" hidden="hidden">
-					<select name="createPlaylistType" id="createPlaylistType">
-						<option value="none"><?php echo Utils::t('Type'); ?></option>
-						<option value="guestlist">Guestlist</option>
-						<option value="blacklist">Blacklist</option>
-					</select>
-					<input class="text" type="text" name="createPlaylistName" id="createPlaylistName" data-playlistname="<?php echo Utils::t('Playlist name'); ?>" value="<?php echo Utils::t('Playlist name'); ?>" />
-					<input class="button light" type="submit" name="createPlaylistValid" id="createPlaylistValid" value="<?php echo Utils::t('Create'); ?>" />
-				</span>
-			</h1>
-		</form>
-		<div class="title-detail">
-			<ul>
-				<li><a id="clickNewPlaylist" href="" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-newplaylist="<?php echo Utils::t('New playlist'); ?>"><?php echo Utils::t('New playlist'); ?></a></li>
-				<li class="last"><input type="checkbox" name="checkAllPlaylists" id="checkAllPlaylists" value="" /></li>
-			</ul>
-		</div>
-		
-		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
-		<table>
-			<thead>
-				<tr>
-					<th class="thleft"><?php echo Utils::t('Playlist'); ?></th>
-					<th><?php echo Utils::t('Type'); ?></th>
-					<th><?php echo Utils::t('Contains'); ?></th>
-					<th><?php echo Utils::t('Modified'); ?></th>
-					<th class="thright"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr class="table-separation"><td colspan="5"></td></tr>
-				<?php
-					$showPlaylists = null;
-					
-					// Liste des playlists
-					if( isset($playlistDirectory['files']) && count($playlistDirectory['files']) > 0 ){
-						$i = 0;
-						$defaultFilename = array(
-							'guestlist.txt',
-							'blacklist.txt',
-							'guestlist.xml',
-							'blacklist.xml',
-						);
-						foreach($playlistDirectory['files'] as $file){
-							$ext = File::getDoubleExtension($file['filename']);
-							if( in_array($file['filename'], $defaultFilename) || ($isDoubleExt = in_array($ext, AdminServConfig::$PLAYLIST_EXTENSION)) ){
-								// Playlist data
-								$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
-								if( isset($data['logins']) ){
-									$countDataLogins = count($data['logins']);
-									if($countDataLogins > 1){
-										$nbPlayers = $countDataLogins.' '.Utils::t('players');
+	<?php if($playlistDirectory != 'Not directory'){ ?>
+		<div id="playlists">
+			<form method="post" action="?p=<?php echo USER_PAGE; ?>">
+				<h1><?php echo Utils::t('Playlists'); ?>
+					<span id="form-new-playlist" hidden="hidden">
+						<select name="createPlaylistType" id="createPlaylistType">
+							<option value="none"><?php echo Utils::t('Type'); ?></option>
+							<option value="guestlist">Guestlist</option>
+							<option value="blacklist">Blacklist</option>
+						</select>
+						<input class="text" type="text" name="createPlaylistName" id="createPlaylistName" data-playlistname="<?php echo Utils::t('Playlist name'); ?>" value="<?php echo Utils::t('Playlist name'); ?>" />
+						<input class="button light" type="submit" name="createPlaylistValid" id="createPlaylistValid" value="<?php echo Utils::t('Create'); ?>" />
+					</span>
+				</h1>
+			</form>
+			<div class="title-detail">
+				<ul>
+					<li><a id="clickNewPlaylist" href="" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-newplaylist="<?php echo Utils::t('New playlist'); ?>"><?php echo Utils::t('New playlist'); ?></a></li>
+					<li class="last"><input type="checkbox" name="checkAllPlaylists" id="checkAllPlaylists" value="" /></li>
+				</ul>
+			</div>
+			
+			<form method="post" action="?p=<?php echo USER_PAGE; ?>">
+			<table>
+				<thead>
+					<tr>
+						<th class="thleft"><?php echo Utils::t('Playlist'); ?></th>
+						<th><?php echo Utils::t('Type'); ?></th>
+						<th><?php echo Utils::t('Contains'); ?></th>
+						<th><?php echo Utils::t('Modified'); ?></th>
+						<th class="thright"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="table-separation"><td colspan="5"></td></tr>
+					<?php
+						$showPlaylists = null;
+						
+						// Liste des playlists
+						if( isset($playlistDirectory['files']) && count($playlistDirectory['files']) > 0 ){
+							$i = 0;
+							$defaultFilename = array(
+								'guestlist.txt',
+								'blacklist.txt',
+								'guestlist.xml',
+								'blacklist.xml',
+							);
+							foreach($playlistDirectory['files'] as $file){
+								$ext = File::getDoubleExtension($file['filename']);
+								if( in_array($file['filename'], $defaultFilename) || ($isDoubleExt = in_array($ext, AdminServConfig::$PLAYLIST_EXTENSION)) ){
+									// Playlist data
+									$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
+									if( isset($data['logins']) ){
+										$countDataLogins = count($data['logins']);
+										if($countDataLogins > 1){
+											$nbPlayers = $countDataLogins.' '.Utils::t('players');
+										}
+										else{
+											$nbPlayers = '1 '.Utils::t('player');
+										}
 									}
 									else{
-										$nbPlayers = '1 '.Utils::t('player');
+										$nbPlayers = '0 '.Utils::t('player');
 									}
+									
+									// Filename
+									if($isDoubleExt){
+										$filename = substr($file['filename'], 0, -13);
+									}
+									else{
+										$filename = substr($file['filename'], 0, -4);
+									}
+									
+									// Line
+									$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
+										.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.$filename.'</span></td>'
+										.'<td class="center">'.ucfirst($data['type']).'</td>'
+										.'<td class="center">'.$nbPlayers.'</td>'
+										.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'
+										.'<td class="checkbox">'
+											.'<input type="checkbox" name="playlist[]" value="'.$file['filename'].'" />'
+											.'<input type="hidden" name="playlistType[]" value="'.$data['type'].'" />'
+										.'</td>'
+									.'</tr>';
+									$i++;
 								}
-								else{
-									$nbPlayers = '0 '.Utils::t('player');
-								}
-								
-								// Filename
-								if($isDoubleExt){
-									$filename = substr($file['filename'], 0, -13);
-								}
-								else{
-									$filename = substr($file['filename'], 0, -4);
-								}
-								
-								// Line
-								$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
-									.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.$filename.'</span></td>'
-									.'<td class="center">'.ucfirst($data['type']).'</td>'
-									.'<td class="center">'.$nbPlayers.'</td>'
-									.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'
-									.'<td class="checkbox">'
-										.'<input type="checkbox" name="playlist[]" value="'.$file['filename'].'" />'
-										.'<input type="hidden" name="playlistType[]" value="'.$data['type'].'" />'
-									.'</td>'
-								.'</tr>';
-								$i++;
 							}
 						}
-					}
-					else{
-						$showPlaylists .= '<tr class="no-line"><td class="center" colspan="5">'.Utils::t('No playlist').'</td></tr>';
-					}
-					
-					// Affichage
-					echo $showPlaylists;
-				?>
-			</tbody>
-		</table>
-		
-		<div class="options">
-			<div class="fright">
-				<div class="selected-files-label locked">
-					<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
-					<span class="selected-files-count">(0)</span>
-					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="deletePlaylist" id="deletePlaylist" value="<?php echo Utils::t('Delete'); ?>" />
-						<input class="button dark" type="submit" name="loadPlaylist" id="loadPlaylist" value="<?php echo Utils::t('Load'); ?>" />
-						<input class="button dark" type="submit" name="savePlaylist" id="savePlaylist" value="<?php echo Utils::t('Save '); ?>" />
+						else{
+							$showPlaylists .= '<tr class="no-line"><td class="center" colspan="5">'.Utils::t('No playlist').'</td></tr>';
+						}
+						
+						// Affichage
+						echo $showPlaylists;
+					?>
+				</tbody>
+			</table>
+			
+			<div class="options">
+				<div class="fright">
+					<div class="selected-files-label locked">
+						<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
+						<span class="selected-files-count">(0)</span>
+						<div class="selected-files-option">
+							<input class="button dark" type="submit" name="deletePlaylist" id="deletePlaylist" value="<?php echo Utils::t('Delete'); ?>" />
+							<input class="button dark" type="submit" name="loadPlaylist" id="loadPlaylist" value="<?php echo Utils::t('Load'); ?>" />
+							<input class="button dark" type="submit" name="savePlaylist" id="savePlaylist" value="<?php echo Utils::t('Save '); ?>" />
+						</div>
 					</div>
 				</div>
 			</div>
+			</form>
 		</div>
-		</form>
-	</div>
+	<?php } ?>
 </section>
 <?php
 	AdminServUI::getFooter();

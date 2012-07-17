@@ -36,7 +36,7 @@
 ?>
 <section class="maps hasMenu">
 	<section class="cadre left menu">
-		<?php echo AdminServUI::getMenuList(ExtensionConfig::$MAPSMENU); ?>
+		<?php echo AdminServUI::getMapsMenuList(); ?>
 	</section>
 	
 	<section class="cadre right order">

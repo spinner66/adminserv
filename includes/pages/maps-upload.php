@@ -3,14 +3,16 @@
 	$client->Terminate();
 	AdminServUI::getHeader();
 ?>
-<section class="maps hasMenu hasFolders">
+<section class="maps hasMenu<?php if( defined('IS_LOCAL') && IS_LOCAL ){ echo ' hasFolders'; } ?>">
 	<section class="cadre left menu">
-		<?php echo AdminServUI::getMenuList(ExtensionConfig::$MAPSMENU); ?>
+		<?php echo AdminServUI::getMapsMenuList(); ?>
 	</section>
 	
-	<section class="cadre middle folders">
-		<?php echo $mapsDirectoryList; ?>
-	</section>
+	<?php if( defined('IS_LOCAL') && IS_LOCAL ){ ?>
+		<section class="cadre middle folders">
+			<?php echo $mapsDirectoryList; ?>
+		</section>
+	<?php } ?>
 	
 	<section class="cadre right upload">
 		<h1><?php echo Utils::t('Send'); ?></h1>
