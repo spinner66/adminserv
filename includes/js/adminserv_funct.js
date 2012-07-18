@@ -35,6 +35,18 @@ function scrollBottom(){
 		scrollTop: $(document).height() - $(window).height()
 	}, "slow");
 }
+function getUrlParams(key){
+	var params = window.location.search.substring(1);
+	if(!key){
+		return params;
+	}
+	else{
+		var index = params.indexOf(key);
+		if(index !== -1){
+			return params.substring(index).split("&")[0].substring(2);
+		}
+	}
+}
 
 
 /**
@@ -466,19 +478,21 @@ function getMapList(mode, sort){
 	$.fn.getMapRenameList = function(){
 		var out = "";
 		var formSelector = $("#form-rename-map");
+		var directoryPath = getUrlParams("d");
 		var list = $(this);
 		if( list.length > 0 ){
 			out += '<ul>';
 			$.each(list, function(i, n){
-				if(n.value.length > 36){
-					var title = ' title="'+n.value+'"';
+				var filename = n.value.replace(directoryPath, '');
+				if(filename.length > 36){
+					var title = ' title="'+filename+'"';
 				}else{
 					var title = "";
 				}
 				out += '<li>'
-					+ '<span class="rename-map-name"'+title+'>'+n.value+'</span>'
+					+ '<span class="rename-map-name"'+title+'>'+filename+'</span>'
 					+ '<span class="rename-map-arrow">&nbsp;</span>'
-					+ '<input class="text width3" type="text" name="renameMapList[]" value="'+n.value+'" />'
+					+ '<input class="text width3" type="text" id="renameMapList" name="renameMapList[]" value="'+filename+'" />'
 				+ '</li>';
 			});
 			out += '</ul>';
