@@ -2,7 +2,7 @@
 	// INCLUDES
 	session_start();
 	define('ADMINSERV_TIMER', false);
-	define('ADMINSERV_VERSION', '2.0b3');
+	define('ADMINSERV_VERSION', '2.0b4');
 	require_once 'config/adminserv.cfg.php';
 	if( file_exists('config/servers.cfg.php') ){
 		include_once 'config/servers.cfg.php';
@@ -19,7 +19,6 @@
 	}
 	AdminServUI::getClass();
 	
-	
 	// LOAD TIME
 	if(ADMINSERV_TIMER){
 		AdminServ::startTimer();
@@ -32,8 +31,8 @@
 		'./config/servers.cfg.php' => 666,
 	);
 	if( in_array(true, AdminServConfig::$LOGS) ){
-		if( Utils::isLinuxServer() ){ $checkRightsList['./logs/'] = 777; }
-		else{ $checkRightsList['./logs/'] = 666; }
+		if( Utils::isWinServer() ){ $checkRightsList['./logs/'] = 666; }
+		else{ $checkRightsList['./logs/'] = 777; }
 	}
 	AdminServ::checkRights($checkRightsList);
 	
