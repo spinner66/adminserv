@@ -258,7 +258,7 @@ abstract class Utils {
 	
 	
 	/**
-	* Détermine si le serveur est sous windows, par défaut Linux
+	* Détermine si le serveur est sous Windows, par défaut Unix
 	*
 	* @return bool
 	*/
