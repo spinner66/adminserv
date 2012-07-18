@@ -852,6 +852,7 @@ td .detailModeTd {
 	padding: 0 5px;
 	width: 39%;
 	text-align: right;
+	overflow: hidden;
 	-webkit-border-radius: 3px 0 0 3px;
 	-moz-border-radius: 3px 0 0 3px;
 	-o-border-radius: 3px 0 0 3px;
@@ -1448,6 +1449,12 @@ footer {
 ------------------*/
 .section-maps-local .options-checkbox {
 	margin-top: 10px;
+}
+#renameFolderNewName {
+	width: 50%;
+}
+#renameMapList {
+	width: 53%;
 }
 
 
