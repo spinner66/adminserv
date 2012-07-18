@@ -17,7 +17,7 @@
 	// ACTIONS
 	if( isset($_POST['addMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			if( !$client->query($queries['add'], $mapsDirectoryPath.$map) ){
+			if( !$client->query($queries['add'], $mapsDirectoryPath.$directory.$map) ){
 				AdminServ::error();
 				break;
 			}
@@ -28,7 +28,7 @@
 	}
 	else if( isset($_POST['insertMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			if( !$client->query($queries['insert'], $mapsDirectoryPath.$map) ){
+			if( !$client->query($queries['insert'], $mapsDirectoryPath.$directory.$map) ){
 				AdminServ::error();
 				break;
 			}

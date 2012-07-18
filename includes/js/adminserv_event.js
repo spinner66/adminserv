@@ -601,6 +601,14 @@ $(document).ready(function(){
 					// Mise à jour du nb de lignes sélectionnées
 					$(".maps .local").updateNbSelectedLines();
 					$(".maps .local").updateCheckAll( $("input#checkAll") );
+					
+					// Vérifie s'il reste des formulaires ouvert et les ferme quand il y 0 lignes sélectionnées
+					if( $("#maplist tr.selected").length == 0 ){
+						if( $(".selected-files-label").hasClass("optHover") ){
+							slideUpRenameForm();
+							slideUpMoveForm();
+						}
+					}
 				}
 			});
 			

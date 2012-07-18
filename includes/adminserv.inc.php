@@ -1906,8 +1906,6 @@ abstract class AdminServ {
 		if(AdminServConfig::LOCAL_GET_MAPS_ON_SERVER){
 			$currentMapsListUId = self::getMapListField('UId');
 		}
-		$pathFromMapsFolder = self::getMapsDirectoryPath();
-		$pathFromMapsFolder = str_replace($pathFromMapsFolder, '', $path);
 		
 		if( class_exists('Folder') && class_exists('GBXChallengeFetcher') ){
 			$directory = Folder::read($path, AdminServConfig::$MAPS_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
@@ -1936,7 +1934,7 @@ abstract class AdminServ {
 							$out['lst'][$i]['Environnement'] = $env;
 							
 							// Autres
-							$out['lst'][$i]['FileName'] = $pathFromMapsFolder.$file;
+							$out['lst'][$i]['FileName'] = $file;
 							$uid = $Gbx->uid;
 							if($uid == 'read error'){ $uid = null; }
 							$out['lst'][$i]['UId'] = $uid;

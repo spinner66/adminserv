@@ -478,21 +478,19 @@ function getMapList(mode, sort){
 	$.fn.getMapRenameList = function(){
 		var out = "";
 		var formSelector = $("#form-rename-map");
-		var directoryPath = getUrlParams("d");
 		var list = $(this);
 		if( list.length > 0 ){
 			out += '<ul>';
 			$.each(list, function(i, n){
-				var filename = n.value.replace(directoryPath, '');
-				if(filename.length > 36){
-					var title = ' title="'+filename+'"';
+				if(n.value.length > 36){
+					var title = ' title="'+n.value+'"';
 				}else{
 					var title = "";
 				}
 				out += '<li>'
-					+ '<span class="rename-map-name"'+title+'>'+filename+'</span>'
+					+ '<span class="rename-map-name"'+title+'>'+n.value+'</span>'
 					+ '<span class="rename-map-arrow">&nbsp;</span>'
-					+ '<input class="text width3" type="text" id="renameMapList" name="renameMapList[]" value="'+filename+'" />'
+					+ '<input class="text width3" type="text" id="renameMapList" name="renameMapList[]" value="'+n.value+'" />'
 				+ '</li>';
 			});
 			out += '</ul>';
