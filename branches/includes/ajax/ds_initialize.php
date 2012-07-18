@@ -28,7 +28,8 @@
 			$out['label']['gamemode'] = Utils::t('Game mode');
 			$out['label']['currentmap'] = Utils::t('Current map');
 			$out['label']['players'] = Utils::t('Players');
-			$out['label']['accessserver'] = Utils::t('Access server');
+			$out['label']['accessserverplayer'] = Utils::t('Access as player');
+			$out['label']['accessserverspectate'] = Utils::t('Access as spectator');
 			$out['label']['addfavourite'] = Utils::t('Add to favourite');
 		}
 	}

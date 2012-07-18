@@ -10,6 +10,11 @@
 			timeout: 3,
 			refresh: 30,
 			color: "",
+			links: {
+				join: true,
+				spectate: true,
+				addfavourite: false
+			}
 		}
 		$.extend(settings, options);
 		settings.refresh = settings.refresh*1000;
@@ -73,10 +78,17 @@
 									+ '</tr>'
 								+ '</table>'
 								+ '<div class="ds-server-join-wrap">'
-										+ '<ul>'
-											+ '<li class="ds-server-favourite"><a href="">'+data.label.addfavourite+'</a></li>'
-											+ '<li class="ds-server-join"><a href="">'+data.label.accessserver+'</a></li>'
-										+ '</ul>'
+										+ '<ul>';
+											if(settings.links.addfavourite){
+												out += '<li class="ds-server-favourite"><a href="">'+data.label.addfavourite+'</a></li>';
+											}
+											if(settings.links.spectate){
+												out += '<li class="ds-server-spectate"><a href="">'+data.label.accessserverspectate+'</a></li>';
+											}
+											if(settings.links.join){
+												out += '<li class="ds-server-join"><a href="">'+data.label.accessserverplayer+'</a></li>';
+											}
+										out += '</ul>'
 								+ '</div>'
 							+ '</li>';
 						}
@@ -91,9 +103,18 @@
 				var maxsize = selector.find(".ds-servers-list").width();
 				if(maxsize < 380){
 					selector.find(".ds-servers-list").addClass("max-width-380");
+					if(settings.links.addfavourite){
+						selector.find(".ds-servers-list .ds-server-favourite").remove();
+					}
+					if(settings.links.spectate){
+						selector.find(".ds-servers-list .ds-server-spectate").remove();
+					}
 				}
 				else if(maxsize < 580){
 					selector.find(".ds-servers-list").addClass("max-width-580");
+					if(settings.links.addfavourite){
+						selector.find(".ds-servers-list .ds-server-favourite").remove();
+					}
 				}
 				
 				// 2ème étape - Récupérer les données serveur
@@ -124,8 +145,15 @@
 									serverId.find(".ds-server-players-count").html(data.players[i].count.current+" / "+data.players[i].count.max);
 									
 									// Join
-									serverId.find(".ds-server-join a").attr("href", data.servers[i].version.protocol+"://#join="+data.servers[i].serverlogin);
-									serverId.find(".ds-server-favourite a").attr("href", data.servers[i].version.protocol+"://#addfavourite="+data.servers[i].serverlogin);
+									if(settings.links.join){
+										serverId.find(".ds-server-join a").attr("href", data.servers[i].version.protocol+"://#join="+data.servers[i].serverlogin);
+									}
+									if(settings.links.spectate){
+										serverId.find(".ds-server-spectate a").attr("href", data.servers[i].version.protocol+"://#spectate="+data.servers[i].serverlogin);
+									}
+									if(settings.links.addfavourite){
+										serverId.find(".ds-server-favourite a").attr("href", data.servers[i].version.protocol+"://#addfavourite="+data.servers[i].serverlogin);
+									}
 									
 									// Players
 									var playerListTable = "<table>";
