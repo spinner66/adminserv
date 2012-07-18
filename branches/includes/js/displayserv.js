@@ -17,7 +17,10 @@
 			}
 		}
 		$.extend(settings, options);
-		settings.refresh = settings.refresh*1000;
+		settings.refresh = parseInt(settings.refresh * 1000);
+		if( settings.refresh < 10000 ){
+			settings.refresh = 10000;
+		}
 		if(settings.color){
 			settings.color = ' style="color: '+settings.color+';"';
 		}
