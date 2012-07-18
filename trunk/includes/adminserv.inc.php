@@ -1394,7 +1394,7 @@ abstract class AdminServ {
 				}
 				
 				// Fichier RunSrv
-				if( Utils::isLinuxServer() ){ $ext = 'sh'; }else{ $ext = 'bat'; }
+				if( Utils::isWinServer() ){ $ext = 'bat'; }else{ $ext = 'sh'; }
 				if(SERVER_VERSION_NAME == 'TmForever'){ $filename = 'Start'; }else{ $filename = 'RunSrv'; }
 				$file = $parentPath.$filename.'.'.$ext;
 				if( file_exists($file) ){

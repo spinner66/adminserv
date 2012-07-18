@@ -258,12 +258,12 @@ abstract class Utils {
 	
 	
 	/**
-	* Détermine si le serveur est sous Linux, par défaut windows
+	* Détermine si le serveur est sous windows, par défaut Linux
 	*
 	* @return bool
 	*/
-	public static function isLinuxServer(){
-		if(substr($_SERVER['DOCUMENT_ROOT'], 0, 1) === '/'){
+	public static function isWinServer(){
+		if( stripos(PHP_OS, 'WIN') === 0 ){
 			return true;
 		}
 		else{
