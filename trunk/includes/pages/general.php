@@ -121,7 +121,7 @@
 		if( !$client->query('ForceScores', $scores, true) ){
 			AdminServ::error();
 		}else{
-			$action = '<Admin> '.Utils::t('The scores have been modified : $00fblue team $fffhas !scoreTeamBlue and $f00red team $fffhas !scoreTeamRed', array('!scoreTeamBlue' => $scoreTeamBlue, '!scoreTeamRed' => $scoreTeamRed));
+			$action = '[Admin] '.Utils::t('The scores have been modified : $00fblue team $fffhas !scoreTeamBlue and $f00red team $fffhas !scoreTeamRed', array('!scoreTeamBlue' => $scoreTeamBlue, '!scoreTeamRed' => $scoreTeamRed));
 			if( !$client->query('ChatSendServerMessage', $action) ){
 				AdminServ::error();
 			}
