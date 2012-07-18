@@ -14,8 +14,6 @@ abstract class AdminServUI {
 	public static function getTitle($type = 'str'){
 		$out = null;
 		$title = AdminServConfig::TITLE;
-		
-		// Si aucun titre n'est spécifié, on met "AdminServ" par défaut
 		if(!$title){
 			$title = 'Admin,Serv';
 		}
@@ -61,6 +59,7 @@ abstract class AdminServUI {
 	*/
 	public static function getTheme($forceTheme = null){
 		$saveCookie = false;
+		
 		// Si on choisi un thème
 		if($forceTheme){
 			$_SESSION['theme'] = $forceTheme;
@@ -102,9 +101,11 @@ abstract class AdminServUI {
 		if( self::hasTheme() ){
 			$list = ExtensionConfig::$THEMES;
 		}
+		$countList = count($list);
+		$countCurrentTheme = count($currentTheme);
 		
 		// Thème courant
-		if( count($currentTheme) > 0 && count($list) > 0 ){
+		if( $countCurrentTheme > 0 && $countList > 0 ){
 			$currentThemeName = key($currentTheme);
 			$currentThemeColor = current($currentTheme);
 			unset($list[$currentThemeName]);
@@ -118,16 +119,30 @@ abstract class AdminServUI {
 			$param = '?th=';
 		}
 		
-		if( count($list) > 0 ){
+		if( $countList > 0 ){
 			$out .= '<ul>';
 			// Si il y a un thème courant, on le place en 1er
-			if( count($currentTheme) > 0 ){
+			if( $countCurrentTheme > 0 ){
 				$out .= '<li><a tabindex="-1" class="theme-color" style="background-color: '.$currentThemeColor[0].';" href="'.$param.$currentThemeName.'" title="'.Utils::t( ucfirst($currentThemeName) ).'"></a></li>';
 			}
 			foreach($list as $name => $color){
 				$out .= '<li><a tabindex="-1" class="theme-color" style="background-color: '.$color[0].';" href="'.$param.$name.'" title="'.Utils::t( ucfirst($name) ).'"></a></li>';
 			}
 			$out .= '</ul>';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Vérifie si il y a bien une config de langue
+	*/
+	public static function hasLang(){
+		$out = false;
+		
+		if( class_exists('ExtensionConfig') && isset(ExtensionConfig::$LANG) && count(ExtensionConfig::$LANG) > 0 ){
+			$out = true;
 		}
 		
 		return $out;
@@ -142,6 +157,7 @@ abstract class AdminServUI {
 	*/
 	public static function getLang($forceLang = null){
 		$saveCookie = false;
+		
 		// Si on choisi une langue
 		if($forceLang){
 			$_SESSION['lang'] = $forceLang;
@@ -185,10 +201,15 @@ abstract class AdminServUI {
 	*/
 	public static function getLangList($currentLang = array() ){
 		$out = null;
-		$list = ExtensionConfig::$LANG;
+		$list = array();
+		if( self::hasLang() ){
+			$list = ExtensionConfig::$LANG;
+		}
+		$countList = count($list);
+		$countCurrentLang = count($currentLang);
 		
 		// Langue courante
-		if( count($currentLang) > 0 ){
+		if( $countCurrentLang > 0 && $countList > 0 ){
 			$currentLangCode = key($currentLang);
 			$currentLangName = current($currentLang);
 			unset($list[$currentLangCode]);
@@ -203,10 +224,10 @@ abstract class AdminServUI {
 		}
 		
 		// Liste de toutes les langues
-		if( count($list) > 0 ){
+		if( $countList > 0 ){
 			$out .= '<ul>';
 			// Si il y a une langue courante, on la place en 1er
-			if( count($currentLang) > 0 ){
+			if( $countCurrentLang > 0 ){
 				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$currentLangCode.'.png);" href="'.$param.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
 			}
 			foreach($list as $code => $name){
@@ -240,8 +261,6 @@ abstract class AdminServUI {
 	* Récupère le header/footer du site
 	*/
 	public static function getHeader(){
-		global $id;
-		
 		// Classes CSS body
 		if( !isset($GLOBALS['body_class']) ){
 			$GLOBALS['body_class'] = null;
@@ -253,9 +272,11 @@ abstract class AdminServUI {
 		else{
 			$GLOBALS['body_class'] .= ' front';
 		}
-		$GLOBALS['body_class'] .= ' section-'.USER_PAGE;
-		if( $plugin = AdminServPlugin::getCurrent() ){
-			$GLOBALS['body_class'] .= ' plugin-'.$plugin;
+		if( defined('USER_PAGE') ){
+			$GLOBALS['body_class'] .= ' section-'.USER_PAGE;
+		}
+		if( defined('CURRENT_PLUGIN') ){
+			$GLOBALS['body_class'] .= ' plugin-'.CURRENT_PLUGIN;
 		}
 		$GLOBALS['body_class'] = trim($GLOBALS['body_class']);
 		
@@ -270,27 +291,27 @@ abstract class AdminServUI {
 	* Récupère le CSS/JS du site
 	*/
 	public static function getCss($path = AdminServConfig::PATH_RESSOURCES){
-		$out = '<link rel="stylesheet" href="'.$path.'styles/jquery-ui.css" />';
+		$out = '<link rel="stylesheet" href="'.$path.'styles/jquery-ui.css" />'."\n\t\t";
 		if(USER_PAGE == 'maps-upload'){
-			$out .= '<link rel="stylesheet" href="'.$path.'styles/fileuploader.css" />';
+			$out .= '<link rel="stylesheet" href="'.$path.'styles/fileuploader.css" />'."\n\t\t";
 		}
-		$out .= '<link rel="stylesheet" href="'.$path.'styles/global.css" />'
-		.'<!--[if IE]><link rel="stylesheet" href="'.$path.'styles/ie.css" /><![endif]-->';
+		$out .= '<link rel="stylesheet" href="'.$path.'styles/global.css" />'."\n\t\t"
+		.'<!--[if IE]><link rel="stylesheet" href="'.$path.'styles/ie.css" /><![endif]-->'."\n\t\t";
 		if( defined('USER_THEME') ){
-			$out .= '<link rel="stylesheet" href="'.$path.'styles/theme.php?th='. USER_THEME .'" />';
+			$out .= '<link rel="stylesheet" href="'.$path.'styles/theme.php?th='. USER_THEME .'" />'."\n\t\t";
 		}
-		$out .= '<link rel="stylesheet" media="screen and (max-width: 1000px)" href="'.$path.'styles/mobile.css" />';
+		$out .= '<link rel="stylesheet" media="screen and (max-width: 1000px)" href="'.$path.'styles/mobile.css" />'."\n";
 		
 		return $out;
 	}
 	public static function getJS($path = AdminServConfig::PATH_INCLUDES){
-		$out = '<script src="'.$path.'js/jquery.js"></script>'
-		.'<script src="'.$path.'js/jquery-ui.js"></script>';
+		$out = '<script src="'.$path.'js/jquery.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'js/jquery-ui.js"></script>'."\n\t\t";
 		if(USER_PAGE == 'maps-upload'){
-			$out .= '<script src="'.$path.'js/fileuploader.js"></script>';
+			$out .= '<script src="'.$path.'js/fileuploader.js"></script>'."\n\t\t";
 		}
-		$out .= '<script src="'.$path.'js/adminserv_funct.js"></script>'
-		.'<script src="'.$path.'js/adminserv_event.js"></script>';
+		$out .= '<script src="'.$path.'js/adminserv_funct.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'js/adminserv_event.js"></script>'."\n";
 		
 		return $out;
 	}
@@ -304,43 +325,29 @@ abstract class AdminServUI {
 	public static function getServerList(){
 		$out = null;
 		
-		// On vérifie qu'une configuration existe
-		if( class_exists('ServerConfig') ){
-			
-			// Si la configuration contient au moins 1 serveur et qu'il n'est pas l'exemple
-			if( AdminServServerConfig::hasServer() ){
-				
-				if( isset($_GET['server']) && $_GET['server'] != null ){
-					$currentServerId = intval($_GET['server']);
-				}
-				else{
-					// Id du serveur utilisé dernièrement
-					$currentServerId = Utils::readCookieData('adminserv', 0);
-				}
-				
-				// Liste des serveurs
-				foreach(ServerConfig::$SERVERS as $server => $values){
-					if( AdminServServerConfig::getServerId($server) == $currentServerId ){
-						$selected = ' selected="selected"';
-					}else{
-						$selected = null;
-					}
-					$out .= '<option value="'.$server.'"'.$selected.'>'.$server.'</option>';
-				}
+		if( class_exists('ServerConfig') && AdminServServerConfig::hasServer() ){
+			// Id du serveur à sélectionner
+			if( isset($_GET['server']) && $_GET['server'] != null ){
+				$currentServerId = intval($_GET['server']);
 			}
 			else{
-				$out = -1;
+				$currentServerId = Utils::readCookieData('adminserv', 0);
+			}
+			
+			// Liste des serveurs
+			foreach(ServerConfig::$SERVERS as $server => $values){
+				if( AdminServServerConfig::getServerId($server) == $currentServerId ){
+					$selected = ' selected="selected"';
+				}else{
+					$selected = null;
+				}
+				$out .= '<option value="'.$server.'"'.$selected.'>'.$server.'</option>';
 			}
 		}
 		else{
-			$out = -1;
-		}
-		
-		
-		// Retour
-		if($out === -1){
 			$out = '<option value="null">'.Utils::t('No server available').'</option>';
 		}
+		
 		return $out;
 	}
 	
@@ -354,32 +361,20 @@ abstract class AdminServUI {
 	public static function getGameModeList($currentGameMode = null){
 		$out = null;
 		
-		// On vérifie qu'une configuration existe
-		if( class_exists('ExtensionConfig') ){
-			
-			// Si la configuration contient au moins 1 mode de jeu
-			if( isset(ExtensionConfig::$GAMEMODES) && count(ExtensionConfig::$GAMEMODES) > 0 ){
-				foreach(ExtensionConfig::$GAMEMODES as $gameModeId => $gameModeName){
-					if( $gameModeId == $currentGameMode ){
-						$selected = ' selected="selected"';
-					}else{
-						$selected = null;
-					}
-					$out .= '<option value="'.$gameModeId.'"'.$selected.'>'.$gameModeName.'</option>';
+		if( class_exists('ExtensionConfig') && isset(ExtensionConfig::$GAMEMODES) && count(ExtensionConfig::$GAMEMODES) > 0 ){
+			foreach(ExtensionConfig::$GAMEMODES as $gameModeId => $gameModeName){
+				if( $gameModeId == $currentGameMode ){
+					$selected = ' selected="selected"';
+				}else{
+					$selected = null;
 				}
-			}
-			else{
-				$out = -1;
+				$out .= '<option value="'.$gameModeId.'"'.$selected.'>'.$gameModeName.'</option>';
 			}
 		}
 		else{
-			$out = -1;
-		}
-		
-		// Retour
-		if($out === -1){
 			$out = '<option value="null">'.Utils::t('No game mode available').'</option>';
 		}
+		
 		return $out;
 	}
 	
@@ -617,7 +612,7 @@ abstract class AdminServUI {
 	*/
 	public static function getPlayerList($currentPlayerLogin = null){
 		global $client;
-		$out = -1;
+		$out = '<option value="null">'.Utils::t('No player available').'</option>';
 		
 		if( $client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
 			$playerList = $client->getResponse();
@@ -631,10 +626,6 @@ abstract class AdminServUI {
 			}
 		}
 		
-		// Retour
-		if($out === -1){
-			$out = '<option value="null">'.Utils::t('No player available').'</option>';
-		}
 		return $out;
 	}
 	
@@ -670,11 +661,11 @@ abstract class AdminServUI {
 	
 	
 	/**
-	* Récupère la liset des dossiers du répertoire "Maps"
+	* Récupère la liste des dossiers du répertoire "Maps"
 	*
-	* @require class "Folder", "File", "Str"
+	* @require class "Folder"
 	*
-	* @param string $path -> Le chemin du dossier "Maps"
+	* @param string $path        -> Le chemin du dossier "Maps"
 	* @param string $currentPath -> Le chemin à partir de "Maps"
 	* @param bool   $showOptions -> Afficher les options (nouveau, renommer, déplacer, supprimer)
 	* @return string
@@ -840,11 +831,8 @@ abstract class AdminServ {
 	}
 	public static function debug($globalValue = null){
 		$const = get_defined_constants(true);
-		if($globalValue){
-			$globals = $GLOBALS[$globalValue];
-		}else{
-			$globals = $GLOBALS;
-		}
+		if($globalValue){ $globals = $GLOBALS[$globalValue]; }
+		else{ $globals = $GLOBALS; }
 		
 		return self::dsm(
 			array(
@@ -861,7 +849,7 @@ abstract class AdminServ {
 		global $client;
 		// Tente de récupérer le message d'erreur du dédié
 		if($text === null){
-			$text = '['.$client->getErrorCode().'] '.Utils::t($client->getErrorMessage() );
+			$text = '['.$client->getErrorCode().'] '.Utils::t( $client->getErrorMessage() );
 		}
 		
 		AdminServLogs::add('error', $text);
@@ -914,7 +902,7 @@ abstract class AdminServ {
 				foreach($result as $grpName => $grpValues){
 					foreach($grpValues['result'] as $bool){
 						if(!$bool){
-							self::error('Le fichier ou le dossier n\'a pas les droits requis : '.$path.' ('.$grpName.':'.$minChmod.')');
+							self::error('Le chemin suivant n\'a pas les droits requis : '.$path.' ("'.$grpName.'" a besoin de "'.$minChmod.'")');
 							break;
 						}
 					}
@@ -1047,18 +1035,15 @@ abstract class AdminServ {
 		
 		// Si la liste est un array
 		if( is_array($serverLevel) ){
-			// Si l'adresse ip est dans la liste des autorisées
 			if( in_array($_SERVER['REMOTE_ADDR'], $serverLevel) ){
 				$out = true;
 			}
 		}
-		// Sinon, c'est local ou null
+		// Sinon, c'est all ou local/localhost
 		else{
-			// Si c'est all -> autorisé à tous
 			if($serverLevel === 'all'){
 				$out = true;
 			}
-			// Sinon -> autorisé au réseau local
 			else{
 				$out = Utils::isLocalhostIP();
 			}
@@ -1076,22 +1061,23 @@ abstract class AdminServ {
 	*/
 	public static function isAdminLevel($level){
 		$out = false;
-		$adminLevel = $_SESSION['adminserv']['adminlevel'];
 		
-		if($level == 'User'){
-			if($adminLevel == 'SuperAdmin' || $adminLevel == 'Admin' || $adminLevel == 'User'){
-				$out = true;
-			}
-		}
-		else if($level == 'Admin'){
-			if($adminLevel == 'SuperAdmin' || $adminLevel == 'Admin'){
-				$out = true;
-			}
-		}
-		else if($level == 'SuperAdmin'){
-			if($adminLevel == 'SuperAdmin'){
-				$out = true;
-			}
+		switch($level){
+			case 'User':
+				if(USER_ADMINLEVEL == 'SuperAdmin' || USER_ADMINLEVEL == 'Admin' || USER_ADMINLEVEL == 'User'){
+					$out = true;
+				}
+				break;
+			case 'Admin':
+				if(USER_ADMINLEVEL == 'SuperAdmin' || USER_ADMINLEVEL == 'Admin'){
+					$out = true;
+				}
+				break;
+			case 'SuperAdmin':
+				if(USER_ADMINLEVEL == 'SuperAdmin'){
+					$out = true;
+				}
+				break;
 		}
 		
 		return $out;
@@ -1107,11 +1093,11 @@ abstract class AdminServ {
 	*/
 	public static function getProtocolLink($linkType, $gameTitle){
 		$protocolName = 'maniaplanet';
-		$protocolSeparator = '://';
-		$protocolSeparatorTitle = '@';
 		if( defined('LINK_PROTOCOL') && LINK_PROTOCOL ){
 			$protocolName = LINK_PROTOCOL;
 		}
+		$protocolSeparator = '://';
+		$protocolSeparatorTitle = '@';
 		$game = self::getGameFromEnv($env);
 		$title = $game['abbr'].ucfirst($env);
 		
@@ -1161,35 +1147,26 @@ abstract class AdminServ {
 	* @return string
 	*/
 	public static function getGameModeName($gameMode, $getManual = false){
-		$out = -1;
+		$out = Utils::t('No game mode available');
 		
-		// On vérifie qu'une configuration existe
-		if( class_exists('ExtensionConfig') ){
-			
-			// Si la configuration contient au moins 1 mode de jeu
-			if( isset(ExtensionConfig::$GAMEMODES) && count(ExtensionConfig::$GAMEMODES) > 0 ){
-				if($getManual && SERVER_VERSION_NAME == 'TmForever'){
-					$gameMode--;
-					if( isset(ExtensionConfig::$GAMEMODES[$gameMode]) ){
-						$out = ExtensionConfig::$GAMEMODES[$gameMode];
-					}
-				}
-				else{
+		if( class_exists('ExtensionConfig') && isset(ExtensionConfig::$GAMEMODES) && count(ExtensionConfig::$GAMEMODES) > 0 ){
+			if($getManual && SERVER_VERSION_NAME == 'TmForever'){
+				$gameMode--;
+				if( isset(ExtensionConfig::$GAMEMODES[$gameMode]) ){
 					$out = ExtensionConfig::$GAMEMODES[$gameMode];
 				}
 			}
+			else{
+				$out = ExtensionConfig::$GAMEMODES[$gameMode];
+			}
 		}
 		
-		// Retour
-		if($out === -1){
-			$out = Utils::t('No game mode available');
-		}
 		return $out;
 	}
 	
 	
 	/**
-	* Détermine si le mode de jeu fourni en paramètre est le mode par équipe
+	* Détermine si le nom du mode de jeu fourni en paramètre correspond au mode de jeu actuel
 	*
 	* @param string $gameModeName    -> Nom du mode de jeu à tester
 	* @param int    $currentGameMode -> ID du mode de jeu courant
@@ -1390,6 +1367,7 @@ abstract class AdminServ {
 	
 	
 	/**
+	* @deprecated
 	* Récupère le login du serveur principal à partir d'un serveur Relai
 	*
 	* @return string
@@ -1475,23 +1453,25 @@ abstract class AdminServ {
 		}
 		
 		// Suivant la commande demandée
-		if($cmd == 'RestartMap'){
-			if( !$client->query($methodRestart) ){
-				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-			}
-		}
-		else if($cmd == 'NextMap'){
-			if( !$client->query($methodNext) ){
-				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-			}
-		}
-		else if($cmd == 'ForceEndRound'){
-			if( !$client->query('ForceEndRound') ){
-				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
-			}
-		}
-		else{
-			$out = Utils::t('Unknown command');
+		switch($cmd){
+			case 'RestartMap':
+				if( !$client->query($methodRestart) ){
+					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				}
+				break;
+			case 'NextMap':
+				if( !$client->query($methodNext) ){
+					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				}
+				break;
+			case 'ForceEndRound':
+				if( !$client->query('ForceEndRound') ){
+					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				}
+				break;
+			default:
+				$out = Utils::t('Unknown command');
+				break;
 		}
 		
 		return $out;
@@ -1655,7 +1635,7 @@ abstract class AdminServ {
 			$chatLines = $client->getResponse();
 			foreach($chatLines as $line){
 				// On masque les lignes du serveur si c'est demandé
-				if($hideServerLines == true){
+				if($hideServerLines){
 					$line = self::clearChatServerLine($line);
 				}
 				
@@ -1668,9 +1648,7 @@ abstract class AdminServ {
 				$line = str_replace('$>', '$z', $line);
 				$line = htmlspecialchars($line, ENT_QUOTES, 'UTF-8');
 				
-				// Affichage des lignes
 				if($line != null){
-					// Convertie les codes nadeo restant en html
 					$out .= TmNick::toHtml($line, 10, false, true, '#666');
 				}
 			}
@@ -1688,7 +1666,7 @@ abstract class AdminServ {
 	*/
 	public static function clearChatServerLine($line){
 		$char = substr(utf8_decode($line), 0, 1);
-		if($char == '<' || $char == '/' || substr($line, 0, 11) == '$99F[Admin]' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
+		if($char == '<' || $char == '/' || substr($line, 0, 11) == '$99F[Admin]' || substr($line, 0, 11) == '$99F<Admin>' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
 			return $line;
 		}
 	}
@@ -1718,7 +1696,7 @@ abstract class AdminServ {
 		}
 		else{
 			$out = Str::toSlash( $client->getResponse() );
-			if( substr($out, -1, 1) != '/'){ $out = $out.'/'; }
+			if( substr($out, -1, 1) != '/'){ $out .= '/'; }
 		}
 		return $out;
 	}
@@ -2573,9 +2551,6 @@ abstract class AdminServLogs {
 			else{
 				$error = Utils::t('The folder "logs" does not exist.');
 			}
-			
-			
-
 		}
 		
 		if($out){
@@ -2721,7 +2696,8 @@ abstract class AdminServServerConfig {
 		// Si l'id = le nb total de serveur -> pas trouvé
 		if($id == $countServers ){
 			return -1;
-		}else{
+		}
+		else{
 			return $id;
 		}
 	}
@@ -2736,9 +2712,8 @@ abstract class AdminServServerConfig {
 	public static function getServerName($serverId){
 		$out = null;
 		$servers = ServerConfig::$SERVERS;
-		$countServers = count($servers);
 		
-		if( $countServers > 0 ){
+		if( count($servers) > 0 ){
 			$i = 0;
 			foreach($servers as $serverName => $serverValues){
 				if($i == $serverId){
@@ -2941,7 +2916,7 @@ abstract class AdminServPlugin {
 	*/
 	public static function getConfig($pluginName = null, $returnField = null){
 		$out = null;
-		if($pluginName == null){
+		if($pluginName === null){
 			$pluginName = CURRENT_PLUGIN;
 		}
 		$path = AdminServConfig::PATH_PLUGINS .$pluginName.'/config.ini';
@@ -3027,8 +3002,8 @@ abstract class AdminServPlugin {
 	* @return html
 	*/
 	public static function getPlugin($pluginName = null){
-		global $client, $translate;
-		if($pluginName == null){
+		global $client, $translate, $category, $view, $index, $id, $directory;
+		if($pluginName === null){
 			$pluginName = CURRENT_PLUGIN;
 		}
 		
@@ -3058,7 +3033,7 @@ abstract class AdminServPlugin {
 	*/
 	public static function getPluginPath($pluginName = null){
 		$out = null;
-		if($pluginName == null){
+		if($pluginName === null){
 			$pluginName = CURRENT_PLUGIN;
 		}
 		$path = AdminServConfig::PATH_PLUGINS;
