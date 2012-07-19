@@ -149,8 +149,8 @@
 									
 									// Join
 									var title = "";
-									if(data.servers[i].title){
-										title += "@"+data.servers[i].title;
+									if(data.servers[i].version.title){
+										title += "@"+data.servers[i].version.title;
 									}
 									if(settings.links.join){
 										serverId.find(".ds-server-join a").attr("href", data.servers[i].version.protocol+"://#join="+data.servers[i].serverlogin+title);
