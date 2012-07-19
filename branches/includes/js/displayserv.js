@@ -148,14 +148,18 @@
 									serverId.find(".ds-server-players-count").html(data.players[i].count.current+" / "+data.players[i].count.max);
 									
 									// Join
+									var title = "";
+									if(data.servers[i].title){
+										title += "@"+data.servers[i].title;
+									}
 									if(settings.links.join){
-										serverId.find(".ds-server-join a").attr("href", data.servers[i].version.protocol+"://#join="+data.servers[i].serverlogin);
+										serverId.find(".ds-server-join a").attr("href", data.servers[i].version.protocol+"://#join="+data.servers[i].serverlogin+title);
 									}
 									if(settings.links.spectate){
-										serverId.find(".ds-server-spectate a").attr("href", data.servers[i].version.protocol+"://#spectate="+data.servers[i].serverlogin);
+										serverId.find(".ds-server-spectate a").attr("href", data.servers[i].version.protocol+"://#spectate="+data.servers[i].serverlogin+title);
 									}
 									if(settings.links.addfavourite){
-										serverId.find(".ds-server-favourite a").attr("href", data.servers[i].version.protocol+"://#addfavourite="+data.servers[i].serverlogin);
+										serverId.find(".ds-server-favourite a").attr("href", data.servers[i].version.protocol+"://#addfavourite="+data.servers[i].serverlogin+title);
 									}
 									
 									// Players
