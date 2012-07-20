@@ -111,7 +111,7 @@
 	
 	
 	// CONFIG PAGES LIST
-	$CONFIGPAGESLIST = array(
+	$configPagesList = array(
 		'servers',
 		'addserver',
 		'servers-order',
@@ -120,6 +120,7 @@
 	
 	
 	// INDEX
+	unset($forceTheme, $userTheme, $forceLang, $userLanguage, $langFile);
 	if( isset($_SESSION['adminserv']['sid']) && isset($_SESSION['adminserv']['password']) && isset($_SESSION['adminserv']['adminlevel']) && !isset($_GET['error']) ){
 		
 		// SWITCHS
@@ -147,7 +148,7 @@
 			}
 		}
 		// PAGES UNIQUES
-		$PAGESLIST = array(
+		$pagesList = array(
 			'general',
 			'srvopts',
 			'gameinfos',
@@ -155,12 +156,12 @@
 			'plugins-list',
 			'guestban',
 		);
-		$PAGESLIST = array_merge($PAGESLIST, array_keys(ExtensionConfig::$MAPSMENU) );
+		$pagesList = array_merge($pagesList, array_keys(ExtensionConfig::$MAPSMENU) );
 		
 		// INCLUDES DES PAGES
-		if( in_array(USER_PAGE, $PAGESLIST) ){
-			unset($PAGESLIST[0]);
-			foreach($PAGESLIST as $page){
+		if( in_array(USER_PAGE, $pagesList) ){
+			unset($pagesList[0]);
+			foreach($pagesList as $page){
 				if(USER_PAGE === $page){
 					$file = AdminServConfig::PATH_INCLUDES .'pages/'.$page.'.php';
 					if( file_exists($file) ){
@@ -172,22 +173,22 @@
 			}
 		}
 		else{
-			if( in_array(USER_PAGE, $CONFIGPAGESLIST) ){
+			if( in_array(USER_PAGE, $configPagesList) ){
 				session_unset();
 				session_destroy();
 				Utils::redirection(false, './config/');
 			}
 			else{
 				if(!CURRENT_PLUGIN){
-					include_once AdminServConfig::PATH_INCLUDES .'pages/'.$PAGESLIST[0].'.php';
+					include_once AdminServConfig::PATH_INCLUDES .'pages/'.$pagesList[0].'.php';
 				}
 			}
 		}
 	}
 	else{
 		// CONFIG
-		if( in_array(USER_PAGE, $CONFIGPAGESLIST) ){
-			foreach($CONFIGPAGESLIST as $page){
+		if( in_array(USER_PAGE, $configPagesList) ){
+			foreach($configPagesList as $page){
 				if(USER_PAGE === $page){
 					$file = AdminServConfig::PATH_INCLUDES .'pages/'.$page.'.php';
 					if( file_exists($file) ){

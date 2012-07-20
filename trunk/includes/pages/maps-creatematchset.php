@@ -56,10 +56,10 @@
 		$matchSettingName = Str::replaceChars($_POST['matchSettingName']);
 		$matchSettingExtension = File::getExtension($matchSettingName);
 		if($matchSettingExtension == 'txt'){
-			$filename = $mapsDirectoryPath.$matchSettingName;
+			$filename = $mapsDirectoryPath.$directory.$matchSettingName;
 		}
 		else{
-			$filename = $mapsDirectoryPath.$matchSettingName.'.txt';
+			$filename = $mapsDirectoryPath.$directory.$matchSettingName.'.txt';
 		}
 		
 		$struct = array();
@@ -73,7 +73,6 @@
 			'allwarmupduration' => $gameinfos['AllWarmUpDuration'],
 			'disablerespawn' => $gameinfos['DisableRespawn'],
 			'forceshowallopponents' => $gameinfos['ForceShowAllOpponents'],
-			'script_name' => $gameinfos['ScriptName'],
 			'rounds_pointslimit' => $gameinfos['RoundsPointsLimit'],
 			'rounds_usenewrules' => $gameinfos['RoundsUseNewRules'],
 			'rounds_forcedlaps' => $gameinfos['RoundsForcedLaps'],
@@ -91,8 +90,8 @@
 			'cup_nbwinners' => $gameinfos['CupNbWinners'],
 			'cup_warmupduration' => $gameinfos['CupWarmUpDuration']
 		);
-		if(SERVER_VERSION_NAME == 'TmForever'){
-			unset($struct['gameinfos']['script_name']);
+		if(SERVER_VERSION_NAME != 'TmForever'){
+			$struct['gameinfos']['script_name'] = $gameinfos['ScriptName'];
 		}
 		
 		// HotSeat
@@ -128,10 +127,10 @@
 			AdminServ::error(Utils::t('Unable to save the MatchSettings').' : '.$matchSettingName.' ('.$result.')');
 		}
 		else{
-			$action = Utils::t('The MatchSettings "!matchSettingName" was successfully created in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$mapsDirectoryPath;
+			$action = Utils::t('The MatchSettings "!matchSettingName" was successfully created in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$mapsDirectoryPath.$directory;
 			AdminServ::info($action);
 			AdminServLogs::add('action', $action);
-			Utils::redirection(false, '?p='.USER_PAGE);
+			Utils::redirection(false, '?p='.USER_PAGE .$hasDirectory);
 		}
 	}
 	else{
@@ -153,7 +152,7 @@
 		<?php echo $mapsDirectoryList; ?>
 	</section>
 	
-	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
+	<form method="post" action="?p=<?php echo USER_PAGE . $hasDirectory; ?>">
 	<section class="cadre right creatematchset">
 		<h1><?php echo $pageTitle.' '.Utils::t('a MatchSettings'); ?></h1>
 		<div class="title-detail">

@@ -973,6 +973,7 @@ abstract class AdminServ {
 								define('SERVER_PORT', $getSystemInfo['Port']);
 								define('SERVER_P2P_PORT', $getSystemInfo['P2PPort']);
 								if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+									define('SERVER_TITLE', $getSystemInfo['TitleId']);
 									define('IS_SERVER', $getSystemInfo['IsServer']);
 									define('IS_DEDICATED', $getSystemInfo['IsDedicated']);
 								}
@@ -1087,52 +1088,22 @@ abstract class AdminServ {
 	/**
 	* Retourne un lien protocol TM ou ManiaPlanet suivant l'environnement
 	*
-	* @param string $linkType  -> Type de lien : #join=server_login ou /:manialink_name
-	* @param string $gameTitle -> Le nom du jeu : TMCanyon, SMStorm, etc
+	* @param string $link -> Lien : #join=server_login ou /:manialink_name
 	* @return string
 	*/
-	public static function getProtocolLink($linkType, $gameTitle){
+	public static function getProtocolLink($link){
+		$out = null;
 		$protocolName = 'maniaplanet';
 		if( defined('LINK_PROTOCOL') && LINK_PROTOCOL ){
 			$protocolName = LINK_PROTOCOL;
 		}
 		$protocolSeparator = '://';
-		$protocolSeparatorTitle = '@';
-		$game = self::getGameFromEnv($env);
-		$title = $game['abbr'].ucfirst($env);
 		
-		return $protocolName.$protocolSeparator.$linkType.$protocolSeparatorTitle.$title;
-	}
-	
-	
-	/**
-	* Récupère le nom et l'abrévation du jeu en fonction de son environnement
-	*
-	* @param string $env -> Le nom de l'environnement
-	* @return array
-	*/
-	public static function getGameFromEnv($env){
-		$out = array();
-		$env = strtolower($env);
-		
-		switch($env){
-			case 'alpine':
-			case 'bay':
-			case 'canyon':
-			case 'coast':
-			case 'desert':
-			case 'island':
-			case 'rally':
-			case 'snow':
-			case 'speed':
-			case 'stadium':
-				$out['name'] = 'TrackMania';
-				$out['abbr'] = 'TM';
-				break;
-			case 'storm':
-				$out['name'] = 'ShootMania';
-				$out['abbr'] = 'SM';
-				break;
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$out = $protocolName.$protocolSeparator.$link;
+		}
+		else{
+			$out = $protocolName.$protocolSeparator.$link.'@'.SERVER_TITLE;
 		}
 		
 		return $out;
