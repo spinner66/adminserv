@@ -41,8 +41,11 @@
 			'HideServer' => $HideServer
 		);
 		
-		// Requête
-		if( !$client->query('SetServerOptions', $struct) ){
+		// Requêtes
+		$client->addCall('SetServerOptions', $struct);
+		$client->addCall('SetBuddyNotification', array('', array_key_exists('BuddyNotification', $_POST)) );
+		$client->addCall('DisableHorns', array(array_key_exists('DisableHorns', $_POST)) );
+		if( !$client->multiquery() ){
 			AdminServ::error();
 		}
 		else{
@@ -61,6 +64,9 @@
 	}
 	$client->addCall('GetBuddyNotification', array('') );
 	$client->addCall('GetHideServer');
+	if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+		$client->addCall('AreHornsDisabled');
+	}
 	if( !$client->multiquery() ){
 		AdminServ::error();
 	}
@@ -77,6 +83,10 @@
 		else{ $srvOpt['CurrentVehicleNetQualityName'] = Utils::t('Fast'); }
 		$srvOpt['BuddyNotification'] = $queriesData['GetBuddyNotification'];
 		$srvOpt['HideServer'] = $queriesData['GetHideServer'];
+		$srvOpt['DisableHorns'] = null;
+		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+			$srvOpt['DisableHorns'] = $queriesData['AreHornsDisabled'];
+		}
 	}
 	
 	
@@ -231,6 +241,14 @@
 							<input class="text" type="checkbox" name="BuddyNotification" id="BuddyNotification"<?php if($srvOpt['BuddyNotification'] != 0){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 					</tr>
+					<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
+						<tr>
+							<td class="key"><label for="DisableHorns"><?php echo Utils::t('Disable horns'); ?></label></td>
+							<td class="value" colspan="4">
+								<input class="text" type="checkbox" name="DisableHorns" id="DisableHorns"<?php if($srvOpt['DisableHorns'] != 0){ echo ' checked="checked"'; } ?> value="" />
+							</td>
+						</tr>
+					<?php } ?>
 				</table>
 			</fieldset>
 		</div>

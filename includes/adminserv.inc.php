@@ -1140,11 +1140,16 @@ abstract class AdminServ {
 	* Détermine si le nom du mode de jeu fourni en paramètre correspond au mode de jeu actuel
 	*
 	* @param string $gameModeName    -> Nom du mode de jeu à tester
-	* @param int    $currentGameMode -> ID du mode de jeu courant
+	* @param int    $currentGameMode -> ID du mode de jeu courant. Si null, le mode de jeu courant est récupéré par le serveur
 	* @return bool
 	*/
-	public static function isGameMode($gameModeName, $currentGameMode){
+	public static function isGameMode($gameModeName, $currentGameMode = null){
+		global $client;
 		$out = false;
+		if($currentGameMode === null){
+			$client->query('GetGameMode');
+			$currentGameMode = $client->getResponse();
+		}
 		
 		if($gameModeName == self::getGameModeName($currentGameMode) ){
 			$out = true;
@@ -1423,21 +1428,34 @@ abstract class AdminServ {
 			}
 		}
 		
+		// Si c'est le mode Cup
+		$hasCupMode = false;
+		if( self::isGameMode('Cup') ){
+			$hasCupMode = true;
+		}
+		
 		// Suivant la commande demandée
 		switch($cmd){
 			case 'RestartMap':
-				if( !$client->query($methodRestart) ){
+				if( !$client->query($methodRestart, $hasCupMode) ){
 					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 				}
 				break;
 			case 'NextMap':
-				if( !$client->query($methodNext) ){
+				if( !$client->query($methodNext, $hasCupMode) ){
 					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 				}
 				break;
 			case 'ForceEndRound':
-				if( !$client->query('ForceEndRound') ){
-					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				if($hasCupMode){
+					if( !$client->query($methodNext) ){
+						$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					}
+				}
+				else{
+					if( !$client->query('ForceEndRound') ){
+						$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					}
 				}
 				break;
 			default:
