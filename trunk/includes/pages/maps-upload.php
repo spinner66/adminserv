@@ -48,7 +48,7 @@
 				</li>
 			<?php } ?>
 				<li>
-					<input class="text inline" type="checkbox" name="GotoListMaps" id="GotoListMaps" value="maps" />
+					<input class="text inline" type="checkbox" name="GotoListMaps" id="GotoListMaps" value="maps" checked="checked" />
 					<label for="GotoListMaps"><?php echo Utils::t('Go to the maps list when upload is complete'); ?></label>
 				</li>
 			</ul>
