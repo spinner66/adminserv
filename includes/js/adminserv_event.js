@@ -20,7 +20,7 @@ $(document).ready(function(){
 		if( $("body").hasClass("section-servers") ){
 			// Clic sur les lignes
 			$("#serverList tr").live("click", function(){
-				if( !$(this).hasClass("no-line") ){
+				if( !$(this).hasClass("no-line") && !$(this).hasClass("table-separation") ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass("selected") ){
 						$("#serverList tr").removeClass("selected");
@@ -225,7 +225,7 @@ $(document).ready(function(){
 			
 			// Clic sur les lignes
 			$("#playerlist tr").live("click", function(){
-				if( !$(this).hasClass("no-line") ){
+				if( !$(this).hasClass("no-line") && !$(this).hasClass("table-separation") ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass("selected") ){
 						$(this).removeClass("selected");
@@ -509,7 +509,7 @@ $(document).ready(function(){
 			
 			// Clic sur les lignes
 			$("#maplist tr").live("click", function(){
-				if( !$(this).hasClass("current") && !$(this).hasClass("no-line") ){
+				if( !$(this).hasClass("current") && !$(this).hasClass("no-line") && !$(this).hasClass("table-separation") ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass("selected") ){
 						$(this).removeClass("selected");
@@ -586,7 +586,7 @@ $(document).ready(function(){
 			
 			// Clic sur les lignes
 			$("#maplist tr").live("click", function(){
-				if( !$(this).hasClass("no-line") ){
+				if( !$(this).hasClass("no-line") && !$(this).hasClass("table-separation") ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass("selected") ){
 						$(this).removeClass("selected");
@@ -688,7 +688,7 @@ $(document).ready(function(){
 			
 			// Clic sur les lignes
 			$("#matchsetlist tr").live("click", function(){
-				if( !$(this).hasClass("no-line") ){
+				if( !$(this).hasClass("no-line") && !$(this).hasClass("table-separation") ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass("selected") ){
 						$(this).removeClass("selected");
@@ -819,7 +819,7 @@ $(document).ready(function(){
 			
 			// Clic sur les lignes
 			$("#banlist tr, #blacklist tr, #guestlist tr, #ignorelist tr").live("click", function(){
-				if( !$(this).hasClass("no-line") ){
+				if( !$(this).hasClass("no-line") && !$(this).hasClass("table-separation") ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass("selected") ){
 						$(this).removeClass("selected");
@@ -837,7 +837,7 @@ $(document).ready(function(){
 				}
 			});
 			$("#playlists tr").live("click", function(){
-				if( !$(this).hasClass("no-line") ){
+				if( !$(this).hasClass("no-line") && !$(this).hasClass("table-separation") ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass("selected") ){
 						$(this).removeClass("selected");

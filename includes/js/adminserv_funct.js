@@ -677,7 +677,7 @@ function setMapslistDetailMode(){
 */
 (function($){
 	$.fn.checkAll = function(isChecked){
-		var lineSelector = $(this).find("tbody tr");
+		var lineSelector = $(this).find("tbody tr[class!=table-separation]");
 		var checkboxSelector = $(this).find("tbody td.checkbox input[type=checkbox]");
 		if(isChecked){
 			checkboxSelector.attr("checked", true);
@@ -699,7 +699,7 @@ function setMapslistDetailMode(){
 	$.fn.updateCheckAll = function(checkAllSelector){
 		// On récupère le nombre d'élements sélectionnés
 		var nbSelected = $(this).find("tbody tr.selected").length;
-		var nbAll = $(this).find("tbody tr").length;
+		var nbAll = $(this).find("tbody tr[class!=table-separation]").length;
 		if( $("body").hasClass("section-maps-list") ){
 			nbAll--;
 		}

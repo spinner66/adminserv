@@ -1603,6 +1603,9 @@ footer {
 .section-guestban .addPlayer input.text {
 	width: 41%;
 }
+.section-guestban .addPlayer select#addPlayerList {
+	width: 44%;
+}
 .section-guestban .addPlayer select.addPlayerTypeList {
 	width: 120px;
 }
