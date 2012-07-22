@@ -148,7 +148,8 @@
 		$_SESSION['adminserv']['mode'] = 'detail';
 	}
 	if( defined('IS_RELAY') && IS_RELAY ){
-		$mainServerLogin = AdminServ::getMainServerLoginFromRelay();
+		// @deprecated $mainServerLogin = AdminServ::getMainServerLoginFromRelay();
+		$mainServerLogin = null;
 	}
 	
 	
