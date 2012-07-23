@@ -865,7 +865,7 @@ function matchset_mapImportSelection(){
 						if( listSelection.length > 0 ){
 							$.each(listSelection, function(i, n){
 								if( n.className.indexOf("selected") !== -1 ){
-									listSelectionId.push(n.sectionRowIndex);
+									listSelectionId.push( parseInt(n.sectionRowIndex - 1) );
 								}
 							});
 						}
