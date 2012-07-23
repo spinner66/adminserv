@@ -2752,6 +2752,35 @@ abstract class AdminServServerConfig {
 	
 	
 	/**
+	* Sauvegarde le mot de passe de la configuration serveur
+	*
+	* @param string $filename -> Le chemin vers le fichier de config
+	* @param string $password -> Le mot de passe à écrire
+	* @return true or text error
+	*/
+	public static function savePasswordConfig($filename, $password){
+		$out = false;
+		$seek = null;
+		
+		// Récupération du pointeur
+		$search = 'const PASSWORD = \'';
+		$seek = File::getSeekFromString($filename, $search, true);
+		
+		// Écriture dans le fichier
+		if($seek !== null){
+			if( ($result = File::saveAtSeek($filename, $password, $seek)) !== true ){
+				$out = $result;
+			}
+			else{
+				$out = true;
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Sauvegarde le fichier de configuration des serveurs
 	*
 	* @param array $serverData -> assoc array(name, address, port, matchsettings, adminlevel => array(SuperAdmin, Admin, User));
