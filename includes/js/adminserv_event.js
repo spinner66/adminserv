@@ -400,7 +400,7 @@ $(document).ready(function(){
 				});
 				// Enlever une map de la sélection
 				$("#mapSelectionDialog tr a").live("click", function(){
-					matchset_mapSelection( parseInt($(this).parent("td").parent("tr")[0].sectionRowIndex + 1) );
+					matchset_mapSelection( parseInt($(this).parent("td").parent("tr")[0].sectionRowIndex) );
 					return false;
 				});
 				
