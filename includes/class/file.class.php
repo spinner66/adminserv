@@ -104,6 +104,34 @@ abstract class File {
 	
 	
 	/**
+	* Récupère le pointeur à partir d'une chaine de caractère dans un fichier
+	*
+	* @param string $filename -> Le chemin du fichier
+	* @param string $string   -> La chaine à rechercher
+	* @param bool   $lastChar -> Retourner le pointer à partir du dernier caractère de la chaine recherchée
+	* @return int or text error
+	*/
+	public static function getSeekFromString($filename, $string, $lastChar = false){
+		$out = null;
+		
+		if( file_exists($filename) && is_writable($filename) ){
+			$handle = fopen($filename, 'r');
+			$content = fread($handle, filesize($filename) );
+			$out = strpos($content, $string);
+			if($lastChar){
+				$out += strlen($string);
+			}
+			fclose($handle);
+		}
+		else{
+			$out = 'No such file or file is not writable';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Renomme un fichier
 	*
 	* @param string $filename    -> Chemin du fichier à renommer
