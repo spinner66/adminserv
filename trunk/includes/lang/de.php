@@ -1,11 +1,9 @@
 <?php
 $translate = array(
-	// Header
 	'Access server' => 'Auf Server zugreifen',
 	'Access relay' => 'Auf Relay zugreifen',
 	'Disconnect' => 'Abschaltung',
 	'Servers' => 'Serveurs',
-	// Connection
 	'Server' => 'Serveur',
 	'Password' => 'Passwort',
 	'Admin level' => 'Admin Level',
@@ -21,7 +19,6 @@ $translate = array(
 	'Offline server.' => 'Server offline.',
 	'Authentication error.' => 'Erreur d\'authentification.',
 	'Add to favourite' => 'Ajouter aux favoris',
-	// General
 	'Current map' => 'Laufende Map',
 	'Name' => 'Name',
 	'Author' => 'Autor',
@@ -59,7 +56,6 @@ $translate = array(
 	'Red team' => 'Équipe rouge',
 	'Blue team' => 'Équipe bleue',
 	'The scores have been modified : $00fblue team $fffhas !scoreTeamBlue and $f00red team $fffhas !scoreTeamRed' => 'Les scores ont été modifiés : l\'$00féquipe bleue$fff à !scoreTeamBlue et l\'$f00équipe rouge $fffà !scoreTeamRed',
-	// ServerOptions
 	'Server options' => 'Options du serveur',
 	'General' => 'General',
 	'Comment' => 'Kommentar',
@@ -85,10 +81,8 @@ $translate = array(
 	'Forced' => 'Genötigt',
 	'Fast' => 'Schnell',
 	'High' => 'Hoch',
-	// GameInfos
 	'Game infos' => 'Infos de jeu',
 	'Game information' => 'Informations de jeu',
-	// Chat
 	'Color' => 'Couleur',
 	'Black' => 'Noir',
 	'Red' => 'Rouge',
@@ -107,18 +101,15 @@ $translate = array(
 	'Message' => 'Nachricht',
 	'Destination' => 'Ziel',
 	'Send' => 'Senden',
-	// Maps.inc
 	'Unable to create the folder' => 'Unmöglich, der neue Ordner zu erstellen',
 	'Unable to rename the folder' => 'Impossible de renommer le dossier',
 	'Unable to move the folder' => 'Impossible de déplacer le dossier',
 	'Unable to delete the folder' => 'Impossible de supprimer le dossier',
-	// Maps-list
 	'List' => 'Liste',
 	'Go to the current map' => 'Allez à la map en cours',
 	'Map' => 'Map',
 	'Delete' => 'Entfernen',
 	'Move after the current map' => 'Déplacer après la map en cours',
-	// Maps-local
 	'Unable to rename the map' => 'Impossible de renommer la map',
 	'Unable to move the map' => 'Impossible de déplacer la map',
 	'Unable to delete the map' => 'Impossible de supprimer la map',
@@ -134,14 +125,12 @@ $translate = array(
 	'in the folder:' => 'dans le dossier :',
 	'Root' => 'Racine',
 	'The map,is actually used by the server.' => 'La map,est actuellement utilisée par le serveur.',
-	// Maps-matchset
 	'MatchSettings' => 'MatchSettings',
 	'Contains' => 'Enthählt',
 	'Modified' => 'Modifié le',
 	'Edit' => 'Editieren',
 	'Load' => 'Aufladen',
 	'Save ' => 'Speichern',
-	// Maps-creatematchset
 	'Create' => 'Erstellen',
 	'Unable to save the MatchSettings' => 'Impossible d\'enregistrer le MatchSettings',
 	'The MatchSettings "!matchSettingName" was successfully created in the folder' => 'Le MatchSettings "!matchSettingName" a bien été créé dans le dossier',
@@ -167,14 +156,12 @@ $translate = array(
 	'Default game mode' => 'Game Mode Standardeinstellung',
 	'No map selected for the MatchSettings.' => 'Aucune map sélectionnée pour le MatchSettings.',
 	'The MatchSettings name already exist! It will be overwritten.' => 'Le nom du MatchSettings existe déjà ! Il sera écrasé.',
-	// Maps-order
 	'Order' => 'Ordonner',
 	'Automatic sort' => 'Tri automatique',
 	'Random' => 'Aléatoire',
 	'Manual sort' => 'Tri manuel',
 	'Save the current MatchSettings' => 'MatchSettings speichern',
 	'Reset' => 'Réinitialiser',
-	// Maps-upload
 	'Transfer mode' => 'Mode de transfert',
 	'at the end of list' => 'à la fin de la liste',
 	'after the current map' => 'après la map en cours',
@@ -200,7 +187,6 @@ $translate = array(
 	'The file has invalid extension (allowed extensions:' => 'L\'extension du fichier est invalide (extensions autorisées :',
 	'The file was not uploaded. Upload has been cancelled or a server error occurred.' => 'Le fichier n\'a pas été envoyé. L\'envoi a été annulé ou une erreur du serveur est survenue.',
 	'Server error. The upload destination folder isn\'t writable.' => 'Erreur du serveur. Le dossier de destination des uploads n\'est pas écrivable.',
-	// Plugins
 	'Plugins' => 'Plugins',
 	'plugin installed' => 'plugin installé',
 	'plugins installed' => 'plugins installés',
@@ -214,7 +200,6 @@ $translate = array(
 	'' => 'Dans la configuration Extension, ajoutez le nom du dossier du plugin précédement ajouté.',
 	'How create your plugin?' => 'Comment créer son plugin ?',
 	'' => 'Pour créer son plugin, allez dans le dossier &laquo; Plugins  &raquo; et dupliquez le dossier &laquo; _newplugin &raquo. Remplacez les valeurs dans le fichier config.ini ainsi que le nom du dossier.<br />Le fichier &laquo; index.php &raquo; est le fichier principal du plugin. A vous de créer les ressources (classes, js, css) puis de les inclures dans ce fichier.',
-	// Guest-ban
 	'Unable to delete the playlist' => 'Impossible de supprimer la playlist',
 	'Player login' => 'Login joueur',
 	'Clean the list' => 'Vider la liste',
@@ -236,7 +221,6 @@ $translate = array(
 	'players' => 'joueurs',
 	'player' => 'joueur',
 	'No playlist' => 'Kein Playlist wird gefunden',
-	// Servers
 	'You are not allowed to configure the servers' => 'Vous n\'êtes pas autorisé à configurer les serveurs.',
 	'No server available. To add one, configure "config/servers.cfg.php" file.' => 'Aucun serveur n\'est disponible. Pour en ajouter un, il faut configurer le fichier "config/servers.cfg.php"',
 	'The servers configuration file isn\'t recognized by AdminServ.' => 'Le fichier de configuration des serveurs n\'est pas reconnu par AdminServ.',
@@ -260,7 +244,6 @@ $translate = array(
 	'Duplicate' => 'Dupliquer',
 	'Modify' => 'Andern',
 	'The "!serverName" server has been deleted.' => 'Le serveur "!serverName" a été supprimé.',
-	// AddServer
 	'This server has been modified.' => 'Le serveur a bien été modifié.',
 	'Unable to modify the server.' => 'Impossible de modifier le serveur.',
 	'This server has been added.' => 'Le serveur a bien été ajouté.',
@@ -281,7 +264,6 @@ $translate = array(
 	'local => local network access' => 'local => accès au réseau local',
 	'192.168.0.1, 192.168.0.2 => access to one or more IP address' => '192.168.0.1, 192.168.0.2 => accès à une ou plusieurs adresses IP',
 	'none => removed from the access list' => 'none => accès enlevé de la liste',
-	// AdminServ.inc
 	'No server available' => 'Aucun serveur disponible',
 	'No game mode available' => 'Aucun mode de jeu disponible',
 	'Map end time' => 'Temps de fin de map',
@@ -338,11 +320,20 @@ $translate = array(
 	'Unable to create log file:' => 'Impossible de créer le fichier de log :',
 	'Unable to add log in file:' => 'Impossible d\'ajouter un log au fichier :',
 	'This server does not exist' => 'Ce serveur n\'existe pas',
-	// Changement de mot de passe
 	'Change password' => 'Changer le mot de passe',
 	'Current' => 'Aktuell',
 	'New' => 'Nouveau',
 	'The current password doesn\'t match.' => 'Le mot de passe actuel ne correspond pas.',
 	'The password has been changed.' => 'Le mot de passe a bien été changé.',
+	'Not rated' => 'Non classé',
+	'Unable to delete server.' => 'Impossible de supprimer ce serveur',
+	'Guest-Ban' => 'Invités-Bannis',
+	'Access as player' => 'Accéder en joueur',
+	'Access as spectator' => 'Accéder en spectateur',
+	'Disable horns' => 'Désactiver les klaxons',
+	'Current vote' => 'Vote en cours',
+	'Cancel vote' => 'Annuler le vote',
+	'Change order' => 'Changer l\'ordre',
+	'Servers order' => 'Ordre des serveurs',
 );
 ?>
