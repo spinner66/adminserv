@@ -10,9 +10,10 @@
 	require_once '../../'.$adminservPath.'config/adminserv.cfg.php';
 	require_once '../adminserv.inc.php';
 	require_once '../class/utils.class.php';
-	$lang = AdminServUI::getLang();
-	if( file_exists('../lang/'.$lang.'.php') ){
-		require_once '../lang/'.$lang.'.php';
+	$langCode = AdminServUI::getLang();
+	$langFile = '../lang/'.$langCode.'.php';
+	if( file_exists($langFile) ){
+		require_once $langFile;
 	}
 	
 	// DATA

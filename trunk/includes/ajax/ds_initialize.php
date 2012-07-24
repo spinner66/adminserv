@@ -9,8 +9,8 @@
 	if( file_exists($serverConfig) ){
 		require_once $serverConfig;
 	}
-	$lang = Utils::getLang();
-	$langFile = '../lang/'.$lang.'.php';
+	$langCode = Utils::getLang();
+	$langFile = '../lang/'.$langCode.'.php';
 	if( file_exists($langFile) ){
 		require_once $langFile;
 	}
