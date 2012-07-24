@@ -3023,8 +3023,11 @@ abstract class AdminServPlugin {
 			$pluginName = CURRENT_PLUGIN;
 		}
 		
-		$file = AdminServConfig::PATH_PLUGINS .$pluginName.'/index.php';
-		if( file_exists($file) ){
+		$pluginPath = AdminServConfig::PATH_PLUGINS .$pluginName.'/';
+		$scriptFile = $pluginPath.'script.php';
+		$viewFile = $pluginPath.'view.php';
+		if( file_exists($scriptFile) && file_exists($viewFile) ){
+			require_once $scriptFile;
 			AdminServUI::getHeader();
 			echo '<section class="plugins hasMenu">'
 				.'<section class="cadre left menu">'
@@ -3033,7 +3036,7 @@ abstract class AdminServPlugin {
 				
 				.'<section class="cadre right">'
 					.'<h1>'.self::getConfig($pluginName, 'name').'</h1>';
-					require_once $file;
+					require_once $viewFile;
 				echo '</section>'
 			.'</section>';
 			AdminServUI::getFooter();
