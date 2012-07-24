@@ -108,7 +108,7 @@ class UploadedFileXhr {
 	*
 	* @param resource $client   -> La ressource du client GbxRemote
 	* @param string   $filename -> Le chemin vers le fichier
-	* @param array    $queries           -> Requêtes à executer et le type d'ajout à la liste: array('insert' => 'InsertMap', 'add' => 'AddMap', 'type' => 'add')
+	* @param array    $queries  -> Requêtes à executer et le type d'ajout à la liste: array('insert' => 'InsertMap', 'add' => 'AddMap', 'type' => 'add')
 	* @return true si réussi, sinon erreur texte
 	*/
 	public function saveMap($client, $filename, $queries){
@@ -145,7 +145,8 @@ class UploadedFileXhr {
 	public function getSize(){
 		if( isset($_SERVER['CONTENT_LENGTH']) ){
 			return (int)$_SERVER['CONTENT_LENGTH'];            
-		}else{
+		}
+		else{
 			throw new Exception('Getting content length is not supported.');
 		}
 	}
@@ -305,7 +306,7 @@ class FileUploader {
 		switch($last){
 			case 'g': $val *= 1024;
 			case 'm': $val *= 1024;
-			case 'k': $val *= 1024;        
+			case 'k': $val *= 1024;
 		}
 		return $val;
 	}
@@ -333,6 +334,7 @@ class FileUploader {
 		$size = $this->file->getSize();
 		if($size === 0){
 			return array('error' => Utils::t('The file is empty.'));
+			return array('error' => Utils::t('The file is empty.'));
 		}
 		if($size > $this->sizeLimit){
 			return array('error' => Utils::t('The file size is too large.'));
@@ -342,7 +344,8 @@ class FileUploader {
 		$pathinfo = pathinfo( $this->file->getName() );
 		if($filenameFunction != null){
 			$filename = $filenameFunction($pathinfo['filename']);
-		}else{
+		}
+		else{
 			$filename = $pathinfo['filename'];
 		}
 		$ext = $pathinfo['extension'];
@@ -360,7 +363,8 @@ class FileUploader {
 		// Enregistrement du fichier
 		if( $this->file->save($uploadDirectory . $filename . '.' . $ext) ){
 			return array('success' => true);
-		}else{
+		}
+		else{
 			return array('error' => Utils::t('The file doesn\'t uploaded. The upload has cancelled or is a server error.'));
 		}
 	}
@@ -399,7 +403,8 @@ class FileUploader {
 		$pathinfo = pathinfo( $this->file->getName() );
 		if($filenameFunction != null){
 			$filename = $filenameFunction($pathinfo['filename']);
-		}else{
+		}
+		else{
 			$filename = $pathinfo['filename'];
 		}
 		$ext = $pathinfo['extension'];
@@ -431,7 +436,8 @@ class FileUploader {
 		// Enregistrement du fichier
 		if( $this->file->saveFTP($ftp_stream, $uploadDirectory, $filename.'.'.$ext) ){
 			return array('success' => true);
-		}else{
+		}
+		else{
 			return array('error' => Utils::t('The file doesn\'t uploaded. The upload has cancelled or is a server error.'));
 		}
 	}
@@ -470,24 +476,43 @@ class FileUploader {
 		$pathinfo = pathinfo( $this->file->getName() );
 		if($filenameFunction != null){
 			$filename = $filenameFunction($pathinfo['filename']);
-		}else{
+		}
+		else{
 			$filename = $pathinfo['filename'];
 		}
 		$ext = $pathinfo['extension'];
 		if( $this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions) ){
-			$these = implode(', ', $this->allowedExtensions);
-			return array('error' => Utils::t('The file has invalid extension (allowed extensions:').' '.$these.').');
+			return array('error' => Utils::t('The file has invalid extension (allowed extensions:').' '.implode(', ', $this->allowedExtensions).').');
 		}
 		
 		// Enregistrement du fichier
+		$error = false;
 		$pathToFile = $uploadDirectory . $filename.'.'.$ext;
-		if( Utils::isLocalhostIP() ){
-			$this->file->save($pathToFile);
+		if( file_exists($uploadDirectory) ){
+			if( ($result = $this->file->save($pathToFile)) !== true ){
+				$error = true;
+			}
 		}
 		else{
-			$this->file->writeMap($client, $pathToFile);
+			if( ($result = $this->file->writeMap($client, $pathToFile)) !== true ){
+				$error = true;
+			}
 		}
-		$out = $this->file->saveMap($client, $pathToFile, $queries);
+		
+		if(!$error){
+			// Ajout/insert la map
+			if( isset($_GET['type']) && $_GET['type'] != 'local' ){
+				$out = $this->file->saveMap($client, $pathToFile, $queries);
+			}
+			// Envoi local seulement
+			else{
+				$out = true;
+			}
+		}
+		else{
+			// Erreur des fonctions save ou writeMap
+			$out = $result;
+		}
 		
 		if($out === true){
 			return array('success' => true, 'out' => $out);

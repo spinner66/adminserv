@@ -32,7 +32,7 @@
 			}
 			
 			// Affichage du message final
-			$message = '<Admin'.$nickname.'> '.$color.$message;
+			$message = '[Admin'.$nickname.'] '.$color.$message;
 			
 			// Destination
 			$_SESSION['adminserv']['chat_dst'] = $destination;

@@ -547,7 +547,6 @@ $(document).ready(function(){
 		*/
 		else if( $("body").hasClass("section-maps-upload") ){
 			//Upload
-			var uploader;
 			initializeUploader();
 			
 			// Mode de transfert
@@ -559,17 +558,12 @@ $(document).ready(function(){
 				if( $(this).children("input").val() == "local" ){
 					$("input#GotoListMaps").attr("checked", false);
 				}
-				uploader.setParams({
-					type: $(this).children("input").val(),
-				});
+				initializeUploader();
 			});
 			
 			// Options
 			$(".options-checkbox input, .options-checkbox label").click(function(){
-				uploader.setParams({
-					mset: ( $("#SaveCurrentMatchSettings").attr("checked") ) ? true : false,
-					gtlm: ( $("#GotoListMaps").attr("checked") ) ? true : false
-				});
+				initializeUploader();
 			});
 		}
 		/**
