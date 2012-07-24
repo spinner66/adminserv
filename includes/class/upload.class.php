@@ -327,7 +327,7 @@ class FileUploader {
 		
 		// Si il y a bien un fichier envoyé
 		if( !$this->file ){
-			return array('error' => Utils::t('No file hasn\'t uploaded'));
+			return array('error' => Utils::t('No file was uploaded'));
 		}
 		
 		// Récuperation de la taille du fichier et test si il n'est pas vide ou supérieur à la taille configurée
@@ -365,7 +365,7 @@ class FileUploader {
 			return array('success' => true);
 		}
 		else{
-			return array('error' => Utils::t('The file doesn\'t uploaded. The upload has cancelled or is a server error.'));
+			return array('error' => Utils::t('The file was not uploaded. Upload has been cancelled or a server error occurred.'));
 		}
 	}
 	
@@ -387,7 +387,7 @@ class FileUploader {
 		
 		// Si il y a bien un fichier envoyé
 		if( !$this->file ){
-			return array('error' => Utils::t('No file hasn\'t uploaded'));
+			return array('error' => Utils::t('No file was uploaded'));
 		}
 		
 		// Récuperation de la taille du fichier et test si il n'est pas vide ou supérieur à la taille configurée
@@ -438,7 +438,7 @@ class FileUploader {
 			return array('success' => true);
 		}
 		else{
-			return array('error' => Utils::t('The file doesn\'t uploaded. The upload has cancelled or is a server error.'));
+			return array('error' => Utils::t('The file was not uploaded. Upload has been cancelled or a server error occurred.'));
 		}
 	}
 	
@@ -460,7 +460,7 @@ class FileUploader {
 		
 		// Si il y a bien un fichier envoyé
 		if( !$this->file ){
-			return array('error' => Utils::t('No file hasn\'t uploaded'));
+			return array('error' => Utils::t('No file was uploaded'));
 		}
 		
 		// Récuperation de la taille du fichier et test si il n'est pas vide ou supérieur à la taille configurée
@@ -518,7 +518,7 @@ class FileUploader {
 			return array('success' => true, 'out' => $out);
 		}
 		else{
-			return array('error' => Utils::t('The file doesn\'t uploaded. The upload has cancelled or is a server error.').' ('.$out.')');
+			return array('error' => Utils::t('The file was not uploaded. Upload has been cancelled or a server error occurred.').' ('.$out.')');
 		}
 	}
 	
