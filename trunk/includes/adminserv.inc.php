@@ -248,11 +248,11 @@ abstract class AdminServUI {
 		require_once __DIR__ .'/class/gbxdatafetcher.inc.php';
 		require_once __DIR__ .'/class/utils.class.php';
 		require_once __DIR__ .'/class/tmnick.class.php';
-		require_once __DIR__ .'/class/upload.class.php';
 		require_once __DIR__ .'/class/timedate.class.php';
 		require_once __DIR__ .'/class/file.class.php';
 		require_once __DIR__ .'/class/folder.class.php';
 		require_once __DIR__ .'/class/str.class.php';
+		require_once __DIR__ .'/class/upload.class.php';
 		require_once __DIR__ .'/class/zip.class.php';
 	}
 	
