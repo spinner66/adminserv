@@ -329,6 +329,12 @@ $(document).ready(function(){
 				return false;
 			});
 			
+			// Script settings
+			$("a#getScriptSettings").click(function(){
+				getScriptSettings();
+				return false;
+			});
+			
 			// Affichage sec -> min
 			$("#NextTimeAttackLimit, #NextLapsTimeLimit, #hotSeatTimeLimit").click(function(){
 				var sec = $(this).val();

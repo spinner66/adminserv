@@ -306,6 +306,94 @@ function getCurrentGameModeConfig(){
 
 
 /**
+*
+*/
+function getScriptSettings(){
+	$.post(getIncludesPath()+"ajax/script_settings.php", {method: "get"}, function(data){
+		if(data != null){
+			// Script info
+			$("#dialogScriptInfoName").html(data.Name+" ("+data.Version+")");
+			$("#dialogScriptInfoCompatibleMapTypes").html(data.CompatibleMapTypes);
+			$("#dialogScriptInfoDesc").html(data.Description);
+			
+			// Paramètres
+			paramsList = "";
+			if( typeof(data.ParamDescs) == "object" && data.ParamDescs.length > 0 ){
+				$.each(data.ParamDescs, function(i, param){
+					var paramValueField = "";
+					if(param.Type == "boolean"){
+						var isChecked = "";
+						if(param.Default){
+							isChecked = ' checked="checked"';
+						}
+						paramValueField = '<input class="text '+param.Type+'" type="checkbox" name="" id="" value="'+param.Default+'"'+isChecked+' />';
+					}
+					else if(param.Type == "int"){
+						paramValueField = '<input class="text '+param.Type+'" type="text" name="" id="" value="'+param.Default+'" />';
+					}
+					
+					paramsList += '<tr>'
+						+ '<td>'+param.Name+'</td>'
+						+ '<td>'+paramValueField+'</td>'
+						+ '<td>'+param.Desc+'</td>'
+					+ '</tr>';
+				});
+				
+				$("#dialogScriptSettings table tbody").html(paramsList);
+			}
+			
+			// Dialog
+			$("#getScriptSettingsDialog").dialog({
+				title: $("#getScriptSettingsDialog").data("title"),
+				modal: true,
+				minWidth: 650,
+				minHeight: 400,
+				buttons: [
+					{
+						text: $("#getScriptSettingsDialog").data("cancel"),
+						click: function(){
+							$(this).dialog("close");
+						}
+					},
+					{
+						text: $("#getScriptSettingsDialog").data("save"),
+						click: function(){
+							setScriptSettings();
+						}
+					}
+				]
+			});
+		}
+	}, "json");
+}
+function setScriptSettings(){
+	var structParams = [];
+	var structValues = [];
+	$.each( $("#dialogScriptSettings table tbody tr"), function(i, param){
+		var key = param.children[0].textContent;
+		var type = param.children[1].children[0].className;
+		
+		if(type.indexOf("boolean") !== -1){
+			var val = param.children[1].children[0].checked;
+		}
+		else if(type.indexOf("int") !== -1){
+			var val = param.children[1].children[0].value;
+		}
+		
+		structParams.push(key);
+		structValues.push(val);
+	});
+	
+	$.post(getIncludesPath()+"ajax/script_settings.php", {method: "set", key: structParams, val: structValues}, function(response){
+		if(response != "true"){
+			error(response);
+			scrollTop();
+		}
+	});
+}
+
+
+/**
 * Récupère les lignes du chat du serveur
 *
 * @param bool hideServerLines -> Afficher ou non les lignes provenant d'un gestionnaire de serveur

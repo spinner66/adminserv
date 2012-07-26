@@ -44,10 +44,10 @@
 	$gameInfosData = array($gameInfos['curr'], $gameInfos['next']);
 	
 	
-	
-	/*$client->addCall('GetModeScriptSettings');
+	$client->addCall('GetModeScriptInfo');
 	$client->multiquery();
-	AdminServ::dsm( $client->getMultiqueryResponse() );*/
+	//AdminServ::dsm( $client->getMultiqueryResponse() );
+	
 	
 	
 	// HTML

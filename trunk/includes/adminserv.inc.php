@@ -517,9 +517,59 @@ abstract class AdminServUI {
 			$out .= '<fieldset id="gameMode-script" class="gameinfos_script" hidden="hidden">'
 				.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/options.png" alt="" />'.AdminServ::getGameModeName(0).'</legend>'
 				.'<table class="game_infos">'
-					.self::getGameInfosField($gameinfos, 'Script name', 'ScriptName')
+					.'<tr>'
+						.'<td class="key"><label for="NextScriptName">'.Utils::t('Script name').'</label></td>';
+						if($currGamInf != null){
+							$out .= '<td class="value">'
+								.'<input class="text width2" type="text" name="CurrScriptName" id="CurrScriptName" readonly="readonly" value="'.$currGamInf['ScriptName'].'" />'
+							.'</td>';
+						}
+						$out .= '<td class="value">'
+							.'<input class="text width2" type="text" name="NextScriptName" id="NextScriptName" value="'.$nextGamInf['ScriptName'].'" />'
+						.'</td>'
+						.'<td class="preview">';
+							if($nextGamInf['GameMode'] == 0){
+								$out .= '<a id="getScriptSettings" href="">'.Utils::t('Edit parameters').'</a>';
+							}
+						$out .= '</td>'
+					.'</tr>'
 				.'</table>'
 			.'</fieldset>';
+			if($nextGamInf['GameMode'] == 0){
+				$out .= '<div id="getScriptSettingsDialog" data-title="'.Utils::t('Script settings').'" data-cancel="'.Utils::t('Cancel').'" data-save="'.Utils::t('Save').'" hidden="hidden">
+					<div id="dialogScriptInfo">
+						<h2>Script info</h2>
+						<table>
+							<tr>
+								<td class="key">Name</td>
+								<td class="value" id="dialogScriptInfoName"></td>
+							</tr>
+							<tr>
+								<td class="key">Compatible map types</td>
+								<td class="value" id="dialogScriptInfoCompatibleMapTypes"></td>
+							</tr>
+							<tr>
+								<td class="key">Description</td>
+								<td class="value" id="dialogScriptInfoDesc"></td>
+							</tr>
+						</table>
+					</div>
+					<div id="dialogScriptSettings">
+						<h2>Script parameters</h2>
+						<table>
+							<thead>
+								<tr>
+									<th class="thleft">'.Utils::t('Name').'</th>
+									<th>'.Utils::t('Value').'</th>
+									<th class="thright">'.Utils::t('Description').'</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>';
+			}
 		}
 		
 		$out .= '<fieldset id="gameMode-rounds" class="gameinfos_round" hidden="hidden">'
@@ -2586,7 +2636,8 @@ abstract class AdminServLogs {
 		$out = false;
 		$type = strtolower($type);
 		if( defined('USER_PAGE') ){ $userPage = USER_PAGE; }else{ $userPage = 'index'; }
-		$str = '['.date('d/m/Y H:i:s').'] ['.$_SERVER['REMOTE_ADDR'].'] : ['.utf8_decode(SERVER_NAME).'] ['.$userPage.'] '.utf8_decode($str)."\n";
+		if( defined('SERVER_NAME') ){ $serverName = '['.utf8_decode(SERVER_NAME).'] '; }else{ $serverName = null; }
+		$str = '['.date('d/m/Y H:i:s').'] ['.$_SERVER['REMOTE_ADDR'].'] : '.$serverName.'['.$userPage.'] '.utf8_decode($str)."\n";
 		$path = self::$LOGS_PATH.$type.'.log';
 		
 		if( file_exists($path) ){
