@@ -364,7 +364,7 @@ header {
 	min-height: 20px;
 	font-size: 1.2em;
 	text-align: center;
-	z-index: 50;
+	z-index: 1004;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	-o-border-radius: 5px;
@@ -377,7 +377,7 @@ header {
 #error {
 	color: #fff;
 	background-color: #d1321e;
-	z-index: 100;
+	z-index: 1005;
 }
 #info {
 	color: #222;

@@ -54,8 +54,7 @@
 		
 		// Filename
 		$matchSettingName = Str::replaceChars($_POST['matchSettingName']);
-		$matchSettingExtension = File::getExtension($matchSettingName);
-		if($matchSettingExtension == 'txt'){
+		if(File::getExtension($matchSettingName) == 'txt'){
 			$filename = $mapsDirectoryPath.$directory.$matchSettingName;
 		}
 		else{
