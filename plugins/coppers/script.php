@@ -20,6 +20,7 @@
 				}
 				else{
 					$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+					AdminServLogs::add('action', 'Transfer '.$serverToServerAmout.' coppers to '.$serverToServerLogin.' server login');
 				}
 			}
 		}
@@ -43,6 +44,7 @@
 					}
 					else{
 						$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+						AdminServLogs::add('action', 'Transfer '.$serverToPlayerAmount.' coppers to '.$serverToPlayerLogin2.' player login');
 					}
 				}
 				// Login joueur sélectionné
@@ -52,6 +54,7 @@
 					}
 					else{
 						$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+						AdminServLogs::add('action', 'Transfer '.$serverToPlayerAmount.' coppers to '.$serverToPlayerLogin.' player login');
 					}
 				}
 			}
@@ -67,6 +70,7 @@
 					AdminServ::error();
 				}else{
 					$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+					AdminServLogs::add('action', 'Transfer '.$playerToServerAmount.' coppers from to '.$playerToServerLogin.' player login');
 				}
 			}
 		}

@@ -166,7 +166,7 @@
 					$file = AdminServConfig::PATH_INCLUDES .'pages/'.$page.'.php';
 					if( file_exists($file) ){
 						include_once $file;
-						AdminServLogs::add('access', 'Connected - Access to the page');
+						AdminServLogs::add('access', 'Control');
 					}
 					break;
 				}
@@ -181,6 +181,7 @@
 			else{
 				if(!CURRENT_PLUGIN){
 					include_once AdminServConfig::PATH_INCLUDES .'pages/'.$pagesList[0].'.php';
+					AdminServLogs::add('access', 'Control');
 				}
 			}
 		}
@@ -194,7 +195,7 @@
 					if( file_exists($file) ){
 						$GLOBALS['page_title'] = 'Configuration';
 						include_once $file;
-						AdminServLogs::add('access', 'Configuration - '.ucfirst($page) );
+						AdminServLogs::add('access', 'Configuration');
 					}
 					break;
 				}
@@ -204,7 +205,7 @@
 		else{
 			$GLOBALS['page_title'] = 'Connexion';
 			include_once AdminServConfig::PATH_INCLUDES .'pages/connection.php';
-			AdminServLogs::add('access', 'Index - Connection');
+			AdminServLogs::add('access', 'Connection');
 		}
 	}
 ?>

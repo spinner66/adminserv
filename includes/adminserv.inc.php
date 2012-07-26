@@ -1932,6 +1932,13 @@ abstract class AdminServ {
 							$out['lst'][$i]['Author'] = $author;
 							$out['lst'][$i]['Recent'] = $values['recent'];
 							
+							// MapType
+							//$modeScriptInfo = $Gbx->
+							//$out['lst'][$i]['Script']['Name'] = 
+							//$out['lst'][$i]['Script']['CompatibleTypes'] = 
+							//$out['lst'][$i]['Script']['Type'] = 
+							//$out['lst'][$i]['Script']['Description'] = 
+							
 							// On server
 							$out['lst'][$i]['OnServer'] = false;
 							if($currentMapsListUId){
@@ -2579,7 +2586,7 @@ abstract class AdminServLogs {
 		$out = false;
 		$type = strtolower($type);
 		if( defined('USER_PAGE') ){ $userPage = USER_PAGE; }else{ $userPage = 'index'; }
-		$str = '['.date('d/m/Y H:i:s').'] ['.$userPage.'] ['.$_SERVER['REMOTE_ADDR'].'] '.utf8_decode($str)."\n";
+		$str = '['.date('d/m/Y H:i:s').'] ['.$_SERVER['REMOTE_ADDR'].'] : ['.utf8_decode(SERVER_NAME).'] ['.$userPage.'] '.utf8_decode($str)."\n";
 		$path = self::$LOGS_PATH.$type.'.log';
 		
 		if( file_exists($path) ){

@@ -20,6 +20,7 @@
 				}
 				else{
 					$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+					AdminServLogs::add('action', 'Transfer '.$serverToServerAmout.' planets to '.$serverToServerLogin.' server login');
 				}
 			}
 		}
@@ -43,6 +44,7 @@
 					}
 					else{
 						$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+						AdminServLogs::add('action', 'Transfer '.$serverToPlayerAmount.' planets to '.$serverToPlayerLogin2.' player login');
 					}
 				}
 				// Login joueur sélectionné
@@ -52,6 +54,7 @@
 					}
 					else{
 						$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+						AdminServLogs::add('action', 'Transfer '.$serverToPlayerAmount.' planets to '.$serverToPlayerLogin.' player login');
 					}
 				}
 			}
@@ -67,6 +70,7 @@
 					AdminServ::error();
 				}else{
 					$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+					AdminServLogs::add('action', 'Transfer '.$playerToServerAmount.' planets from to '.$playerToServerLogin.' player login');
 				}
 			}
 		}

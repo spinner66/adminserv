@@ -1,7 +1,4 @@
 <?php
-	// Logs
-	AdminServLogs::add('access', 'Connected - Access to the plugin');
-	
 	// Tente de récupérer les plugins d'une autre config
 	AdminServPlugin::setPluginsList();
 	
@@ -9,6 +6,7 @@
 	if(CURRENT_PLUGIN){
 		if( AdminServPlugin::hasPlugin(CURRENT_PLUGIN) ){
 			AdminServPlugin::getPlugin();
+			AdminServLogs::add('access', 'Plugin');
 		}
 		else{
 			Utils::redirection(false, '?p=plugins-list');
