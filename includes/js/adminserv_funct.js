@@ -314,7 +314,10 @@ function getScriptSettings(){
 			// Script info
 			$("#dialogScriptInfoName").html(data.Name+" ("+data.Version+")");
 			$("#dialogScriptInfoCompatibleMapTypes").html(data.CompatibleMapTypes);
-			$("#dialogScriptInfoDesc").html(data.Description);
+			if(data.Description != ""){
+				$(".dialogScriptInfoDesc").attr("hidden", false);
+				$("#dialogScriptInfoDesc").html(data.Description);
+			}
 			
 			// Paramètres
 			paramsList = "";
@@ -328,14 +331,14 @@ function getScriptSettings(){
 						}
 						paramValueField = '<input class="text '+param.Type+'" type="checkbox" name="" id="" value="'+param.Default+'"'+isChecked+' />';
 					}
-					else if(param.Type == "int"){
+					else if(param.Type == "int" || param.Type == "float"){
 						paramValueField = '<input class="text '+param.Type+'" type="text" name="" id="" value="'+param.Default+'" />';
 					}
 					
 					paramsList += '<tr>'
-						+ '<td>'+param.Name+'</td>'
-						+ '<td>'+paramValueField+'</td>'
-						+ '<td>'+param.Desc+'</td>'
+						+ '<td class="first">'+param.Name+'</td>'
+						+ '<td class="middle">'+paramValueField+'</td>'
+						+ '<td class="last">'+param.Desc+'</td>'
 					+ '</tr>';
 				});
 				
@@ -376,7 +379,7 @@ function setScriptSettings(){
 		if(type.indexOf("boolean") !== -1){
 			var val = param.children[1].children[0].checked;
 		}
-		else if(type.indexOf("int") !== -1){
+		else if(type.indexOf("int") !== -1 || type.indexOf("float") !== -1){
 			var val = param.children[1].children[0].value;
 		}
 		
