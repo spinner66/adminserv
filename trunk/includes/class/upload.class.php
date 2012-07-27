@@ -29,22 +29,26 @@ class UploadedFileXhr {
 	* @return bool true si réussi
 	*/
 	public function save($path){
+		$out = null;
+		
 		// Ouverture du flux "input" de PHP et création d'un fichier temp
 		$input = fopen("php://input", "r");
 		$temp = tmpfile();
 		$realSize = stream_copy_to_stream($input, $temp);
 		fclose($input);
 		if( $realSize != $this->getSize() ){
-			return false;
+			$out = false;
 		}
 		
 		// Création du fichier final
 		$target = fopen($path, "w");
 		fseek($temp, 0, SEEK_SET);
-		stream_copy_to_stream($temp, $target);
+		if( stream_copy_to_stream($temp, $target) > 0 ){
+			$out = true;
+		}
 		fclose($target);
 		
-		return true;
+		return $out;
 	}
 	
 	
@@ -57,18 +61,22 @@ class UploadedFileXhr {
 	* @return true si réussi, sinon false
 	*/
 	public function saveFTP($ftp_stream, $path, $filename){
+		$out = null;
+		
 		// Ouverture du flux "input" de PHP et création d'un fichier temp
 		$input = fopen("php://input", "r");
 		$temp = tmpfile();
 		$realSize = stream_copy_to_stream($input, $temp);
 		fclose($input);
 		if( $realSize != $this->getSize() ){
-			return false;
+			$out = false;
 		}
 		
 		// Enregistre le fichier sur le FTP
 		fseek($temp, 0, SEEK_SET);
-		return ftp_fput($ftp_stream, $path.$filename, $temp, FTP_BINARY);
+		$out = ftp_fput($ftp_stream, $path.$filename, $temp, FTP_BINARY);
+		
+		return $out;
 	}
 	
 	
@@ -511,7 +519,12 @@ class FileUploader {
 		}
 		else{
 			// Erreur des fonctions save ou writeMap
-			$out = $result;
+			if($result){
+				$out = $result;
+			}
+			else{
+				$out = 'write error';
+			}
 		}
 		
 		if($out === true){
@@ -584,3 +597,4 @@ class FileUploader {
 		return htmlspecialchars(json_encode($result), ENT_NOQUOTES);
 	}
 }
+?>
