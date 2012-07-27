@@ -529,7 +529,7 @@ abstract class AdminServUI {
 						.'</td>'
 						.'<td class="preview">';
 							if($nextGamInf['GameMode'] == 0){
-								$out .= '<a id="getScriptSettings" href="">'.Utils::t('Edit parameters').'</a>';
+								$out .= '<a id="getScriptSettings" href="">'.Utils::t('Script settings').'</a>';
 							}
 						$out .= '</td>'
 					.'</tr>'
@@ -538,24 +538,28 @@ abstract class AdminServUI {
 			if($nextGamInf['GameMode'] == 0){
 				$out .= '<div id="getScriptSettingsDialog" data-title="'.Utils::t('Script settings').'" data-cancel="'.Utils::t('Cancel').'" data-save="'.Utils::t('Save').'" hidden="hidden">
 					<div id="dialogScriptInfo">
-						<h2>Script info</h2>
-						<table>
-							<tr>
-								<td class="key">Name</td>
-								<td class="value" id="dialogScriptInfoName"></td>
-							</tr>
-							<tr>
-								<td class="key">Compatible map types</td>
-								<td class="value" id="dialogScriptInfoCompatibleMapTypes"></td>
-							</tr>
-							<tr>
-								<td class="key">Description</td>
-								<td class="value" id="dialogScriptInfoDesc"></td>
-							</tr>
-						</table>
+						<h2>'.Utils::t('Script info').'</h2>
+						<div class="content">
+							<table>
+								<tbody>
+									<tr>
+										<td class="key">'.Utils::t('Name').'</td>
+										<td class="value" id="dialogScriptInfoName"></td>
+									</tr>
+									<tr>
+										<td class="key">'.Utils::t('Compatible map types').'</td>
+										<td class="value" id="dialogScriptInfoCompatibleMapTypes"></td>
+									</tr>
+									<tr class="dialogScriptInfoDesc" hidden="hidden">
+										<td class="key">'.Utils::t('Description').'</td>
+										<td class="value" id="dialogScriptInfoDesc"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 					<div id="dialogScriptSettings">
-						<h2>Script parameters</h2>
+						<h2>'.Utils::t('Script parameters').'</h2>
 						<table>
 							<thead>
 								<tr>

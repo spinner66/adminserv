@@ -44,12 +44,6 @@
 	$gameInfosData = array($gameInfos['curr'], $gameInfos['next']);
 	
 	
-	$client->addCall('GetModeScriptInfo');
-	$client->multiquery();
-	//AdminServ::dsm( $client->getMultiqueryResponse() );
-	
-	
-	
 	// HTML
 	$client->Terminate();
 	AdminServUI::getHeader();
