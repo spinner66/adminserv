@@ -165,13 +165,15 @@
 									// Players
 									var playerListTable = "<table>";
 										if(data.players[i].count.current > 0){
-											$.each(data.players[i].list, function(i, n){
+											$.each(data.players[i].list, function(idPlayer, dataPlayer){
 												var teamSpan = "";
-												if(n.gamemode == "Team"){
-													teamSpan = '<span class="team_'+n.teamId+'" title="'+n.teamName+'"></span>';
+												if(data.servers[i].gamemode == "Team"){
+													teamSpan = '<span class="team_'+dataPlayer.teamId+'" title="'+dataPlayer.teamName+'"></span>';
 												}
-												playerListTable += '<td>'+teamSpan+n.name+'</td>'
-												+ '<td>'+n.status+'</td>'
+												playerListTable += '<tr>'
+													+ '<td>'+teamSpan+dataPlayer.name+'</td>'
+													+ '<td>'+dataPlayer.status+'</td>'
+												+ '</tr>';
 											});
 										}
 										else{

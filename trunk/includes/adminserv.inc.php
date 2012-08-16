@@ -956,7 +956,7 @@ abstract class AdminServ {
 				foreach($result as $grpName => $grpValues){
 					foreach($grpValues['result'] as $bool){
 						if(!$bool){
-							self::error('Le chemin suivant n\'a pas les droits requis : '.$path.' ("'.$grpName.'" a besoin de "'.$minChmod.'")');
+							self::error( Utils::t('This path was not required rights:').' '.$path.' ("'.$grpName.'" '.Utils::t('needs').' "'.$minChmod.'")');
 							break;
 						}
 					}
