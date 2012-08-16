@@ -201,7 +201,7 @@
 				<div class="mapsSelected">
 					<p><?php echo Utils::t('MatchSettings selected maps:'); ?> <span id="nbMapSelected"><?php echo $matchSetting['nbm']; ?></span></p>
 					<input class="button light" type="button" name="mapSelection" id="mapSelection" value="<?php echo Utils::t('View the MatchSettings selection'); ?>" />
-					<div id="mapSelectionDialog" data-title="Sélection du MatchSettings" data-remove="<?php echo Utils::t('Remove map from the selection'); ?>" data-close="<?php echo Utils::t('Close'); ?>" hidden="hidden">
+					<div id="mapSelectionDialog" data-title="<?php echo Utils::t('MatchSettings selection'); ?>" data-remove="<?php echo Utils::t('Remove map from the selection'); ?>" data-close="<?php echo Utils::t('Close'); ?>" hidden="hidden">
 						<table>
 							<thead>
 								<tr>

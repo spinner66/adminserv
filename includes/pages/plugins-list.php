@@ -25,7 +25,7 @@
 		
 		<h2>Comment installer un plugin ?</h2>
 		<div class="content">
-			<p>Les plugins sont diponibles sur la page de téléchargement du projet AdminServ : <a href="http://code.google.com/p/adminserv/downloads/list">Cliquez-ici</a></p>
+			<p>Les plugins sont disponibles sur la page de téléchargement du projet AdminServ : <a href="http://code.google.com/p/adminserv/downloads/list">Cliquez-ici</a></p>
 			<p>- Dézippez le plugin et placez son contenu dans le dossier &laquo; plugins &raquo; d'AdminServ.<br />
 			- Dans la configuration Extension, ajoutez le nom du dossier du plugin précédement ajouté.</p>
 			<p>

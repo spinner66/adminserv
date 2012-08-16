@@ -142,6 +142,7 @@ $translate = array(
 	'Select' => 'Sélectionner',
 	'MatchSettings selected maps:' => 'Maps sélectionnées pour le MatchSettings :',
 	'View the MatchSettings selection' => 'Voir la sélection du MatchSettings',
+	'MatchSettings selection' => 'Sélection du MatchSettings',
 	'Remove map from the selection' => 'Enlever cette map de la sélection',
 	'Close' => 'Fermer',
 	'HotSeat' => 'HotSeat',
@@ -335,5 +336,7 @@ $translate = array(
 	'Cancel vote' => 'Annuler le vote',
 	'Change order' => 'Changer l\'ordre',
 	'Servers order' => 'Ordre des serveurs',
+	'This path was not required rights:' => 'Le chemin suivant n\'a pas les droits requis :',
+	'needs' => 'a besoin de',
 );
 ?>
