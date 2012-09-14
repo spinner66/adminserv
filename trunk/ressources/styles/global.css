@@ -1202,6 +1202,10 @@ footer {
 .section-index .options input {
 	margin-top: 10px;
 }
+.section-index .scriptName {
+	color: #888;
+	font-size: .85em;
+}
 
 
 /* Page Server options
