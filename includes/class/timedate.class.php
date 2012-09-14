@@ -226,43 +226,40 @@ abstract class TimeDate {
 	*/
 	public static function secToStringTime($sec, $fullText = true){
 		$out = null;
-		$timeDifference = intval($sec);
 		
-		// Si le temps est supérieur à 0
-		if($timeDifference > 0){
-			// Calcul du temps
-			$seconds = $timeDifference;
-			$minutes = round($timeDifference/60);
-			$hours = round($timeDifference/3600);
-			$days = round($timeDifference/86400);
-			$weeks = round($timeDifference/604800);
-			$months = round($timeDifference/2419200);
-			$years = round($timeDifference/29030400);
-			
-			// Création du texte
-			if($seconds < 60){
-				$out .= $seconds.' sec'; if($fullText){ $out .= 'onde'; if($seconds > 1){ $out .= 's'; } }
-			}
-			else if($minutes < 60){
-				$out .= $minutes.' min'; if($fullText){ $out .= 'ute'; if($minutes > 1){ $out .= 's'; } }
-			}
-			else if($hours < 24){
-				$out .= $hours.' h'; if($fullText){ $out .= 'eure'; if($hours > 1){ $out .= 's'; } }
-			}
-			else if($days < 7){
-				$out .= $days.' j'; if($fullText){ $out .= 'our'; if($days > 1){ $out .= 's'; } }
-			}
-			else if($weeks < 4){
-				$out .= $weeks.' sem'; if($fullText){ $out .= 'aine'; if($weeks > 1){ $out .= 's'; } }
-			}
-			else if($months < 12){
-				$out .= $months.' mois';
-			}
-			else{
-				$out .= $years.' an'; if($years > 1){ $out .= 's'; }
-			}
+		$year = 1*60*60*24*365;
+		$day = 1*60*60*24;
+		$hour = 1*60*60;
+		$minute = 1*60;
+		$second = 1;
+		
+		$timeDifference = intval($sec);
+		$yearCount = floor($timeDifference / $year);
+		$timeDifference -= $yearCount * $year;
+		$dayCount = floor($timeDifference / $day);
+		$timeDifference -= $dayCount * $day;
+		$hourCount = floor($timeDifference / $hour);
+		$timeDifference -= $hourCount * $hour;
+		$minuteCount = floor($timeDifference / $minute);
+		$timeDifference -= $minuteCount * $minute;
+		$secondCount = floor($timeDifference / $second);
+		$timeDifference -= $secondCount * $second;
+		
+		$strDay = $dayCount.'j'; if($fullText){ $strDay .= 'our'; if($dayCount > 1){ $strDay .= 's'; } }
+		$strHour = $hourCount.'h'; if($fullText){ $strHour .= 'eure'; if($hourCount > 1){ $strHour .= 's'; } }
+		$strMinute = $minuteCount.'min'; if($fullText){ $strMinute .= 'ute'; if($minuteCount > 1){ $strMinute .= 's'; } }
+		$strSecond = $secondCount.'sec'; if($fullText){ $strSecond .= 'onde'; if($secondCount > 1){ $strSecond .= 's'; } }
+		
+		if($dayCount != 0){
+			$out .= $strDay.', '.$strHour.' '.$strMinute.' '.$strSecond;
 		}
-		// Retour
+		else if($dayCount == 0 && $hourCount != 0){
+			$out .= $strHour.' '.$strMinute.' '.$strSecond;
+		}
+		else if($dayCount == 0 && $hourCount == 0){
+			$out .= $strMinute.' '.$strSecond;
+		}
+		
 		return $out;
 	}
 	

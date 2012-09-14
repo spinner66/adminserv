@@ -1135,7 +1135,7 @@ abstract class AdminServ {
 	
 	
 	/**
-	* Retourne un lien protocol TM ou ManiaPlanet suivant l'environnement
+	* Retourne un lien protocol TM ou ManiaPlanet
 	*
 	* @param string $link -> Lien : #join=server_login ou /:manialink_name
 	* @return string
@@ -1148,7 +1148,7 @@ abstract class AdminServ {
 		}
 		$protocolSeparator = '://';
 		
-		if(SERVER_VERSION_NAME == 'TmForever'){
+		if(SERVER_VERSION_NAME == 'TmForever' || substr($link, 0, 2) == '/:'){
 			$out = $protocolName.$protocolSeparator.$link;
 		}
 		else{
