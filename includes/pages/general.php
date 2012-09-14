@@ -180,7 +180,16 @@
 			</tr>
 			<tr>
 				<td class="key"><?php echo Utils::t('Game mode'); ?></td>
-				<td class="value <?php echo strtolower($serverInfo['srv']['gameModeName']); ?>" id="map_gamemode"><?php echo $serverInfo['srv']['gameModeName']; ?></td>
+				<td class="value <?php echo strtolower($serverInfo['srv']['gameModeName']); ?>" id="map_gamemode">
+					<?php
+						if( isset($serverInfo['srv']['gameModeScriptName']) ){
+							echo $serverInfo['srv']['gameModeName'].' <span class="scriptName">('.$serverInfo['srv']['gameModeScriptName'].')</span>';
+						}
+						else{
+							echo $serverInfo['srv']['gameModeName'];
+						}
+					?>
+				</td>
 			</tr>
 			<?php if($serverInfo['map']['callvote']['login']){ ?>
 				<tr>

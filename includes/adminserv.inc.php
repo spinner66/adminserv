@@ -934,12 +934,7 @@ abstract class AdminServ {
 	* Vérifie la version de PHP
 	*/
 	public static function checkPHPVersion(){
-		if(PHP_MAJOR_VERSION < 5 && PHP_MINOR_VERSION < 3){
-			return false;
-		}
-		else{
-			return true;
-		}
+		return version_compare(PHP_VERSION, '5.3.0', '>=');
 	}
 	
 	
@@ -1214,6 +1209,17 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Formate le nom d'un script
+	*
+	* @param string $scriptName -> Le nom du script retourné par le serveur
+	* @return string
+	*/
+	public static function formatScriptName($scriptName){
+		return str_ireplace('.script.txt', '', $scriptName);
+	}
+	
+	
+	/**
 	* Récupère les informations du serveur actuel (map, serveur, stats, joueurs)
 	*
 	* @global resource $client -> Le client doit être initialisé
@@ -1260,6 +1266,11 @@ abstract class AdminServ {
 			// GameMode
 			$out['srv']['gameModeId'] = $queriesData['GetGameMode'];
 			$out['srv']['gameModeName'] = self::getGameModeName($out['srv']['gameModeId']);
+			if( self::isGameMode('Script', $out['srv']['gameModeId']) ){
+				$client->query('GetModeScriptInfo');
+				$getModeScriptInfo = $client->getResponse();
+				$out['srv']['gameModeScriptName'] = self::formatScriptName($getModeScriptInfo['Name']);
+			}
 			
 			// CurrentMapInfo
 			$currentMapInfo = $queriesData[$queryName['getMapInfo']];
@@ -1295,7 +1306,6 @@ abstract class AdminServ {
 			$out['srv']['name'] = TmNick::toHtml($queriesData['GetServerName'], 10, true, false, '#999');
 			
 			// Status
-			$client->query('GetStatus');
 			$out['srv']['status'] = $queriesData['GetStatus']['Name'];
 			
 			// NetworkStats
@@ -1408,31 +1418,11 @@ abstract class AdminServ {
 		
 		if( self::isAdminLevel('Admin') ){
 			if( !$client->query('GameDataDirectory') ){
-				self::error('tout pété');
+				self::error();
 			}
 			else{
-				// Chemin parent
-				$currentPath = Str::toSlash( $client->getResponse() );
-				$parentPathEx = explode('/', $currentPath);
-				array_pop($parentPathEx);
-				array_pop($parentPathEx);
-				if( count($parentPathEx) > 0 ){
-					$parentPath = null;
-					foreach($parentPathEx as $part){
-						$parentPath .= $part.'/';
-					}
-				}
-				
-				// Fichier RunSrv
-				if( Utils::isWinServer() ){ $ext = 'bat'; }else{ $ext = 'sh'; }
-				if(SERVER_VERSION_NAME == 'TmForever'){ $filename = 'Start'; }else{ $filename = 'RunSrv'; }
-				$file = $parentPath.$filename.'.'.$ext;
-				if( file_exists($file) ){
-					$fileContents = file_get_contents($file);
-					$fileContentsEx = explode('/join=', $fileContents);
-					$fileContentsEx = explode(' ', $fileContentsEx[1]);
-					$out = trim($fileContentsEx[0]);
-				}
+				// Récupération du login
+				$out = null;
 			}
 		}
 		
@@ -3101,6 +3091,11 @@ abstract class AdminServPlugin {
 					require_once $viewFile;
 				echo '</section>'
 			.'</section>';
+			AdminServUI::getFooter();
+		}
+		else{
+			AdminServ::error( Utils::t('Plugin error: script.php or view.php file is missing.') );
+			AdminServUI::getHeader();
 			AdminServUI::getFooter();
 		}
 	}

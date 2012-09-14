@@ -182,10 +182,12 @@ function getCurrentServerInfo(mode, sort){
 				$("#map_author").html(data.map.author);
 				$("#map_enviro").html(data.map.enviro+'<img src="'+path_ressources+'images/env/'+data.map.enviro.toLowerCase()+'.png" alt="" />');
 				$("#map_uid").html(data.map.uid);
-				$("#map_gamemode").html(data.srv.gameModeName);
-				$("#map_gamemode").attr("class", "");
-				$("#map_gamemode").addClass("value");
-				$("#map_gamemode").addClass( data.srv.gameModeName.toLowerCase() );
+				if(data.srv.gameModeScriptName != 'undefined'){
+					var gameModeName = data.srv.gameModeName+' <span class="scriptName">('+data.srv.gameModeScriptName+')</span>';
+				}else{
+					var gameModeName = data.srv.gameModeName;
+				}
+				$("#map_gamemode").html(gameModeName).attr("class", "").addClass("value "+data.srv.gameModeName.toLowerCase() );
 				if(data.map.thumb){
 					$("#map_thumbnail").html('<img src="data:image/jpeg;base64,'+data.map.thumb+'" alt="'+$("#map_thumbnail").data("text-thumbnail")+'" />');
 				}

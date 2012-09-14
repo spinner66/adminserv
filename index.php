@@ -10,7 +10,7 @@
 	require_once 'config/extension.cfg.php';
 	require_once AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
 	if( !AdminServ::checkPHPVersion() ){
-		echo '<b>This PHP version is not compatible with AdminServ.</b><br />Your PHP version: '.phpversion().'<br />PHP version required: 5.3';
+		echo '<b>This PHP version is not compatible with AdminServ.</b><br />Your PHP version: '. PHP_VERSION .'<br />PHP version required: 5.3.0';
 		exit;
 	}
 	$_SESSION['adminserv']['path'] = null;
@@ -19,7 +19,7 @@
 	}
 	AdminServUI::getClass();
 	
-	// LOAD TIME
+	// LOAD TIMER
 	if(ADMINSERV_TIMER){
 		AdminServ::startTimer();
 	}
@@ -59,10 +59,10 @@
 	
 	
 	// DÉCONNEXION
-	if( isset($_GET['error']) || isset($_GET['logout']) ){
+	if( isset($_GET['error']) || ($isLogout = isset($_GET['logout'])) ){
 		session_unset();
 		session_destroy();
-		if( isset($_GET['logout']) ){
+		if($isLogout){
 			Utils::redirection(false);
 		}
 	}
