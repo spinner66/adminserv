@@ -154,44 +154,6 @@
 				</table>
 			</fieldset>
 			
-			<fieldset>
-				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/rt_team.png" alt="" /><?php echo Utils::t('Teams'); ?></legend>
-				<table>
-					<tr>
-						<td class="key"><label for=""><?php echo Utils::t('Team 1'); ?></label></td>
-						<td class="value">
-							<input class="text width2" type="text" name="" id="" maxlength="75" value="" />
-						</td>
-						<td class="value">
-							<select class="width1" name="" id="">
-								<option value="">Couleur</option>
-							</select>
-						</td>
-						<td class="value">
-							<select class="width1" name="" id="">
-								<option value="">Pays</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td class="key"><label for=""><?php echo Utils::t('Team 2'); ?></label></td>
-						<td class="value">
-							<input class="text width2" type="text" name="" id="" maxlength="75" value="" />
-						</td>
-						<td class="value">
-							<select class="width1" name="" id="">
-								<option value="">Couleur</option>
-							</select>
-						</td>
-						<td class="value">
-							<select class="width1" name="" id="">
-								<option value="">Pays</option>
-							</select>
-						</td>
-					</tr>
-				</table>
-			</fieldset>
-			
 			<fieldset class="srvopts_advanced">
 				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/options.png" alt="" /><?php echo Utils::t('Advanced'); ?></legend>
 				<table>

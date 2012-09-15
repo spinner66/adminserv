@@ -329,6 +329,38 @@ $(document).ready(function(){
 				return false;
 			});
 			
+			// Infos équipes
+			$("#colorPickerTeam1").ColorPicker({
+				color: '#0000ff',
+				onShow: function (colpkr) {
+					$(colpkr).slideDown("fast");
+					return false;
+				},
+				onHide: function (colpkr) {
+					$(colpkr).slideUp("fast");
+					return false;
+				},
+				onChange: function (hsb, hex, rgb) {
+					$("#colorPickerTeam1").css("backgroundColor", "#"+hex);
+					$("#infosTeam1Color").val("#"+hex);
+				}
+			});
+			$("#colorPickerTeam2").ColorPicker({
+				color: '#ff0000',
+				onShow: function (colpkr) {
+					$(colpkr).slideDown("fast");
+					return false;
+				},
+				onHide: function (colpkr) {
+					$(colpkr).slideUp("fast");
+					return false;
+				},
+				onChange: function (hsb, hex, rgb) {
+					$("#colorPickerTeam2").css("backgroundColor", "#"+hex);
+					$("#infosTeam2Color").val("#"+hex);
+				}
+			});
+			
 			// Script settings
 			$("a#getScriptSettings").click(function(){
 				getScriptSettings();

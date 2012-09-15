@@ -288,7 +288,7 @@ function getCurrentGameModeConfig(){
 		var section = ".section-gameinfos";
 	}
 	$.each( $(section+" .content.gameinfos fieldset"), function(i, n){
-		if( !$(this).hasClass("gameinfos_general") ){
+		if( !$(this).hasClass("gameinfos_general") && !$(this).hasClass("gameinfos_teaminfos") ){
 			if( $(this).attr("hidden") ){
 				$(this).hide();
 			}
