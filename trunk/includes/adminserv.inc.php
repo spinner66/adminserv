@@ -18,17 +18,14 @@ abstract class AdminServUI {
 			$title = 'Admin,Serv';
 		}
 		
-		// Si il y a une séparation
 		if( strstr($title, ',') ){
 			if($type == 'html'){
-				$titleEx = explode(',', $title);
-				$out = $titleEx[0].'<span class="title-color">'.$titleEx[1].'</span>';
+				$out = str_replace(',', '<span class="title-color">', $title).'</span>';
 			}
 			else{
 				$out = str_replace(',', '', $title);
 			}
 		}
-		// Sinon, on renvoi le titre simple
 		else{
 			$out = $title;
 		}
@@ -38,7 +35,7 @@ abstract class AdminServUI {
 	
 	
 	/**
-	* Vérifie si il y a bien une config de theme
+	* Vérifie s'il y a bien une config de theme
 	*/
 	public static function hasTheme(){
 		$out = false;
@@ -85,7 +82,14 @@ abstract class AdminServUI {
 		}
 		
 		if($saveCookie){
-			Utils::addCookieData('adminserv_user', array($_SESSION['theme'], self::getLang(), Utils::readCookieData('adminserv_user', 2), Utils::readCookieData('adminserv_user', 3)), AdminServConfig::COOKIE_EXPIRE);
+			$cookieData = array(
+				$_SESSION['theme'],
+				self::getLang(),
+				Utils::readCookieData('adminserv_user', 2),
+				Utils::readCookieData('adminserv_user', 3)
+			);
+			
+			Utils::addCookieData('adminserv_user', $cookieData, AdminServConfig::COOKIE_EXPIRE);
 		}
 		
 		return strtolower($_SESSION['theme']);
@@ -136,7 +140,7 @@ abstract class AdminServUI {
 	
 	
 	/**
-	* Vérifie si il y a bien une config de langue
+	* Vérifie s'il y a bien une config de langue
 	*/
 	public static function hasLang(){
 		$out = false;
@@ -152,7 +156,7 @@ abstract class AdminServUI {
 	/**
 	* Récupère la langue courante
 	*
-	* @param string $forceLang -> Forcer l'utilisation du langue
+	* @param string $forceLang -> Forcer l'utilisation de la langue
 	* @return $_SESSION['lang']
 	*/
 	public static function getLang($forceLang = null){
@@ -189,10 +193,17 @@ abstract class AdminServUI {
 		}
 		
 		if($saveCookie){
-			Utils::addCookieData('adminserv_user', array(self::getTheme(), $_SESSION['lang'], Utils::readCookieData('adminserv_user', 2), Utils::readCookieData('adminserv_user', 3)), AdminServConfig::COOKIE_EXPIRE);
+			$cookieData = array(
+				self::getTheme(),
+				$_SESSION['lang'],
+				Utils::readCookieData('adminserv_user', 2),
+				Utils::readCookieData('adminserv_user', 3)
+			);
+			
+			Utils::addCookieData('adminserv_user', $cookieData, AdminServConfig::COOKIE_EXPIRE);
 		}
 		
-		return $_SESSION['lang'];
+		return strtolower($_SESSION['lang']);
 	}
 	
 	
@@ -226,7 +237,7 @@ abstract class AdminServUI {
 		// Liste de toutes les langues
 		if( $countList > 0 ){
 			$out .= '<ul>';
-			// Si il y a une langue courante, on la place en 1er
+			// S'il y a une langue courante, on la place en 1er
 			if( $countCurrentLang > 0 ){
 				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$currentLangCode.'.png);" href="'.$param.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
 			}
@@ -272,10 +283,10 @@ abstract class AdminServUI {
 		else{
 			$GLOBALS['body_class'] .= ' front';
 		}
-		if( defined('USER_PAGE') ){
+		if( defined('USER_PAGE') && USER_PAGE ){
 			$GLOBALS['body_class'] .= ' section-'.USER_PAGE;
 		}
-		if( defined('CURRENT_PLUGIN') ){
+		if( defined('CURRENT_PLUGIN') && CURRENT_PLUGIN ){
 			$GLOBALS['body_class'] .= ' plugin-'.CURRENT_PLUGIN;
 		}
 		$GLOBALS['body_class'] = trim($GLOBALS['body_class']);
@@ -326,7 +337,6 @@ abstract class AdminServUI {
 		$out = null;
 		
 		if( class_exists('ServerConfig') && AdminServServerConfig::hasServer() ){
-			// Id du serveur à sélectionner
 			if( isset($_GET['server']) && $_GET['server'] != null ){
 				$currentServerId = intval($_GET['server']);
 			}
@@ -334,7 +344,6 @@ abstract class AdminServUI {
 				$currentServerId = Utils::readCookieData('adminserv', 0);
 			}
 			
-			// Liste des serveurs
 			foreach(ServerConfig::$SERVERS as $server => $values){
 				if( AdminServServerConfig::getServerId($server) == $currentServerId ){
 					$selected = ' selected="selected"';
@@ -840,6 +849,7 @@ abstract class AdminServUI {
 		else{
 			AdminServ::error('Class "Folder" not exists');
 		}
+		
 		return $out;
 	}
 	
@@ -1046,14 +1056,7 @@ abstract class AdminServ {
 								
 								// TRACKMANIA FOREVER
 								if(SERVER_VERSION_NAME == 'TmForever'){
-									
-									// Mode de jeu
-									unset(ExtensionConfig::$GAMEMODES[0]);
-									$newGameModes = array();
-									foreach(ExtensionConfig::$GAMEMODES as $gameModeId => $gameModeName){
-										$newGameModes[] = $gameModeName;
-									}
-									ExtensionConfig::$GAMEMODES = $newGameModes;
+									array_shift(ExtensionConfig::$GAMEMODES);
 								}
 								
 								return true;
@@ -1083,16 +1086,17 @@ abstract class AdminServ {
 		$out = false;
 		$serverLevel = ServerConfig::$SERVERS[$serverName]['adminlevel'][$level];
 		
-		// Si la liste est un array
 		if( is_array($serverLevel) ){
 			if( in_array($_SERVER['REMOTE_ADDR'], $serverLevel) ){
 				$out = true;
 			}
 		}
-		// Sinon, c'est all ou local/localhost
 		else{
 			if($serverLevel === 'all'){
 				$out = true;
+			}
+			else if($serverLevel === 'none'){
+				$out = false;
 			}
 			else{
 				$out = Utils::isLocalhostIP();
@@ -1280,9 +1284,8 @@ abstract class AdminServ {
 			$out['map']['enviro'] = $currentMapInfo['Environnement'];
 			
 			// MapThumbnail
-			$mapsDirectory = $queriesData['GetMapsDirectory'];
-			if($mapsDirectory && $currentMapInfo['FileName'] != null){
-				$Gbx = new GBXChallengeFetcher($mapsDirectory.$currentMapInfo['FileName'], true, true);
+			if( isset($queriesData['GetMapsDirectory']) && $currentMapInfo['FileName'] != null){
+				$Gbx = new GBXChallengeFetcher($queriesData['GetMapsDirectory'].$currentMapInfo['FileName'], true, true);
 				$out['map']['thumb'] = base64_encode($Gbx->thumbnail);
 			}
 			else{
@@ -1309,8 +1312,8 @@ abstract class AdminServ {
 			$out['srv']['status'] = $queriesData['GetStatus']['Name'];
 			
 			// NetworkStats
-			$networkStats = $queriesData['GetNetworkStats'];
-			if( count($networkStats) > 0 ){
+			if( isset($queriesData['GetNetworkStats']) && count($queriesData['GetNetworkStats']) > 0 ){
+				$networkStats = $queriesData['GetNetworkStats'];
 				$out['net']['uptime'] = TimeDate::secToStringTime($networkStats['Uptime'], false);
 				$out['net']['nbrconnection'] = $networkStats['NbrConnection'];
 				$out['net']['meanconnectiontime'] = TimeDate::secToStringTime($networkStats['MeanConnectionTime'], false);
@@ -1451,10 +1454,9 @@ abstract class AdminServ {
 	
 	
 	/**
-	* Administration rapide (restart, next, endround)
+	* Administration rapide
 	*
-	* @global resource $client -> Le client doit être initialisé
-	* @param  string   $cmd    -> Le nom de la méthode ManiaPlanet à utiliser
+	* @param  string $cmd -> Le nom de la commande (PrevMap, RestartMap, NextMap ou ForceEndRound)
 	* @return true si réussi, sinon un message d'erreur
 	*/
 	public static function speedAdmin($cmd){
@@ -2880,35 +2882,35 @@ abstract class AdminServServerConfig {
 		
 		// Template
 		$fileTemplate = self::$CONFIG_START_TEMPLATE;
-			$i = 0;
-			foreach($servers as $serverName => $serverValues){
-				// Édition
-				if($i == $editServer && isset($serverData) && count($serverData) > 0 ){
-					$fileTemplate .= self::getServerTemplate($serverData);
-				}
-				else{
-					// Liste des serveurs existant
-					$fileTemplate .= self::getServerTemplate(
-						array(
-							'name' => $serverName,
-							'address' => $serverValues['address'],
-							'port' => $serverValues['port'],
-							'matchsettings' => $serverValues['matchsettings'],
-							'adminlevel' => array(
-								'SuperAdmin' => $serverValues['adminlevel']['SuperAdmin'],
-								'Admin' => $serverValues['adminlevel']['Admin'],
-								'User' => $serverValues['adminlevel']['User']
-							)
-						)
-					);
-				}
-				$i++;
-			}
-			
-			// Ajout d'un nouveau
-			if($editServer === -1 && isset($serverData) && count($serverData) > 0 ){
+		$i = 0;
+		foreach($servers as $serverName => $serverValues){
+			// Édition
+			if($i == $editServer && isset($serverData) && count($serverData) > 0 ){
 				$fileTemplate .= self::getServerTemplate($serverData);
 			}
+			else{
+				// Liste des serveurs existant
+				$fileTemplate .= self::getServerTemplate(
+					array(
+						'name' => $serverName,
+						'address' => $serverValues['address'],
+						'port' => $serverValues['port'],
+						'matchsettings' => $serverValues['matchsettings'],
+						'adminlevel' => array(
+							'SuperAdmin' => $serverValues['adminlevel']['SuperAdmin'],
+							'Admin' => $serverValues['adminlevel']['Admin'],
+							'User' => $serverValues['adminlevel']['User']
+						)
+					)
+				);
+			}
+			$i++;
+		}
+		
+		// Ajout d'un nouveau
+		if($editServer === -1 && isset($serverData) && count($serverData) > 0 ){
+			$fileTemplate .= self::getServerTemplate($serverData);
+		}
 		$fileTemplate .= self::$CONFIG_END_TEMPLATE;
 		
 		// Enregistrement
@@ -2954,7 +2956,7 @@ abstract class AdminServPlugin {
 	
 	
 	/**
-	* Détermine si il y a au moins un plugin disponible
+	* Détermine s'il y a au moins un plugin disponible
 	*
 	* @param string $pluginName -> Test un plugin en particulier
 	* @return bool
@@ -3056,7 +3058,7 @@ abstract class AdminServPlugin {
 					foreach($pluginsList as $plugin => $infos){
 						$out .= '<li><a '; if(self::getCurrent() == $plugin){ $out .= 'class="active" '; } $out .= 'href="?p=plugins-'.$plugin.'" title="Version : '.$infos['version'].'">'.$infos['name'].'</a></li>';
 					}
-			$out .= '</ul>'
+				$out .= '</ul>'
 			.'</nav>';
 		}
 		

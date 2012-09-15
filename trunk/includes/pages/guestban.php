@@ -496,7 +496,7 @@
 		</form>
 	</div>
 	
-	<?php if($playlistDirectory != 'Not directory'){ ?>
+	<?php if( isset($playlistDirectory) && $playlistDirectory != 'Not directory'){ ?>
 		<div id="playlists">
 			<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 				<h1><?php echo Utils::t('Playlists'); ?>

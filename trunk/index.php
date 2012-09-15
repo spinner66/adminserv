@@ -1,7 +1,7 @@
 <?php
 	// INCLUDES
 	session_start();
-	define('ADMINSERV_TIMER', false);
+	define('ADMINSERV_TIMER', true);
 	define('ADMINSERV_VERSION', '2.0');
 	require_once 'config/adminserv.cfg.php';
 	if( file_exists('config/servers.cfg.php') ){
@@ -59,10 +59,10 @@
 	
 	
 	// DÉCONNEXION
-	if( isset($_GET['error']) || ($isLogout = isset($_GET['logout'])) ){
+	if( isset($_GET['error']) || isset($_GET['logout']) ){
 		session_unset();
 		session_destroy();
-		if($isLogout){
+		if( isset($_GET['logout']) ){
 			Utils::redirection(false);
 		}
 	}
