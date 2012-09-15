@@ -155,12 +155,12 @@
 			</fieldset>
 			
 			<fieldset>
-				<legend><?php echo Utils::t('Teams'); ?></legend>
+				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/rt_team.png" alt="" /><?php echo Utils::t('Teams'); ?></legend>
 				<table>
 					<tr>
 						<td class="key"><label for=""><?php echo Utils::t('Team 1'); ?></label></td>
 						<td class="value">
-							<input class="text width1" type="text" name="" id="" maxlength="75" value="" />
+							<input class="text width2" type="text" name="" id="" maxlength="75" value="" />
 						</td>
 						<td class="value">
 							<select class="width1" name="" id="">
@@ -176,7 +176,7 @@
 					<tr>
 						<td class="key"><label for=""><?php echo Utils::t('Team 2'); ?></label></td>
 						<td class="value">
-							<input class="text width1" type="text" name="" id="" maxlength="75" value="" />
+							<input class="text width2" type="text" name="" id="" maxlength="75" value="" />
 						</td>
 						<td class="value">
 							<select class="width1" name="" id="">
