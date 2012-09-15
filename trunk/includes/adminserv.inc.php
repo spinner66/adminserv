@@ -302,13 +302,12 @@ abstract class AdminServUI {
 	* Récupère le CSS/JS du site
 	*/
 	public static function getCss($path = AdminServConfig::PATH_RESSOURCES){
-		$out = '<link rel="stylesheet" href="'.$path.'styles/jquery-ui.css" />'."\n\t\t";
-		if(USER_PAGE == 'maps-upload'){
-			$out .= '<link rel="stylesheet" href="'.$path.'styles/fileuploader.css" />'."\n\t\t";
-		}
-		$out .= '<link rel="stylesheet" href="'.$path.'styles/global.css" />'."\n\t\t"
+		$out = '<link rel="stylesheet" href="'.$path.'styles/jquery-ui.css" />'."\n\t\t"
+		.'<link rel="stylesheet" href="'.$path.'styles/colorpicker.css" />'."\n\t\t"
+		.'<link rel="stylesheet" href="'.$path.'styles/fileuploader.css" />'."\n\t\t"
+		.'<link rel="stylesheet" href="'.$path.'styles/global.css" />'."\n\t\t"
 		.'<!--[if IE]><link rel="stylesheet" href="'.$path.'styles/ie.css" /><![endif]-->'."\n\t\t";
-		if( defined('USER_THEME') ){
+		if( defined('USER_THEME') && USER_THEME ){
 			$out .= '<link rel="stylesheet" href="'.$path.'styles/theme.php?th='. USER_THEME .'" />'."\n\t\t";
 		}
 		$out .= '<link rel="stylesheet" media="screen and (max-width: 1000px)" href="'.$path.'styles/mobile.css" />'."\n";
@@ -317,11 +316,10 @@ abstract class AdminServUI {
 	}
 	public static function getJS($path = AdminServConfig::PATH_INCLUDES){
 		$out = '<script src="'.$path.'js/jquery.js"></script>'."\n\t\t"
-		.'<script src="'.$path.'js/jquery-ui.js"></script>'."\n\t\t";
-		if(USER_PAGE == 'maps-upload'){
-			$out .= '<script src="'.$path.'js/fileuploader.js"></script>'."\n\t\t";
-		}
-		$out .= '<script src="'.$path.'js/adminserv_funct.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'js/jquery-ui.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'js/colorpicker.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'js/fileuploader.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'js/adminserv_funct.js"></script>'."\n\t\t"
 		.'<script src="'.$path.'js/adminserv_event.js"></script>'."\n";
 		
 		return $out;

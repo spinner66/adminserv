@@ -9,6 +9,20 @@
 			AdminServ::error();
 		}
 		else{
+			// Team info
+			if( isset($_POST['teaminfos1Name']) ){
+				$team1Name = $_POST['teamInfo1Name'];
+				$team1Color = $_POST['teamInfo1Color'];
+				$team1Country = $_POST['teamInfo1Country'];
+				$team2Name = $_POST['teamInfo2Name'];
+				$team2Color = $_POST['teamInfo2Color'];
+				$team2Country = $_POST['teamInfo2Country'];
+				
+				if( !$client->query('SetTeamInfo', $team1Name, $team1Color, $team1Country, $team2Name, $team2Color, $team2Country) ){
+					AdminServ::error();
+				}
+			}
+			
 			// RoundCustomPoints
 			if( isset($_POST['NextRoundCustomPoints']) && $_POST['NextRoundCustomPoints'] != null){
 				$NextRoundCustomPoints = explode(',', $_POST['NextRoundCustomPoints']);
@@ -52,12 +66,43 @@
 	<h1><?php echo Utils::t('Game information'); ?></h1>
 	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 		<div class="content gameinfos">
-			<?php
-				// Général
-				echo AdminServUI::getGameInfosGeneralForm($gameInfosData);
-				// Modes de jeux
-				echo AdminServUI::getGameInfosGameModeForm($gameInfosData);
-			?>
+			<?php echo AdminServUI::getGameInfosGeneralForm($gameInfosData); ?>
+			
+			<?php if( AdminServ::isGameMode('Team', $gameInfos['next']['GameMode']) ){ ?>
+				<fieldset class="gameinfos_teaminfos">
+					<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Team infos'); ?></legend>
+					<table>
+						<tr>
+							<td class="key"><label for="teamInfo1Name"><?php echo Utils::t('Team 1'); ?></label></td>
+							<td class="value">
+								<input class="text width2" type="text" name="teamInfo1Name" id="teamInfo1Name" value="<?php echo Utils::t('Blue'); ?>" />
+							</td>
+							<td class="value">
+								<input class="text width2" type="text" name="teamInfo1Country" id="teamInfo1Country" value="World|France" />
+							</td>
+							<td class="preview">
+								<div id="colorPickerTeam1" class="colorSelector" title="<?php echo Utils::t('Color'); ?>"></div>
+								<input type="hidden" name="teamInfo1Color" id="teamInfo1Color" value="#0000ff" />
+							</td>
+						</tr>
+						<tr>
+							<td class="key"><label for="teamInfo2Name"><?php echo Utils::t('Team 2'); ?></label></td>
+							<td class="value">
+								<input class="text width2" type="text" name="teamInfo2Name" id="teamInfo2Name" value="<?php echo Utils::t('Red'); ?>" />
+							</td>
+							<td class="value">
+								<input class="text width2" type="text" name="teamInfo2Country" id="teamInfo2Country" value="World|France" />
+							</td>
+							<td class="preview">
+								<div id="colorPickerTeam2" class="colorSelector" title="<?php echo Utils::t('Color'); ?>"></div>
+								<input type="hidden" name="teamInfo2Color" id="teamInfo2Color" value="#ff0000" />
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			<?php } ?>
+			
+			<?php echo AdminServUI::getGameInfosGameModeForm($gameInfosData); ?>
 		</div>
 		<?php if(SERVER_MATCHSET){ ?>
 			<div class="fleft options-checkbox">
