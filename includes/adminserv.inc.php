@@ -1464,11 +1464,19 @@ abstract class AdminServ {
 		// Méthode en fonction du jeu
 		if($cmd != 'ForceEndRound'){
 			if(SERVER_VERSION_NAME == 'TmForever'){
-				$methodRestart = 'RestartChallenge';
-				$methodNext = 'NextChallenge';
+				$queries = array(
+					'restartMap' => 'RestartChallenge',
+					'nextMap' => 'NextChallenge',
+					'getCurrentMapIndex' => 'GetCurrentChallengeIndex',
+					'setNextMapIndex' => 'SetNextChallengeIndex'
+				);
 			}else{
-				$methodRestart = 'RestartMap';
-				$methodNext = 'NextMap';
+				$queries = array(
+					'restartMap' => 'RestartMap',
+					'nextMap' => 'NextMap',
+					'getCurrentMapIndex' => 'GetCurrentMapIndex',
+					'setNextMapIndex' => 'SetNextMapIndex'
+				);
 			}
 		}
 		
@@ -1480,19 +1488,41 @@ abstract class AdminServ {
 		
 		// Suivant la commande demandée
 		switch($cmd){
+			case 'PrevMap':
+				if( !$client->query($queries['getCurrentMapIndex']) ){
+					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+				}
+				else{
+					$currentMapIndex = $client->getResponse();
+					if($currentMapIndex === 0){
+						$nbMaps = self::getNbMaps( self::getMapList() );
+						$prevMapIndex =  $nbMaps['nbm']['count'] - 1;
+					}
+					else{
+						$prevMapIndex = $currentMapIndex - 1;
+					}
+					
+					if( !$client->query($queries['setNextMapIndex'], $prevMapIndex) ){
+						$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+					}
+					else{
+						self::speedAdmin('NextMap');
+					}
+				}
+				break;
 			case 'RestartMap':
-				if( !$client->query($methodRestart, $hasCupMode) ){
+				if( !$client->query($queries['restartMap'], $hasCupMode) ){
 					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 				}
 				break;
 			case 'NextMap':
-				if( !$client->query($methodNext, $hasCupMode) ){
+				if( !$client->query($queries['nextMap'], $hasCupMode) ){
 					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 				}
 				break;
 			case 'ForceEndRound':
 				if($hasCupMode){
-					if( !$client->query($methodNext) ){
+					if( !$client->query($queries['nextMap']) ){
 						$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 					}
 				}
