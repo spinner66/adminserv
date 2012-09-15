@@ -127,7 +127,7 @@ function speedAdmin(cmd){
 			if( $("body").hasClass("section-index") ){
 				getCurrentServerInfo("", sort);
 			}
-			else if( $("body").hasClass("section-maps") ){
+			else if( $("body").hasClass("section-maps-list") ){
 				getMapList("", sort);
 			}
 			$(".speed-admin a.locked").removeClass("locked");

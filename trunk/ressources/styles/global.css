@@ -120,13 +120,13 @@ header {
 /* SpeedAdmin */
 .speed-admin {
 	float: right;
-	margin-right: 100px;
+	margin-right: 78px;
 }
 .speed-admin ul {
 	overflow: hidden;
 	background: #484848;
 	padding: 3px 4px;
-	width: 66px;
+	width: 89px;
 	-webkit-border-radius: 0 0 5px 5px;
 	-moz-border-radius: 0 0 5px 5px;
 	-o-border-radius: 0 0 5px 5px;
@@ -149,6 +149,9 @@ header {
 .speed-admin ul li a.locked {
 	cursor: default;
 	background-position: 0 -40px;
+}
+.speed-admin ul li a.prev {
+	background-image: url("../images/16/bt_arrow_fastprev.png");
 }
 .speed-admin ul li a.restart {
 	background-image: url("../images/16/bt_refresh.png");
