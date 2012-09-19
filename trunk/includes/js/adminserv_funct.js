@@ -2,38 +2,38 @@
 * Fonctions générales
 */
 function getIncludesPath(){
-	return $.trim( $("#path_includes").text() );
+	return $.trim( $('#path_includes').text() );
 }
 function getRessourcesPath(){
-	return $.trim( $("#path_ressources").text() );
+	return $.trim( $('#path_ressources').text() );
 }
 function getPath(){
-	return $.trim( $(".path").text() );
+	return $.trim( $('.path').text() );
 }
 function getMode(){
-	return $.trim( $("#detailMode").data("statusmode") );
+	return $.trim( $('#detailMode').data('statusmode') );
 }
 function getCurrentSort(){
-	return $("#currentSort").val();
+	return $('#currentSort').val();
 }
 function setCurrentSort(sort){
-	return $("#currentSort").val(sort);
+	return $('#currentSort').val(sort);
 }
 function t(text){
-	text = text.replace('from', $("#formUpload").data("from") );
-	text = text.replace('Kb', $("#formUpload").data("kb") );
-	text = text.replace('Mb', $("#formUpload").data("mb") );
+	text = text.replace('from', $('#formUpload').data('from') );
+	text = text.replace('Kb', $('#formUpload').data('kb') );
+	text = text.replace('Mb', $('#formUpload').data('mb') );
 	return text;
 }
 function scrollTop(){
-	$("html, body").animate({  
+	$('html, body').animate({  
 		scrollTop: 0
-	}, "slow");
+	}, 'slow');
 }
 function scrollBottom(){
-	$("html, body").animate({  
+	$('html, body').animate({  
 		scrollTop: $(document).height() - $(window).height()
-	}, "slow");
+	}, 'slow');
 }
 function getUrlParams(key){
 	var params = window.location.search.substring(1);
@@ -43,7 +43,7 @@ function getUrlParams(key){
 	else{
 		var index = params.indexOf(key);
 		if(index !== -1){
-			return params.substring(index).split("&")[0].substring(2);
+			return params.substring(index).split('&')[0].substring(2);
 		}
 	}
 }
@@ -55,7 +55,7 @@ function getUrlParams(key){
 * @param int sec -> La valeur en seconde
 */
 function secToMin(sec){
-	if(sec == "" || sec == undefined || isNaN(sec) ){
+	if(sec == '' || sec == undefined || isNaN(sec) ){
 		sec = 0;
 	}
 	return round( (parseInt(sec) / 60), 1);
@@ -78,16 +78,16 @@ function round(value, precision){
 * Affichage du texte d'erreur
 */
 function error(text, hide){
-	$("#error").fadeIn("fast");
-	if( $("#error").attr("hidden") ){
-		$("#error").removeAttr("hidden");
+	$('#error').fadeIn('fast');
+	if( $('#error').attr('hidden') ){
+		$('#error').removeAttr('hidden');
 	}
-	$("#error").html(text);
+	$('#error').html(text);
 	
 	if(hide){
 		setTimeout(function(){
-			$("#error").attr("hidden", true);
-			$("#error").fadeOut("fast");
+			$('#error').attr('hidden', true);
+			$('#error').fadeOut('fast');
 		}, 4000);
 	}
 }
@@ -97,16 +97,16 @@ function error(text, hide){
 * Affichage du texte d'erreur
 */
 function info(text, hide){
-	$("#info").fadeIn("fast");
-	if( $("#info").attr("hidden") ){
-		$("#info").removeAttr("hidden");
+	$('#info').fadeIn('fast');
+	if( $('#info').attr('hidden') ){
+		$('#info').removeAttr('hidden');
 	}
-	$("#info").text(text);
+	$('#info').text(text);
 	
 	if(hide){
 		setTimeout(function(){
-			$("#info").attr("hidden", true);
-			$("#info").fadeOut("fast");
+			$('#info').attr('hidden', true);
+			$('#info').fadeOut('fast');
 		}, 4000);
 	}
 }
@@ -118,19 +118,19 @@ function info(text, hide){
 * @param string cmd -> Le nom de la méthode à utiliser
 */
 function speedAdmin(cmd){
-	$.post(getIncludesPath()+"ajax/speed_admin.php", {cmd: cmd}, function(response){
-		if(response != "true"){
-			error("Error: "+response);
+	$.post(getIncludesPath()+'ajax/speed_admin.php', {cmd: cmd}, function(response){
+		if(response != 'true'){
+			error('Error: '+response);
 		}
 		setTimeout(function(){
 			var sort = getCurrentSort();
-			if( $("body").hasClass("section-index") ){
-				getCurrentServerInfo("", sort);
+			if( $('body').hasClass('section-index') ){
+				getCurrentServerInfo('', sort);
 			}
-			else if( $("body").hasClass("section-maps-list") ){
-				getMapList("", sort);
+			else if( $('body').hasClass('section-maps-list') ){
+				getMapList('', sort);
 			}
-			$(".speed-admin a.locked").removeClass("locked");
+			$('.speed-admin a.locked').removeClass('locked');
 		}, 2000);
 	});
 }
@@ -140,22 +140,21 @@ function speedAdmin(cmd){
 * Récupère la liste des niveaux admin suivant le serveur sélectionné
 */
 function getServerAdminLevel(){
-	var serverName = $("select#as_server").val();
-	var adminLevelList = "";
+	var serverName = $('select#as_server').val();
+	var adminLevelList = '';
 	
-	$.getJSON(getIncludesPath()+"ajax/get_server_adminlevel.php", {srv: serverName}, function(response){
+	$.getJSON(getIncludesPath()+'ajax/get_server_adminlevel.php', {srv: serverName}, function(response){
 		if(response != null){
 			$.each(response.levels, function(i, n){
 				if(response.last != null && response.last == n){ var selected = ' selected="selected"'; }
-				else{ var selected = ""; }
+				else{ var selected = ''; }
 				adminLevelList += '<option value="'+n+'"'+selected+'>'+n+'</option>';
 			});
 			
-			// On met à jour la liste
-			$("select#as_adminlevel").html(adminLevelList);
+			$('select#as_adminlevel').html(adminLevelList);
 		}
 		else{
-			error("Aucun niveau admin configuré pour ce serveur.");
+			error('Aucun niveau admin configuré pour ce serveur.');
 		}
 	});
 }
@@ -172,9 +171,9 @@ function getCurrentServerInfo(mode, sort){
 	if(sort){
 		setCurrentSort(sort);
 	}
-	var isTeamGameMode = $("#isTeamGameMode").val();
+	var isTeamGameMode = $('#isTeamGameMode').val();
 	
-	$.getJSON(getIncludesPath()+"ajax/get_current_serverinfo.php", {mode: mode, sort: sort}, function(data){
+	$.getJSON(getIncludesPath()+'ajax/get_current_serverinfo.php', {mode: mode, sort: sort}, function(data){
 		if(data != null){
 			// Map
 			if(data.map != null){
@@ -182,49 +181,49 @@ function getCurrentServerInfo(mode, sort){
 				$("#map_author").html(data.map.author);
 				$("#map_enviro").html(data.map.enviro+'<img src="'+path_ressources+'images/env/'+data.map.enviro.toLowerCase()+'.png" alt="" />');
 				$("#map_uid").html(data.map.uid);
-				if(data.srv.gameModeScriptName != 'undefined'){
+				if(data.srv.gameModeScriptName){
 					var gameModeName = data.srv.gameModeName+' <span class="scriptName">('+data.srv.gameModeScriptName+')</span>';
 				}else{
 					var gameModeName = data.srv.gameModeName;
 				}
-				$("#map_gamemode").html(gameModeName).attr("class", "").addClass("value "+data.srv.gameModeName.toLowerCase() );
+				$('#map_gamemode').html(gameModeName).attr('class', '').addClass('value '+data.srv.gameModeName.toLowerCase() );
 				if(data.map.thumb){
-					$("#map_thumbnail").html('<img src="data:image/jpeg;base64,'+data.map.thumb+'" alt="'+$("#map_thumbnail").data("text-thumbnail")+'" />');
+					$('#map_thumbnail').html('<img src="data:image/jpeg;base64,'+data.map.thumb+'" alt="'+$('#map_thumbnail').data('text-thumbnail')+'" />');
 				}
 				if(data.map.scores){
-					$("#ScoreTeamBlue").val(data.map.scores.blue);
-					$("#ScoreTeamRed").val(data.map.scores.red);
+					$('#ScoreTeamBlue').val(data.map.scores.blue);
+					$('#ScoreTeamRed').val(data.map.scores.red);
 				}
 			}
 			
 			// Server
 			if(data.srv != null){
-				$("#server_name").html(data.srv.name);
-				$("#server_status").html(data.srv.status);
+				$('#server_name').html(data.srv.name);
+				$('#server_status').html(data.srv.status);
 			}
 			
 			// Stats
 			if(data.net != null){
-				$("#network_uptime").html(data.net.uptime);
-				$("#network_nbrconnection").html(data.net.nbrconnection);
-				$("#network_meanconnectiontime").html(data.net.meanconnectiontime);
-				$("#network_meannbrplayer").html(data.net.meannbrplayer);
-				$("#network_recvnetrate").html(data.net.recvnetrate);
-				$("#network_sendnetrate").html(data.net.sendnetrate);
-				$("#network_totalreceivingsize").html(data.net.totalreceivingsize);
-				$("#network_totalsendingsize").html(data.net.totalsendingsize);
+				$('#network_uptime').html(data.net.uptime);
+				$('#network_nbrconnection').html(data.net.nbrconnection);
+				$('#network_meanconnectiontime').html(data.net.meanconnectiontime);
+				$('#network_meannbrplayer').html(data.net.meannbrplayer);
+				$('#network_recvnetrate').html(data.net.recvnetrate);
+				$('#network_sendnetrate').html(data.net.sendnetrate);
+				$('#network_totalreceivingsize').html(data.net.totalreceivingsize);
+				$('#network_totalsendingsize').html(data.net.totalsendingsize);
 			}
 			
 			// Players
-			if(data.ply != null && !$("#playerlist").isChecked() ){
-				var out = "";
+			if(data.ply != null && !$('#playerlist').isChecked() ){
+				var out = '';
 				
 				// Création du tableau
 				out += '<tr class="table-separation"><td colspan="'; if(isTeamGameMode){ out += '6'; }else{ out += '5'; } out += '"></td></tr>';
-				if( typeof(data.ply) == "object" && data.ply.length > 0 ){
+				if( typeof(data.ply) == 'object' && data.ply.length > 0 ){
 					$.each(data.ply, function(i, player){
 						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">';
-							if(isTeamGameMode && mode == "detail"){
+							if(isTeamGameMode && mode == 'detail'){
 								out += '<td class="detailModeTd imgleft"><span class="team_'+player.TeamId+'" title="'+player.TeamName+'"></span>'+player.TeamName+'</td>';
 							}
 							out += '<td class="imgleft"><img src="'+path_ressources+'images/16/solo.png" alt="" />'+player.NickName+'</td>';
@@ -237,21 +236,21 @@ function getCurrentServerInfo(mode, sort){
 						+'</tr>';
 					});
 					
-					if( $("input#checkAll").attr("disabled") ){
-						$("input#checkAll").attr("disabled", false);
+					if( $('input#checkAll').attr('disabled') ){
+						$('input#checkAll').attr('disabled', false);
 					}
 				}
 				else{
-					if( !$("input#checkAll").attr("disabled") ){
-						$("input#checkAll").attr("disabled", true);
+					if( !$('input#checkAll').attr('disabled') ){
+						$('input#checkAll').attr('disabled', true);
 					}
 					out += '<tr class="no-line"><td class="center" colspan="'; if(isTeamGameMode){ out += '6'; }else{ out += '5'; } out += '">'+data.ply+'</td></tr>';
 				}
 				
 				// HTML
-				$("#playerlist table tbody").html(out);
-				if( $("#playerlist").hasClass("loading") ){
-					$("#playerlist").removeClass("loading");
+				$('#playerlist table tbody').html(out);
+				if( $('#playerlist').hasClass('loading') ){
+					$('#playerlist').removeClass('loading');
 				}
 			}
 		}
@@ -266,7 +265,7 @@ function getCurrentServerInfo(mode, sort){
 * @param string dest -> Selecteur Jquery pour afficher les données
 */
 function getPreviewSrvOpts(str, dest){
-	$.getJSON(getIncludesPath()+"ajax/preview_srvopts.php", {t: str}, function(data){
+	$.getJSON(getIncludesPath()+'ajax/preview_srvopts.php', {t: str}, function(data){
 		if(data != null){
 			$(dest).html('['+data.str+']');
 		}
@@ -278,31 +277,31 @@ function getPreviewSrvOpts(str, dest){
 * Récupère la configuration du gameMode sélectionné
 */
 function getCurrentGameModeConfig(){
-	var gameMode = $("select#NextGameMode option:selected").text();
-	var selector = $("#gameMode-"+gameMode.toLowerCase() );
+	var gameMode = $('select#NextGameMode option:selected').text();
+	var selector = $('#gameMode-'+gameMode.toLowerCase() );
 	
 	// Fermeture de tous les modes par défaut
-	if( $("body").hasClass("section-maps-creatematchset") ){
-		var section = ".section-maps-creatematchset";
+	if( $('body').hasClass('section-maps-creatematchset') ){
+		var section = '.section-maps-creatematchset';
 	}else{
-		var section = ".section-gameinfos";
+		var section = '.section-gameinfos';
 	}
-	$.each( $(section+" .content.gameinfos fieldset"), function(i, n){
-		if( !$(this).hasClass("gameinfos_general") && !$(this).hasClass("gameinfos_teaminfos") ){
-			if( $(this).attr("hidden") ){
+	$.each( $(section+' .content.gameinfos fieldset'), function(i, n){
+		if( !$(this).hasClass('gameinfos_general') && !$(this).hasClass('gameinfos_teaminfos') ){
+			if( $(this).attr('hidden') ){
 				$(this).hide();
 			}
 			else{
 				$(this).hide();
-				$(this).attr("hidden", true);
+				$(this).attr('hidden', true);
 			}
 		}
 	});
 	
 	// Affichage du mode de jeu sélectionné
-	if( selector.attr("hidden") ){
-		selector.slideDown("fast");
-		selector.removeAttr("hidden");
+	if( selector.attr('hidden') ){
+		selector.slideDown('fast');
+		selector.removeAttr('hidden');
 	}
 }
 
@@ -311,29 +310,29 @@ function getCurrentGameModeConfig(){
 *
 */
 function getScriptSettings(){
-	$.post(getIncludesPath()+"ajax/script_settings.php", {method: "get"}, function(data){
+	$.post(getIncludesPath()+'ajax/script_settings.php', {method: 'get'}, function(data){
 		if(data != null){
 			// Script info
-			$("#dialogScriptInfoName").html(data.Name+" ("+data.Version+")");
-			$("#dialogScriptInfoCompatibleMapTypes").html(data.CompatibleMapTypes);
-			if(data.Description != ""){
-				$(".dialogScriptInfoDesc").attr("hidden", false);
-				$("#dialogScriptInfoDesc").html(data.Description);
+			$('#dialogScriptInfoName').html(data.Name+' ('+data.Version+')');
+			$('#dialogScriptInfoCompatibleMapTypes').html(data.CompatibleMapTypes);
+			if(data.Description != ''){
+				$('.dialogScriptInfoDesc').attr('hidden', false);
+				$('#dialogScriptInfoDesc').html(data.Description);
 			}
 			
 			// Paramètres
-			paramsList = "";
-			if( typeof(data.ParamDescs) == "object" && data.ParamDescs.length > 0 ){
+			paramsList = '';
+			if( typeof(data.ParamDescs) == 'object' && data.ParamDescs.length > 0 ){
 				$.each(data.ParamDescs, function(i, param){
-					var paramValueField = "";
-					if(param.Type == "boolean"){
-						var isChecked = "";
+					var paramValueField = '';
+					if(param.Type == 'boolean'){
+						var isChecked = '';
 						if(param.Default){
 							isChecked = ' checked="checked"';
 						}
 						paramValueField = '<input class="text '+param.Type+'" type="checkbox" name="" id="" value="'+param.Default+'"'+isChecked+' />';
 					}
-					else if(param.Type == "int" || param.Type == "float"){
+					else if(param.Type == 'int' || param.Type == 'float'){
 						paramValueField = '<input class="text '+param.Type+'" type="text" name="" id="" value="'+param.Default+'" />';
 					}
 					
@@ -344,24 +343,24 @@ function getScriptSettings(){
 					+ '</tr>';
 				});
 				
-				$("#dialogScriptSettings table tbody").html(paramsList);
+				$('#dialogScriptSettings table tbody').html(paramsList);
 			}
 			
 			// Dialog
-			$("#getScriptSettingsDialog").dialog({
-				title: $("#getScriptSettingsDialog").data("title"),
+			$('#getScriptSettingsDialog').dialog({
+				title: $('#getScriptSettingsDialog').data('title'),
 				modal: true,
 				minWidth: 650,
 				minHeight: 400,
 				buttons: [
 					{
-						text: $("#getScriptSettingsDialog").data("cancel"),
+						text: $('#getScriptSettingsDialog').data('cancel'),
 						click: function(){
-							$(this).dialog("close");
+							$(this).dialog('close');
 						}
 					},
 					{
-						text: $("#getScriptSettingsDialog").data("save"),
+						text: $('#getScriptSettingsDialog').data('save'),
 						click: function(){
 							setScriptSettings();
 						}
@@ -369,19 +368,19 @@ function getScriptSettings(){
 				]
 			});
 		}
-	}, "json");
+	}, 'json');
 }
 function setScriptSettings(){
 	var structParams = [];
 	var structValues = [];
-	$.each( $("#dialogScriptSettings table tbody tr"), function(i, param){
+	$.each( $('#dialogScriptSettings table tbody tr'), function(i, param){
 		var key = param.children[0].textContent;
 		var type = param.children[1].children[0].className;
 		
-		if(type.indexOf("boolean") !== -1){
+		if(type.indexOf('boolean') !== -1){
 			var val = param.children[1].children[0].checked;
 		}
-		else if(type.indexOf("int") !== -1 || type.indexOf("float") !== -1){
+		else if(type.indexOf('int') !== -1 || type.indexOf('float') !== -1){
 			var val = param.children[1].children[0].value;
 		}
 		
@@ -389,8 +388,8 @@ function setScriptSettings(){
 		structValues.push(val);
 	});
 	
-	$.post(getIncludesPath()+"ajax/script_settings.php", {method: "set", key: structParams, val: structValues}, function(response){
-		if(response != "true"){
+	$.post(getIncludesPath()+'ajax/script_settings.php', {method: 'set', key: structParams, val: structValues}, function(response){
+		if(response != 'true'){
 			error(response);
 			scrollTop();
 		}
@@ -405,9 +404,9 @@ function setScriptSettings(){
 * @return string html
 */
 function getChatServerLines(hideServerLines){
-	$.getJSON(getIncludesPath()+"ajax/get_chatserverlines.php", {s: hideServerLines}, function(data){
+	$.getJSON(getIncludesPath()+'ajax/get_chatserverlines.php', {s: hideServerLines}, function(data){
 		if(data != null){
-			$("#chat").html(data);
+			$('#chat').html(data);
 		}
 	});
 }
@@ -417,19 +416,19 @@ function getChatServerLines(hideServerLines){
 * Ajoute une ligne (pseudo + message) dans le chat du serveur
 */
 function addChatServerLine(){
-	var nickname = $("#chatNickname").val();
-	if( nickname == $("#chatNickname").data("default-value") ){
-		nickname = "";
+	var nickname = $('#chatNickname').val();
+	if( nickname == $('#chatNickname').data('default-value') ){
+		nickname = '';
 	}
-	var color = $("#chatColor").val();
-	var message = $("#chatMessage").val();
-	var destination = $("#chatDestination").val();
-	var hideServerLines = $("#checkServerLines").data("val");
+	var color = $('#chatColor').val();
+	var message = $('#chatMessage').val();
+	var destination = $('#chatDestination').val();
+	var hideServerLines = $('#checkServerLines').data('val');
 	
-	$.post(getIncludesPath()+"ajax/add_chatserverline.php", {nic: nickname, clr: color, msg: message, dst: destination}, function(response){
+	$.post(getIncludesPath()+'ajax/add_chatserverline.php', {nic: nickname, clr: color, msg: message, dst: destination}, function(response){
 		if(response != null){
 			getChatServerLines(hideServerLines);
-			$("#chatMessage").val("");
+			$('#chatMessage').val('');
 		}
 	});
 }
@@ -440,50 +439,51 @@ function addChatServerLine(){
 */
 function initializeUploader(){
 	uploader = new qq.FileUploader({
-		element: $("#formUpload")[0],
+		element: $('#formUpload')[0],
 		action: getIncludesPath()+'ajax/upload.php',
 		maxConnections: 2,
 		params: {
 			path: getPath(),
-			type: $(".transferMode li.selected input").val(),
-			mset: ( $("#SaveCurrentMatchSettings").attr("checked") ) ? true : false,
-			gtlm: ( $("#GotoListMaps").attr("checked") ) ? true : false
+			type: $('.transferMode li.selected input').val(),
+			mset: ( $('#SaveCurrentMatchSettings').attr('checked') ) ? true : false,
+			gtlm: ( $('#GotoListMaps').attr('checked') ) ? true : false
 		},
 		template:
-		'<div class="qq-uploader">' + 
-			'<div class="qq-upload-drop-area"><span>'+ $("#formUpload").data('dropfiles') +'</span></div>' +
-			'<div class="qq-upload-button">'+ $("#formUpload").data('uploadfile') +'</div>' +
-			'<ul class="qq-upload-list"></ul>' + 
-		'</div>',
+		'<div class="qq-uploader">'
+			+ '<div class="qq-upload-drop-area"><span>'+ $('#formUpload').data('dropfiles') +'</span></div>'
+			+ '<div class="qq-upload-button">'+ $('#formUpload').data('uploadfile') +'</div>'
+			+ '<ul class="qq-upload-list"></ul>'
+		+ '</div>',
 		fileTemplate:
-		'<li>' +
-			'<span class="qq-upload-file"></span>' +
-			'<span class="qq-upload-spinner"><span class="qq-upload-bar"></span></span>' +
-			'<span class="qq-upload-size"></span>' +
-			'<a class="qq-upload-cancel" href="./">'+ $("#formUpload").data('cancel') +'</a>' +
-			'<span class="qq-upload-failed-text">'+ $("#formUpload").data('failed') +'</span>' +
-		'</li>',
+		'<li>'
+			+ '<span class="qq-upload-file"></span>'
+			+ '<span class="qq-upload-spinner"><span class="qq-progress-bar"></span></span>'
+			+ '<span class="qq-upload-size"></span>'
+			+ '<a class="qq-upload-cancel" href="./">'+ $('#formUpload').data('cancel') +'</a>'
+			+ '<span class="qq-upload-failed-text">'+ $('#formUpload').data('failed') +'</span>'
+		+ '</li>',
 		onProgress: function(id, fileName, loaded, total){
 			window.onbeforeunload = function(){
-				return $("#formUpload").data('uploadnotfinished');
+				return $('#formUpload').data('uploadnotfinished');
 			}
-			$.each( $(".qq-upload-list li"), function(key, value){
-				// Récupèration des données
-				var text = $(this).children(".qq-upload-size").text();
+			$.each( $('.qq-upload-list li'), function(key, value){
+				var text = $(this).children('.qq-upload-size').text();
 				var newtext = t(text);
-				var lastpos = text.indexOf("%");
+				var lastpos = text.indexOf('%');
 				var pourcent = text.substring(0, lastpos);
 				
-				// Modification des données
-				$(this).children(".qq-upload-size").text(newtext);
-				$(this).children(".qq-upload-spinner").children(".qq-upload-bar").css("width", pourcent+"px");
+				$(this).children('.qq-upload-size').text(newtext);
+				$(this).children('.qq-upload-spinner').children('.qq-progress-bar').css('width', pourcent+'px');
 			});
 		},
 		onComplete: function(id, fileName, responseJSON){
 			window.onbeforeunload = function(){}
+			
+			var uploader;
+			
 			if(responseJSON.success == true){
 				if(uploader._options.params.gtlm){
-					location.href = "?p="+$("#formUpload").data("mapspagename");
+					location.href = '?p='+$('#formUpload').data('mapspagename');
 				}
 			}
 		},
@@ -491,11 +491,11 @@ function initializeUploader(){
 			window.onbeforeunload = function(){}
 		},
 		messages: {
-			typeError: $("#formUpload").data("type-error"),
-			sizeError: $("#formUpload").data("size-error"),
-			minSizeError: $("#formUpload").data("minsize-error"),
-			emptyError: $("#formUpload").data("empty-error"),
-			onLeave: $("#formUpload").data("onleave")
+			typeError: $('#formUpload').data('type-error'),
+			sizeError: $('#formUpload').data('size-error'),
+			minSizeError: $('#formUpload').data('minsize-error'),
+			emptyError: $('#formUpload').data('empty-error'),
+			onLeave: $('#formUpload').data('onleave')
 		},
 		showMessage: function(message){
 			error(message);
@@ -516,25 +516,25 @@ function getMapList(mode, sort){
 		setCurrentSort(sort);
 	}
 	
-	$.getJSON(getIncludesPath()+"ajax/get_maplist.php", {mode: mode, sort: sort}, function(data){
+	$.getJSON(getIncludesPath()+'ajax/get_maplist.php', {mode: mode, sort: sort}, function(data){
 		if(data != null){
-			if(data.lst != null && !$("#maplist").isChecked() ){
-				var out = "";
+			if(data.lst != null && !$('#maplist').isChecked() ){
+				var out = '';
 				
 				// Création du tableau
 				out += '<tr class="table-separation"><td colspan="6"></td></tr>';
-				if( typeof(data.lst) == "object" && data.lst.length > 0 ){
+				if( typeof(data.lst) == 'object' && data.lst.length > 0 ){
 					$.each(data.lst, function(i, map){
 						out += '<tr'; if(data.cid == i){ out += ' id="currentMap"'; } out += ' class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } if(data.cid == i){ out += ' current'; } out += '">'
 							+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
 								+'<span title="'+map.FileName+'">'+map.Name+'</span>'
-								if(mode == "detail"){
+								if(mode == 'detail'){
 									out += '<span class="detailModeTd">'+map.UId+'</span>';
 								}
 							out += '</td>'
 							+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
 							+'<td>'+map.Author+'</td>';
-							if(mode == "detail"){
+							if(mode == 'detail'){
 								out += '<td>'+map.GoldTime+'</td>'
 								+'<td>'+map.CopperPrice+'</td>';
 							}
@@ -542,21 +542,21 @@ function getMapList(mode, sort){
 						+'</tr>';
 					});
 					
-					if( $("input#checkAll").attr("disabled") ){
-						$("input#checkAll").attr("disabled", false);
+					if( $('input#checkAll').attr('disabled') ){
+						$('input#checkAll').attr('disabled', false);
 					}
 				}
 				else{
-					if( !$("input#checkAll").attr("disabled") ){
-						$("input#checkAll").attr("disabled", true);
+					if( !$('input#checkAll').attr('disabled') ){
+						$('input#checkAll').attr('disabled', true);
 					}
 					out += '<tr class="no-line"><td class="center" colspan="6">'+data.lst+'</td></tr>';
 				}
 				
 				// HTML
-				$("#maplist table tbody").html(out);
-				if( $("#maplist").hasClass("loading") ){
-					$("#maplist").removeClass("loading");
+				$('#maplist table tbody').html(out);
+				if( $('#maplist').hasClass('loading') ){
+					$('#maplist').removeClass('loading');
 				}
 			}
 		}
@@ -569,8 +569,8 @@ function getMapList(mode, sort){
 */
 (function($){
 	$.fn.getMapRenameList = function(){
-		var out = "";
-		var formSelector = $("#form-rename-map");
+		var out = '';
+		var formSelector = $('#form-rename-map');
 		var list = $(this);
 		if( list.length > 0 ){
 			out += '<ul>';
@@ -578,7 +578,7 @@ function getMapList(mode, sort){
 				if(n.value.length > 36){
 					var title = ' title="'+n.value+'"';
 				}else{
-					var title = "";
+					var title = '';
 				}
 				out += '<li>'
 					+ '<span class="rename-map-name"'+title+'>'+n.value+'</span>'
@@ -604,10 +604,10 @@ function getMapList(mode, sort){
 * Récupère l'arboréscence des dossiers pour déplacer
 */
 function getMoveFolderList(nbFiles){
-	$.getJSON(getIncludesPath()+"ajax/get_directory_list.php", function(data){
+	$.getJSON(getIncludesPath()+'ajax/get_directory_list.php', function(data){
 		if(data != null){
-			var out = "";
-			var formSelector = $("#form-move-map");
+			var out = '';
+			var formSelector = $('#form-move-map');
 			if( nbFiles > 1 ){
 				var nbName = nbFiles + ' maps';
 			}else{
@@ -635,51 +635,51 @@ function getMoveFolderList(nbFiles){
 * Fonctions d'affichage des formulaires
 */
 function slideDownRenameForm(){
-	$("#form-rename-map").slideDown("fast");
-	$("#renameMap").addClass("active");
-	$(".options").addClass("form");
-	$(".options .selected-files-label").addClass("optHover");
-	$("#maplist table tbody tr.selected td.checkbox input").getMapRenameList();
+	$('#form-rename-map').slideDown('fast');
+	$('#renameMap').addClass('active');
+	$('.options').addClass('form');
+	$('.options .selected-files-label').addClass('optHover');
+	$('#maplist table tbody tr.selected td.checkbox input').getMapRenameList();
 }
 function slideUpRenameForm(){
-	$("#form-rename-map").slideUp("fast");
-	$("#renameMap").removeClass("active");
-	$(".options").removeClass("form");
-	$(".options .selected-files-label").removeClass("optHover");
+	$('#form-rename-map').slideUp('fast');
+	$('#renameMap').removeClass('active');
+	$('.options').removeClass('form');
+	$('.options .selected-files-label').removeClass('optHover');
 }
 function slideDownMoveForm(){
-	$("#form-move-map").slideDown("fast");
-	$("#moveMap").addClass("active");
-	$(".options").addClass("form");
-	$(".options .selected-files-label").addClass("optHover");
-	if( $("#form-move-map").text() == "" ){
-		getMoveFolderList( $("#maplist table tbody tr.selected td.checkbox input").length );
+	$('#form-move-map').slideDown('fast');
+	$('#moveMap').addClass('active');
+	$('.options').addClass('form');
+	$('.options .selected-files-label').addClass('optHover');
+	if( $('#form-move-map').text() == '' ){
+		getMoveFolderList( $('#maplist table tbody tr.selected td.checkbox input').length );
 	}
 }
 function slideUpMoveForm(){
-	$("#form-move-map").slideUp("fast");
-	$("#moveMap").removeClass("active");
-	$(".options").removeClass("form");
-	$(".options .selected-files-label").removeClass("optHover");
+	$('#form-move-map').slideUp('fast');
+	$('#moveMap').removeClass('active');
+	$('.options').removeClass('form');
+	$('.options .selected-files-label').removeClass('optHover');
 }
 function slideDownNewFolderForm(){
-	$("#form-new-folder").animate({
-		height: "25px",
-		marginTop: "6px",
-		marginBottom: "6px"
-	}, "fast");
-	$("#form-new-folder").removeAttr("hidden");
-	$("#newfolder").text( $("#newfolder").data("cancel") );
-	$("#newFolderName").select();
+	$('#form-new-folder').animate({
+		height: '25px',
+		marginTop: '6px',
+		marginBottom: '6px'
+	}, 'fast');
+	$('#form-new-folder').removeAttr('hidden');
+	$('#newfolder').text( $('#newfolder').data('cancel') );
+	$('#newFolderName').select();
 }
 function slideUpNewFolderForm(){
-	$("#form-new-folder").animate({
-		height: "0",
-		marginTop: "0",
-		marginBottom: "0"
-	}, "fast", function(){
-		$("#form-new-folder").attr("hidden", true);
-		$("#newfolder").text( $("#newfolder").data("new") );
+	$('#form-new-folder').animate({
+		height: '0',
+		marginTop: '0',
+		marginBottom: '0'
+	}, 'fast', function(){
+		$('#form-new-folder').attr('hidden', true);
+		$('#newfolder').text( $('#newfolder').data('new') );
 	});
 }
 
@@ -689,31 +689,31 @@ function slideUpNewFolderForm(){
 */
 function setMapsOrderSort(sort, order){
 	var path_ressources = getRessourcesPath();
-	var list = $("#jsonlist").val();
+	var list = $('#jsonlist').val();
 	
-	$.post(getIncludesPath()+"ajax/mapsorder_sort.php", {srt: sort, ord: order, lst: list}, function(data){
+	$.post(getIncludesPath()+'ajax/mapsorder_sort.php', {srt: sort, ord: order, lst: list}, function(data){
 		if(data != null){
-			var out = "";
-			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
+			var out = '';
+			if( typeof(data.lst) == 'object' && data.lst.length > 0 ){
 				$.each(data.lst, function(id, map){
 					if(data.cid != id){
 						out += '<li class="ui-state-default">'
-							+'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
-							+'<div class="order-map-name" title="'+map.FileName+'">'+map.Name+'</div>'
-							+'<div class="order-map-env"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
-							+'<div class="order-map-author"><img src="'+path_ressources+'images/16/mapauthor.png" alt="" />'+map.Author+'</div>'
-						+'</li>';
+							+ '<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
+							+ '<div class="order-map-name" title="'+map.FileName+'">'+map.Name+'</div>'
+							+ '<div class="order-map-env"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
+							+ '<div class="order-map-author"><img src="'+path_ressources+'images/16/mapauthor.png" alt="" />'+map.Author+'</div>'
+						+ '</li>';
 					}
 				});
 			}
 			
 			// HTML
-			$("#sortableMapList").html(out);
-			if( $("#sortableMapList").hasClass("loading") ){
-				$("#sortableMapList").removeClass("loading");
+			$('#sortableMapList').html(out);
+			if( $('#sortableMapList').hasClass('loading') ){
+				$('#sortableMapList').removeClass('loading');
 			}
 		}
-	}, "json");
+	}, 'json');
 }
 
 
@@ -722,21 +722,21 @@ function setMapsOrderSort(sort, order){
 */
 function setGeneralDetailMode(){
 	var sort = getCurrentSort();
-	if( $("#detailMode").text() == $("#detailMode").data("textdetail") ){
-		getCurrentServerInfo("detail", sort);
-		$("#detailMode").text( $("#detailMode").data("textsimple") );
-		$("#playerlist table th.detailModeTh").attr("hidden", false);
-		$("#playerlist table th.firstTh").removeClass("thleft");
-		$("#playerlist").addClass("loading");
-		$("#detailMode").data("statusmode", "detail");
+	if( $('#detailMode').text() == $('#detailMode').data('textdetail') ){
+		getCurrentServerInfo('detail', sort);
+		$('#detailMode').text( $('#detailMode').data('textsimple') );
+		$('#playerlist table th.detailModeTh').attr('hidden', false);
+		$('#playerlist table th.firstTh').removeClass('thleft');
+		$('#playerlist').addClass('loading');
+		$('#detailMode').data('statusmode', 'detail');
 	}
 	else{
-		getCurrentServerInfo("simple", sort);
-		$("#detailMode").text( $("#detailMode").data("textdetail") );
-		$("#playerlist table th.detailModeTh").attr("hidden", true);
-		$("#playerlist table th.firstTh").addClass("thleft");
-		$("#playerlist").addClass("loading");
-		$("#detailMode").data("statusmode", "simple");
+		getCurrentServerInfo('simple', sort);
+		$('#detailMode').text( $('#detailMode').data('textdetail') );
+		$('#playerlist table th.detailModeTh').attr('hidden', true);
+		$('#playerlist table th.firstTh').addClass('thleft');
+		$('#playerlist').addClass('loading');
+		$('#detailMode').data('statusmode', 'simple');
 	}
 }
 
@@ -746,19 +746,19 @@ function setGeneralDetailMode(){
 */
 function setMapslistDetailMode(){
 	var sort = getCurrentSort();
-	if( $("#detailMode").text() == $("#detailMode").data("textdetail") ){
-		getMapList("detail", sort);
-		$("#detailMode").text( $("#detailMode").data("textsimple") );
-		$("#maplist table th.detailModeTh").attr("hidden", false);
-		$("#maplist").addClass("loading");
-		$("#detailMode").data("statusmode", "detail");
+	if( $('#detailMode').text() == $('#detailMode').data('textdetail') ){
+		getMapList('detail', sort);
+		$('#detailMode').text( $('#detailMode').data('textsimple') );
+		$('#maplist table th.detailModeTh').attr('hidden', false);
+		$('#maplist').addClass('loading');
+		$('#detailMode').data('statusmode', 'detail');
 	}
 	else{
-		getMapList("simple", sort);
-		$("#detailMode").text( $("#detailMode").data("textdetail") );
-		$("#maplist table th.detailModeTh").attr("hidden", true);
-		$("#maplist").addClass("loading");
-		$("#detailMode").data("statusmode", "simple");
+		getMapList('simple', sort);
+		$('#detailMode').text( $('#detailMode').data('textdetail') );
+		$('#maplist table th.detailModeTh').attr('hidden', true);
+		$('#maplist').addClass('loading');
+		$('#detailMode').data('statusmode', 'simple');
 	}
 }
 
@@ -770,15 +770,15 @@ function setMapslistDetailMode(){
 */
 (function($){
 	$.fn.checkAll = function(isChecked){
-		var lineSelector = $(this).find("tbody tr[class!=table-separation]");
-		var checkboxSelector = $(this).find("tbody td.checkbox input[type=checkbox]");
+		var lineSelector = $(this).find('tbody tr[class!="table-separation"]');
+		var checkboxSelector = $(this).find('tbody td.checkbox input[type="checkbox"]');
 		if(isChecked){
-			checkboxSelector.attr("checked", true);
-			lineSelector.addClass("selected");
+			checkboxSelector.attr('checked', true);
+			lineSelector.addClass('selected');
 		}
 		else{
-			checkboxSelector.attr("checked", false);
-			lineSelector.removeClass("selected");
+			checkboxSelector.attr('checked', false);
+			lineSelector.removeClass('selected');
 		}
 	};
 })(jQuery);
@@ -790,19 +790,18 @@ function setMapslistDetailMode(){
 */
 (function($){
 	$.fn.updateCheckAll = function(checkAllSelector){
-		// On récupère le nombre d'élements sélectionnés
-		var nbSelected = $(this).find("tbody tr.selected").length;
-		var nbAll = $(this).find("tbody tr[class!=table-separation]").length;
-		if( $("body").hasClass("section-maps-list") ){
+		var nbSelected = $(this).find('tbody tr.selected').length;
+		var nbAll = $(this).find('tbody tr[class!="table-separation"]').length;
+		if( $('body').hasClass('section-maps-list') ){
 			nbAll--;
 		}
 		
 		if(nbSelected == nbAll){
-			checkAllSelector.attr("checked", true);
+			checkAllSelector.attr('checked', true);
 		}
 		else if(nbSelected == 0){
-			if( checkAllSelector.attr("checked") ){
-				checkAllSelector.attr("checked", false);
+			if( checkAllSelector.attr('checked') ){
+				checkAllSelector.attr('checked', false);
 			}
 		}
 	};
@@ -814,16 +813,15 @@ function setMapslistDetailMode(){
 */
 (function($){
 	$.fn.updateNbSelectedLines = function(){
-		// On récupère le nombre d'élements sélectionnés
-		var nb = $(this).find("tbody tr.selected").length;
+		var nb = $(this).find('tbody tr.selected').length;
 		
-		// Mise à jour
 		if(nb > 0){
-			$(this).find(".selected-files-label").removeClass("locked");
-		}else{
-			$(this).find(".selected-files-label").addClass("locked");
+			$(this).find('.selected-files-label').removeClass('locked');
 		}
-		$(this).find(".selected-files-count").text("("+nb+")");
+		else{
+			$(this).find('.selected-files-label').addClass('locked');
+		}
+		$(this).find('.selected-files-count').text('('+nb+')');
 	};
 })(jQuery);
 
@@ -833,8 +831,8 @@ function setMapslistDetailMode(){
 */
 (function($){
 	$.fn.isChecked = function(){
-		// On récupère le nombre d'élements sélectionnés;
-		var nb = $(this).find("tbody tr.selected").length;
+		var nb = $(this).find('tbody tr.selected').length;
+		
 		if(nb > 0){
 			return true;
 		}
@@ -851,8 +849,8 @@ function setMapslistDetailMode(){
 * @return array JSON
 */
 function getJsonSelectedLines(){
-	var selectedFiles = $(".cadre table tbody tr.selected");
-	var files = "[";
+	var selectedFiles = $('.cadre table tbody tr.selected');
+	var files = '[';
 	
 	if(selectedFiles.length > 1){
 		$.each(selectedFiles, function(i, n){
@@ -867,7 +865,7 @@ function getJsonSelectedLines(){
 	else{
 		files += '"'+selectedFiles.find(".checkbox input").val()+'"';
 	}
-	files += "]";
+	files += ']';
 	
 	return files;
 }
@@ -883,15 +881,15 @@ function getJsonSelectedLines(){
 * @param string filename -> Le nom du fichier
 */
 function matchset_getFileExists(filename){
-	$.getJSON(getIncludesPath()+"ajax/get_matchset_fileexists.php", {path: getPath(), name: filename}, function(response){
+	$.getJSON(getIncludesPath()+'ajax/get_matchset_fileexists.php', {path: getPath(), name: filename}, function(response){
 		if(response){
-			$("#matchSettingNameExists").attr("hidden", false);
-			$("#matchSettingNameExists").hide();
-			$("#matchSettingNameExists").fadeIn("fast");
+			$('#matchSettingNameExists').attr('hidden', false);
+			$('#matchSettingNameExists').hide();
+			$('#matchSettingNameExists').fadeIn('fast');
 		}
 		else{
-			$("#matchSettingNameExists").attr("hidden", true);
-			$("#matchSettingNameExists").fadeOut("fast");
+			$('#matchSettingNameExists').attr('hidden', true);
+			$('#matchSettingNameExists').fadeOut('fast');
 		}
 	});
 }
@@ -900,72 +898,78 @@ function matchset_getFileExists(filename){
 * Récupère la liste des maps en local pour la création d'un matchSettings
 */
 function matchset_mapImport(){
-	var path = $("#mapsDirectoryList").val();
-	$.getJSON(getIncludesPath()+"ajax/get_matchset_mapimport.php", {path: path}, function(data){
+	var path = $('#mapsDirectoryList').val();
+	$.getJSON(getIncludesPath()+'ajax/get_matchset_mapimport.php', {path: path}, function(data){
 		if(data != null){
 			matchset_setNbMapSelection(data.nbm.count);
-			$(".creatematchset .maps").removeClass("loading");
+			$('.creatematchset .maps').removeClass('loading');
 		}
 	});
 }
 function matchset_mapImportSelection(){
-	var path = $("#mapsDirectoryList").val();
+	var path = $('#mapsDirectoryList').val();
 	var path_includes = getIncludesPath();
 	var path_ressources = getRessourcesPath();
-	$.getJSON(path_includes+"ajax/get_matchset_mapimport.php", {path: path, op: "getSelection"}, function(data){
+	$.getJSON(path_includes+'ajax/get_matchset_mapimport.php', {path: path, op: 'getSelection'}, function(data){
 		if(data != null){
-			var out = "";
+			var out = '';
 			
 			// Création du tableau
 			out += '<tr class="table-separation"><td colspan="4"></td></tr>';
-			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
+			if( typeof(data.lst) == 'object' && data.lst.length > 0 ){
 				$.each(data.lst, function(i, map){
 					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
 						+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
 							+'<span title="'+map.FileName+'">'+map.Name+'</span>'
 						out += '</td>'
-						+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
-						+'<td>'+map.Author+'</td>';
+						+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>';
+						if(map.Type){
+							out += '<td><span title="'+map.Type.FullName+'">'+map.Type.Name+'</span></td>';
+						}
+						else{
+							out += '<td>-</td>';
+						}
+						out += '<td>'+map.Author+'</td>';
 						out += '<td class="checkbox"><input type="checkbox" name="map[]" value="'+map.FileName+'" /></td>'
 					+'</tr>';
 				});
 				
-				if( $("input#checkAllMapImport").attr("disabled") ){
-					$("input#checkAllMapImport").attr("disabled", false);
+				if( $('input#checkAllMapImport').attr('disabled') ){
+					$('input#checkAllMapImport').attr('disabled', false);
 				}
 			}
 			else{
-				if( !$("input#checkAllMapImport").attr("disabled") ){
-					$("input#checkAllMapImport").attr("disabled", true);
+				if( !$('input#checkAllMapImport').attr('disabled') ){
+					$('input#checkAllMapImport').attr('disabled', true);
 				}
 				out += '<tr class="no-line"><td class="center" colspan="4">'+data.lst+'</td></tr>';
 			}
 			
 			// HTML
-			$("#mapImportSelectionDialog").removeAttr("hidden");
-			$("#mapImportSelectionDialog table tbody").html(out);
-			$(".creatematchset .maps").removeClass("loading");
-			$("#mapImportSelectionDialog").dialog({
-				title: $("#mapImportSelectionDialog").data("title"),
+			$('#mapImportSelectionDialog').removeAttr('hidden');
+			$('#mapImportSelectionDialog table tbody').html(out);
+			$('.creatematchset .maps').removeClass('loading');
+			$('#mapImportSelectionDialog').dialog({
+				title: $('#mapImportSelectionDialog').data('title'),
 				modal: true,
-				minWidth: 650,
+				minWidth: 850,
 				minHeight: 400,
 				buttons: [{
-					text: $("#mapImportSelectionDialog").data("select"),
+					text: $('#mapImportSelectionDialog').data('select'),
 					click: function(){
-						var listSelection = $("#mapImportSelectionDialog tbody tr.selected");
+						var listSelection = $('#mapImportSelectionDialog tbody tr.selected');
 						var listSelectionId = [];
 						if( listSelection.length > 0 ){
 							$.each(listSelection, function(i, n){
-								if( n.className.indexOf("selected") !== -1 ){
+								if( n.className.indexOf('selected') !== -1 ){
 									listSelectionId.push( parseInt(n.sectionRowIndex - 1) );
 								}
 							});
 						}
-						$.getJSON(path_includes+"ajax/get_matchset_mapimport.php", {path: path, op: "setSelection", select: listSelectionId}, function(data){
+						$.getJSON(path_includes+'ajax/get_matchset_mapimport.php', {path: path, op: 'setSelection', select: listSelectionId}, function(data){
 							if(data != null){
 								matchset_setNbMapSelection(data.nbm.count);
-								$("#mapImportSelectionDialog").dialog("close");
+								$('#mapImportSelectionDialog').dialog('close');
 							}
 						});
 					}
@@ -982,7 +986,7 @@ function matchset_mapImportSelection(){
 * @param int nb
 */
 function matchset_setNbMapSelection(nb){
-	$("#nbMapSelected").text(nb);
+	$('#nbMapSelected').text(nb);
 }
 /**
 * Récupère et affiche la sélection du MatchSettings
@@ -992,15 +996,15 @@ function matchset_mapSelection(removeId){
 	if(removeId){
 		var params = {remove: parseInt(removeId - 1)};
 	}else{
-		var params = "";
+		var params = '';
 	}
-	$.getJSON(getIncludesPath()+"ajax/get_matchset_mapselection.php", params, function(data){
+	$.getJSON(getIncludesPath()+'ajax/get_matchset_mapselection.php', params, function(data){
 		if(data != null){
-			var out = "";
+			var out = '';
 			
 			// Création du tableau
 			out += '<tr class="table-separation"><td colspan="4"></td></tr>';
-			if( typeof(data.lst) == "object" && data.lst.length > 0 ){
+			if( typeof(data.lst) == 'object' && data.lst.length > 0 ){
 				$.each(data.lst, function(i, map){
 					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
 						+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
@@ -1018,18 +1022,18 @@ function matchset_mapSelection(removeId){
 			
 			// HTML
 			matchset_setNbMapSelection(data.nbm.count);
-			$("#mapSelectionDialog").removeAttr("hidden");
-			$("#mapSelectionDialog table tbody").html(out);
-			$(".creatematchset .maps").removeClass("loading");
-			$("#mapSelectionDialog").dialog({
-				title: $("#mapSelectionDialog").data("title"),
+			$('#mapSelectionDialog').removeAttr('hidden');
+			$('#mapSelectionDialog table tbody').html(out);
+			$('.creatematchset .maps').removeClass('loading');
+			$('#mapSelectionDialog').dialog({
+				title: $('#mapSelectionDialog').data('title'),
 				modal: true,
 				minWidth: 650,
 				minHeight: 400,
 				buttons: [{
-					text: $("#mapSelectionDialog").data("close"),
+					text: $('#mapSelectionDialog').data('close'),
 					click: function(){
-						$(this).dialog("close");
+						$(this).dialog('close');
 					}
 				}]
 			});
@@ -1040,24 +1044,24 @@ function matchset_mapSelection(removeId){
 
 /* Folders */
 function getRenameFolderForm(){
-	$("#renameFolderForm").removeAttr("hidden");
-	$("#renameFolderForm").dialog({
-		title: $("#renameFolderForm").data("title"),
+	$('#renameFolderForm').removeAttr('hidden');
+	$('#renameFolderForm').dialog({
+		title: $('#renameFolderForm').data('title'),
 		modal: true,
 		resizable: false,
 		minWidth: 406,
 		buttons: [
 			{
-				text: $("#renameFolderForm").data("cancel"),
+				text: $('#renameFolderForm').data('cancel'),
 				click: function(){
-					$(this).dialog("close");
+					$(this).dialog('close');
 				}
 			},
 			{
-				text: $("#renameFolderForm").data("rename"),
+				text: $('#renameFolderForm').data('rename'),
 				click: function(){
-					$("#optionFolderHiddenFieldValue").val( $("#renameFolderNewName").val() );
-					$("#optionFolderForm").submit();
+					$('#optionFolderHiddenFieldValue').val( $('#renameFolderNewName').val() );
+					$('#optionFolderForm').submit();
 				}
 			},
 			
@@ -1065,14 +1069,14 @@ function getRenameFolderForm(){
 	});
 }
 function getMoveFolderForm(){
-	$("#moveFolderForm").removeAttr("hidden");
-	$.getJSON(getIncludesPath()+"ajax/get_directory_list.php", function(data){
+	$('#moveFolderForm').removeAttr('hidden');
+	$.getJSON(getIncludesPath()+'ajax/get_directory_list.php', function(data){
 		if(data != null){
-			var out = "";
-			var formSelector = $("#moveFolderForm");
-			out += '<label for="moveFormDirectoryList">'+formSelector.data("movethefolder")+'</label>'
+			var out = '';
+			var formSelector = $('#moveFolderForm');
+			out += '<label for="moveFormDirectoryList">'+formSelector.data('movethefolder')+'</label>'
 			+ '<select name="moveFormDirectoryList" id="moveFormDirectoryList">'
-				+ '<option value=".">'+formSelector.data("root")+'</option>';
+				+ '<option value=".">'+formSelector.data('root')+'</option>';
 				$.each(data, function(i, n){
 					out += '<option value="'+n.path+'">'+n.level+n.name+'</option>';
 				});
@@ -1082,23 +1086,23 @@ function getMoveFolderForm(){
 			formSelector.html(out);
 		}
 	});
-	$("#moveFolderForm").dialog({
-		title: $("#moveFolderForm").data("title"),
+	$('#moveFolderForm').dialog({
+		title: $('#moveFolderForm').data('title'),
 		modal: true,
 		resizable: false,
 		minWidth: 406,
 		buttons: [
 			{
-				text: $("#moveFolderForm").data("cancel"),
+				text: $('#moveFolderForm').data('cancel'),
 				click: function(){
-					$(this).dialog("close");
+					$(this).dialog('close');
 				}
 			},
 			{
-				text: $("#moveFolderForm").data("move"),
+				text: $('#moveFolderForm').data('move'),
 				click: function(){
-					$("#optionFolderHiddenFieldValue").val( $("#moveFormDirectoryList").val() );
-					$("#optionFolderForm").submit();
+					$('#optionFolderHiddenFieldValue').val( $('#moveFormDirectoryList').val() );
+					$('#optionFolderForm').submit();
 				}
 			},
 			

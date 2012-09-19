@@ -171,6 +171,7 @@
 					<tr>
 						<th class="thleft"><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=name"><?php echo Utils::t('Map'); ?></a></th>
 						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=env"><?php echo Utils::t('Environment'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=type"><?php echo Utils::t('Type'); ?></a></th>
 						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
@@ -199,6 +200,7 @@
 								$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($map['Recent']){ $showMapList .= ' recent'; } $showMapList .= $mapClass.'">'
 									.'<td class="imgleft"><img src="'.$pathRessources.'images/16/'.$mapImg.'.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
 									.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
+									.'<td><span title="'.$map['Type']['FullName'].'">'.$map['Type']['Name'].'</span></td>'
 									.'<td>'.$map['Author'].'</td>'
 									.'<td class="checkbox"><input type="checkbox" name="map[]" value="'.$map['FileName'].'" /></td>'
 								.'</tr>';
