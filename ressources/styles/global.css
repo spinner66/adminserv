@@ -1792,6 +1792,71 @@ a.tmnick_externallink:hover {
 }
 
 
+
+/* ColorPicker
+------------------------*/
+#colorPickerTeam1 {
+	background: #0000ff;
+}
+#colorPickerTeam2 {
+	background: #ff0000;
+}
+.section-gameinfos .colorSelectorWrapper {
+	position: relative;
+	float: right;
+}
+.section-gameinfos .colorSelector {
+	position: absolute;
+	top: 0;
+	right: 38px;
+	border-width: 2px 0 2px 2px;
+}
+.colorSelector {
+	position: relative;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	border: 2px solid #ddd;
+}
+.colorpicker {
+	position: absolute;
+	top: 22px;
+	left: -2px;
+	z-index: 1000;
+	display: none;
+	width: 47px;
+	height: 169px;
+	background: #ddd;
+	overflow: hidden;
+}
+.colorpicker_hue {
+	position: absolute;
+	top: 9px;
+	left: 6px;
+	width: 35px;
+	height: 150px;
+	cursor: n-resize;
+	background: url("../images/colorpicker/slider.png") no-repeat center top;
+}
+.colorpicker_hue > div {
+	position: absolute;
+	left: 0;
+	margin: -4px 0 0;
+	width: 35px;
+	height: 9px;
+	background: url("../images/colorpicker/picker.png") no-repeat;
+	overflow: hidden;
+}
+.colorpicker_color,
+.colorpicker_new_color,
+.colorpicker_field,
+.colorpicker_hex,
+.colorpicker_submit,
+.colorpicker_current_color {
+	display: none;
+}
+
+
 /* DisplayServ
 -------------------- */
 #displayserv {

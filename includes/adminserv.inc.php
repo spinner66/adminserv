@@ -303,7 +303,6 @@ abstract class AdminServUI {
 	*/
 	public static function getCss($path = AdminServConfig::PATH_RESSOURCES){
 		$out = '<link rel="stylesheet" href="'.$path.'styles/jquery-ui.css" />'."\n\t\t"
-		.'<link rel="stylesheet" href="'.$path.'styles/colorpicker.css" />'."\n\t\t"
 		.'<link rel="stylesheet" href="'.$path.'styles/fileuploader.css" />'."\n\t\t"
 		.'<link rel="stylesheet" href="'.$path.'styles/global.css" />'."\n\t\t"
 		.'<!--[if IE]><link rel="stylesheet" href="'.$path.'styles/ie.css" /><![endif]-->'."\n\t\t";
@@ -1217,7 +1216,11 @@ abstract class AdminServ {
 	* @return string
 	*/
 	public static function formatScriptName($scriptName){
-		return str_ireplace('.script.txt', '', $scriptName);
+		$out = str_ireplace('.script.txt', '', $scriptName);
+		$scriptNameEx = explode('\\', $out);
+		$out = $scriptNameEx[count($scriptNameEx)-1];
+		
+		return $out;
 	}
 	
 	
@@ -1283,7 +1286,14 @@ abstract class AdminServ {
 			
 			// MapThumbnail
 			if( isset($queriesData['GetMapsDirectory']) && $currentMapInfo['FileName'] != null){
-				$Gbx = new GBXChallengeFetcher($queriesData['GetMapsDirectory'].$currentMapInfo['FileName'], true, true);
+				if(SERVER_VERSION_NAME == 'TmForever'){
+					$Gbx = new GBXChallengeFetcher($queriesData['GetMapsDirectory'].$currentMapInfo['FileName'], false, true);
+				}
+				else{
+					$Gbx = new GBXChallMapFetcher(false, true);
+					$Gbx->processFile($queriesData['GetMapsDirectory'].$currentMapInfo['FileName']);
+				}
+				
 				$out['map']['thumb'] = base64_encode($Gbx->thumbnail);
 			}
 			else{
@@ -1848,6 +1858,10 @@ abstract class AdminServ {
 					$out['lst'][$i]['Author'] = $map['Author'];
 					$out['lst'][$i]['GoldTime'] = TimeDate::format($map['GoldTime']);
 					$out['lst'][$i]['CopperPrice'] = $map['CopperPrice'];
+					$out['lst'][$i]['Type']['Name'] = self::formatScriptName($map['MapType']);
+					$out['lst'][$i]['Type']['FullName'] = $map['MapType'];
+					$out['lst'][$i]['Style']['Name'] = self::formatScriptName($map['MapStyle']);
+					$out['lst'][$i]['Style']['FullName'] = $map['MapStyle'];
 					$i++;
 				}
 			}
@@ -1980,7 +1994,13 @@ abstract class AdminServ {
 						$dbExt = File::getDoubleExtension($file);
 						if( in_array($dbExt, AdminServConfig::$MAP_EXTENSION) ){
 							// Données
-							$Gbx = new GBXChallengeFetcher($path.$file, true);
+							if(SERVER_VERSION_NAME == 'TmForever'){
+								$Gbx = new GBXChallengeFetcher($path.$file);
+							}
+							else{
+								$Gbx = new GBXChallMapFetcher();
+								$Gbx->processFile($path.$file);
+							}
 							
 							// Name
 							$filename = $Gbx->name;
@@ -2007,11 +2027,12 @@ abstract class AdminServ {
 							$out['lst'][$i]['Recent'] = $values['recent'];
 							
 							// MapType
-							//$modeScriptInfo = $Gbx->
-							//$out['lst'][$i]['Script']['Name'] = 
-							//$out['lst'][$i]['Script']['CompatibleTypes'] = 
-							//$out['lst'][$i]['Script']['Type'] = 
-							//$out['lst'][$i]['Script']['Description'] = 
+							$mapType = $Gbx->mapType;
+							if($mapType == null && $Gbx->typeName != null){
+								$mapType = $Gbx->typeName;
+							}
+							$out['lst'][$i]['Type']['Name'] = self::formatScriptName($mapType);
+							$out['lst'][$i]['Type']['FullName'] = $mapType;
 							
 							// On server
 							$out['lst'][$i]['OnServer'] = false;
@@ -2041,6 +2062,9 @@ abstract class AdminServ {
 								break;
 							case 'env':
 								uasort($out['lst'], 'AdminServSort::sortByEnviro');
+								break;
+							case 'type':
+								uasort($out['lst'], 'AdminServSort::sortByType');
 								break;
 							case 'author':
 								uasort($out['lst'], 'AdminServSort::sortByAuthor');
@@ -2542,6 +2566,16 @@ abstract class AdminServSort {
 			return 0;
 		}
 		if($a['Environnement'] < $b['Environnement']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
+	public static function sortByType($a, $b){
+		if($a['Type']['Name'] == $b['Type']['Name']){
+			return 0;
+		}
+		if($a['Type']['Name'] < $b['Type']['Name']){
 			return -1;
 		}else{
 			return 1;
