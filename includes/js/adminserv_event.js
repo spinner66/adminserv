@@ -71,6 +71,10 @@ $(document).ready(function(){
 			getServerAdminLevel();
 			$('select#as_server').change(function(){
 				getServerAdminLevel();
+				if( $('#error').css('display') == 'block' ){
+					$('#error').attr('hidden', true);
+					$('#error').fadeOut('fast');
+				}
 			});
 			
 			// Connexion
@@ -245,7 +249,7 @@ $(document).ready(function(){
 			
 			// Mode détail
 			$('#detailMode').click(function(){
-				setGeneralDetailMode();
+				$('#playerlist').setDetailMode();
 				return false;
 			});
 			
@@ -266,14 +270,14 @@ $(document).ready(function(){
 			$('input#ServerName').keyup(function(event){
 				var key = event.keyCode;
 				if(key != 13 && key != 37 && key != 39){
-					getPreviewSrvOpts($(this).val(), '#serverNameHtml');
+					$('#serverNameHtml').getColorStr( $(this).val() );
 				}
 			});
 			// ServerComment
 			$('textarea#ServerComment').keyup(function(event){
 				var key = event.keyCode;
 				if(key != 37 && key != 39){
-					getPreviewSrvOpts('$i'+ $(this).val(), '#serverCommentHtml');
+					$('#serverCommentHtml').getColorStr('$i'+ $(this).val() );
 				}
 			});
 		}
@@ -532,7 +536,7 @@ $(document).ready(function(){
 		else if( $('body').hasClass('section-maps-list') ){
 			// Mise à jour de la liste
 			setInterval(function(){
-				getMapList(getMode(), getCurrentSort());
+				getMapList(getMode());
 			}, 10000);
 			
 			// Checkbox
@@ -568,16 +572,7 @@ $(document).ready(function(){
 			
 			// Mode détail
 			$('#detailMode').click(function(){
-				setMapslistDetailMode();
-				return false;
-			});
-			
-			// Tris
-			$('#maplist table th a').click(function(){
-				var sort = $(this).attr('href');
-				sort = sort.split('=')[1];
-				$('#maplist').addClass('loading');
-				getMapList(getMode(), sort);
+				$('#maplist').setDetailMode();
 				return false;
 			});
 		}

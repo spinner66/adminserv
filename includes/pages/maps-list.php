@@ -60,11 +60,11 @@
 			<table>
 				<thead>
 					<tr>
-						<th class="thleft"><a href="?sort=name"><?php echo Utils::t('Map'); ?></a></th>
-						<th><a href="?sort=env"><?php echo Utils::t('Environment'); ?></a></th>
-						<th><a href="?sort=author"><?php echo Utils::t('Author'); ?></a></th>
-						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=goldtime"><?php echo Utils::t('Gold time'); ?></a></th>
-						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=cost"><?php echo Utils::t('Cost'); ?></a></th>
+						<th class="thleft"><?php echo Utils::t('Map'); ?></th>
+						<th><?php echo Utils::t('Environment'); ?></th>
+						<th><?php echo Utils::t('Author'); ?></th>
+						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Gold time'); ?></th>
+						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Cost'); ?></th>
 						<th class="thright"></th>
 					</tr>
 				</thead>

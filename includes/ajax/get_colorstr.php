@@ -1,6 +1,6 @@
 <?php
 	/**
-	* Prévisualise le nom du serveur et son commentaire
+	* Retourne une chaine de caractère en couleur html
 	*/
 	
 	// INCLUDES
