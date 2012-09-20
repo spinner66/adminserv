@@ -208,6 +208,7 @@
 								<tr>
 									<th class="thleft"><?php echo Utils::t('Map'); ?></th>
 									<th><?php echo Utils::t('Environment'); ?></th>
+									<th><?php echo Utils::t('Type'); ?></th>
 									<th><?php echo Utils::t('Author'); ?></th>
 									<th class="thright"></th>
 								</tr>

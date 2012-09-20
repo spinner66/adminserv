@@ -106,14 +106,14 @@
 						<td class="value" colspan="3">
 							<input class="text width3" type="text" name="ServerName" id="ServerName" maxlength="75" value="<?php echo $srvOpt['Name']; ?>" />
 						</td>
-						<td class="preview" id="serverNameHtml">[<?php echo $srvOpt['NameHtml']; ?>]</td>
+						<td class="preview">[<span id="serverNameHtml"><?php echo $srvOpt['NameHtml']; ?></span>]</td>
 					</tr>
 					<tr class="serverComment">
 						<td class="key"><label for="ServerComment"><?php echo Utils::t('Comment'); ?></label></td>
 						<td class="value" colspan="3">
 							<textarea class="width3" name="ServerComment" id="ServerComment" maxlength="255"><?php echo $srvOpt['Comment']; ?></textarea>
 						</td>
-						<td class="preview" id="serverCommentHtml">[<?php echo $srvOpt['CommentHtml']; ?>]</td>
+						<td class="preview">[<span id="serverCommentHtml"><?php echo $srvOpt['CommentHtml']; ?></span>]</td>
 					</tr>
 					<tr>
 						<td class="key"><label for="ServerPassword"><?php echo Utils::t('Player password'); ?></label></td>

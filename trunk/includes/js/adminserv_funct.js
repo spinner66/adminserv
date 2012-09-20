@@ -145,11 +145,6 @@ function getServerAdminLevel(){
 	
 	$.getJSON(getIncludesPath()+'ajax/get_server_adminlevel.php', {srv: serverName}, function(response){
 		if(response.levels != null){
-			if( $('#error').css('display') == 'block' ){
-				$('#error').attr('hidden', true);
-				$('#error').fadeOut('fast');
-			}
-			
 			$.each(response.levels, function(i, n){
 				if(response.last != null && response.last == n){ var selected = ' selected="selected"'; }
 				else{ var selected = ''; }
@@ -265,18 +260,21 @@ function getCurrentServerInfo(mode, sort){
 
 
 /**
-* Récupère et affiche le nom du serveur et son commentaire
+* Transforme une chaine de caractère de couleur en HTML
 *
-* @param string str  -> La chaine de caractère à transformer en HTML
-* @param string dest -> Selecteur Jquery pour afficher les données
+* @param string str
 */
-function getPreviewSrvOpts(str, dest){
-	$.getJSON(getIncludesPath()+'ajax/preview_srvopts.php', {t: str}, function(data){
-		if(data != null){
-			$(dest).html('['+data.str+']');
-		}
-	});
-}
+(function($){
+	$.fn.getColorStr = function(str){
+		var selector = $(this);
+		
+		$.getJSON(getIncludesPath()+'ajax/get_colorstr.php', {t: str}, function(data){
+			if(data != null){
+				selector.html(data.str);
+			}
+		});
+	};
+})(jQuery);
 
 
 /**
@@ -743,49 +741,39 @@ function setMapsOrderSort(sort, order){
 
 
 /**
-* Gestion du mode détail de la page general
+* Met en place l'affichage en mode détail
 */
-function setGeneralDetailMode(){
-	var sort = getCurrentSort();
-	if( $('#detailMode').text() == $('#detailMode').data('textdetail') ){
-		getCurrentServerInfo('detail', sort);
-		$('#detailMode').text( $('#detailMode').data('textsimple') );
-		$('#playerlist table th.detailModeTh').attr('hidden', false);
-		$('#playerlist table th.firstTh').removeClass('thleft');
-		$('#playerlist').addClass('loading');
-		$('#detailMode').data('statusmode', 'detail');
-	}
-	else{
-		getCurrentServerInfo('simple', sort);
-		$('#detailMode').text( $('#detailMode').data('textdetail') );
-		$('#playerlist table th.detailModeTh').attr('hidden', true);
-		$('#playerlist table th.firstTh').addClass('thleft');
-		$('#playerlist').addClass('loading');
-		$('#detailMode').data('statusmode', 'simple');
-	}
-}
-
-
-/**
-* Gestion du mode détail de la page maps-list
-*/
-function setMapslistDetailMode(){
-	var sort = getCurrentSort();
-	if( $('#detailMode').text() == $('#detailMode').data('textdetail') ){
-		getMapList('detail', sort);
-		$('#detailMode').text( $('#detailMode').data('textsimple') );
-		$('#maplist table th.detailModeTh').attr('hidden', false);
-		$('#maplist').addClass('loading');
-		$('#detailMode').data('statusmode', 'detail');
-	}
-	else{
-		getMapList('simple', sort);
-		$('#detailMode').text( $('#detailMode').data('textdetail') );
-		$('#maplist table th.detailModeTh').attr('hidden', true);
-		$('#maplist').addClass('loading');
-		$('#detailMode').data('statusmode', 'simple');
-	}
-}
+(function($){
+	$.fn.setDetailMode = function(){
+		var sort = getCurrentSort();
+		var type = $(this).attr('id');
+		
+		if( $('#detailMode').text() == $('#detailMode').data('textdetail') ){
+			if(type == 'maplist'){
+				getMapList('detail', sort);
+			}
+			else if(type == 'playerlist'){
+				getCurrentServerInfo('detail', sort);
+			}
+			$('#detailMode').text( $('#detailMode').data('textsimple') );
+			$(this).find('table th.detailModeTh').attr('hidden', false);
+			$(this).addClass('loading');
+			$('#detailMode').data('statusmode', 'detail');
+		}
+		else{
+			if(type == 'maplist'){
+				getMapList('simple', sort);
+			}
+			else if(type == 'playerlist'){
+				getCurrentServerInfo('simple', sort);
+			}
+			$('#detailMode').text( $('#detailMode').data('textdetail') );
+			$(this).find('table th.detailModeTh').attr('hidden', true);
+			$(this).addClass('loading');
+			$('#detailMode').data('statusmode', 'simple');
+		}
+	};
+})(jQuery);
 
 
 /**
@@ -867,33 +855,6 @@ function setMapslistDetailMode(){
 	};
 })(jQuery);
 
-
-/**
-* Récupère les valeurs des lignes sélectionnées
-*
-* @return array JSON
-*/
-function getJsonSelectedLines(){
-	var selectedFiles = $('.cadre table tbody tr.selected');
-	var files = '[';
-	
-	if(selectedFiles.length > 1){
-		$.each(selectedFiles, function(i, n){
-			if(i == selectedFiles.length-1){
-				files += '"'+n.children[3].children[0].value+'"';
-			}
-			else{
-				files += '"'+n.children[3].children[0].value+'",';
-			}
-		});
-	}
-	else{
-		files += '"'+selectedFiles.find(".checkbox input").val()+'"';
-	}
-	files += ']';
-	
-	return files;
-}
 
 
 /**
@@ -1032,13 +993,19 @@ function matchset_mapSelection(removeId){
 			if( typeof(data.lst) == 'object' && data.lst.length > 0 ){
 				$.each(data.lst, function(i, map){
 					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
-						+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
-							+'<span title="'+map.FileName+'">'+map.Name+'</span>'
-						out += '</td>'
-						+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
-						+'<td>'+map.Author+'</td>';
-						out += '<td class="checkbox imgcenter"><a href="." title="'+$("#mapSelectionDialog").data("remove")+'"><img src="'+path_ressources+'images/16/delete.png" alt="" /></a></td>'
-					+'</tr>';
+						+ '<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
+							+ '<span title="'+map.FileName+'">'+map.Name+'</span>'
+						+ '</td>'
+						+ '<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>';
+						if(map.Type){
+							out += '<td><span title="'+map.Type.FullName+'">'+map.Type.Name+'</span></td>';
+						}
+						else{
+							out += '<td>-</td>';
+						}
+						out += '<td>'+map.Author+'</td>'
+						+ '<td class="checkbox imgcenter"><a href="." title="'+$("#mapSelectionDialog").data("remove")+'"><img src="'+path_ressources+'images/16/delete.png" alt="" /></a></td>'
+					+ '</tr>';
 				});
 			}
 			else{
