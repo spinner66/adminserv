@@ -339,5 +339,6 @@ $translate = array(
 	'This path was not required rights:' => 'Le chemin suivant n\'a pas les droits requis :',
 	'needs' => 'a besoin de',
 	'Plugin error: script.php or view.php file is missing.' => 'Erreur de plugin : le fichier script.php ou view.php est manquant.',
+	'No server admin levels configured.' => 'Aucun niveau admin configuré pour ce serveur.',
 );
 ?>
