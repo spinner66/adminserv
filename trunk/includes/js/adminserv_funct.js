@@ -144,7 +144,12 @@ function getServerAdminLevel(){
 	var adminLevelList = '';
 	
 	$.getJSON(getIncludesPath()+'ajax/get_server_adminlevel.php', {srv: serverName}, function(response){
-		if(response != null){
+		if(response.levels != null){
+			if( $('#error').css('display') == 'block' ){
+				$('#error').attr('hidden', true);
+				$('#error').fadeOut('fast');
+			}
+			
 			$.each(response.levels, function(i, n){
 				if(response.last != null && response.last == n){ var selected = ' selected="selected"'; }
 				else{ var selected = ''; }
@@ -154,7 +159,8 @@ function getServerAdminLevel(){
 			$('select#as_adminlevel').html(adminLevelList);
 		}
 		else{
-			error('Aucun niveau admin configuré pour ce serveur.');
+			$('select#as_adminlevel').empty();
+			error( $('select#as_adminlevel').data('error') );
 		}
 	});
 }
