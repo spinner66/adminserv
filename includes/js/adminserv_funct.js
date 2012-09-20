@@ -438,7 +438,8 @@ function addChatServerLine(){
 * Initialisation de l'uploader Ajax
 */
 function initializeUploader(){
-	uploader = new qq.FileUploader({
+	var statusFiles = [];
+	var uploader = new qq.FileUploader({
 		element: $('#formUpload')[0],
 		action: getIncludesPath()+'ajax/upload.php',
 		maxConnections: 2,
@@ -479,11 +480,27 @@ function initializeUploader(){
 		onComplete: function(id, fileName, responseJSON){
 			window.onbeforeunload = function(){}
 			
-			var uploader;
-			
-			if(responseJSON.success == true){
-				if(uploader._options.params.gtlm){
-					location.href = '?p='+$('#formUpload').data('mapspagename');
+			if(uploader._options.params.gtlm){
+				if(responseJSON.success){
+					var status = true;
+				}
+				else{
+					var status = false;
+				}
+				statusFiles.push(status);
+				
+				if(uploader.getInProgress() == 0){
+					var allowRedirect = true;
+					for(var i = 0; i < statusFiles.length; i++){
+						if(statusFiles[i] === false){
+							allowRedirect = false;
+							break;
+						}
+					}
+					
+					if(allowRedirect){
+						location.href = '?p='+$('#formUpload').data('mapspagename');
+					}
 				}
 			}
 		},
@@ -501,6 +518,8 @@ function initializeUploader(){
 			error(message);
 		}
 	});
+	
+	return uploader;
 }
 
 

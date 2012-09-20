@@ -586,7 +586,7 @@ $(document).ready(function(){
 		*/
 		else if( $('body').hasClass('section-maps-upload') ){
 			//Upload
-			initializeUploader();
+			var uploader = initializeUploader();
 			
 			// Mode de transfert
 			$('.transferMode li').click(function(){
@@ -597,12 +597,17 @@ $(document).ready(function(){
 				if( $(this).children('input').val() == 'local' ){
 					$('input#GotoListMaps').attr('checked', false);
 				}
-				initializeUploader();
+				uploader.setParams({
+					type: $('.transferMode li.selected input').val()
+				});
 			});
 			
 			// Options
 			$('.options-checkbox input, .options-checkbox label').click(function(){
-				initializeUploader();
+				uploader.setParams({
+					mset: ( $('#SaveCurrentMatchSettings').attr('checked') ) ? true : false,
+					gtlm: ( $('#GotoListMaps').attr('checked') ) ? true : false
+				});
 			});
 		}
 		/**
