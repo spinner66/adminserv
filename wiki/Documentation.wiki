@@ -1,4 +1,5 @@
 #summary AdminServ, EN
+#labels Featured,Phase-Requirements,Phase-Deploy,Phase-Implementation
 
 =Documentation AdminServ=
 
