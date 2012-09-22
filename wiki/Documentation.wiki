@@ -46,14 +46,14 @@ To return to the online configuration, just add */config* in the url. You can al
 It is also possible to edit the configuration file of servers in the Adminserv's folder: */config/servers.cfg.php*
 Few notions of PHP will be helpful. The server configuration is the following (change the values ​​in italic):
 {{{
-'_Server name_' => array(
-    'address' => '_localhost_',
-    'port' => _5000_,
-    'matchsettings' => '_matchsettings_name_',
+'Server name' => array(
+    'address' => 'localhost',
+    'port' => 5000,
+    'matchsettings' => 'matchsettings_name',
     'adminlevel' => array(
-        'SuperAdmin' => '_all_’,
-        'Admin' => '_all_',
-        'User' => '_all_',
+        'SuperAdmin' => 'all’,
+        'Admin' => 'all',
+        'User' => 'all',
     )
 ),
 }}}
@@ -106,7 +106,7 @@ AdminServLogs ::add ('file_name_log', 'writing text');
         ‘pluginfoldername’,
     );
 }}}
-  * *PLUGINS_LIST_TYPE*: The method used for the configuration file for plugins. By default replace, the new file replaces the current configuration. But you can also add the following plugins with add.
+  * *PLUGINS_LIST_TYPE*: The method used for the configuration file for plugins. By default `replace`, the new file replaces the current configuration. But you can also add the following plugins with `add`.
 
 ===DataBaseConfig & FTPConfig===
 These two configurations are not used by Adminserv. But they can be used for eventual plugins ...
