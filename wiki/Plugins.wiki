@@ -35,29 +35,29 @@ Each of these variables are tested and return null (category, view, directory) o
 
 ==Constants are:==
   * *USER_PAGE*: name of the current page
-  * USER_THEME: name of the current theme
-  * USER_LANG: code current lang
-  * USER_ADMINLEVEL: admin level used
-  * USER_MODE: single display mode or detail
-  * CURRENT_PLUGIN: name of the current plugin folder
-  * SERVER_ID: server number in relation to the order of the configuration
-  * SERVER_NAME: Name server
-  * SERVER_ADDR: address of the server
-  * SERVER_XMLRPC_PORT: xmlrpc port of the server
-  * SERVER_MATCHSET: matchsettings name
-  * SERVER_ADMINLEVEL: table containing all configuration levels admins (use unserialize to exploit the string)
-  * SERVER_VERSION_NAME: set name used by the TmForever or Maniaplanet server
-  * SERVER_VERSION: dedicated server version
-  * SERVER_BUILD: date version of the dedicated server
-  * SERVER_LOGIN: Dedicated Server login
-  * SERVER_TITLE: Game title used on the server: TMCanyon, SMStorm, etc.. Is null if the server is connected on TmForever.
-  * SERVER_PUBLISHED_IP: public IP address to connect to the server
-  * SERVER_PORT: The port used by the server
-  * SERVER_P2P_PORT: P2P port used by the server
-  * IS_SERVER: Value of GetSystemInfo()
-  * IS_DEDICATED: Value of GetSystemInfo()
-  * IS_RELAY: Determines if the server is a relay
-  * API_VERSION: date version of the API
-  * LINK_PROTOCOL: name of the protocol used in the access links tmtp or Maniaplanet
+  * *USER_THEME*: name of the current theme
+  * *USER_LANG*: code current lang
+  * *USER_ADMINLEVEL*: admin level used
+  * *USER_MODE*: single display mode or detail
+  * *CURRENT_PLUGIN*: name of the current plugin folder
+  * *SERVER_ID*: server number in relation to the order of the configuration
+  * *SERVER_NAME*: Name server
+  * *SERVER_ADDR*: address of the server
+  * *SERVER_XMLRPC_PORT*: xmlrpc port of the server
+  * *SERVER_MATCHSET*: matchsettings name
+  * *SERVER_ADMINLEVEL*: table containing all configuration levels admins (use unserialize to exploit the string)
+  * *SERVER_VERSION_NAME*: set name used by the TmForever or Maniaplanet server
+  * *SERVER_VERSION*: dedicated server version
+  * *SERVER_BUILD*: date version of the dedicated server
+  * *SERVER_LOGIN*: Dedicated Server login
+  * *SERVER_TITLE*: Game title used on the server: TMCanyon, SMStorm, etc.. Is null if the server is connected on TmForever.
+  * *SERVER_PUBLISHED_IP*: public IP address to connect to the server
+  * *SERVER_PORT*: The port used by the server
+  * *SERVER_P2P_PORT*: P2P port used by the server
+  * *IS_SERVER*: Value of GetSystemInfo()
+  * *IS_DEDICATED*: Value of GetSystemInfo()
+  * *IS_RELAY*: Determines if the server is a relay
+  * *API_VERSION*: date version of the API
+  * *LINK_PROTOCOL*: name of the protocol used in the access links tmtp or Maniaplanet
 
-You can view it with AdminServ::debug();
+You can view it with `AdminServ::debug();`
