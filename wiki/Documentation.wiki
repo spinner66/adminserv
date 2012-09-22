@@ -38,6 +38,7 @@ The next information are optional:
 
 
 Once the server is registered, you can view the list of servers in the *Servers* tab and begin to manage the server by clicking on *Back* to the top right.
+
 To return to the online configuration, just add */config* in the url. You can also change the password at any time in the *Change the password tab*.
 
 
