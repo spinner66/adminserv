@@ -154,7 +154,7 @@ To the display of DisplayServ, you must enable the option `use_displayserv` in t
   * The button *Cancel the Vote* appears only if the vote is in progress on the server.
   * It is possible to stop the server only on this page. Use the `?stop` in the url. This action is available only to the level SuperAdmin.
 
-==Options of the server==
+=Server options==
   * The information is changed directly on the server but are not stored in the configuration file dedicated_cfg.txt
   * For the name and comment of the server, there is an overview of the display ingame.
 
