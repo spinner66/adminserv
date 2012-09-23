@@ -1,93 +1,46 @@
 <?php
 	// ENREGISTREMENT
 	if( isset($_POST['savesrvopts']) ){
-		// Clés
-		if(SERVER_VERSION_NAME == 'TmForever'){
-			$keys = array(
-				'allowMapDownload' => 'AllowChallengeDownload'
-			);
+		$ChangeAuthPassword = null;
+		if( isset($_POST['ChangeAuthPassword']) && $_POST['ChangeAuthPassword'] != null ){
+			$ChangeAuthLevel = $_POST['ChangeAuthLevel'];
+			$ChangeAuthPassword = trim($_POST['ChangeAuthPassword']);
 		}
-		else{
-			$keys = array(
-				'allowMapDownload' => 'AllowMapDownload'
-			);
-		}
-		
-		// Variables
-		$IsP2PUpload = array_key_exists('IsP2PUpload', $_POST);
-		$IsP2PDownload = array_key_exists('IsP2PDownload', $_POST);
-		$NextCallVoteTimeOut = TimeDate::secToMillisec( intval($_POST['NextCallVoteTimeOut']) );
-		$HideServer = array_key_exists('HideServer', $_POST);
-		$AllowMapDownload = array_key_exists($keys['allowMapDownload'], $_POST);
-		$AutoSaveReplays = array_key_exists('AutoSaveReplays', $_POST);
-		if($_POST['CallVoteRatio'] == 0){ $CallVoteRatio = 0.0; }
-		else if($_POST['CallVoteRatio'] == 1){ $CallVoteRatio = 1.0; }
-		else{ $CallVoteRatio = $_POST['CallVoteRatio']; }
-		$struct = array(
-			'Name' => stripslashes($_POST['ServerName']),
-			'Comment' => stripslashes($_POST['ServerComment']),
-			'Password' => trim($_POST['ServerPassword']),
-			'PasswordForSpectator' => trim($_POST['SpectatorPassword']),
-			'NextMaxPlayers' => intval($_POST['NextMaxPlayers']),
-			'NextMaxSpectators' => intval($_POST['NextMaxSpectators']),
-			'IsP2PUpload' => $IsP2PUpload,
-			'IsP2PDownload' => $IsP2PDownload,
-			'NextLadderMode' => intval($_POST['NextLadderMode']),
-			'NextVehicleNetQuality' => intval($_POST['NextVehicleNetQuality']),
-			'NextCallVoteTimeOut' => $NextCallVoteTimeOut,
-			'CallVoteRatio' => floatval($CallVoteRatio),
-			$keys['allowMapDownload'] => $AllowMapDownload,
-			'AutoSaveReplays' => $AutoSaveReplays,
-			'HideServer' => $HideServer
-		);
+		$struct = AdminServ::getServerOptionsStructFromPOST();
 		
 		// Requêtes
-		$client->addCall('SetServerOptions', $struct);
-		$client->addCall('SetBuddyNotification', array('', array_key_exists('BuddyNotification', $_POST)) );
-		$client->addCall('DisableHorns', array(array_key_exists('DisableHorns', $_POST)) );
-		if( !$client->multiquery() ){
+		if( !$client->query('SetServerOptions', $struct) ){
 			AdminServ::error();
 		}
 		else{
-			AdminServLogs::add('action', 'Save server options');
-			Utils::redirection(false, '?p='.USER_PAGE);
+			$client->addCall('SetBuddyNotification', array('', array_key_exists('BuddyNotification', $_POST)) );
+			$client->addCall('DisableHorns', array(array_key_exists('DisableHorns', $_POST)) );
+			if($ChangeAuthPassword){
+				$client->addCall('ChangeAuthPassword', array($ChangeAuthLevel, $ChangeAuthPassword) );
+			}
+			if( !$client->multiquery() ){
+				AdminServ::error();
+			}
+			else{
+				if($ChangeAuthPassword){
+					if(USER_ADMINLEVEL === $ChangeAuthLevel){
+						$_SESSION['adminserv']['password'] = $ChangeAuthPassword;
+					}
+					AdminServ::info( Utils::t('You changed the password "!authLevel", remember it at the next connection!', array('!authLevel' => $ChangeAuthLevel)) );
+					AdminServLogs::add('action', 'Change authentication password for '.$ChangeAuthLevel.' level');
+				}
+				else{
+					AdminServLogs::add('action', 'Save server options');
+				}
+				Utils::redirection(false, '?p='.USER_PAGE);
+			}
 		}
 	}
 	
 	
 	// LECTURE
-	if(SERVER_VERSION_NAME == 'TmForever'){
-		$client->addCall('GetServerOptions', array(1) );
-	}
-	else{
-		$client->addCall('GetServerOptions');
-	}
-	$client->addCall('GetBuddyNotification', array('') );
-	$client->addCall('GetHideServer');
-	if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-		$client->addCall('AreHornsDisabled');
-	}
-	if( !$client->multiquery() ){
-		AdminServ::error();
-	}
-	else{
-		$queriesData = $client->getMultiqueryResponse();
-		$srvOpt = $queriesData['GetServerOptions'];
-		$srvOpt['Name'] = stripslashes($srvOpt['Name']);
-		$srvOpt['NameHtml'] = TmNick::toHtml($srvOpt['Name'], 10, false, false, '#666');
-		$srvOpt['Comment'] = stripslashes($srvOpt['Comment']);
-		$srvOpt['CommentHtml'] = TmNick::toHtml('$i'.nl2br($srvOpt['Comment']), 10, false, false, '#666');
-		if($srvOpt['CurrentLadderMode'] !== 0){ $srvOpt['CurrentLadderModeName'] = Utils::t('Forced'); }
-		else{ $srvOpt['CurrentLadderModeName'] = Utils::t('Inactive'); }
-		if($srvOpt['CurrentVehicleNetQuality'] !== 0){ $srvOpt['CurrentVehicleNetQualityName'] = Utils::t('High'); }
-		else{ $srvOpt['CurrentVehicleNetQualityName'] = Utils::t('Fast'); }
-		$srvOpt['BuddyNotification'] = $queriesData['GetBuddyNotification'];
-		$srvOpt['HideServer'] = $queriesData['GetHideServer'];
-		$srvOpt['DisableHorns'] = null;
-		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-			$srvOpt['DisableHorns'] = $queriesData['AreHornsDisabled'];
-		}
-	}
+	$srvOpt = AdminServ::getServerOptions();
+	$adminLevels = AdminServ::getServerAdminLevel();
 	
 	
 	// HTML
@@ -251,6 +204,30 @@
 					<?php } ?>
 				</table>
 			</fieldset>
+			
+			<?php if( AdminServ::isAdminLevel('SuperAdmin') ){ ?>
+				<fieldset class="srvopts_changeauthpassword">
+					<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Change authentication password'); ?></legend>
+					<table>
+						<tr>
+							<td class="key"><label for="ChangeAuthLevel"><?php echo Utils::t('Admin level'); ?></label></td>
+							<td class="value col2">
+								<select name="ChangeAuthLevel" id="ChangeAuthLevel">
+									<?php
+										if( isset($adminLevels['levels']) && count($adminLevels['levels']) > 0 ){
+											foreach($adminLevels['levels'] as $levelId => $levelName){
+												echo '<option value="'.$levelName.'">'.$levelName.'</option>';
+											}
+										}
+									?>
+								</select>
+								<span class="changeauthpassword-arrow"> </span>
+								<input class="text" type="password" name="ChangeAuthPassword" id="ChangeAuthPassword" value="" />
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			<?php } ?>
 		</div>
 		<div class="fright save">
 			<input class="button light" type="submit" name="savesrvopts" id="savesrvopts" value="<?php echo Utils::t('Save'); ?>" />
