@@ -92,7 +92,7 @@ $(document).ready(function(){
 		/**
 		* Nouveau dossier
 		*/
-		$('a#newfolder').click(function(){
+		$('#newfolder').click(function(){
 			if( $('#form-new-folder').attr('hidden') ){
 				slideDownNewFolderForm();
 			}
@@ -220,7 +220,7 @@ $(document).ready(function(){
 			}, 10000);
 			
 			// Checkbox
-			$('input#checkAll').click(function(){
+			$('#checkAll').click(function(){
 				$('#playerlist').checkAll( $(this).attr('checked') );
 				
 				// Mise à jour du nb de lignes sélectionnées
@@ -267,18 +267,36 @@ $(document).ready(function(){
 		*/
 		else if( $('body').hasClass('section-srvopts') ){
 			// ServerName
-			$('input#ServerName').keyup(function(event){
+			$('#ServerName').keyup(function(event){
 				var key = event.keyCode;
 				if(key != 13 && key != 37 && key != 39){
 					$('#serverNameHtml').getColorStr( $(this).val() );
 				}
 			});
+			
 			// ServerComment
-			$('textarea#ServerComment').keyup(function(event){
+			$('#ServerComment').keyup(function(event){
 				var key = event.keyCode;
 				if(key != 37 && key != 39){
 					$('#serverCommentHtml').getColorStr('$i'+ $(this).val() );
 				}
+			});
+			
+			// ClientInputsMaxLatency
+			$('#ClientInputsMaxLatency').change(function(){
+				if( $(this).val() == 'more' ){
+					$(this).hide();
+					$('#ClientInputsMaxLatencyValue').fadeIn('fast').removeAttr('hidden');
+					$('#ClientInputsMaxLatencyValue').parent('td').find('.returnDefaultValue').fadeIn('fast').removeAttr('hidden');
+				}
+			});
+			// Revenir à la valeur par défaut
+			$('.returnDefaultValue').click(function(){
+				$(this).fadeOut().attr('hidden', true);
+				$('#ClientInputsMaxLatencyValue').hide().attr('hidden', true).val('');
+				$('#ClientInputsMaxLatency').fadeIn('fast').removeAttr('hidden').find('option').removeAttr('selected');
+				$('#ClientInputsMaxLatency option:first').select();
+				return false;
 			});
 		}
 		/**
@@ -295,12 +313,8 @@ $(document).ready(function(){
 			$('select#NextFinishTimeout').change(function(){
 				if( $(this).val() == 'more' ){
 					$(this).hide();
-					$('#NextFinishTimeoutValue').fadeIn('fast');
-					$('#NextFinishTimeoutValue').removeAttr('hidden');
-					$('#NextFinishTimeoutValue').val('15');
-					var defaultValueSelector = $('#NextFinishTimeoutValue').parent('td').parent('tr').children('td.preview').children('a.returnDefaultValue');
-					defaultValueSelector.fadeIn('fast');
-					defaultValueSelector.parent('td').removeAttr('hidden');
+					$('#NextFinishTimeoutValue').fadeIn('fast').removeAttr('hidden').val('15');
+					$('#NextFinishTimeoutValue').parent('td').parent('tr').find('.returnDefaultValue').fadeIn('fast').parent('td').removeAttr('hidden');
 				}
 			});
 			
@@ -308,17 +322,13 @@ $(document).ready(function(){
 			$('select#NextForceShowAllOpponents').change(function(){
 				if( $(this).val() == 'more' ){
 					$(this).hide();
-					$('#NextForceShowAllOpponentsValue').fadeIn('fast');
-					$('#NextForceShowAllOpponentsValue').removeAttr('hidden');
-					$('#NextForceShowAllOpponentsValue').val('2');
-					var defaultValueSelector = $('#NextForceShowAllOpponentsValue').parent('td').parent('tr').children('td.preview').children('a.returnDefaultValue');
-					defaultValueSelector.fadeIn('fast');
-					defaultValueSelector.parent('td').removeAttr('hidden');
+					$('#NextForceShowAllOpponentsValue').fadeIn('fast').removeAttr('hidden').val('2');
+					$('#NextForceShowAllOpponentsValue').parent('td').parent('tr').find('.returnDefaultValue').fadeIn('fast').parent('td').removeAttr('hidden');
 				}
 			});
 			
 			// Revenir à la valeur par défaut
-			$('a.returnDefaultValue').click(function(){
+			$('.returnDefaultValue').click(function(){
 				$(this).fadeOut();
 				$(this).attr('hidden', true);
 				var selectValueSelector = $(this).parent('td').parent('tr').children('td.next').children('select');
@@ -327,7 +337,7 @@ $(document).ready(function(){
 				inputValueSelector.attr('hidden', true);
 				inputValueSelector.val('');
 				selectValueSelector.fadeIn('fast');
-				selectValueSelector.children('option:first').removeAttr('selected');
+				selectValueSelector.children('option').removeAttr('selected');
 				selectValueSelector.children('option:first').select();
 				selectValueSelector.removeAttr('hidden');
 				return false;
@@ -367,24 +377,20 @@ $(document).ready(function(){
 			});
 			
 			// Script settings
-			$('a#getScriptSettings').click(function(){
+			$('#getScriptSettings').click(function(){
 				getScriptSettings();
 				return false;
 			});
 			
 			// Affichage sec -> min
 			$('#NextTimeAttackLimit, #NextLapsTimeLimit, #hotSeatTimeLimit').click(function(){
-				var sec = $(this).val();
-				var min = secToMin(sec);
-				$(this).parent('td').parent('tr').children('td.preview').html('['+min+' min]');
+				$(this).parent('td').parent('tr').children('td.preview').html('['+secToMin( $(this).val() )+' min]');
 			});
 			$('#NextTimeAttackLimit, #NextLapsTimeLimit, #hotSeatTimeLimit').blur(function(){
 				$(this).parent('td').parent('tr').children('td.preview').html('');
 			});
 			$('#NextTimeAttackLimit, #NextLapsTimeLimit, #hotSeatTimeLimit').keyup(function(){
-				var sec = $(this).val();
-				var min = secToMin(sec);
-				$(this).parent('td').parent('tr').children('td.preview').html('['+min+' min]');
+				$(this).parent('td').parent('tr').children('td.preview').html('['+secToMin( $(this).val() )+' min]');
 			});
 			
 			
@@ -411,8 +417,9 @@ $(document).ready(function(){
 					$('.creatematchset .maps').addClass('loading');
 					matchset_mapImportSelection();
 				});
+				
 				// Checkbox
-				$('input#checkAllMapImport').click(function(){
+				$('#checkAllMapImport').click(function(){
 					$('#mapImportSelectionDialog').checkAll( $(this).attr('checked') );
 					if( $('#mapImportSelectionDialog tr.current').hasClass('selected') ){
 						$('#mapImportSelectionDialog tr.current').removeClass('selected');
@@ -432,15 +439,15 @@ $(document).ready(function(){
 						$(this).children('td.checkbox').children('input').attr('checked', true);
 					}
 					// Mise à jour du CheckAll
-					$('#mapImportSelectionDialog').updateCheckAll( $('input#checkAllMapImport') );
+					$('#mapImportSelectionDialog').updateCheckAll( $('#checkAllMapImport') );
 				});
-				
 				
 				// Voir la sélection du matchsettings
 				$('#mapSelection').click(function(){
 					$('.creatematchset .maps').addClass('loading');
 					matchset_mapSelection();
 				});
+				
 				// Enlever une map de la sélection
 				$('#mapSelectionDialog tr a').live('click', function(){
 					matchset_mapSelection( parseInt($(this).parent('td').parent('tr')[0].sectionRowIndex) );
@@ -460,7 +467,7 @@ $(document).ready(function(){
 				// Submit
 				$('#savematchsetting').click(function(){
 					if( $('#nbMapSelected').text() == '0' ){
-						$('html').animate({scrollTop: 0}, 500);
+						scrollTop();
 						error( $(this).data('nomap'), true);
 						return false;
 					}
