@@ -998,9 +998,11 @@ abstract class AdminServ {
 					}
 					else{
 						if($fullInit){
+							$client->addCall('SetApiVersion', array(date('Y-m-d')) );
 							$client->addCall('GetVersion');
 							$client->addCall('GetSystemInfo');
 							$client->addCall('IsRelayServer');
+							
 							if( !$client->multiquery() ){
 								self::error();
 							}
@@ -1045,7 +1047,7 @@ abstract class AdminServ {
 									define('USER_MODE', $_SESSION['adminserv']['mode']);
 								}
 								
-								// TRACKMANIA FOREVER
+								// TmForever
 								if(SERVER_VERSION_NAME == 'TmForever'){
 									array_shift(ExtensionConfig::$GAMEMODES);
 								}
@@ -1285,7 +1287,7 @@ abstract class AdminServ {
 		if( self::isAdminLevel('SuperAdmin') ){
 			$client->addCall('GetNetworkStats');
 		}
-		$client->addCall('GetPlayerList', array(AdminServConfig::LIMIT_PLAYERS_LIST, 0) );
+		$client->addCall('GetPlayerList', array(AdminServConfig::LIMIT_PLAYERS_LIST, 0, 1) );
 		
 		if( !$client->multiquery() ){
 			$out['error'] = Utils::t('Client not initialized');
@@ -1375,7 +1377,7 @@ abstract class AdminServ {
 					$out['ply'][$i]['Login'] = $player['Login'];
 					
 					// PlayerStatus
-					if($player['IsSpectator'] != 0){ $playerStatus = Utils::t('Spectator'); }else{ $playerStatus = Utils::t('Player'); }
+					if($player['SpectatorStatus'] != 0){ $playerStatus = Utils::t('Spectator'); }else{ $playerStatus = Utils::t('Player'); }
 					$out['ply'][$i]['PlayerStatus'] = $playerStatus;
 					
 					// Autres
@@ -1383,8 +1385,7 @@ abstract class AdminServ {
 					$out['ply'][$i]['TeamId'] = $player['TeamId'];
 					if($player['TeamId'] == 0){ $teamName = Utils::t('Blue'); }else if($player['TeamId'] == 1){ $teamName = Utils::t('Red'); }else{ $teamName = Utils::t('Spectator'); }
 					$out['ply'][$i]['TeamName'] = $teamName;
-					$out['ply'][$i]['IsSpectator'] = $player['IsSpectator'];
-					$out['ply'][$i]['IsInOfficialMode'] = $player['IsInOfficialMode'];
+					$out['ply'][$i]['SpectatorStatus'] = $player['SpectatorStatus'];
 					$out['ply'][$i]['Rank'] = $rankingList[$i]['Rank'];
 					$out['ply'][$i]['BestTime'] = $rankingList[$i]['BestTime'];
 					$out['ply'][$i]['BestCheckpoints'] = $rankingList[$i]['BestCheckpoints'];
@@ -1594,7 +1595,6 @@ abstract class AdminServ {
 			$client->addCall('GetServerOptions');
 		}
 		$client->addCall('GetBuddyNotification', array('') );
-		$client->addCall('GetHideServer');
 		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
 			$client->addCall('AreHornsDisabled');
 		}
@@ -1625,7 +1625,6 @@ abstract class AdminServ {
 				$out['CurrentVehicleNetQualityName'] = Utils::t('Fast');
 			}
 			$out['BuddyNotification'] = $queriesData['GetBuddyNotification'];
-			$out['HideServer'] = $queriesData['GetHideServer'];
 			if(SERVER_VERSION_NAME == 'ManiaPlanet'){
 				$out['DisableHorns'] = $queriesData['AreHornsDisabled'];
 			}
@@ -1672,9 +1671,8 @@ abstract class AdminServ {
 			'NextVehicleNetQuality' => intval($_POST['NextVehicleNetQuality']),
 			'NextCallVoteTimeOut' => TimeDate::secToMillisec( intval($_POST['NextCallVoteTimeOut']) ),
 			'CallVoteRatio' => floatval($CallVoteRatio),
-			$keys['allowMapDownload'] => array_key_exists($keys['allowMapDownload'], $_POST),
-			'AutoSaveReplays' => array_key_exists('AutoSaveReplays', $_POST),
-			'HideServer' => array_key_exists('HideServer', $_POST)
+			$keys['allowMapDownload'] => array_key_exists('AllowMapDownload', $_POST),
+			'AutoSaveReplays' => array_key_exists('AutoSaveReplays', $_POST)
 		);
 		
 		return $out;

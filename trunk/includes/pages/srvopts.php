@@ -1,6 +1,10 @@
 <?php
 	// ENREGISTREMENT
 	if( isset($_POST['savesrvopts']) ){
+		$ClientInputsMaxLatency = $_POST['ClientInputsMaxLatency'];
+		if($ClientInputsMaxLatency == 'more'){
+			$ClientInputsMaxLatency = $_POST['ClientInputsMaxLatencyValue'];
+		}
 		$ChangeAuthPassword = null;
 		if( isset($_POST['ChangeAuthPassword']) && $_POST['ChangeAuthPassword'] != null ){
 			$ChangeAuthLevel = $_POST['ChangeAuthLevel'];
@@ -13,8 +17,12 @@
 			AdminServ::error();
 		}
 		else{
+			if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+				$client->addCall('SetClientInputsMaxLatency', array(intval($ClientInputsMaxLatency)) );
+				$client->addCall('DisableHorns', array(array_key_exists('DisableHorns', $_POST)) );
+			}
+			$client->addCall('SetHideServer', array( (int)array_key_exists('HideServer', $_POST)) );
 			$client->addCall('SetBuddyNotification', array('', array_key_exists('BuddyNotification', $_POST)) );
-			$client->addCall('DisableHorns', array(array_key_exists('DisableHorns', $_POST)) );
 			if($ChangeAuthPassword){
 				$client->addCall('ChangeAuthPassword', array($ChangeAuthLevel, $ChangeAuthPassword) );
 			}
@@ -167,9 +175,22 @@
 					<tr>
 						<td class="key"><label for="CallVoteRatio"><?php echo Utils::t('Vote ratio'); ?></label></td>
 						<td class="value" colspan="4">
-							<input class="text width1" type="text" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $srvOpt['CallVoteRatio']; ?>" />
+							<input class="text" type="text" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $srvOpt['CallVoteRatio']; ?>" />
 						</td>
 					</tr>
+					<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
+						<tr>
+							<td class="key"><label for="ClientInputsMaxLatency"><?php echo Utils::t('Client inputs max latency'); ?></label></td>
+							<td class="value" colspan="4">
+								<select name="ClientInputsMaxLatency" id="ClientInputsMaxLatency"<?php if($srvOpt['ClientInputsMaxLatency'] > 0){ echo ' hidden="hidden"'; } ?>>
+									<option value="0"><?php echo Utils::t('Automatic'); ?></option>
+									<option value="more"><?php echo Utils::t('Choose number'); ?></option>
+								</select>
+								<input class="text" type="text" name="ClientInputsMaxLatencyValue" id="ClientInputsMaxLatencyValue" value="<?php echo $srvOpt['ClientInputsMaxLatency']; ?>"<?php if($srvOpt['ClientInputsMaxLatency'] == 0){ echo ' hidden="hidden"'; } ?> />
+								<a class="returnDefaultValue" href="?p=<?php echo USER_PAGE; ?>"<?php if($srvOpt['ClientInputsMaxLatency'] == 0){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Return to the default value'); ?></a>
+							</td>
+						</tr>
+					<?php } ?>
 					<tr>
 						<td class="key"><label for="HideServer"><?php echo Utils::t('Hidden server'); ?></label></td>
 						<td class="value" colspan="4">
@@ -179,7 +200,7 @@
 					<tr>
 						<td class="key"><label for="AllowMapDownload"><?php echo Utils::t('Map download'); ?></label></td>
 						<td class="value" colspan="4">
-							<input class="text" type="checkbox" name="AllowMapDownload" id="AllowMapDownload"<?php if($srvOpt['AllowChallengeDownload'] != 0){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="AllowMapDownload" id="AllowMapDownload"<?php if(SERVER_VERSION_NAME == 'TmForever' && $srvOpt['AllowChallengeDownload'] != 0){ echo ' checked="checked"'; }else if(SERVER_VERSION_NAME == 'ManiaPlanet' && $srvOpt['AllowMapDownload'] != 0){ echo ' checked="checked"'; } ?> value="" />
 						</td>
 					</tr>
 					<tr<?php if( AdminServ::isAdminLevel('Admin') && !AdminServ::isAdminLevel('SuperAdmin') ){ echo ' hidden="hidden"'; } ?>>
