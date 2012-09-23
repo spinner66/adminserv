@@ -11,17 +11,18 @@
 		else{
 			// Team info
 			if( isset($_POST['teamInfo1Name']) ){
-				$team1Name = $_POST['teamInfo1Name'];
-				$team1Color = $_POST['teamInfo1Color'];
-				$team1Country = $_POST['teamInfo1Country'];
-				$team2Name = $_POST['teamInfo2Name'];
-				$team2Color = $_POST['teamInfo2Color'];
-				$team2Country = $_POST['teamInfo2Country'];
+				$team1 = array(
+					'name' => $_POST['teamInfo1Name'],
+					'color' => (double) hexdec($_POST['teamInfo1Color']),
+					'country' => $_POST['teamInfo1Country']
+				);
+				$team2 =  array(
+					'name' => $_POST['teamInfo2Name'],
+					'color' => (double) hexdec($_POST['teamInfo2Color']),
+					'country' => $_POST['teamInfo2Country']
+				);
 				
-				
-				if( !$client->query('SetTeamInfo', 'Unused', (double)0.0, 'World', $team1Name, (double)0.0, $team1Country, $team2Name, (double)0.66, $team2Country) ){
-					AdminServ::error();
-				}
+				AdminServ::setTeamInfo($team1, $team2);
 			}
 			
 			// RoundCustomPoints
@@ -49,7 +50,7 @@
 			}
 			
 			AdminServLogs::add('action', 'Save game infos');
-			//Utils::redirection(false, '?p='.USER_PAGE);
+			Utils::redirection(false, '?p='.USER_PAGE);
 		}
 	}
 	

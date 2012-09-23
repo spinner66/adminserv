@@ -18,16 +18,11 @@ abstract class AdminServUI {
 			$title = 'Admin,Serv';
 		}
 		
-		if( strstr($title, ',') ){
-			if($type == 'html'){
-				$out = str_replace(',', '<span class="title-color">', $title).'</span>';
-			}
-			else{
-				$out = str_replace(',', '', $title);
-			}
+		if($type == 'html'){
+			$out = str_replace(',', '<span class="title-color">', $title).'</span>';
 		}
 		else{
-			$out = $title;
+			$out = str_replace(',', '', $title);
 		}
 		
 		return $out;
@@ -272,7 +267,6 @@ abstract class AdminServUI {
 	* Récupère le header/footer du site
 	*/
 	public static function getHeader(){
-		// Classes CSS body
 		if( !isset($GLOBALS['body_class']) ){
 			$GLOBALS['body_class'] = null;
 		}
@@ -535,7 +529,7 @@ abstract class AdminServUI {
 						.'</td>'
 						.'<td class="preview">';
 							if($nextGamInf['GameMode'] == 0){
-								$out .= '<a id="getScriptSettings" href="">'.Utils::t('Script settings').'</a>';
+								$out .= '<a id="getScriptSettings" href="" data-infotext="'.Utils::t('Script settings updated.').'">'.Utils::t('Script settings').'</a>';
 							}
 						$out .= '</td>'
 					.'</tr>'
@@ -1136,6 +1130,38 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Récupère la liste des niveaux admin
+	*
+	* @param string $serverName -> Nom du serveur de la config
+	* @return array
+	*/
+	public static function getServerAdminLevel($serverName = null){
+		$out = array();
+		$servers = ServerConfig::$SERVERS;
+		if($serverName === null){
+			$serverName = SERVER_NAME;
+		}
+		$authenticate = array('SuperAdmin', 'Admin', 'User');
+		
+		if( AdminServServerConfig::hasServer() && isset($servers[$serverName]) ){
+			foreach($servers[$serverName]['adminlevel'] as $levelName => $levelValues){
+				if($levelName != null){
+					if( in_array($levelName, $authenticate) && $levelValues != 'none' ){
+						if( self::userAllowedInAdminLevel($serverName, $levelName) ){
+							$out['levels'][] = $levelName;
+						}
+					}
+				}
+			}
+		}
+		
+		$out['last'] = Utils::readCookieData('adminserv', 1);
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Retourne un lien protocol TM ou ManiaPlanet
 	*
 	* @param string $link -> Lien : #join=server_login ou /:manialink_name
@@ -1552,6 +1578,110 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Récupère les options du serveur
+	*
+	* @global resource $client -> Le client doit être initialisé
+	* @return array
+	*/
+	public static function getServerOptions(){
+		global $client;
+		$out = array();
+		
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$client->addCall('GetServerOptions', array(1) );
+		}
+		else{
+			$client->addCall('GetServerOptions');
+		}
+		$client->addCall('GetBuddyNotification', array('') );
+		$client->addCall('GetHideServer');
+		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+			$client->addCall('AreHornsDisabled');
+		}
+		
+		if( !$client->multiquery() ){
+			self::error();
+		}
+		else{
+			$queriesData = $client->getMultiqueryResponse();
+			$out = $queriesData['GetServerOptions'];
+			$out['Name'] = stripslashes($out['Name']);
+			if($out['Name'] == null){
+				$out['Name'] = SERVER_NAME;
+			}
+			$out['NameHtml'] = TmNick::toHtml($out['Name'], 10, false, false, '#666');
+			$out['Comment'] = stripslashes($out['Comment']);
+			$out['CommentHtml'] = TmNick::toHtml('$i'.nl2br($out['Comment']), 10, false, false, '#666');
+			if($out['CurrentLadderMode'] !== 0){
+				$out['CurrentLadderModeName'] = Utils::t('Forced'); 
+			}
+			else{
+				$out['CurrentLadderModeName'] = Utils::t('Inactive');
+			}
+			if($out['CurrentVehicleNetQuality'] !== 0){
+				$out['CurrentVehicleNetQualityName'] = Utils::t('High');
+			}
+			else{
+				$out['CurrentVehicleNetQualityName'] = Utils::t('Fast');
+			}
+			$out['BuddyNotification'] = $queriesData['GetBuddyNotification'];
+			$out['HideServer'] = $queriesData['GetHideServer'];
+			if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+				$out['DisableHorns'] = $queriesData['AreHornsDisabled'];
+			}
+			else{
+				$out['DisableHorns'] = null;
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Retourne la structure pour l'enregistrement des options du serveur
+	*
+	* @return array
+	*/
+	public static function getServerOptionsStructFromPOST(){
+		if(SERVER_VERSION_NAME == 'TmForever'){
+			$keys = array(
+				'allowMapDownload' => 'AllowChallengeDownload'
+			);
+		}
+		else{
+			$keys = array(
+				'allowMapDownload' => 'AllowMapDownload'
+			);
+		}
+		
+		if($_POST['CallVoteRatio'] == 0){ $CallVoteRatio = 0.0; }
+		else if($_POST['CallVoteRatio'] == 1){ $CallVoteRatio = 1.0; }
+		else{ $CallVoteRatio = $_POST['CallVoteRatio']; }
+		
+		$out = array(
+			'Name' => stripslashes($_POST['ServerName']),
+			'Comment' => stripslashes($_POST['ServerComment']),
+			'Password' => trim($_POST['ServerPassword']),
+			'PasswordForSpectator' => trim($_POST['SpectatorPassword']),
+			'NextMaxPlayers' => intval($_POST['NextMaxPlayers']),
+			'NextMaxSpectators' => intval($_POST['NextMaxSpectators']),
+			'IsP2PUpload' => array_key_exists('IsP2PUpload', $_POST),
+			'IsP2PDownload' => array_key_exists('IsP2PDownload', $_POST),
+			'NextLadderMode' => intval($_POST['NextLadderMode']),
+			'NextVehicleNetQuality' => intval($_POST['NextVehicleNetQuality']),
+			'NextCallVoteTimeOut' => TimeDate::secToMillisec( intval($_POST['NextCallVoteTimeOut']) ),
+			'CallVoteRatio' => floatval($CallVoteRatio),
+			$keys['allowMapDownload'] => array_key_exists($keys['allowMapDownload'], $_POST),
+			'AutoSaveReplays' => array_key_exists('AutoSaveReplays', $_POST),
+			'HideServer' => array_key_exists('HideServer', $_POST)
+		);
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère les informations de jeux
 	*
 	* @global resource $client -> Le client doit être initialisé
@@ -1645,7 +1775,6 @@ abstract class AdminServ {
 	* @return array
 	*/
 	public static function getGameInfosStructFromPOST(){
-		// Mise en forme
 		if($_POST['NextFinishTimeoutValue'] < 2){
 			if($_POST['NextFinishTimeout'] == 0){ $FinishTimeout = 0; }
 			else if($_POST['NextFinishTimeout'] == 1){ $FinishTimeout = 1; }
@@ -1658,6 +1787,7 @@ abstract class AdminServ {
 			else if($_POST['NextForceShowAllOpponents'] == 1){ $NextForceShowAllOpponents = 1; }
 		}
 		else{ $NextForceShowAllOpponents = intval($_POST['NextForceShowAllOpponentsValue']); }
+		
 		$out = array(
 			'GameMode' => intval($_POST['NextGameMode']),
 			'ChatTime' => TimeDate::secToMillisec( intval($_POST['NextChatTime'] - 8) ),
@@ -1684,6 +1814,27 @@ abstract class AdminServ {
 		);
 		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
 			$out += array('ScriptName' => Str::replaceChars($_POST['NextScriptName']));
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Enregistre les infos sur les équipes
+	* @param array $team1 -> (assoc) array(name, color, country)
+	* @param array $team2
+	* @return bool
+	*/
+	public static function setTeamInfo($team1, $team2){
+		global $client;
+		$out = false;
+		
+		if( !$client->query('SetTeamInfo', 'Unused', 0., 'World', $team1['name'], $team1['color'], $team1['country'], $team2['name'], $team2['color'], $team2['country']) ){
+			AdminServ::error();
+		}
+		else{
+			$out = true;
 		}
 		
 		return $out;
@@ -1858,10 +2009,12 @@ abstract class AdminServ {
 					$out['lst'][$i]['Author'] = $map['Author'];
 					$out['lst'][$i]['GoldTime'] = TimeDate::format($map['GoldTime']);
 					$out['lst'][$i]['CopperPrice'] = $map['CopperPrice'];
-					$out['lst'][$i]['Type']['Name'] = self::formatScriptName($map['MapType']);
-					$out['lst'][$i]['Type']['FullName'] = $map['MapType'];
-					$out['lst'][$i]['Style']['Name'] = self::formatScriptName($map['MapStyle']);
-					$out['lst'][$i]['Style']['FullName'] = $map['MapStyle'];
+					if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+						$out['lst'][$i]['Type']['Name'] = self::formatScriptName($map['MapType']);
+						$out['lst'][$i]['Type']['FullName'] = $map['MapType'];
+						$out['lst'][$i]['Style']['Name'] = self::formatScriptName($map['MapStyle']);
+						$out['lst'][$i]['Style']['FullName'] = $map['MapStyle'];
+					}
 					$i++;
 				}
 			}

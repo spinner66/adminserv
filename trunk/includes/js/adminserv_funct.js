@@ -311,7 +311,7 @@ function getCurrentGameModeConfig(){
 
 
 /**
-*
+* Récupère les paramètres du script courant
 */
 function getScriptSettings(){
 	$.post(getIncludesPath()+'ajax/script_settings.php', {method: 'get'}, function(data){
@@ -334,10 +334,10 @@ function getScriptSettings(){
 						if(param.Default){
 							isChecked = ' checked="checked"';
 						}
-						paramValueField = '<input class="text '+param.Type+'" type="checkbox" name="" id="" value="'+param.Default+'"'+isChecked+' />';
+						paramValueField = '<input class="text" data-type="'+param.Type+'" type="checkbox" name="'+param.Name+'" id="'+param.Name+'" value="'+param.Default+'"'+isChecked+' />';
 					}
 					else if(param.Type == 'int' || param.Type == 'float'){
-						paramValueField = '<input class="text '+param.Type+'" type="text" name="" id="" value="'+param.Default+'" />';
+						paramValueField = '<input class="text" data-type="'+param.Type+'" type="text" name="'+param.Name+'" id="'+param.Name+'" value="'+param.Default+'" />';
 					}
 					
 					paramsList += '<tr>'
@@ -354,7 +354,7 @@ function getScriptSettings(){
 			$('#getScriptSettingsDialog').dialog({
 				title: $('#getScriptSettingsDialog').data('title'),
 				modal: true,
-				minWidth: 650,
+				minWidth: 800,
 				minHeight: 400,
 				buttons: [
 					{
@@ -374,28 +374,40 @@ function getScriptSettings(){
 		}
 	}, 'json');
 }
+
+
+/**
+* Enregistre les paramètres du script courant
+*/
 function setScriptSettings(){
-	var structParams = [];
-	var structValues = [];
-	$.each( $('#dialogScriptSettings table tbody tr'), function(i, param){
-		var key = param.children[0].textContent;
-		var type = param.children[1].children[0].className;
+	var params = [];
+	
+	$('#dialogScriptSettings table tbody tr').each(function(){
+		var key = $(this).find('.first').text();
+		var type = $(this).find('.middle input').data('type');
 		
-		if(type.indexOf('boolean') !== -1){
-			var val = param.children[1].children[0].checked;
+		if(type == 'boolean'){
+			var val = $(this).find('.middle input').attr('checked');
 		}
-		else if(type.indexOf('int') !== -1 || type.indexOf('float') !== -1){
-			var val = param.children[1].children[0].value;
+		else if(type == 'int' || type == 'float'){
+			var val = $(this).find('.middle input').val();
 		}
 		
-		structParams.push(key);
-		structValues.push(val);
+		params.push({
+			name: key,
+			value: val,
+			type: type,
+		});
 	});
 	
-	$.post(getIncludesPath()+'ajax/script_settings.php', {method: 'set', key: structParams, val: structValues}, function(response){
+	$.post(getIncludesPath()+'ajax/script_settings.php', {method: 'set', params: params}, function(response){
 		if(response != 'true'){
 			error(response);
 			scrollTop();
+		}
+		else{
+			$('#getScriptSettingsDialog').dialog('close');
+			info($('#getScriptSettings').data('infotext'), true);
 		}
 	});
 }
@@ -938,7 +950,7 @@ function matchset_mapImportSelection(){
 			$('#mapImportSelectionDialog').dialog({
 				title: $('#mapImportSelectionDialog').data('title'),
 				modal: true,
-				minWidth: 850,
+				minWidth: 800,
 				minHeight: 400,
 				buttons: [{
 					text: $('#mapImportSelectionDialog').data('select'),
@@ -1020,7 +1032,7 @@ function matchset_mapSelection(removeId){
 			$('#mapSelectionDialog').dialog({
 				title: $('#mapSelectionDialog').data('title'),
 				modal: true,
-				minWidth: 650,
+				minWidth: 800,
 				minHeight: 400,
 				buttons: [{
 					text: $('#mapSelectionDialog').data('close'),

@@ -1240,6 +1240,22 @@ footer {
 #CallVoteRatio {
 	width: 12%;
 }
+.section-srvopts .srvopts_changeauthpassword select,
+.section-srvopts .srvopts_changeauthpassword .text {
+	float: left;
+	width: 19.7%;
+}
+.section-srvopts .srvopts_changeauthpassword .changeauthpassword-arrow {
+	display: block;
+	float: left;
+	margin: 6px 10px 6px 15px;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 7px 0 7px 20px;
+	border-color: transparent transparent transparent rgba(0, 0, 0, .2);
+}
+
 
 /* Page Game infos
 ---------------------- */
@@ -1263,7 +1279,7 @@ footer {
 	color: #888;
 	text-decoration: none;
 }
-.section-gameinfos .content {
+.section-gameinfos .content.gameinfos {
 	min-height: 500px;
 }
 #getScriptSettingsDialog {

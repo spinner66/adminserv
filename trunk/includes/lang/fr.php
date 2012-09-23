@@ -343,5 +343,10 @@ $translate = array(
 	'Gold time' => 'Temps or',
 	'Cost' => 'Coût',
 	'Type' => 'Type',
+	'Team infos' => 'Infos sur les équipes',
+	'Script settings' => 'Paramètres de script',
+	'Script settings updated.' => 'Paramètres de script mis à jour.',
+	'Change authentication password' => 'Changer le mot de passe d\'un compte',
+	'You changed the password "!authLevel", remember it at the next connection!' => 'Vous venez de changer le mot de passe "!authLevel", pensez-y à la prochaine connexion !',
 );
 ?>
