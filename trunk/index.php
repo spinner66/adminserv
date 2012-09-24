@@ -1,7 +1,7 @@
 <?php
 	// INCLUDES
 	session_start();
-	define('ADMINSERV_TIMER', true);
+	define('ADMINSERV_TIMER', false);
 	define('ADMINSERV_VERSION', '2.0');
 	require_once 'config/adminserv.cfg.php';
 	if( file_exists('config/servers.cfg.php') ){
