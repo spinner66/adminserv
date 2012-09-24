@@ -29,7 +29,7 @@
 				</li>
 				<li>
 					<input class="text" type="radio" name="transferMode" id="transferModeInsert" value="insert" />
-					<div class="name"><span><?php echo Utils::t('Insert'); ?></span> <?php echo Utils::t('after the current map'); ?></div>
+					<div class="name"><span><?php echo Utils::t('Insert'); ?></span> <?php echo Utils::t('after current map'); ?></div>
 				</li>
 				<li>
 					<input class="text" type="radio" name="transferMode" id="transferModeLocal" value="local" />
