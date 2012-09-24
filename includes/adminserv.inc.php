@@ -668,7 +668,7 @@ abstract class AdminServUI {
 		global $client;
 		$out = '<option value="null">'.Utils::t('No player available').'</option>';
 		
-		if( $client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
+		if( $client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0, 1) ){
 			$playerList = $client->getResponse();
 			if( count($playerList) > 0 ){
 				$out = null;
@@ -704,7 +704,7 @@ abstract class AdminServUI {
 			$out = '<nav class="vertical-nav">'
 				.'<ul>';
 					foreach($list as $page => $title){
-						$out .= '<li><a '; if(USER_PAGE == $page){ $out .= 'class="active" '; } $out .= 'href="?p='.$page; if($directory){ $out .= '&amp;d='.$directory; } $out .= '">'.$title.'</a></li>';
+						$out .= '<li><a '; if(USER_PAGE == $page){ $out .= 'class="active" '; } $out .= 'href="?p='.$page; if($directory){ $out .= '&amp;d='.$directory; } $out .= '">'.Utils::t($title).'</a></li>';
 					}
 			$out .= '</ul>'
 			.'</nav>';
@@ -1477,7 +1477,7 @@ abstract class AdminServ {
 		global $client;
 		$out = 0;
 		
-		if( !$client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0) ){
+		if( !$client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0, 1) ){
 			self::error();
 		}
 		else{

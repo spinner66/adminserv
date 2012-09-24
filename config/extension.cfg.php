@@ -60,12 +60,12 @@ class ExtensionConfig {
 	
 	// Menu list in maps page
 	public static $MAPSMENU = array(
-		'maps-list' => 'Liste',
+		'maps-list' => 'List',
 		'maps-local' => 'Local',
-		'maps-upload' => 'Envoyer',
-		'maps-order' => 'Ordonner',
+		'maps-upload' => 'Send',
+		'maps-order' => 'Order',
 		'maps-matchset' => 'MatchSettings',
-		'maps-creatematchset' => 'Créer un MatchSettings'
+		'maps-creatematchset' => 'Create a MatchSettings'
 	);
 }
 ?>

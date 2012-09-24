@@ -218,7 +218,7 @@
 			</table>
 		</div>
 		
-		<div class="options" data-mapisused="<?php echo Utils::t('The map,is actually used by the server.'); ?>">
+		<div class="options" data-mapisused="<?php echo Utils::t('The map,is currently used by the server.'); ?>">
 			<div class="fleft">
 				<span class="nb-line"><?php echo $mapsList['nbm']['count'].' '.$mapsList['nbm']['title']; ?></span>
 			</div>
