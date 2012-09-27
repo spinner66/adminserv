@@ -1,8 +1,4 @@
 <?php
-	/**
-	* Récupère la liste des maps du serveur
-	*/
-	
 	// INCLUDES
 	session_start();
 	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }

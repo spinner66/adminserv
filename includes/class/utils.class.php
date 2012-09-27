@@ -119,16 +119,15 @@ abstract class Utils {
 	*/
 	public static function readCookieData($cookie_name, $data_pos = null){
 		$separator = '|';
-		// Lecture
+		
 		if( isset($_COOKIE[$cookie_name]) ){
 			$out =  explode($separator, $_COOKIE[$cookie_name]);
-			// Si une position est choisie
+			
 			if( is_numeric($data_pos) ){
 				if( isset($out[$data_pos]) && $out[$data_pos] != null){
 					return $out[$data_pos];
 				}
 			}
-			// Sinon toutes les valeurs
 			else{
 				if($out[0] != null){
 					return $out;
@@ -150,7 +149,7 @@ abstract class Utils {
 	*/
 	public static function addCookieData($cookieName, $data, $cookieExpire = 15){
 		$separator = '|';
-		// Liste des données
+		
 		$newCookieData = null;
 		for($i = 0; $i < count($data); $i++){
 			if($i == count($data)-1){
@@ -160,7 +159,7 @@ abstract class Utils {
 				$newCookieData .= $data[$i].$separator;
 			}
 		}
-		// On écrit le cookie
+		
 		if( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != null){ $isHttps = true; }
 		else{ $isHttps = false; }
 		if( setcookie($cookieName, $newCookieData, time()+60*60*24*$cookieExpire, '/', $isHttps) ){
@@ -179,13 +178,11 @@ abstract class Utils {
 	* @return $_SESSION['lang']
 	*/
 	public static function getLang($forceLang = null){
-		// Si on choisi une langue
 		if($forceLang){
 			$_SESSION['lang'] = $forceLang;
 		}
 		else{
 			if( !isset($_SESSION['lang']) ){
-				// On récupère la langue du navigateur
 				$_SESSION['lang'] = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 			}
 		}
@@ -203,11 +200,9 @@ abstract class Utils {
 		global $translate;
 		$out = $key;
 		
-		if( isset($_SESSION['lang']) ){
-			if($_SESSION['lang'] !== 'en'){
-				if( isset($translate[$key]) ){
-					$out = $translate[$key];
-				}
+		if( isset($_SESSION['lang']) && $_SESSION['lang'] !== 'en' ){
+			if( isset($translate[$key]) ){
+				$out = $translate[$key];
 			}
 		}
 		
@@ -225,6 +220,7 @@ abstract class Utils {
 	public static function getBrowser(){
 		$out = null;
 		$http_user_agent = $_SERVER['HTTP_USER_AGENT'];
+		
 		if( strstr($http_user_agent, 'Firefox') ){ $out = 'Firefox'; }
 		else if( strstr($http_user_agent, 'Chrome') ){ $out = 'Chrome'; }
 		else if( strstr($http_user_agent, 'Opera') ){ $out = 'Opera'; }
@@ -233,6 +229,7 @@ abstract class Utils {
 		else if( strstr($http_user_agent, 'Konqueror') ){ $out = 'Konqueror'; }
 		else if( strstr($http_user_agent, 'Netscape') ){ $out = 'Netscape'; }
 		else{ $out = 'Others'; }
+		
 		return $out;
 	}
 	
@@ -243,6 +240,7 @@ abstract class Utils {
 	public static function getOperatingSystem(){
 		$out = null;
 		$http_user_agent = $_SERVER['HTTP_USER_AGENT'];
+		
 		if( strstr($http_user_agent, 'Win') ){ $out = 'Windows'; }
 		else if( (strstr($http_user_agent, 'Mac')) || (strstr('PPC', $http_user_agent)) ){ $out = 'Mac'; }
 		else if( strstr($http_user_agent, 'Linux') ){ $out = 'Linux'; }
@@ -253,6 +251,7 @@ abstract class Utils {
 		else if( strstr($http_user_agent, 'OS/2') ){ $out = 'OS/2'; }
 		else if( strstr($http_user_agent, 'AIX') ){ $out = 'AIX'; }
 		else{ $out = 'Others'; }
+		
 		return $out;
 	}
 	
@@ -281,21 +280,18 @@ abstract class Utils {
 	public static function isLocalhostIP($addr = null){
 		$out = false;
 		
-		// On récupère l'adresse IP du serveur, et on liste les 3 premières valeurs
-		$server_ip_list = explode('.', $_SERVER['SERVER_ADDR']);
-		$server_ip_substr = $server_ip_list[0].'.'.$server_ip_list[1].'.'.$server_ip_list[2];
+		$serverIPEx = explode('.', $_SERVER['SERVER_ADDR']);
+		$serverIP = $serverIPEx[0].'.'.$serverIPEx[1].'.'.$serverIPEx[2];
 		
-		// De même pour l'utilisateur
 		if($addr){
-			$user_ip_list = explode('.', $addr);
+			$userIPEx = explode('.', $addr);
 		}
 		else{
-			$user_ip_list = explode('.', $_SERVER['REMOTE_ADDR']);
+			$userIPEx = explode('.', $_SERVER['REMOTE_ADDR']);
 		}
-		$user_ip_substr = $user_ip_list[0].'.'.$user_ip_list[1].'.'.$user_ip_list[2];
+		$userIP = $userIPEx[0].'.'.$userIPEx[1].'.'.$userIPEx[2];
 		
-		// Si les valeurs sont identiques -> on est dans le réseau local
-		if($user_ip_substr === $server_ip_substr){
+		if($userIP === $userIP){
 			$out = true;
 		}
 		

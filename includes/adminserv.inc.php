@@ -52,18 +52,15 @@ abstract class AdminServUI {
 	public static function getTheme($forceTheme = null){
 		$saveCookie = false;
 		
-		// Si on choisi un thème
 		if($forceTheme){
 			$_SESSION['theme'] = $forceTheme;
 			$saveCookie = true;
 		}
 		else{
 			if( !isset($_SESSION['theme']) ){
-				// On récupère le thème dans le cookie
 				if( isset($_COOKIE['adminserv_user']) ){
 					$_SESSION['theme'] = Utils::readCookieData('adminserv_user', 0);
 				}
-				// Sinon thème par défaut
 				else{
 					if(AdminServConfig::DEFAULT_THEME){
 						$_SESSION['theme'] = AdminServConfig::DEFAULT_THEME;
@@ -157,23 +154,19 @@ abstract class AdminServUI {
 	public static function getLang($forceLang = null){
 		$saveCookie = false;
 		
-		// Si on choisi une langue
 		if($forceLang){
 			$_SESSION['lang'] = $forceLang;
 			$saveCookie = true;
 		}
 		else{
 			if( !isset($_SESSION['lang']) ){
-				// On récupère la langue dans le cookie
 				if( isset($_COOKIE['adminserv_user']) ){
 					$_SESSION['lang'] = Utils::readCookieData('adminserv_user', 1);
 				}
 				else{
-					// On récupère la langue du navigateur
 					if( AdminServConfig::DEFAULT_LANGUAGE == 'auto' ){
 						$_SESSION['lang'] = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 					}
-					// Sinon langue par défaut
 					else{
 						if(AdminServConfig::DEFAULT_LANGUAGE){
 							$_SESSION['lang'] = AdminServConfig::DEFAULT_LANGUAGE;
@@ -363,7 +356,7 @@ abstract class AdminServUI {
 		
 		if( class_exists('ExtensionConfig') && isset(ExtensionConfig::$GAMEMODES) && count(ExtensionConfig::$GAMEMODES) > 0 ){
 			foreach(ExtensionConfig::$GAMEMODES as $gameModeId => $gameModeName){
-				if( $gameModeId == $currentGameMode ){
+				if($gameModeId == $currentGameMode){
 					$selected = ' selected="selected"';
 				}else{
 					$selected = null;
@@ -2609,11 +2602,9 @@ abstract class AdminServSort {
 	
 	
 	public static function sortByNickName($a, $b){
-		// Modification
 		$a['NickName'] = TmNick::toText($a['NickName']);
 		$b['NickName'] = TmNick::toText($b['NickName']);
 		
-		// Comparaison
 		if($a['NickName'] == $b['NickName']){
 			return 0;
 		}
@@ -2654,7 +2645,6 @@ abstract class AdminServSort {
 		}
 	}
 	public static function sortByTeam($a, $b){
-		// Modification
 		if($a['TeamId'] == 0){
 			$a['TeamId'] = 'blue';
 		}else if($a['TeamId'] == 1){
@@ -2670,7 +2660,6 @@ abstract class AdminServSort {
 			$b['TeamId'] = 'spectator';
 		}
 		
-		// Comparaison
 		if($a['TeamId'] == $b['TeamId']){
 			return 0;
 		}
@@ -2683,11 +2672,9 @@ abstract class AdminServSort {
 	
 	/* Maps-list */
 	public static function sortByName($a, $b){
-		// Modification
 		$a['Name'] = TmNick::toText($a['Name']);
 		$b['Name'] = TmNick::toText($b['Name']);
 		
-		// Comparaison
 		if($a['Name'] == $b['Name']){
 			return 0;
 		}
@@ -2698,7 +2685,6 @@ abstract class AdminServSort {
 		}
 	}
 	public static function sortByEnviro($a, $b){
-		// Modification
 		if($a['Environnement'] == 'Speed'){
 			$a['Environnement'] = 'Desert';
 		}
@@ -2712,7 +2698,6 @@ abstract class AdminServSort {
 			$b['Environnement'] = 'Snow';
 		}
 		
-		// Comparaison
 		if($a['Environnement'] == $b['Environnement']){
 			return 0;
 		}

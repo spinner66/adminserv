@@ -29,7 +29,6 @@ abstract class TimeDate {
 		$out = 0;
 		
 		if($date){
-			// Parse
 			$date = trim($date);
 			if( strstr($date, '/') && !$use_strtotime){
 				$date_ex = explode('/', $date);
@@ -44,7 +43,6 @@ abstract class TimeDate {
 				$date_ex = explode(' ', $date_ex);
 			}
 			
-			// Création du temps
 			if( !$use_strtotime ){
 				$out = mktime(0, 0, 0, $date_ex[1], $date_ex[0], $date_ex[2]); 
 			}
@@ -71,7 +69,6 @@ abstract class TimeDate {
 		$s = 1;
 		
 		if($time){
-			// Parse
 			$time = trim($time);
 			if( strstr($time, ':') && !strstr($time, '.') && !$use_strtotime){
 				$time_ex = explode(':', $time);
@@ -91,7 +88,7 @@ abstract class TimeDate {
 				$time_ex = explode(' ', $time);
 			}
 			
-			// Création du temps
+			
 			if( !$use_strtotime && $out === 0){
 				$out = ($time_ex[0] * $h) + ($time_ex[1] * $m) + ($time_ex[2] * $s); 
 			}
@@ -114,34 +111,27 @@ abstract class TimeDate {
 	* @return string
 	*/
 	public static function formatDateForMySQL($type, $date, $time = '00:00:00', $use_strtotime = false){
-		// Variables
 		$out = '000-00-00 00:00:00';
 		$type = strtoupper($type);
 		$date = trim($date);
 		
-		// Type MySQL
 		switch($type){
 			case 'DATE':
 				$out = date('Y-m-d', self::dateToTime($date, $use_strtotime));
 				break;
-				
 			case 'DATETIME':
 				$datetotime = self::dateToTime($date, $use_strtotime);
 				$timetosec = self::timeToSec($time, $use_strtotime);
 				$out = date('Y-m-d H:i:s', $datetotime + $timetosec);
 				break;
-				
 			case 'TIME':
 				$out = date('H:i:s', self::timeToSec($time, $use_strtotime));
 				break;
-				
 			case 'YEAR':
 				$out = date('Y', self::dateToTime($date, $use_strtotime));
 				break;
-				
 			default:
 				$out = self::formatDateForMySQL('DATETIME', $date, $time, $use_strtotime);
-				break;
 		}
 		return $out;
 	}
@@ -178,9 +168,7 @@ abstract class TimeDate {
 		$out = null;
 		$timeDifference = time() - $time;
 		
-		// Si le temps est supérieur à 0
 		if($timeDifference > 0){
-			// Calcul du temps
 			$seconds = $timeDifference;
 			$minutes = round($timeDifference/60);
 			$hours = round($timeDifference/3600);
@@ -189,7 +177,6 @@ abstract class TimeDate {
 			$months = round($timeDifference/2419200);
 			$years = round($timeDifference/29030400);
 			
-			// Création du texte
 			if($seconds < 60){
 				$out .= 'Il y a moins d\'une minute';
 			}
@@ -212,7 +199,7 @@ abstract class TimeDate {
 				$out .= 'Il y a '.$years.' an'; if($years > 1){ $out .= 's'; }
 			}
 		}
-		// Retour
+		
 		return $out;
 	}
 	

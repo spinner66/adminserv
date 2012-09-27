@@ -1,8 +1,4 @@
 <?php
-	/**
-	* Vérifie si le nom du matchsettings existe déjà
-	*/
-	
 	// INCLUDES
 	require_once '../adminserv.inc.php';
 	AdminServUI::getClass();
@@ -11,9 +7,9 @@
 	if( isset($_GET['path']) ){ $path = $_GET['path']; }else{ $path = null; }
 	if( isset($_GET['name']) ){ $name = $_GET['name']; }else{ $name = null; }
 	
-	// VÉRIFICATION
+	// CHECKING
 	$out = false;
-	if( $path && $name ){
+	if($path && $name){
 		$struct = Folder::read($path);
 		if( !strstr($name, '.txt') ){
 			$name = $name.'.txt';
@@ -29,6 +25,6 @@
 		}
 	}
 	
-	// RETOUR
+	// OUT
 	echo json_encode($out);
 ?>

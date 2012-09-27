@@ -15,8 +15,8 @@ abstract class File {
 	public static function getExtension($filename){
 		$out = null;
 		
-		if( strstr($filename, '.') ){
-			$pathinfo = pathinfo($filename);
+		$pathinfo = pathinfo($filename);
+		if( isset($pathinfo['extension']) ){
 			$out = strtolower($pathinfo['extension']);
 		}
 		
@@ -25,7 +25,7 @@ abstract class File {
 	
 	
 	/**
-	* Récupère l'extension d'un fichier Nadeo
+	* Récupère une double extension
 	*
 	* @param string $filename -> Le chemin ou nom du fichier
 	* @return string "class.php"
@@ -33,11 +33,11 @@ abstract class File {
 	public static function getDoubleExtension($filename){
 		$out = null;
 		$filenameEx = explode('.', $filename);
+		$countFilenameEx = count($filenameEx);
 		
-		if( count($filenameEx) > 2 ){
-			$ext = $filenameEx[count($filenameEx)-2];
-			$ext .= '.'.$filenameEx[count($filenameEx)-1];
-			$out = strtolower($ext);
+		if( $countFilenameEx > 2 ){
+			$out = $filenameEx[$countFilenameEx - 2];
+			$out .= strtolower('.'.$filenameEx[$countFilenameEx - 1]);
 		}
 		
 		return $out;
@@ -55,7 +55,13 @@ abstract class File {
 		$out = null;
 		
 		if( file_exists($filename) ){
-			if($appendData){ $append = FILE_APPEND; }else{ $append = 0; }
+			if($appendData){
+				$append = FILE_APPEND;
+			}
+			else{
+				$append = 0;
+			}
+			
 			if( file_put_contents($filename, $data, $append) ){
 				$out = true;
 			}
@@ -191,7 +197,6 @@ abstract class File {
 		$filename = htmlspecialchars( trim($path_parts['basename']), ENT_QUOTES, 'UTF-8');
 		$path = $path_parts['dirname'].'/';
 		
-		// Headers
 		header('Content-Disposition: attachment; filename="'.$filename);
 		header('Content-Type: application/force-download');
 		header('Content-Transfer-Encoding: binary');

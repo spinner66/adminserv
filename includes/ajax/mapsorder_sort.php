@@ -1,18 +1,14 @@
 <?php
-	/**
-	* Tri la liste des maps
-	*/
-	
 	// INCLUDES
 	require_once '../adminserv.inc.php';
-	AdminServUI::getClass();
+	require_once '../class/tmnick.class.php';
 	
 	// ISSET
  	if( isset($_POST['srt']) ){ $sort = $_POST['srt']; }else{ $sort = null; }
 	if( isset($_POST['ord']) ){ $order = $_POST['ord']; }else{ $order = 'asc'; }
 	if( isset($_POST['lst']) ){ $list = $_POST['lst']; }else{ $list = null; }
 	
-	// HTML
+	// DATA
 	$out = null;
 	if($sort != null && $list != null){
 		$list = json_decode($list, true);
