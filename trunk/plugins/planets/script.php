@@ -61,7 +61,8 @@
 			if( $playerToServerAmount > 0 ){
 				if( !$client->query('SendBill', $playerToServerLogin, $playerToServerAmount, Utils::t('Confirmation of the transfer by AdminServ'), SERVER_LOGIN) ){
 					AdminServ::error();
-				}else{
+				}
+				else{
 					$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
 					AdminServLogs::add('action', 'Transfer '.$playerToServerAmount.' planets from to '.$playerToServerLogin.' player login');
 				}

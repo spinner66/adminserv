@@ -34,7 +34,6 @@
 								break;
 							default:
 								$value = (string)$param['value'];
-								break;
 						}
 						$scriptSettings[$param['name']] = $value;
 					}
