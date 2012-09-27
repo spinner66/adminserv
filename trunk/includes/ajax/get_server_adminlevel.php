@@ -1,10 +1,4 @@
 <?php
-	/**
-	* Récupère la liste des niveaux admin suivant le serveur sélectionné
-	*
-	* @param string srv -> Le nom du serveur sélectionné
-	*/
-	
 	// INCLUDES
 	session_start();
 	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }

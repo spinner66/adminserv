@@ -1,8 +1,4 @@
 <?php
-	/**
-	* Récupère la liste des maps en local
-	*/
-	
 	// INCLUDES
 	session_start();
 	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }
@@ -26,7 +22,6 @@
 	
 	// DATA
 	$out = null;
-	
 	if( AdminServ::initialize() && $path != null ){
 		// Maps
 		if($path == 'currentServerSelection'){
@@ -61,8 +56,7 @@
 		$client->Terminate();
 	}
 	
-	
-	// Retour
+	// OUT
 	if($operation == 'getSelection'){
 		echo json_encode($mapsImport);
 	}

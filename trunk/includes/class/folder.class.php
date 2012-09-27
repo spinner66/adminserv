@@ -20,53 +20,40 @@ abstract class Folder {
 		$midnight = time() - (date('H') * 3600) - (date('i') * 60);
 		if( substr($path, -1, 1) != '/'){ $path = $path.'/'; }
 		
-		// Si la classe File n'existe pas
-		if( !@class_exists('File') && !@class_exists('Str') ){
+		if( !class_exists('File') && !class_exists('Str') ){
 			$out = 'Class "File" or "Str" not exists';
 		}
 		else{
-			// Si le chemin n'est pas un dossier
-			if( ! @is_dir($path) ){
+			if( !is_dir($path) ){
 				$out = 'Not directory';
 			}
 			else{
-				// Pour chaque entrée
 				$dir = scandir($path);
 				foreach($dir as $entry){
-					// Si ce n'est pas . et ..
 					if($entry != '.' && $entry != '..'){
 						$pathToEntry = $path.'/'.$entry;
 						
-						// Si c'est un dossier
-						if( @is_dir($pathToEntry) ){
-							// Si le dossier n'est pas parmi les dossiers masqués
+						if( is_dir($pathToEntry) ){
 							if( !in_array($entry, $hiddenFolders) ){
-								// Enregistrement du nom et de sa taille
 								$out['folders'][$entry]['size'] = Str::formatSize(self::getSize($pathToEntry));
 								$out['folders'][$entry]['nb_file'] = self::countFiles($pathToEntry, $hiddenFiles);
 							}
 						}
-						// Si c'est un fichier different des fichiers masqués
 						else if( !in_array($entry, $hiddenFiles) ){
 							$extension = File::getExtension($entry);
-							// Si le fichier est différent d'une extension masquée
+							
 							if( !in_array($extension, $hiddenFiles) ){
-								// Recupere seulement le timestamp et le poids ici
 								$out['files'][$entry] = @array_slice(@stat($pathToEntry), 20, 3);
-								// Formatage de la taille du fichier
 								$out['files'][$entry]['size'] = Str::formatSize($out['files'][$entry]['size']);
-								// Ajout du nom
 								$out['files'][$entry]['filename'] = $entry;
-								// Ajout de l'extension
 								$out['files'][$entry]['extension'] = $extension;
-								// Statut
 								if($out['files'][$entry]['mtime'] > ($midnight - $recentStatusPeriod)){ $recent = 1; }else{ $recent = 0; }
 								$out['files'][$entry]['recent'] = $recent;
 							}
 						}
 					}
 				}
-				// Si il n'y a aucun dossier ou fichier, on initialise les tableaux par null
+				
 				if( empty($out['folders']) ){
 					$out['folders'] = null;
 				}
@@ -88,9 +75,9 @@ abstract class Folder {
 	public static function create($dirname){
 		$out = null;
 		
-		if( ! @file_exists($dirname) ){
+		if( !file_exists($dirname) ){
 			umask(0000);
-			if( @mkdir($dirname, 0777, true) ){
+			if( mkdir($dirname, 0777, true) ){
 				$out = true;
 			}
 			else{
@@ -115,9 +102,9 @@ abstract class Folder {
 	public static function rename($oldname, $newname){
 		$out = null;
 		
-		if( @file_exists($oldname) ){
+		if( file_exists($oldname) ){
 			if( is_dir($oldname) ){
-				if( @rename($oldname, $newname) ){
+				if( rename($oldname, $newname) ){
 					$out = true;
 				}
 				else{
@@ -145,9 +132,9 @@ abstract class Folder {
 	public static function delete($dirname){
 		$out = null;
 		
-		if( @file_exists($dirname) ){
+		if( file_exists($dirname) ){
 			if( is_dir($dirname) ){
-				if( @rmdir($dirname) ){
+				if( rmdir($dirname) ){
 					$out = true;
 				}
 				else{
@@ -176,14 +163,13 @@ abstract class Folder {
 	public static function countFiles($path, $hiddenFiles = array() ){
 		$out = 0;
 		if( substr($path, -1, 1) != '/'){ $path = $path.'/'; }
-		// Si la classe File n'existe pas
-		if( @class_exists('File') ){
-			// Si le dossier existe
-			if( @file_exists($path) ){
+		
+		if( class_exists('File') ){
+			if( file_exists($path) ){
 				$dir = scandir($path);
 				foreach($dir as $file){
 					$pathToFile = $path.$file;
-					// Si c'est pas un dossier
+					
 					if( is_dir($pathToFile) && $file != '.' && $file != '..' ){
 						if( is_numeric( $result = self::countFiles($pathToFile, $hiddenFiles) ) ){
 							$out += $result;
@@ -195,9 +181,7 @@ abstract class Folder {
 					}
 					else{
 						if($file != '.' && $file != '..'){
-							// Si le fichier n'est pas masqué
 							if( !in_array($file, $hiddenFiles) ){
-								// Si l'extension n'est pas masqué
 								if( !in_array( File::getExtension($file), $hiddenFiles) ){
 									$out++;
 								}
@@ -213,6 +197,7 @@ abstract class Folder {
 		else{
 			$out = 'Class "File" not exists';
 		}
+		
 		return $out;
 	}
 	
@@ -227,8 +212,7 @@ abstract class Folder {
 		$out = 0;
 		if( substr($path, -1, 1) != '/'){ $path = $path.'/'; }
 		
-		// Si le dossier existe
-		if( @file_exists($path) ){
+		if( file_exists($path) ){
 			$dir = scandir($path);
 			foreach($dir as $file){
 				if( $file != '..' && $file != '.' ){
@@ -245,6 +229,7 @@ abstract class Folder {
 		else{
 			$out = 'Dir not exists';
 		}
+		
 		return $out;
 	}
 	
@@ -259,7 +244,7 @@ abstract class Folder {
 	*/
 	public static function getArborescence($path = '.', $hiddenFolders = array(), $hidePathLevel = 0){
 		$out = array();
-		$struct = Folder::read($path, $hiddenFolders);
+		$struct = self::read($path, $hiddenFolders);
 		
 		// Décalage selon la profondeur de l'arborescence
 		$countSlash = substr_count($path, '/') - $hidePathLevel;
@@ -268,6 +253,7 @@ abstract class Folder {
 			$pathLevel .= '&#9474;&nbsp;';
 		}
 		$pathLevel .= '&#9500;&nbsp;';
+		
 		if( isset($struct['folders']) && count($struct['folders']) > 0 ){
 			foreach($struct['folders'] as $dir => $values){
 				$out[] = array(

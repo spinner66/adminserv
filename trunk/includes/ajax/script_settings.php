@@ -1,8 +1,4 @@
 <?php
-	/**
-	* Récupération et enregistrement des paramètres d'un mode Script
-	*/
-	
 	// INCLUDES
 	session_start();
 	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }
@@ -15,7 +11,7 @@
 	AdminServUI::getClass();
 	
 	// ISSET
-	if( isset($_POST['method']) ){ $method = addslashes( htmlspecialchars($_POST['method']) ); }else{ $method = null; }
+	if( isset($_POST['method']) ){ $method = $_POST['method']; }else{ $method = null; }
 	if( isset($_POST['params']) ){ $params = $_POST['params']; }else{ $params = null; }
 	
 	// DATA
@@ -26,19 +22,18 @@
 				$scriptSettings = array();
 				if( count($params) > 0 ){
 					foreach($params as $param){
-						$value = null;
 						switch($param['type']){
 							case 'boolean':
-								$value = (bool) $param['value'];
+								$value = (bool)$param['value'];
 								break;
 							case 'int':
-								$value = (int) $param['value'];
+								$value = (int)$param['value'];
 								break;
 							case 'float':
-								$value = (float) $param['value'];
+								$value = (float)$param['value'];
 								break;
 							default:
-								$value = (string) $param['value'];
+								$value = (string)$param['value'];
 								break;
 						}
 						$scriptSettings[$param['name']] = $value;
@@ -52,7 +47,7 @@
 					$out = true;
 				}
 			}
-			else if($method == 'get'){
+			else{
 				if( !$client->query('GetModeScriptInfo') ){
 					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 				}

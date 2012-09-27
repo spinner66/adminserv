@@ -37,25 +37,18 @@
 				if($serverToPlayerMessage == Utils::t('Optionnal') ){
 					$serverToPlayerMessage = Utils::t('Transfered by AdminServ');
 				}
-				// Login joueur tapé
+				// Player login
 				if($serverToPlayerLogin2 != Utils::t('Player login') ){
-					if( !$client->query('Pay', $serverToPlayerLogin2, $serverToPlayerAmount, $serverToPlayerMessage) ){
-						AdminServ::error();
-					}
-					else{
-						$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
-						AdminServLogs::add('action', 'Transfer '.$serverToPlayerAmount.' planets to '.$serverToPlayerLogin2.' player login');
-					}
+					$serverToPlayerLogin = $serverToPlayerLogin2;
 				}
-				// Login joueur sélectionné
+				
+				// Pay
+				if( !$client->query('Pay', $serverToPlayerLogin, $serverToPlayerAmount, $serverToPlayerMessage) ){
+					AdminServ::error();
+				}
 				else{
-					if( !$client->query('Pay', $serverToPlayerLogin, $serverToPlayerAmount, $serverToPlayerMessage) ){
-						AdminServ::error();
-					}
-					else{
-						$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
-						AdminServLogs::add('action', 'Transfer '.$serverToPlayerAmount.' planets to '.$serverToPlayerLogin.' player login');
-					}
+					$_SESSION['adminserv']['transfer_billid'] = $client->getResponse();
+					AdminServLogs::add('action', 'Transfer '.$serverToPlayerAmount.' planets to '.$serverToPlayerLogin.' player login');
 				}
 			}
 		}
@@ -75,12 +68,11 @@
 			}
 		}
 		
-		// Redirection
 		Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	
 	
-	/* LECTURE */
+	/* GET */
 	$client->addCall('GetServerPlanets');
 	if( isset($_SESSION['adminserv']['transfer_billid']) && $_SESSION['adminserv']['transfer_billid'] != null){
 		$client->addCall('GetBillState', array($_SESSION['adminserv']['transfer_billid']) );
@@ -92,10 +84,10 @@
 	else{
 		$queriesData = $client->getMultiqueryResponse();
 		
-		// Nombre de planets
+		// Planets number
 		$nbPlanets = $queriesData['GetServerPlanets'];
 		
-		// Statut du transfert
+		// Transfer status
 		if( isset($queriesData['GetBillState']) ){
 			$billState = $queriesData['GetBillState'];
 			$transferState = Utils::t('Transaction').' #'.$billState['TransactionId'].' : '.$billState['StateName'];
@@ -105,7 +97,7 @@
 		}
 	}
 	
-	// Nombre de joueurs
+	// Players
 	$playerCount = AdminServ::getNbPlayers();
 	$getPlayerListUI = AdminServUI::getPlayerList();
 	

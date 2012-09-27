@@ -8,6 +8,7 @@ class ExtensionConfig {
 		'coppers',
 	);
 	
+	
 	// Themes color list
 	public static $THEMES = array(
 		'blue' => array(

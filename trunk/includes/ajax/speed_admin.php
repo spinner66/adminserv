@@ -1,8 +1,4 @@
 <?php
-	/**
-	* Administration rapide : restart, next et endround
-	*/
-	
 	// INCLUDES
 	session_start();
 	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }

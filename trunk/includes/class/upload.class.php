@@ -16,7 +16,6 @@
 */
 
 
-
 /**
 * Permet de traiter le fichier envoyé par XHR (XMLHttpRequest)
 */
@@ -122,13 +121,11 @@ class UploadedFileXhr {
 	public function saveMap($client, $filename, $queries){
 		$out = true;
 		
-		// Insert
 		if($queries['type'] == 'insert'){
 			if( !$client->query($queries['insert'], $filename) ){
 				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 			}
 		}
-		// Add
 		else{
 			if( !$client->query($queries['add'], $filename) ){
 				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
@@ -161,9 +158,8 @@ class UploadedFileXhr {
 }
 
 
-
 /**
-* Permet de traiter le fichier envoyé par Formulaire HTML ($_FILES array)
+* Permet de traiter le fichier envoyé par Formulaire HTML (array $_FILES)
 */
 class UploadedFileForm {
 	
@@ -174,7 +170,6 @@ class UploadedFileForm {
 	* @return bool true si réussi, sinon false
 	*/
 	public function save($path){
-		// Si il n'a pas réussi à déplacer le fichier envoyé
 		if( !move_uploaded_file($_FILES['qqfile']['tmp_name'], $path) ){
 			return false;
 		}
@@ -191,7 +186,6 @@ class UploadedFileForm {
 	* @return true si réussi, sinon false
 	*/
 	public function saveFTP($ftp_stream, $path, $filename){
-		// Enregistre le fichier sur le FTP
 		return ftp_put($ftp_stream, $path.$filename, $_FILES['qqfile']['tmp_name'], FTP_BINARY);
 	}
 	
@@ -226,13 +220,11 @@ class UploadedFileForm {
 	public function saveMap($client, $filename, $queries){
 		$out = true;
 		
-		// Insert
 		if($queries['type'] == 'insert'){
 			if( !$client->query($queries['insert'], $filename) ){
 				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'insert';
 			}
 		}
-		// Add
 		else{
 			if( !$client->query($queries['add'], $filename) ){
 				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage().'add';
@@ -258,7 +250,6 @@ class UploadedFileForm {
 		return $_FILES['qqfile']['size'];
 	}
 }
-
 
 
 /**
@@ -318,6 +309,7 @@ class FileUploader {
 		}
 		return $val;
 	}
+	
 	
 	/**
 	* Enregistre le fichier envoyé dans un dossier
@@ -547,11 +539,9 @@ class FileUploader {
 	* @return array('success' => true) ou array('error' => 'error message')
 	*/
 	public static function saveUploadedFile($uploadDirectory, $replaceOldFile = false, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
-		// Initialisation de la classe et enregistrement du fichier
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
 		$result = $uploader->handleUpload($uploadDirectory, $replaceOldFile, $filenameFunction);
 		
-		// Retourne le résultat en json
 		return htmlspecialchars(json_encode($result), ENT_NOQUOTES);
 	}
 	
@@ -568,11 +558,9 @@ class FileUploader {
 	* @return array('success' => true) ou array('error' => 'error message')
 	*/
 	public static function saveUploadedFileToFTP($ftp_stream, $uploadDirectory, $replaceOldFile = false, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
-		// Initialisation de la classe et enregistrement du fichier sur un serveur FTP
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
 		$result = $uploader->handleUploadFTP($ftp_stream, $uploadDirectory, $replaceOldFile, $filenameFunction);
 		
-		// Retourne le résultat en json
 		return htmlspecialchars(json_encode($result), ENT_NOQUOTES);
 	}
 	
@@ -589,11 +577,9 @@ class FileUploader {
 	* @return array('success' => true) ou array('error' => 'error message')
 	*/
 	public static function saveUploadedFileToManiaPlanetServer($client, $uploadDirectory, $queries, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
-		// Initialisation de la classe et enregistrement du fichier sur un serveur dédié Maniaplanet
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
 		$result = $uploader->handleUploadManiaPlanet($client, $uploadDirectory, $queries, $filenameFunction);
 		
-		// Retourne le résultat en json
 		return htmlspecialchars(json_encode($result), ENT_NOQUOTES);
 	}
 }
