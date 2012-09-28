@@ -13,12 +13,12 @@
 			if( isset($_POST['teamInfo1Name']) ){
 				$team1 = array(
 					'name' => $_POST['teamInfo1Name'],
-					'color' => (double) hexdec($_POST['teamInfo1Color']),
+					'color' => (double)hexdec($_POST['teamInfo1Color']),
 					'country' => $_POST['teamInfo1Country']
 				);
 				$team2 =  array(
 					'name' => $_POST['teamInfo2Name'],
-					'color' => (double) hexdec($_POST['teamInfo2Color']),
+					'color' => (double)hexdec($_POST['teamInfo2Color']),
 					'country' => $_POST['teamInfo2Country']
 				);
 				

@@ -37,10 +37,10 @@ abstract class File {
 		
 		if( $countFilenameEx > 2 ){
 			$out = $filenameEx[$countFilenameEx - 2];
-			$out .= strtolower('.'.$filenameEx[$countFilenameEx - 1]);
+			$out .= '.'.$filenameEx[$countFilenameEx - 1];
 		}
 		
-		return $out;
+		return strtolower($out);
 	}
 	
 	
