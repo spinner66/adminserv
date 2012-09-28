@@ -98,14 +98,6 @@ abstract class AdminServUI {
 			$list = ExtensionConfig::$THEMES;
 		}
 		$countList = count($list);
-		$countCurrentTheme = count($currentTheme);
-		
-		// Thème courant
-		if( $countCurrentTheme > 0 && $countList > 0 ){
-			$currentThemeName = key($currentTheme);
-			$currentThemeColor = current($currentTheme);
-			unset($list[$currentThemeName]);
-		}
 		
 		// Page courante
 		if(USER_PAGE && USER_PAGE != 'index'){
@@ -118,7 +110,10 @@ abstract class AdminServUI {
 		if( $countList > 0 ){
 			$out .= '<ul>';
 			// Si il y a un thème courant, on le place en 1er
-			if( $countCurrentTheme > 0 ){
+			if( count($currentTheme) > 0 ){
+				$currentThemeName = key($currentTheme);
+				$currentThemeColor = current($currentTheme);
+				unset($list[$currentThemeName]);
 				$out .= '<li><a tabindex="-1" class="theme-color" style="background-color: '.$currentThemeColor[0].';" href="'.$param.$currentThemeName.'" title="'.Utils::t( ucfirst($currentThemeName) ).'"></a></li>';
 			}
 			foreach($list as $name => $color){
@@ -205,14 +200,6 @@ abstract class AdminServUI {
 			$list = ExtensionConfig::$LANG;
 		}
 		$countList = count($list);
-		$countCurrentLang = count($currentLang);
-		
-		// Langue courante
-		if( $countCurrentLang > 0 && $countList > 0 ){
-			$currentLangCode = key($currentLang);
-			$currentLangName = current($currentLang);
-			unset($list[$currentLangCode]);
-		}
 		
 		// Page courante
 		if(USER_PAGE && USER_PAGE != 'index'){
@@ -226,7 +213,10 @@ abstract class AdminServUI {
 		if( $countList > 0 ){
 			$out .= '<ul>';
 			// S'il y a une langue courante, on la place en 1er
-			if( $countCurrentLang > 0 ){
+			if( count($currentLang) > 0 ){
+				$currentLangCode = key($currentLang);
+				$currentLangName = current($currentLang);
+				unset($list[$currentLangCode]);
 				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$currentLangCode.'.png);" href="'.$param.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
 			}
 			foreach($list as $code => $name){
@@ -375,8 +365,9 @@ abstract class AdminServUI {
 	/**
 	* Récupère le formulaire pour un champ
 	*
-	* @param string $name -> Le nom du champ affiché dans un label
-	* @param string $id   -> L'id du champ du tableau GameInfos
+	* @param array  $gameinfos -> Informations de jeu courantes et suivantes
+	* @param string $name      -> Le nom du champ affiché dans un label
+	* @param string $id        -> L'id du champ du tableau GameInfos
 	* @return string HTML
 	*/
 	public static function getGameInfosField($gameinfos, $name, $id){
@@ -403,8 +394,7 @@ abstract class AdminServUI {
 	/**
 	* Récupère le formulaire général aux informations de jeu
 	*
-	* @param array $currGamInf -> Les informations de jeu courantes
-	* @param array $nextGamInf -> Les informations de jeu suivantes
+	* @param array $gameinfos -> Informations de jeu courantes et suivantes
 	* @return string HTML
 	*/
 	public static function getGameInfosGeneralForm($gameinfos){
@@ -497,8 +487,7 @@ abstract class AdminServUI {
 	/**
 	* Récupère les formulaires des modes de jeux
 	*
-	* @param array $currGamInf -> Les informations de jeu courantes
-	* @param array $nextGamInf -> Les informations de jeu suivantes
+	* @param array $gameinfos -> Informations de jeu courantes et suivantes
 	* @return string HTML
 	*/
 	public static function getGameInfosGameModeForm($gameinfos){
@@ -561,8 +550,7 @@ abstract class AdminServUI {
 									<th class="thright">'.Utils::t('Description').'</th>
 								</tr>
 							</thead>
-							<tbody>
-							</tbody>
+							<tbody></tbody>
 						</table>
 					</div>
 				</div>';
@@ -661,7 +649,10 @@ abstract class AdminServUI {
 		global $client;
 		$out = '<option value="null">'.Utils::t('No player available').'</option>';
 		
-		if( $client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0, 1) ){
+		if( !$client->query('GetPlayerList', AdminServConfig::LIMIT_PLAYERS_LIST, 0, 1) ){
+			AdminServ::error();
+		}
+		else{
 			$playerList = $client->getResponse();
 			if( count($playerList) > 0 ){
 				$out = null;
@@ -678,7 +669,7 @@ abstract class AdminServUI {
 	
 	
 	/**
-	* Retourne une liste html pour un menu
+	* Retourne le menu pour les pages maps
 	*
 	* @return html
 	*/
@@ -724,14 +715,14 @@ abstract class AdminServUI {
 			// Titre + nouveau dossier
 			$out .= '<form id="createFolderForm" method="post" action="?p='. USER_PAGE .'&amp;d='.$currentPath.'">'
 				.'<h1>Dossiers';
-					if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['new'][1]) ){
+					if($showOptions && isset(AdminServConfig::$FOLDERS_OPTIONS) && isset(AdminServConfig::$FOLDERS_OPTIONS['new']) && AdminServConfig::$FOLDERS_OPTIONS['new'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['new'][1]) ){
 						$out .='<span id="form-new-folder" hidden="hidden">'
 							.'<input class="text" type="text" name="newFolderName" id="newFolderName" value="" />'
 							.'<input class="button light" type="submit" name="newFolderValid" id="newFolderValid" value="ok" />'
 						.'</span>';
 					}
 				$out .= '</h1>';
-				if($showOptions && AdminServConfig::$FOLDERS_OPTIONS['new'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['new'][1]) ){
+				if($showOptions && isset(AdminServConfig::$FOLDERS_OPTIONS) && isset(AdminServConfig::$FOLDERS_OPTIONS['new']) && AdminServConfig::$FOLDERS_OPTIONS['new'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['new'][1]) ){
 					$out .= '<div class="title-detail"><a href="." id="newfolder" data-cancel="'.Utils::t('Cancel').'" data-new="'.Utils::t('New').'">'.Utils::t('New').'</a></div>';
 				}
 			$out .= '</form>';
@@ -796,8 +787,8 @@ abstract class AdminServUI {
 			}
 			
 			// Options de dossier
-			if($showOptions && $currentPath){
-				if( (AdminServConfig::$FOLDERS_OPTIONS['rename'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['rename'][1])) || (AdminServConfig::$FOLDERS_OPTIONS['move'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['move'][1])) || (AdminServConfig::$FOLDERS_OPTIONS['delete'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['delete'][1])) ){
+			if($showOptions && $currentPath && isset(AdminServConfig::$FOLDERS_OPTIONS) ){
+				if( (isset(AdminServConfig::$FOLDERS_OPTIONS['rename']) && AdminServConfig::$FOLDERS_OPTIONS['rename'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['rename'][1])) || (isset(AdminServConfig::$FOLDERS_OPTIONS['move']) && AdminServConfig::$FOLDERS_OPTIONS['move'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['move'][1])) || (isset(AdminServConfig::$FOLDERS_OPTIONS['delete']) && AdminServConfig::$FOLDERS_OPTIONS['delete'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['delete'][1])) ){
 					$currentDir = basename($currentPath);
 					$out .= '<form id="optionFolderForm" method="post" action="?p='. USER_PAGE .'&amp;d='.$currentPath.'">'
 						.'<div class="option-folder-list">'
@@ -1033,11 +1024,11 @@ abstract class AdminServ {
 								define('LINK_PROTOCOL', TmNick::$linkProtocol);
 								
 								// Mode d'affichage : detail ou simple
-								if( !isset($_SESSION['adminserv']['mode']) ){
-									define('USER_MODE', 'simple');
+								if( isset($_SESSION['adminserv']['mode']) ){
+									define('USER_MODE', $_SESSION['adminserv']['mode']);
 								}
 								else{
-									define('USER_MODE', $_SESSION['adminserv']['mode']);
+									define('USER_MODE', 'simple');
 								}
 								
 								// TmForever
@@ -1170,11 +1161,11 @@ abstract class AdminServ {
 		}
 		$protocolSeparator = '://';
 		
-		if(SERVER_VERSION_NAME == 'TmForever' || substr($link, 0, 2) == '/:'){
-			$out = $protocolName.$protocolSeparator.$link;
+		if( defined('SERVER_VERSION_NAME') && SERVER_VERSION_NAME == 'ManiaPlanet'){
+			$out = $protocolName.$protocolSeparator.$link.'@'.SERVER_TITLE;
 		}
 		else{
-			$out = $protocolName.$protocolSeparator.$link.'@'.SERVER_TITLE;
+			$out = $protocolName.$protocolSeparator.$link;
 		}
 		
 		return $out;
@@ -1248,8 +1239,7 @@ abstract class AdminServ {
 	/**
 	* Récupère les informations du serveur actuel (map, serveur, stats, joueurs)
 	*
-	* @global resource $client -> Le client doit être initialisé
-	* @param  string   $sortBy -> Le tri à faire sur la liste
+	* @param string $sortBy -> Le tri à faire sur la liste
 	* @return array
 	*/
 	public static function getCurrentServerInfo($sortBy = null){
@@ -1511,9 +1501,9 @@ abstract class AdminServ {
 		}
 		
 		// Si c'est le mode Cup
-		$hasCupMode = false;
+		$isCupMode = false;
 		if( self::isGameMode('Cup') ){
-			$hasCupMode = true;
+			$isCupMode = true;
 		}
 		
 		// Suivant la commande demandée
@@ -1541,17 +1531,17 @@ abstract class AdminServ {
 				}
 				break;
 			case 'RestartMap':
-				if( !$client->query($queries['restartMap'], $hasCupMode) ){
+				if( !$client->query($queries['restartMap'], $isCupMode) ){
 					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 				}
 				break;
 			case 'NextMap':
-				if( !$client->query($queries['nextMap'], $hasCupMode) ){
+				if( !$client->query($queries['nextMap'], $isCupMode) ){
 					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 				}
 				break;
 			case 'ForceEndRound':
-				if($hasCupMode){
+				if($isCupMode){
 					if( !$client->query($queries['nextMap']) ){
 						$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 					}
@@ -1564,7 +1554,6 @@ abstract class AdminServ {
 				break;
 			default:
 				$out = Utils::t('Unknown command');
-				break;
 		}
 		
 		return $out;
@@ -1842,14 +1831,12 @@ abstract class AdminServ {
 		global $client;
 		$out = null;
 		
-		// ChatLines
 		if( !$client->query('GetChatLines') ){
 			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 		}
 		else{
 			$chatLines = $client->getResponse();
 			foreach($chatLines as $line){
-				// On masque les lignes du serveur si c'est demandé
 				if($hideServerLines){
 					$line = self::clearChatServerLine($line);
 				}
@@ -1858,7 +1845,6 @@ abstract class AdminServ {
 				if($line == '$99FThe $<$00FBlue team$> wins this round.'){ $line = Utils::t('$99FThe $<$00FBlue team$> wins this round.'); }
 				if($line == '$99FThe $<$F00Red team$> wins this round.'){ $line = Utils::t('$99FThe $<$F00Red team$> wins this round.'); }
 				
-				// On enlève les codes nadeo $s, $o, $w, etc
 				$line = TmNick::stripNadeoCode($line);
 				$line = str_replace('$>', '$z', $line);
 				$line = htmlspecialchars($line, ENT_QUOTES, 'UTF-8');
@@ -1897,7 +1883,6 @@ abstract class AdminServ {
 		global $client;
 		$out = null;
 		
-		// Version
 		if(SERVER_VERSION_NAME == 'TmForever'){
 			$queryName = 'GetTracksDirectory';
 		}
@@ -1905,7 +1890,6 @@ abstract class AdminServ {
 			$queryName = 'GetMapsDirectory';
 		}
 		
-		// Requête
 		if( !$client->query($queryName) ){
 			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 		}
@@ -1926,7 +1910,6 @@ abstract class AdminServ {
 	public static function getNbMaps($array){
 		$out = array();
 		
-		// Test si c'est un tableau
 		if( isset($array['lst']) && is_array($array['lst']) ){
 			$countMapsList = count($array['lst']);
 		}
@@ -1934,7 +1917,6 @@ abstract class AdminServ {
 			$countMapsList = 0;
 		}
 		
-		// Compte et traduit l'intitulé
 		$out['nbm']['count'] = $countMapsList;
 		if($countMapsList > 1){
 			$out['nbm']['title'] = Utils::t('maps');
@@ -2103,6 +2085,12 @@ abstract class AdminServ {
 						case 'CopperPrice':
 							$out[] = $map['CopperPrice'];
 							break;
+						case 'MapType':
+							$out[] = $map['MapType'];
+							break;
+						case 'MapStyle':
+							$out[] = $map['MapStyle'];
+							break;
 					}
 					$i++;
 				}
@@ -2128,7 +2116,7 @@ abstract class AdminServ {
 			$currentMapsListUId = self::getMapListField('UId');
 		}
 		
-		if( class_exists('Folder') && class_exists('GBXChallengeFetcher') ){
+		if( class_exists('Folder') && class_exists('GBXChallMapFetcher') ){
 			$directory = Folder::read($path, AdminServConfig::$MAPS_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
 			if( is_array($directory) ){
 				$countMapList = count($directory['files']);
@@ -2196,7 +2184,6 @@ abstract class AdminServ {
 					$out['lst'] = Utils::t('No map');
 				}
 				
-				
 				// TRIS
 				if($sortBy != null){
 					if( is_array($out['lst']) && count($out['lst']) > 0 ){
@@ -2223,7 +2210,7 @@ abstract class AdminServ {
 			}
 		}
 		else{
-			$out['error'] = 'Class "Folder" or "GBXChallengeFetcher" not found';
+			$out['error'] = 'Class "Folder" or "GBXChallMapFetcher" not found';
 		}
 		
 		return $out;
@@ -2247,17 +2234,16 @@ abstract class AdminServ {
 					$i = 0;
 					foreach($directory['files'] as $file => $values){
 						if( in_array(File::getExtension($file), AdminServConfig::$MATCHSET_EXTENSION) ){
-							// Données
 							$matchsetData = self::getMatchSettingsData($path.$file, array('maps'));
 							$matchsetNbmCount = 0;
 							if( isset($matchsetData['maps']) ){
 								$matchsetNbmCount = count($matchsetData['maps']);
 							}
 							if($matchsetNbmCount > 1){
-								$matchsetNbm = $matchsetNbmCount . ' '.Utils::t('maps');
+								$matchsetNbm = $matchsetNbmCount.' '.Utils::t('maps');
 							}
 							else{
-								$matchsetNbm = $matchsetNbmCount . ' '.Utils::t('map');
+								$matchsetNbm = $matchsetNbmCount.' '.Utils::t('map');
 							}
 							
 							$out['lst'][$i]['Name'] = substr($file, 0, -4);
@@ -2270,7 +2256,7 @@ abstract class AdminServ {
 					}
 				}
 				
-				// Nombre de maps
+				// Nombre de matchsettings
 				if( isset($out['lst']) && is_array($out['lst']) ){
 					$out['nbm']['count'] = $countMatchsetList;
 					if( count($out['lst']) > 1){
@@ -2360,7 +2346,6 @@ abstract class AdminServ {
 	public static function saveMatchSettings($filename, $struct){
 		$out = false;
 		
-		// Jeu
 		if(SERVER_VERSION_NAME == 'TmForever'){
 			$mapField = 'challenge';
 		}
@@ -2368,7 +2353,6 @@ abstract class AdminServ {
 			$mapField = 'map';
 		}
 		
-		// Génération du XML
 		$out = '<?xml version="1.0" encoding="utf-8" ?>'."\n"
 		."<playlist>\n";
 			// GameInfos, Hotseat, Filter
@@ -2399,7 +2383,6 @@ abstract class AdminServ {
 			}
 		$out .= "</playlist>\n";
 		
-		// Création XML
 		if( ! @$newXMLObject = simplexml_load_string($out) ){
 			$out = Utils::t('text->XML conversion error');
 		}
@@ -2427,14 +2410,12 @@ abstract class AdminServ {
 		$out = array();
 		$xml = null;
 		
-		// Chargement du fichier XML
 		if( @file_exists($filename) ){
 			if( !($xml = @simplexml_load_file($filename)) ){
 				$out['error'] = 'simplexml_load_file error';
 			}
 		}
 		
-		// Lecture du fichier XML
 		if($xml){
 			// Jeu
 			if(SERVER_VERSION_NAME == 'TmForever'){
@@ -2517,7 +2498,7 @@ abstract class AdminServ {
 	
 	
 	/**
-	* Met en forme les données des maps du MatchSettings
+	* Met en forme les données des maps à partir d'un MatchSettings
 	*
 	* @global resource $client -> Le client doit être initialisé
 	* @param  array    $maps   -> Le tableau extrait du matchsettings : assoc array(ident => filename)
@@ -2534,7 +2515,13 @@ abstract class AdminServ {
 			foreach($maps as $mapUId => $mapFileName){
 				if( in_array(File::getDoubleExtension($mapFileName), AdminServConfig::$MAP_EXTENSION) ){
 					// Données
-					$Gbx = new GBXChallengeFetcher($path.Str::toSlash($mapFileName), true);
+					if(SERVER_VERSION_NAME == 'TmForever'){
+						$Gbx = new GBXChallengeFetcher($path.Str::toSlash($mapFileName));
+					}
+					else{
+						$Gbx = new GBXChallMapFetcher();
+						$Gbx->processFile($path.Str::toSlash($mapFileName));
+					}
 					
 					// Name
 					$name = htmlspecialchars($Gbx->name, ENT_QUOTES, 'UTF-8');
@@ -2573,7 +2560,6 @@ abstract class AdminServ {
 	public static function getPlaylistData($filename){
 		$out = array();
 		
-		// Chargement du fichier XML
 		$xml = null;
 		if( @file_exists($filename) ){
 			if( !($xml = @simplexml_load_file($filename)) ){
@@ -2581,7 +2567,6 @@ abstract class AdminServ {
 			}
 		}
 		
-		// Lecture du fichier XML
 		if($xml){
 			$out['type'] = @$xml->getName();
 			foreach($xml->player as $player){
@@ -2760,6 +2745,7 @@ abstract class AdminServSort {
 }
 
 
+
 /**
 * Classe pour le traitement des logs AdminServ
 */
@@ -2852,6 +2838,7 @@ abstract class AdminServLogs {
 		return $out;
 	}
 }
+
 
 
 /**
@@ -3100,7 +3087,6 @@ abstract class AdminServPlugin {
 		$otherPluginsList = AdminServConfig::PLUGINS_LIST;
 		
 		if($otherPluginsList){
-			// Récupération du fichier
 			if( file_exists($otherPluginsList) ){
 				include_once $otherPluginsList;
 				
