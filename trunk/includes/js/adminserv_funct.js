@@ -250,6 +250,7 @@ function getCurrentServerInfo(mode, sort){
 				
 				// HTML
 				$('#playerlist table tbody').html(out);
+				$('.cadre.right .options .nb-line').html(data.nbp);
 				if( $('#playerlist').hasClass('loading') ){
 					$('#playerlist').removeClass('loading');
 				}
@@ -590,6 +591,7 @@ function getMapList(mode, sort){
 				
 				// HTML
 				$('#maplist table tbody').html(out);
+				$('.cadre.right .options .nb-line').html(data.nbm.count+' '+data.nbm.title);
 				if( $('#maplist').hasClass('loading') ){
 					$('#maplist').removeClass('loading');
 				}

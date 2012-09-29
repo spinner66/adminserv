@@ -1369,12 +1369,14 @@ abstract class AdminServ {
 					if($player['TeamId'] == 0){ $teamName = Utils::t('Blue'); }else if($player['TeamId'] == 1){ $teamName = Utils::t('Red'); }else{ $teamName = Utils::t('Spectator'); }
 					$out['ply'][$i]['TeamName'] = $teamName;
 					$out['ply'][$i]['SpectatorStatus'] = $player['SpectatorStatus'];
-					$out['ply'][$i]['Rank'] = $rankingList[$i]['Rank'];
-					$out['ply'][$i]['BestTime'] = $rankingList[$i]['BestTime'];
-					$out['ply'][$i]['BestCheckpoints'] = $rankingList[$i]['BestCheckpoints'];
-					$out['ply'][$i]['Score'] = $rankingList[$i]['Score'];
-					$out['ply'][$i]['NbrLapsFinished'] = $rankingList[$i]['NbrLapsFinished'];
-					$out['ply'][$i]['LadderScore'] = $rankingList[$i]['LadderScore'];
+					if( isset($rankingList[$i]) ){
+						$out['ply'][$i]['Rank'] = $rankingList[$i]['Rank'];
+						$out['ply'][$i]['BestTime'] = $rankingList[$i]['BestTime'];
+						$out['ply'][$i]['BestCheckpoints'] = $rankingList[$i]['BestCheckpoints'];
+						$out['ply'][$i]['Score'] = $rankingList[$i]['Score'];
+						$out['ply'][$i]['NbrLapsFinished'] = $rankingList[$i]['NbrLapsFinished'];
+						$out['ply'][$i]['LadderScore'] = $rankingList[$i]['LadderScore'];
+					}
 					if($player['LadderRanking'] == -1){
 						$player['LadderRanking'] = Utils::t('Not rated');
 					}
