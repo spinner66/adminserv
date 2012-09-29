@@ -53,7 +53,7 @@ footer,
 	position: absolute;
 	left: 0;
 	top: 84px;
-	width: 30%;
+	width: 60%;
 }
 .speed-admin ul {
 	width: 100%;
@@ -81,7 +81,7 @@ footer,
 .switch-server {
 	top: 84px;
 	right: 0;
-	width: 60%;
+	width: 40%;
 }
 .switch-server #switchServerList {
 	padding: 7px 10px 8px;
@@ -149,6 +149,9 @@ footer,
 .section-index .title-detail,
 .section-guestban .title-detail {
 	top: 24px;
+}
+#playerlist {
+	min-height: 150px;
 }
 .section-chat #chatNickname {
 	width: 18%;

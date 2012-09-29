@@ -286,7 +286,7 @@ abstract class AdminServUI {
 		if( defined('USER_THEME') && USER_THEME ){
 			$out .= '<link rel="stylesheet" href="'.$path.'styles/theme.php?th='. USER_THEME .'" />'."\n\t\t";
 		}
-		$out .= '<link rel="stylesheet" media="screen and (max-width: 1000px)" href="'.$path.'styles/mobile.css" />'."\n";
+		$out .= '<link rel="stylesheet" media="screen and (max-width: 1000px) and (min-width: 335px)" href="'.$path.'styles/mobile.css" />'."\n";
 		
 		return $out;
 	}
