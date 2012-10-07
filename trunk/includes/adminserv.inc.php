@@ -1296,19 +1296,20 @@ abstract class AdminServ {
 			$out['map']['enviro'] = $currentMapInfo['Environnement'];
 			
 			// MapThumbnail
+			$out['map']['thumb'] = null;
 			if( isset($queriesData['GetMapsDirectory']) && $currentMapInfo['FileName'] != null){
-				if(SERVER_VERSION_NAME == 'TmForever'){
-					$Gbx = new GBXChallengeFetcher($queriesData['GetMapsDirectory'].$currentMapInfo['FileName'], false, true);
+				$mapFileName = $queriesData['GetMapsDirectory'].$currentMapInfo['FileName'];
+				if( file_exists($mapFileName) ){
+					if(SERVER_VERSION_NAME == 'TmForever'){
+						$Gbx = new GBXChallengeFetcher($queriesData['GetMapsDirectory'].$currentMapInfo['FileName'], false, true);
+					}
+					else{
+						$Gbx = new GBXChallMapFetcher(false, true);
+						$Gbx->processFile($queriesData['GetMapsDirectory'].$currentMapInfo['FileName']);
+					}
+					
+					$out['map']['thumb'] = base64_encode($Gbx->thumbnail);
 				}
-				else{
-					$Gbx = new GBXChallMapFetcher(false, true);
-					$Gbx->processFile($queriesData['GetMapsDirectory'].$currentMapInfo['FileName']);
-				}
-				
-				$out['map']['thumb'] = base64_encode($Gbx->thumbnail);
-			}
-			else{
-				$out['map']['thumb'] = null;
 			}
 			
 			// CurrentCallVote
