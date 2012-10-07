@@ -600,13 +600,18 @@ $(document).ready(function(){
 					$('input#GotoListMaps').attr('checked', false);
 				}
 				uploader.setParams({
-					type: $('.transferMode li.selected input').val()
+					path: getPath(),
+					type: $('.transferMode li.selected input').val(),
+					mset: ( $('#SaveCurrentMatchSettings').attr('checked') ) ? true : false,
+					gtlm: ( $('#GotoListMaps').attr('checked') ) ? true : false
 				});
 			});
 			
 			// Options
 			$('.options-checkbox input, .options-checkbox label').click(function(){
 				uploader.setParams({
+					path: getPath(),
+					type: $('.transferMode li.selected input').val(),
 					mset: ( $('#SaveCurrentMatchSettings').attr('checked') ) ? true : false,
 					gtlm: ( $('#GotoListMaps').attr('checked') ) ? true : false
 				});
