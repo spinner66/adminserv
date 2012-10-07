@@ -115,7 +115,7 @@
 	}
 	else if( isset($_POST['deleteMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			$result = File::delete($mapsDirectoryPath.$map);
+			$result = File::delete($mapsDirectoryPath.$directory.$map);
 			if($result !== true){
 				AdminServ::error(Utils::t('Unable to delete the map').' : '.$map.' ('.$result.')');
 				break;
