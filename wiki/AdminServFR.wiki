@@ -1,0 +1,199 @@
+#summary Documentation, FR
+
+*AdminServ* est un contrôleur de serveur dédié pour TrackMania Forever et ManiaPlanet. Il permet de gérer ses serveurs à distance via son navigateur internet.
+
+
+=Requis=
+  * Un serveur web (de préférence évitez les serveurs gratuits)
+  * PHP version 5.3+
+  * Un serveur dédié TrackMania Forever / ManiaPlanet en fonctionnement
+
+
+=Installation=
+Extraire le fichier "adminserv.zip" où bon vous semble sur un serveur web, et accédez au site via votre navigateur interne.
+
+
+=Configuration=
+
+==Serveurs==
+
+===En ligne===
+La configuration en ligne est activée par défaut. S'il n'y a aucun serveur, AdminServ détermine que c'est votre 1ère connexion et demande la création d'un mot de passe pour gérer la configuration des serveurs en ligne.
+
+Une fois le mot de passe enregistré, vous pouvez ajouter votre serveur :
+  * *Nom du serveur*: Ce nom est utilisé dans les listes déroulantes pour le choix du serveur à administrer. Les caractères spéciaux sont automatiquement enlevés.
+  * *Adresse*: L'adresse IP ou le nom de domaine pointant vers la machine du serveur dédié.
+  * *Port XMLRPC*: Ce port permet de contrôler le serveur. Il est défini dans le fichier "dedicated_cfg.txt" et il doit être ouvert dans le parfeu et routeur pour y accéder à distance.
+
+
+Les informations suivantes sont optionnelles :
+
+  * *MatchSettings du serveur*: En général, on utilise un matchsettings spécifique pour le serveur contenant la liste des maps et les réglages du mode de jeu. Vous pouvez mettre le nom du matchsettings à partir du dossier Maps ou Tracks du serveur dédié pour l'enregistrer automatiquement par la suite. L'extension du fichier n'est pas utile. Si le matchsettings n'existe pas, il sera créé.
+  * *Niveaux SuperAdmin, Admin et User*: Vous pouvez pour les 3 niveaux d'autorisations en limiter l'accès. Les valeurs possibles sont :
+    * *all* : accès à tous
+    * *local* : accès au réseau local
+    * *192.168.0.1, 192.168.0.2* : accès à une ou plusieurs adresses IP
+    * *none* : accès enlevé de la liste
+
+
+Une fois le serveur enregistré, vous pouvez visualiser la liste des serveurs dans l'onglet *Serveurs* ou commencer à administrer le serveur en cliquant sur *Retour* en haut à droite.
+
+Pour revenir à la configuration en ligne, il suffit de rajouter */config* dans l'url. Vous pouvez aussi modifier le mot de passe de connexion à tout moment dans l'onglet *Changer le mot de passe*.
+
+
+===Offline===
+Il est aussi possible d'éditer le fichier de configuration des serveurs dans le dossier d'AdminServ : */config/servers.cfg.php*
+Quelques notions de PHP vous serons utiles. La configuration d'un serveur est la suivante :
+{{{
+'Server name' => array(
+    'address' => 'localhost',
+    'port' => 5000,
+    'matchsettings' => 'matchsettings_name',
+    'adminlevel' => array(
+        'SuperAdmin' => 'all’,
+        'Admin' => 'all',
+        'User' => 'all',
+    )
+),
+}}}
+
+
+==AdminServ==
+
+La configuration d’AdminServ est optionnelle. Le fichier correspondant est : *config/adminserv.cfg.php*
+
+===OnlineConfig===
+  * *ACTIVATE* : Activer ou non la configuration en ligne.
+  * *PASSWORD* : Mot de passe en MD5 généré automatiquement par le configurateur de serveurs.
+  * *ADDRESS* : Limiter l'accès à la configuration suivant l'adresse IP. Désactivé par défaut. Possibilité de mettre localhost.
+  * *ADD_ONLY* : Ajouter seulement les serveurs. Vous ne pouvez pas voir les autres serveurs, ni les modifier ou les supprimer.
+
+===AdminServConfig===
+  * *TITLE* : Le titre de l'application. Par défaut Admin,Serv sachant que la virgule sépare la couleur.
+  * *SUBTITLE* : Le sous titre de l'application. Mettez null pour désactiver.
+  * *LOGO* : Le chemin de l'image principale de l'application à partir du dossier /ressources/images/. Mettez null pour désactiver.
+  * *DEFAULT_THEME* : Thème par défaut chargé à la 1ère connexion. La valeur correspond à la configuration des thèmes : [AdminServ#Extension]
+  * *DEFAULT_LANGUAGE* : Langue par défaut chargée à la 1ère connexion. La valeur correspond à la configuration des langues : [AdminServ#Extension]. Si la valeur est auto, alors la langue est récupérée automatiquement.
+  * *USE_DISPLAYSERV* : Utiliser l'outil DisplayServ sur la page de connexion. Pour la documentation de DisplayServ : [DisplayServ http://code.google.com/p/adminserv/wiki/DisplayServ]
+  * *AUTOSAVE_MATCHSETTINGS* : Permet d’enregistrer automatiquement le MatchSettings à chaque modification des informations de jeu et d’ajout de map. Le matchsettings enregistré est celui définit dans la configuration du serveur.
+  * *MD5_PASSWORD* : Si activé, le mot de passe pour la connexion sera testé en MD5. Il faudra alors mettre le mot de passe du serveur dédié en MD5 également.
+  * *LIMIT_PLAYERS_LIST* : Permet de définir le nombre de lignes max sur la page "général".
+  * *LIMIT_MAPS_LIST* : Permet de définir le nombre de ligne max sur la page maps-list. Pas de limite pour les maps locales.
+  * *LOCAL_GET_MAPS_ON_SERVER* : Si activé, AdminServ va charger la liste des maps du serveur pour faire une comparaison avec les maps locales. L'icône change d'état et il n'est pas possible de renommer, déplacer ou supprimer une map utilisée sur le serveur. Cela permet d'éviter les erreurs (pour les chemins des fichiers dans le matchsettings) et aussi pour visualiser facilement lesquelles sont déjà sur le serveur. L'inconvénient est que le temps de chargement sera augmenté s'il y a beaucoup de maps sur le serveur.
+  * *RECENT_STATUS_PERIOD* : Période pour définir le statut d’un fichier en tant que récent. Le temps est à spécifier en heure. Dans certaines pages, les lignes modifiées récemment seront surlignées en jaune pendant le temps définit par ce paramètre.
+  * *SERVER_CONNECTION_TIMEOUT* : Temps maximum à attendre pour se connecter au serveur.
+  * *COOKIE_EXPIRE* : Nombre de jours avant que les paramètres de l'utilisateur expirent. Les paramètres enregistrés dans le cookie sont : thème, langue, pseudo de chat, couleur de chat, dernier serveur administré avec son niveau d'administration.
+  * *FOLDERS_OPTIONS* : Vous pouvez activer ou désactiver les options de dossier tel que : nouveau, renommer, déplacer, supprimer. Pour chaque action, il y a 2 paramètres à définir. L'activation de l'action et le niveau admin minimum pour utiliser cette action.
+  * *MAPS_HIDDEN_FOLDERS* : Permet de cacher les dossiers inutilisés dans les pages maps.
+  * *MATCHSET_HIDDEN_FOLDERS* : Permet de cacher les dossiers inutilisés dans les pages matchsettings.
+  * *MAP_EXTENSION* : Double extension pour lister les maps.
+  * *MATCHSET_EXTENSION* : Extension pour lister les matchsettings.
+  * *PLAYLIST_EXTENSION* : Extension pour lister les playlists (guestlist, blacklist, etc). Les deux playlists générées par le serveur dédié (guestlist et blacklist) sont déjà prises en compte.
+  * *ALLOWED_EXTENSIONS* : Extensions autorisées pour l'upload de fichier.
+  * *SIZE_LIMIT* : La taille limite par fichier envoyé. Si la valeur est auto, c'est la taille du serveur web qui est utilisée (configuration du php.ini).
+  * *LOGS* : Logs d'AdminServ. Vous pouvez activer les logs pour chaque fichier. Accès aux pages (access), actions utilisées (action), erreurs rencontrées (error). Il est possible d'ajouter des fichiers de logs dans la configuration. Chaque fichier est crée s'il n'existe pas. Pour écrire un log, utilisez :
+{{{
+AdminServLogs ::add ('nom_du_fichier_log', 'texte à écrire');
+}}}
+  * *MULTI_ADMINSERV* : Permet d'utiliser plusieurs instances d'AdminServ. Utile pour ceux qui gèrent beaucoup de serveurs. Cela permet de modifier l'emplacement des dossiers utilisés pour toutes les instances et faciliter la maintenance d'AdminServ ainsi que l'ajout mutualisé de plugins.
+  * *PATH_INCLUDES* : Chemin du dossier includes.
+  * *PATH_PLUGINS* : Chemin du dossier plugins.
+  * *PATH_RESSOURCES* : Chemin du dossier ressources.
+  * *PLUGINS_LIST* : Chemin du fichier de configuration des plugins. Par défaut, AdminServ utilise la configuration Extension.cfg.php. Cette option permet de définir une liste de plugins pour plusieurs instances d'AdminServ. Dans le fichier php spécifié, il faut une variable :
+{{{
+    $PLUGINS = array(
+        'pluginfoldername',
+    );
+}}}
+  * *PLUGINS_LIST_TYPE*: La méthode utilisée pour le fichier de configuration des plugins. Par défaut `replace`, le nouveau fichier remplace la configuration actuelle. Mais vous pouvez aussi ajouter les plugins à la suite avec `add`.
+
+===DataBaseConfig & FTPConfig===
+Ces 2 configurations ne sont pas utilisées par AdminServ. Mais elles pourront servir pour d’éventuels plugins...
+
+==Extension==
+The configuration for the extension of Adminserv is in: *config/extension.cfg.php*
+
+  * *PLUGINS*: List of installed plugins. We must put the name of the folder where are all downloaded plugin. To learn more about the plugins: [http://code.google.com/p/adminserv/wiki/Plugins]
+  * *THEMES*: List of the color themes. For each theme name, there are two colors to define. The first is the main color (bright color) and the second is the color used for items clicked (light color).
+{{{
+    'name_of_the_color_of_the_theme' => array(
+        'red', // bright color
+        'rgba(0,0,0,.1)' // light color
+    )
+}}}
+    Colors can be in text, hex and rgb (a).
+  * *LANG*: List of available languages​​:
+{{{
+    'code_lang' => 'title'
+}}}
+     The language code corresponds both to name of the image (resources/images/lang/) and the file name (/includes/lang/). The title is indicative.
+  * *GAMEMODES*: List of game modes The list must be made ​​from ManiaPlanet.
+  * *MAPSMENU*: Menu list in the *Maps* pages. You can change the order or add an entry redirecting to a plugin for example.
+
+
+=Connection=
+Once a server configured, simply select it and enter the password of the dedicated server to connect to the administration.
+
+At the next login, Adminserv automatically saves the last used server and selects it. You can also select a server using the ?server=1 to select the second server instance.
+
+
+The password can be encrypted in MD5 if enabled in the configuration adminserv.cfg.php. In this case, it will also need a password md5 for the dedicated server.
+
+You can remove admin levels in the server configuration. Just set the level value to none.
+
+You can press any entry in the page to automatically connect.
+
+To the display of DisplayServ, you must enable the option `use_displayserv` in the configuration `adminserv.cfg.php`. All about Displayserv: [http://code.google.com/p/adminserv/wiki/DisplayServ]
+
+=Specifications on pages=
+
+==General==
+  * Data are updated every 10 seconds.
+  * The display of the page is different if the game mode is *Team*. Below the Information of the map, there is the possibility to force scores (sending a message to the server for each change), and players are sorted and displayed by team. There are also two new buttons to change the team of players.
+  * The button *Cancel the Vote* appears only if the vote is in progress on the server.
+  * It is possible to stop the server only on this page. Use the `?stop` in the url. This action is available only to the level SuperAdmin.
+
+=Server options==
+  * The information is changed directly on the server but are not stored in the configuration file dedicated_cfg.txt
+  * For the name and comment of the server, there is an overview of the display ingame.
+
+==Game information==
+  * At each selection of a new game mode, the configuration is loaded below.
+  * This game information can be saved in the current matchsettings.
+
+==Chat==
+  * Data are collected every 3 seconds.
+  * The link at the top right *Hide Rows of the server* will hide the rows that are generated by the server manager. Only lines of players will then be displayed.
+  * The nickname, if specified, appears in the chat as : `[admin:Nickname] Message`
+  * You can press enter in the message field to send your text.
+
+==Maps - List==
+  * The current map is highlighted in yellow. No action is possible for this map.
+  * From 25 maps, a link *Go to the current map* shown to scroll toward it.
+
+==Maps - Local==
+  * If you click on a folder, you have the folder's options. Then you can rename, move or delete a folder.
+  * All actions work with several maps. For the download action, you will have a zip file containing all maps. For the delete action, there is always a confirmation to perform.
+  * If maps are highlighted in yellow, is that they were recently added or modified.
+
+==Maps - Send==
+  * *Add*: to add maps at the end of list
+  * *Insert*: to insert maps after the current map
+  * *Send*: to simply send in the folder chosen.
+  * For the upload, you can upload multiple files simultaneously. Either by drag in the corresponding frame or by clicking on *Browse...*
+
+==Maps - Order==
+  * The current map is excluded from the display. At registration, the list will be sorted after the current map.
+
+==Maps - MatchSettings==
+  * If the line is highlighted in yellow, is that the matchsettings was recently modified.
+
+==Maps - Create MatchSettings==
+  * A message appears if the name of the matchsettings exists. If you save without changing the name, it will be overwritten.
+
+==Plugins==
+  * List only the plugins compatible with the server version (ManiaPlanet or TmForever) and with the admin level.
+  * All about plugins: [http://code.google.com/p/adminserv/wiki/Plugins]
+
+==Guest-Bans==
+  * You can add a player on the server (or have to login). If you want to add a player to a specific playlist, you must load first the playlist.
