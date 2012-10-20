@@ -194,7 +194,7 @@ To the display of DisplayServ, you must enable the option `use_displayserv` in t
 
 ==Plugins==
   * List only the plugins compatible with the server version (ManiaPlanet or TmForever) and with the admin level.
-  * All about plugins: click here
+  * All about plugins: [http://code.google.com/p/adminserv/wiki/Plugins]
 
 ==Guest-Bans==
   * You can add a player on the server (or have to login). If you want to add a player to a specific playlist, you must load first the playlist.
