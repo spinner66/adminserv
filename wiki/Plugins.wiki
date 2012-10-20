@@ -4,7 +4,7 @@ Plugins are extensions to add features to Adminserv.
 
 
 =1# Installing a plugin=      
-Plugins are available on the download page of the project Adminserv: Click here
+See all plugins: [http://www.zone-kev717.info/adminserv/plugins/]
   * Unzip the plugin and place its contents into the "plugins" folder of Adminserv.
   * In the Configuration Extension, add the name of the plugin folder previously added.
 {{{
