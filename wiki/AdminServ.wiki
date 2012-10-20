@@ -114,7 +114,7 @@ These two configurations are not used by Adminserv. But they can be used for eve
 ==Extension==
 The configuration for the extension of Adminserv is in: *config/extension.cfg.php*
 
-  * *PLUGINS*: List of installed plugins. We must put the name of the folder where are all downloaded plugin. To learn more about the plugins: Plugins
+  * *PLUGINS*: List of installed plugins. We must put the name of the folder where are all downloaded plugin. To learn more about the plugins: [http://code.google.com/p/adminserv/wiki/Plugins]
   * *THEMES*: List of the color themes. For each theme name, there are two colors to define. The first is the main color (bright color) and the second is the color used for items clicked (light color).
 {{{
     'name_of_the_color_of_the_theme' => array(
