@@ -2,7 +2,7 @@
 #labels Featured,Phase-Requirements,Phase-Implementation
 
 DisplayServ displays the status of your dedicated servers for TrackMania Forever and ManiaPlanet.
-= =
+=&nbsp;=
 =1# Requirements=
  * A web server (preferably avoid free servers)
  * PHP version 5.3+
