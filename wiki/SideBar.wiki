@@ -1,5 +1,5 @@
  * [AdminServ]
-   * [Requirements]
+   * [Requirements AdminServ#Requirements]
  * [Plugins]
  * [DisplayServ]
  * [Screenshots]
