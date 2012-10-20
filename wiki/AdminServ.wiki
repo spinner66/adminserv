@@ -4,7 +4,7 @@
 *AdminServ* is a dedicated server controller. It’s a website that can manage its servers remotely connected on TmForever and ManiaPlanet.
 
 
-=1. Requirements=
+=Requirements=
   * A web server (preferably avoid free servers)
   * PHP version 5.3+
   * A dedicated server TrackMania Forever / ManiaPlanet in use
@@ -14,7 +14,7 @@
 Extract the file "adminserv.zip" where you want on a web server, and access the website via your Internet browser.
 
 
-=3. Configuration=
+=Configuration=
 
 ==Servers==
 
@@ -132,7 +132,7 @@ The configuration for the extension of Adminserv is in: *config/extension.cfg.ph
   * *MAPSMENU*: Menu list in the *Maps* pages. You can change the order or add an entry redirecting to a plugin for example.
 
 
-=4. Connection=
+=Connection=
 Once a server configured, simply select it and enter the password of the dedicated server to connect to the administration.
 
 At the next login, Adminserv automatically saves the last used server and selects it. You can also select a server using the ?server=1 to select the second server instance.
@@ -146,7 +146,7 @@ You can press any entry in the page to automatically connect.
 
 To the display of DisplayServ, you must enable the option `use_displayserv` in the configuration `adminserv.cfg.php`. All about Displayserv: [http://code.google.com/p/adminserv/wiki/DisplayServ]
 
-=5. Specifications on pages=
+=Specifications on pages=
 
 ==General==
   * Data are updated every 10 seconds.
