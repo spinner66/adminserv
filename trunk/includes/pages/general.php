@@ -338,7 +338,7 @@
 							// Ligne
 							$showPlayerList .= '<tr class="'; if($i%2){ $showPlayerList .= 'even'; }else{ $showPlayerList .= 'odd'; } $showPlayerList .= '">';
 								if($isTeamGameMode && USER_MODE == 'detail'){
-									$showPlayerList .= '<td class="detailModeTd imgleft"><span class="team_'.$player['TeamId'].'" title="'.$player['TeamName'].'"></span>'.$player['TeamName'].'</td>';
+									$showPlayerList .= '<td class="detailModeTd imgleft"><span class="team_'.$player['TeamId'].'" title="'.$player['TeamName'].'">&nbsp;</span>'.$player['TeamName'].'</td>';
 								}
 								
 								$showPlayerList .= '<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>';
