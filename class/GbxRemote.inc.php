@@ -6,38 +6,39 @@
 	Version 1.61 - Simon Willison, 11th July 2003 (htmlentities -> htmlspecialchars)
 	Site:   http://scripts.incutio.com/xmlrpc/
 	Manual: http://scripts.incutio.com/xmlrpc/manual.php
+	Errors: http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php
 	Made available under the Artistic License: http://www.opensource.org/licenses/artistic-license.php
 
 	Modified to support protocol 'GbxRemote 2' ('GbxRemote 1')
-	This version is for LittleEndian (e.g. Intel PC) machines.
-	For BigEndian machines use GbxRemote.bem.php as GbxRemote.inc.php instead.
+	This version is for LittleEndian (e.g. Intel PC) machines.  For BegEndian
+	machines use GbxRemote.bem.php as GbxRemote.inc.php instead.
 
 	Release 2007-09-22 - Slig:
 		Modified to support >256KB received data (and now >2MB data produce a specific error message)
 		Modified readCB() to wait the initial timeout only before first read packet
 		Modified readCB() to return true if there is data to get with getCBResponses()
 		Modified to support amd64 (for $recvhandle)
-		Modified IXR_ClientMulticall_Gbx->addCall() to fit Aseco 0.6.1
-		Added IXR_Client_Gbx->bytes_sent & bytes_received counters
+		Modified IXR_ClientMulticall_Gbx::addCall() to fit Aseco 0.6.1
+		Added IXR_Client_Gbx::bytes_sent & bytes_received counters
 		Fix for a changed feature since php5.1.1 about reference parameter assignment (was used in stream_select)
 		Workaround for stream_select return value bug with amd64
 
 	Release 2008-01-20 - Slig / Xymph / Assembler Maniac:
 		Workaround for fread delay bug in some cases
-		Added resetError method (by Xymph)
+		Added IXR_Client_Gbx::resetError() method (by Xymph)
 		Some comments and strings code cleanup (by Xymph)
 		Fix stream_set_timeout($this->socket,...) (thx to CavalierDeVache)
-		Added a default timeout value to function readCB($timeout)
+		Added a default timeout value to IXR_Client_Gbx::readCB($timeout)
 		Changed calls with timeout on a stream to use microseconds instead of seconds (by AM)
-		Removed IXR_Client_Gbx->bytes_sent & bytes_received counters - not used (by AM)
+		Removed IXR_Client_Gbx::bytes_sent & bytes_received counters - not used (by AM)
 
 	Release 2008-02-05 - Slig:
 		Changed some socket read/write timeouts back to seconds to avoid 'transport error'
 		Changed max data received from 2MB to 4MB
 
 	Release 2008-05-20 - Xymph:
-		Prevented unpack() warnings in query method when the connection dies
-		Changed resetError method to assign 'false' for correct isError method
+		Prevented unpack() warnings in IXR_Client_Gbx::query() when the connection dies
+		Changed IXR_Client_Gbx::resetError() to assign 'false' for correct isError()
 		Tweaked some 'transport error' messages
 
 	Release 2009-04-08 - Gou1:
@@ -49,6 +50,17 @@
 
 	Release 2009-06-03 - Xymph:
 		Suppress possible repetitive CRT warning at stream_select
+
+	Release 2011-04-09 - Xymph / La beuze:
+		Added optional timeout mechanism to IXR_Client_Gbx::InitWithIp()
+
+	Release 2011-05-22 - Xymph:
+		Added non-error (true) return status to IXR_Client_Gbx::queryIgnoreResult()
+		Updated status codes and messages for transport/endian errors
+		Prevented possible PHP warning in IXR_Client_Gbx::getErrorCode() and getErrorMessage()
+
+	Release 2011-12-04 - Xymph:
+		Prevented possible PHP warning in IXR_Value::calculateType
 */
 
 if (!defined('LF')) {
@@ -89,10 +101,10 @@ class IXR_Value {
 			return 'double';
 		}
 		// Deal with IXR object types base64 and date
-		if (is_object($this->data) && is_a($this->data, 'IXR_Date')) {
+		if (is_object($this->data) && ($this->data instanceof IXR_Date)) {
 			return 'date';
 		}
-		if (is_object($this->data) && is_a($this->data, 'IXR_Base64')) {
+		if (is_object($this->data) && ($this->data instanceof IXR_Base64)) {
 			return 'base64';
 		}
 		// If it is a normal PHP object convert it into a struct
@@ -478,15 +490,25 @@ class IXR_Client_Gbx {
 		$this->reqhandle = 0x80000000;
 	}
 
-	function InitWithIp($ip, $port) {
+	function InitWithIp($ip, $port, $timeout = null) {
 
 		if (!$this->bigEndianTest()) {
-			$this->error = new IXR_Error(-32999, 'endian error - script doesn\'t match machine type');
+			$this->error = new IXR_Error(-31999, 'endian error - script doesn\'t match machine type');
 			return false;
 		}
 
-		// open connection
-		$this->socket = @fsockopen($ip, $port, $errno, $errstr, $timeout = 5);
+		// open connection, with timeout if specified
+		if (!isset($timeout)) {
+			$this->socket = @fsockopen($ip, $port, $errno, $errstr);
+		} else {
+			$init_time = microtime(true);
+			$init_timeout = 5; // retry every 5s
+			while (true) {
+				$this->socket = @fsockopen($ip, $port, $errno, $errstr, $init_timeout);
+				if ($this->socket || (microtime(true) - $init_time >= $timeout))
+					break;
+			}
+		}
 		if (!$this->socket) {
 			$this->error = new IXR_Error(-32300, "transport error - could not open socket (error: $errno, $errstr)");
 			return false;
@@ -524,7 +546,7 @@ class IXR_Client_Gbx {
 	protected function sendRequest(IXR_Request $request) {
 		$xml = $request->getXml();
 
-		@stream_set_timeout($this->socket, 20);  // timeout 20 s (to write the request)
+		@stream_set_timeout($this->socket, 20);  // timeout 20s (to write the request)
 		// send request
 		$this->reqhandle++;
 		if ($this->protocol == 1) {
@@ -535,7 +557,7 @@ class IXR_Client_Gbx {
 
 		$bytes_to_write = strlen($bytes);
 		while ($bytes_to_write > 0) {
-			$r = fwrite($this->socket, $bytes);
+			$r = @fwrite($this->socket, $bytes);
 			if ($r === false || $r == 0) {
 				// connection interrupted
 				return false; // or die?
@@ -557,12 +579,12 @@ class IXR_Client_Gbx {
 		do {
 			$size = 0;
 			$recvhandle = 0;
-			@stream_set_timeout($this->socket, 20);  // timeout 20 s (to read the reply header)
+			@stream_set_timeout($this->socket, 20);  // timeout 20s (to read the reply header)
 			// Get result
 			if ($this->protocol == 1) {
 				$contents = fread($this->socket, 4);
 				if (strlen($contents) == 0) {
-					$this->error = new IXR_Error(-32700, 'transport error - connection interrupted!');
+					$this->error = new IXR_Error(-32300, 'transport error - cannot read size');
 					return false;
 				}
 				$array_result = unpack('Vsize', $contents);
@@ -571,7 +593,7 @@ class IXR_Client_Gbx {
 			} else {
 				$contents = fread($this->socket, 8);
 				if (strlen($contents) == 0) {
-					$this->error = new IXR_Error(-32700, 'transport error - connection interrupted!');
+					$this->error = new IXR_Error(-32300, 'transport error - cannot read size/handle');
 					return false;
 				}
 				$array_result = unpack('Vsize/Vhandle', $contents);
@@ -585,11 +607,11 @@ class IXR_Client_Gbx {
 			}
 
 			if ($recvhandle == 0 || $size == 0) {
-				$this->error = new IXR_Error(-32700, 'transport error - connection interrupted!');
+				$this->error = new IXR_Error(-32300, 'transport error - connection interrupted!');
 				return false;
 			}
 			if ($size > 4096*1024) {
-				$this->error = new IXR_Error(-32700, "transport error - answer too big ($size)");
+				$this->error = new IXR_Error(-32300, "transport error - response too large ($size)");
 				return false;
 			}
 
@@ -632,22 +654,22 @@ class IXR_Client_Gbx {
 		$method = array_shift($args);
 
 		if (!$this->socket || $this->protocol == 0) {
-			$this->error = new IXR_Error(-32300, 'transport error - Client not initialized');
+			$this->error = new IXR_Error(-32300, 'transport error - client not initialized');
 			return false;
 		}
 
 		$request = new IXR_Request($method, $args);
 
 		// Check if request is larger than 512 Kbytes
-		if ($request->getLength() > 512*1024-8) {
-			$this->error = new IXR_Error(-32700, 'transport error - request too large!');
+		if (($size = $request->getLength()) > 512*1024-8) {
+			$this->error = new IXR_Error(-32300, "transport error - request too large ($size)");
 			return false;
 		}
 
 		// Send request
 		$ok = $this->sendRequest($request);
 		if (!$ok) {
-			$this->error = new IXR_Error(-32700, 'transport error - connection interrupted');
+			$this->error = new IXR_Error(-32300, 'transport error - connection interrupted!');
 			return false;
 		}
 
@@ -661,7 +683,7 @@ class IXR_Client_Gbx {
 		$method = array_shift($args);
 
 		if (!$this->socket || $this->protocol == 0) {
-			$this->error = new IXR_Error(-32300, 'transport error - Client not initialized');
+			$this->error = new IXR_Error(-32300, 'transport error - client not initialized');
 			return false;
 		}
 
@@ -669,16 +691,15 @@ class IXR_Client_Gbx {
 
 		// Check if the request is greater than 512 Kbytes to avoid errors
 		// If the method is system.multicall, make two calls (possibly recursively)
-		if ($request->getLength() > 512*1024-8) {
+		if (($size = $request->getLength()) > 512*1024-8) {
 			if ($method = 'system.multicall' && isset($args[0])) {
 				$count = count($args[0]);
 				// If count is 1, query cannot be reduced
 				if ($count < 2) {
-					$this->error = new IXR_Error(-32700, 'transport error - request too large!');
+					$this->error = new IXR_Error(-32300, "transport error - request too large ($size)");
 					return false;
 				}
 				$length = floor($count/2);
-
 				$args1 = array_slice($args[0], 0, $length);
 				$args2 = array_slice($args[0], $length, ($count-$length));
 
@@ -688,7 +709,7 @@ class IXR_Client_Gbx {
 			}
 			// If the method is not a multicall, just stop
 			else {
-				$this->error = new IXR_Error(-32700, 'transport error - request too large!');
+				$this->error = new IXR_Error(-32300, "transport error - request too large ($size)");
 				return false;
 			}
 		}
@@ -696,14 +717,15 @@ class IXR_Client_Gbx {
 		// Send request
 		$ok = $this->sendRequest($request);
 		if (!$ok) {
-			$this->error = new IXR_Error(-32700, 'transport error - connection interrupted');
+			$this->error = new IXR_Error(-32300, 'transport error - connection interrupted!');
 			return false;
 		}
+		return true;
 	}
 
 	function readCB($timeout = 2000) {  // timeout 2 ms
 		if (!$this->socket || $this->protocol == 0) {
-			$this->error = new IXR_Error(-32300, 'transport error - Client not initialized');
+			$this->error = new IXR_Error(-32300, 'transport error - client not initialized');
 			return false;
 		}
 		if ($this->protocol == 1)
@@ -731,7 +753,7 @@ class IXR_Client_Gbx {
 			// Get result
 			$contents = fread($this->socket, 8);
 			if (strlen($contents) == 0) {
-				$this->error = new IXR_Error(-32700, 'transport error - connection interrupted!');
+				$this->error = new IXR_Error(-32300, 'transport error - cannot read size/handle');
 				return false;
 			}
 			$array_result = unpack('Vsize/Vhandle', $contents);
@@ -739,11 +761,11 @@ class IXR_Client_Gbx {
 			$recvhandle = $array_result['handle'];
 
 			if ($recvhandle == 0 || $size == 0) {
-				$this->error = new IXR_Error(-32700, 'transport error - connection interrupted!');
+				$this->error = new IXR_Error(-32300, 'transport error - connection interrupted!');
 				return false;
 			}
 			if ($size > 4096*1024) {
-				$this->error = new IXR_Error(-32700, "transport error - answer too big ($size)");
+				$this->error = new IXR_Error(-32300, "transport error - response too large ($size)");
 				return false;
 			}
 
@@ -797,11 +819,17 @@ class IXR_Client_Gbx {
 	}
 
 	function getErrorCode() {
-		return $this->error->code;
+		if ($this->isError())
+			return $this->error->code;
+		else
+			return 0;
 	}
 
 	function getErrorMessage() {
-		return $this->error->message;
+		if ($this->isError())
+			return $this->error->message;
+		else
+			return '';
 	}
 }
 
@@ -811,7 +839,7 @@ class IXR_ClientMulticall_Gbx extends IXR_Client_Gbx {
 
 	function addCall($methodName, $args = array() ) {
 		$this->calls[] = array('methodName' => $methodName, 'params' => $args);
-
+		
 		return (count($this->calls) - 1);
 	}
 
@@ -824,10 +852,10 @@ class IXR_ClientMulticall_Gbx extends IXR_Client_Gbx {
 		}
 		return $result;
 	}
-	
+
 	function getMultiqueryResponse(){
 		$out = array();
-
+		
 		if( count($this->calls) > 0 ){
 			$result = $this->getResponse();
 			foreach($this->calls as $i => $method){
@@ -844,7 +872,7 @@ class IXR_ClientMulticall_Gbx extends IXR_Client_Gbx {
 				}
 			}
 		}
-
+		
 		$this->calls = array();
 		return $out;
 	}

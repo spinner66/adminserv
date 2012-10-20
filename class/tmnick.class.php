@@ -1,5 +1,4 @@
 <?php
-
 /**
 * Cette classe gère les chaines TMF, c'est à dire que cette classe permet de convertir une chaine TM en:
 *   - html (ombre et lien sont géré)
@@ -27,7 +26,6 @@ class TmNick {
 	* $p Lien interne avec info joueur
 	* $l Lien externe vers un site web
 	*/
-	
 	public  static $m_fontPath = 'fonts/';
 	public  static $linkProtocol = 'tmtp';
 	private static $m_pattern = '/\\$\\$|\\$[0-9a-fA-F][0-9a-zA-Z]{2}|\\$[twmgonishplzTWMGONISHLZ]/';
@@ -473,16 +471,16 @@ class TmNick {
 			.tmnick_global {
 				font-style: normal;
 				font-weight: none;
-				letter-spacing: 0px;
+				letter-spacing: 0;
 			}
-			.tmnick_normal { letter-spacing: 0px; }
+			.tmnick_normal { letter-spacing: 0; }
 			.tmnick_short { letter-spacing: -1px; }
 			.tmnick_wide { letter-spacing: 2px; }
-			.tmnick_raz { font-style: normal; font-weight: none; letter-spacing: 0px; }
+			.tmnick_raz { font-style: normal; font-weight: none; letter-spacing: 0; }
 			.tmnick_italic { font-style: italic; }
 			.tmnick_bold { font-weight: bold; letter-spacing: 1px; }
 			.tmnick_upper { text-transform: uppercase; }
-			span.tmnick_shadow { text-shadow: 0px 1px 1px #333; }
+			span.tmnick_shadow { text-shadow: 0 1px 1px #333; }
 			.tmnick_shadowed { position: relative; }
 			.tmnick_shadowed span { position: relative; }
 			span.tmnick_shadow { position: absolute; }
@@ -518,6 +516,7 @@ class TmNick {
 				border-bottom: thin solid Orange;
 			}
 		</style>';
+		
 		return $css;
 	}
 	
@@ -530,24 +529,19 @@ class TmNick {
 	* @return string texte sans codes $s, $o, etc ...
 	*/
 	public static function stripNadeoCode($str, $select = null){
-		// Si la chaine n'est pas vide
-		if($str){
-			// Si une sélection est demandée
-			if($select != null){
-				// On sépare les codes, et on créer le tableau en min/maj
-				$stripNadeoCode = array();
-				$selectList = explode(',', $select);
-				foreach($selectList as $code){
-					$stripNadeoCode[] = strtolower(trim($code));
-					$stripNadeoCode[] = strtoupper(trim($code));
-				}
+		if($select != null){
+			$stripNadeoCode = array();
+			$selectList = explode(',', $select);
+			foreach($selectList as $code){
+				$stripNadeoCode[] = strtolower(trim($code));
+				$stripNadeoCode[] = strtoupper(trim($code));
 			}
-			// Sinon, on enlève tous les codes
-			else{
-				$stripNadeoCode = array('$w', '$W', '$n', '$N', '$o', '$O', '$i', '$I', '$t', '$T', '$s', '$S', '$g', '$G', '$z', '$Z', '$<');
-			}
-			return str_replace($stripNadeoCode, '', $str);
 		}
+		else{
+			$stripNadeoCode = array('$w', '$W', '$n', '$N', '$o', '$O', '$i', '$I', '$t', '$T', '$s', '$S', '$g', '$G', '$z', '$Z', '$<');
+		}
+		
+		return str_replace($stripNadeoCode, '', $str);
 	}
 	
 	
