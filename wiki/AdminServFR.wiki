@@ -41,7 +41,7 @@ Une fois le serveur enregistré, vous pouvez visualiser la liste des serveurs da
 Pour revenir à la configuration en ligne, il suffit de rajouter */config* dans l'url. Vous pouvez aussi modifier le mot de passe de connexion à tout moment dans l'onglet *Changer le mot de passe*.
 
 
-===Offline===
+===Hors ligne===
 Il est aussi possible d'éditer le fichier de configuration des serveurs dans le dossier d'AdminServ : */config/servers.cfg.php*
 Quelques notions de PHP vous serons utiles. La configuration d'un serveur est la suivante :
 {{{
