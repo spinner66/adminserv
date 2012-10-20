@@ -1,4 +1,5 @@
 #summary Documentation, EN
+#labels Featured,Phase-Requirements,Phase-Implementation
 
 *AdminServ* is a dedicated server controller. It’s a website that can manage its servers remotely connected on TmForever and ManiaPlanet.
 
