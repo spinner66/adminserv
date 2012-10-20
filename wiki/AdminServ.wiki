@@ -11,7 +11,7 @@
 
 
 =2# Installation=
-Extract the file “adminserv.zip” where you want on a web server, and access the website via your Internet browser.
+Extract the file "adminserv.zip" where you want on a web server, and access the website via your Internet browser.
 
 
 =3# Configuration=
@@ -73,9 +73,9 @@ The configuration of Adminserv is optional. The corresponding file is: *config/a
   * *TITLE*: The title of the application. By default Admin,Serv knowing that the comma separates the color.
   * *SUBTITLE*: The subtitle of the application. Put null to disable.
   * *LOGO*: The path of the main picture of the application from the folder /ressources/images/. Put null to disable.
-  * *DEFAULT_THEME*: Default theme loaded at the first connection. The value corresponds to the configuration of the themes: click here
-  * *DEFAULT_LANGUAGE*: Default language loaded at the first connection. The value corresponds to the configuration of languages: click here. If the value is auto, then the language is collected automatically.
-  * *USE_DISPLAYSERV*: Use the DisplayServ's tool on the login page. For the documentation of DisplayServ: click here
+  * *DEFAULT_THEME*: Default theme loaded at the first connection. The value corresponds to the configuration of the themes: [click here#Extension]
+  * *DEFAULT_LANGUAGE*: Default language loaded at the first connection. The value corresponds to the configuration of languages: [click here#Extension]. If the value is auto, then the language is collected automatically.
+  * *USE_DISPLAYSERV*: Use the DisplayServ's tool on the login page. For the documentation of DisplayServ: [click here http://code.google.com/p/adminserv/wiki/Plugins]
   * *AUTOSAVE_MATCHSETTINGS*: Saves MatchSettings automatically each time you change game information and add map. The matchsettings saved is defined in the server configuration.
   * *MD5_PASSWORD*: If enabled, the password for the connection will be tested in MD5. You will have to put the password of the dedicated server in MD5 also.
   * *LIMIT_PLAYERS_LIST*: Defines the maximum number of lines on the page "General".
@@ -109,23 +109,23 @@ AdminServLogs ::add ('file_name_log', 'writing text');
   * *PLUGINS_LIST_TYPE*: The method used for the configuration file for plugins. By default `replace`, the new file replaces the current configuration. But you can also add the following plugins with `add`.
 
 ===DataBaseConfig & FTPConfig===
-These two configurations are not used by Adminserv. But they can be used for eventual plugins ...
+These two configurations are not used by Adminserv. But they can be used for eventual plugins...
 
 ==Extension==
 The configuration for the extension of Adminserv is in: *config/extension.cfg.php*
 
   * *PLUGINS*: List of installed plugins. We must put the name of the folder where are all downloaded plugin. To learn more about the plugins: click here
-  * *THEMES#config_theme*: List of the color themes. For each theme name, there are two colors to define. The first is the main color (bright color) and the second is the color used for items clicked (light color).
+  * *THEMES*: List of the color themes. For each theme name, there are two colors to define. The first is the main color (bright color) and the second is the color used for items clicked (light color).
 {{{
-       'name_of_the_color_of_the_theme' => array(
-           'red', // bright color
-           'rgba(0,0,0,.1)' // light color
-       )
+    'name_of_the_color_of_the_theme' => array(
+        'red', // bright color
+        'rgba(0,0,0,.1)' // light color
+    )
 }}}
     Colors can be in text, hex and rgb (a).
   * *LANG*: List of available languages​​:
 {{{
-     'code_lang' => 'title'
+    'code_lang' => 'title'
 }}}
      The language code corresponds both to name of the image (resources/images/lang/) and the file name (/includes/lang/). The title is indicative.
   * *GAMEMODES*: List of game modes The list must be made ​​from ManiaPlanet.
