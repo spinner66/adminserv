@@ -1,9 +1,8 @@
-#summary EN
 #labels Phase-Implementation,Featured
 Plugins are extensions to add features to Adminserv.
 
 
-=1# Installing a plugin=      
+=Installing a plugin=      
 See all plugins: [http://www.zone-kev717.info/adminserv/plugins/]
   * Unzip the plugin and place its contents into the "plugins" folder of Adminserv.
   * In the Configuration Extension, add the name of the plugin folder previously added.
@@ -14,22 +13,22 @@ public static $PLUGINS = array(
 }}}
 If you do not see the plugin in the list on the *Plugins* page, is that it may not be compatible with your server and / or your admin level. Check the configuration in the config.ini file of the plugin.
 
-=2# Create a new plugin=
+=Create a new plugin=
 To create a plugin, go to the plugins folder and duplicate file _newplugin. Replace the values ​​in the config.ini file and folder name.
 Then there are two PHP files:
-  * script.php : this file is executed before the header of the site. This is where all plugin script will be placed.
-  * view.php : this file is the display of the plugin executed after the header. This is where everything will be placed the html code.
+  * script.php: this file is executed before the header of the site. This is where all plugin script will be placed.
+  * view.php: this file is the display of the plugin executed after the header. This is where everything will be placed the html code.
 You need to create resources (classes, js, css) then include these files.
 
-=3# Global variables and constants=
+=Global variables and constants=
 By default, Adminserv provided some global variables and constants.
 
 ==Global variables are:==
-  * *$category*: parameter "c" of the url.
-  * *$view*: parameter "view" of the url.
-  * *$index*: parameter "i" of the url.
-  * *$id*: "id" parameter of the url.
-  * *$directory*: parameter "d" of the url.
+  * *$category*: `c` parameter of the url.
+  * *$view*: `view` parameter of the url.
+  * *$index*: `i` parameter of the url.
+  * *$id*: `id` parameter of the url.
+  * *$directory*: `d` parameter of the url.
 Each of these variables are tested and return null (category, view, directory) or -1 (index, id) if the parameters are not present in the URL.
   * *$client*: XMLRPC client object for communicating with the dedicated server.
 
