@@ -1,6 +1,5 @@
-*Documentation*
-  * [AdminServ]
-  * [Plugins]
-  * [DisplayServ]
+ * [AdminServ]
+ * [Plugins]
+ * [DisplayServ]
 
 [Screenshots]
