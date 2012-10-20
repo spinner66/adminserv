@@ -103,7 +103,7 @@ AdminServLogs ::add ('file_name_log', 'writing text');
   * *PLUGINS_LIST*: Path to the plugin configuration. By default, the configuration used by Adminserv is Extension.cfg.php. This option allows to define a list of plugins for multiple instances of Adminserv. In the php file specified, it must be have a variable:
 {{{
     $PLUGINS = array(
-        ‘pluginfoldername’,
+        'pluginfoldername',
     );
 }}}
   * *PLUGINS_LIST_TYPE*: The method used for the configuration file for plugins. By default `replace`, the new file replaces the current configuration. But you can also add the following plugins with `add`.
@@ -115,7 +115,7 @@ These two configurations are not used by Adminserv. But they can be used for eve
 The configuration for the extension of Adminserv is in: *config/extension.cfg.php*
 
   * *PLUGINS*: List of installed plugins. We must put the name of the folder where are all downloaded plugin. To learn more about the plugins: click here
-  * *THEMES*: List of the color themes. For each theme name, there are two colors to define. The first is the main color (bright color) and the second is the color used for items clicked (light color).
+  * *THEMES#config_theme*: List of the color themes. For each theme name, there are two colors to define. The first is the main color (bright color) and the second is the color used for items clicked (light color).
 {{{
        'name_of_the_color_of_the_theme' => array(
            'red', // bright color
