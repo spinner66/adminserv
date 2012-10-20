@@ -11,13 +11,13 @@ public static $PLUGINS = array(
     'PluginName',
 );                             
 }}}
-If you do not see the plugin in the list on the *Plugins* page, is that it may not be compatible with your server and / or your admin level. Check the configuration in the config.ini file of the plugin.
+If you do not see the plugin in the list on the *Plugins* page, is that it may not be compatible with your server and / or your admin level. Check the configuration in the `config.ini` file of the plugin.
 
 =Create a new plugin=
-To create a plugin, go to the plugins folder and duplicate file _newplugin. Replace the values ​​in the config.ini file and folder name.
+To create a plugin, go to the `plugins` folder and duplicate file `_newplugin`. Replace the values ​​in the `config.ini` file and folder name.
 Then there are two PHP files:
-  * script.php: this file is executed before the header of the site. This is where all plugin script will be placed.
-  * view.php: this file is the display of the plugin executed after the header. This is where everything will be placed the html code.
+  * *script.php*: this file is executed before the header of the site. This is where all plugin script will be placed.
+  * *view.php*: this file is the display of the plugin executed after the header. This is where everything will be placed the html code.
 You need to create resources (classes, js, css) then include these files.
 
 =Global variables and constants=
@@ -37,7 +37,7 @@ Each of these variables are tested and return null (category, view, directory) o
   * *USER_THEME*: name of the current theme
   * *USER_LANG*: code current lang
   * *USER_ADMINLEVEL*: admin level used
-  * *USER_MODE*: single display mode or detail
+  * *USER_MODE*: display mode `simple` or `detail`
   * *CURRENT_PLUGIN*: name of the current plugin folder
   * *SERVER_ID*: server number in relation to the order of the configuration
   * *SERVER_NAME*: Name server
@@ -45,11 +45,11 @@ Each of these variables are tested and return null (category, view, directory) o
   * *SERVER_XMLRPC_PORT*: xmlrpc port of the server
   * *SERVER_MATCHSET*: matchsettings name
   * *SERVER_ADMINLEVEL*: table containing all configuration levels admins (use unserialize to exploit the string)
-  * *SERVER_VERSION_NAME*: set name used by the TmForever or Maniaplanet server
+  * *SERVER_VERSION_NAME*: set name used by the `TmForever` or `Maniaplanet` server
   * *SERVER_VERSION*: dedicated server version
   * *SERVER_BUILD*: date version of the dedicated server
   * *SERVER_LOGIN*: Dedicated Server login
-  * *SERVER_TITLE*: Game title used on the server: TMCanyon, SMStorm, etc.. Is null if the server is connected on TmForever.
+  * *SERVER_TITLE*: Game title used on the server: TMCanyon, SMStorm, etc.. Is `null` if the server is connected on TmForever.
   * *SERVER_PUBLISHED_IP*: public IP address to connect to the server
   * *SERVER_PORT*: The port used by the server
   * *SERVER_P2P_PORT*: P2P port used by the server
@@ -57,6 +57,6 @@ Each of these variables are tested and return null (category, view, directory) o
   * *IS_DEDICATED*: Value of GetSystemInfo()
   * *IS_RELAY*: Determines if the server is a relay
   * *API_VERSION*: date version of the API
-  * *LINK_PROTOCOL*: name of the protocol used in the access links tmtp or Maniaplanet
+  * *LINK_PROTOCOL*: name of the protocol used in the access links `tmtp` or `maniaplanet`
 
 You can view it with `AdminServ::debug();`
