@@ -1659,6 +1659,17 @@ footer {
 }
 
 
+/* Page plugins
+--------------------*/
+.section-plugins-list .content ul {
+	margin: 12px 0;
+	padding-left: 40px;
+}
+.section-plugins-list .content ul li {
+	list-style-type: disc;
+}
+
+
 /* Page Guest-Ban
 ---------------------- */
 .section-guestban #banlist,

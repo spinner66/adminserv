@@ -23,14 +23,14 @@
 			</ul>
 		</div>
 		<div class="content">
-			<p>Les plugins sont des extensions permettant d'ajouter des fonctionnalités pour AdminServ.</p>
+			<p><?php echo Utils::t('Plugins are extensions to add features to Adminserv.'); ?></p>
 		</div>
 		
-		<h2>Comment installer un plugin ?</h2>
+		<h2><?php echo Utils::t('Installing a plugin'); ?></h2>
 		<div class="content">
-			<p>Les plugins sont disponibles sur la page de téléchargement du projet AdminServ : <a href="http://code.google.com/p/adminserv/downloads/list">Cliquez-ici</a></p>
-			<p>- Dézippez le plugin et placez son contenu dans le dossier &laquo; plugins &raquo; d'AdminServ.<br />
-			- Dans la configuration Extension, ajoutez le nom du dossier du plugin précédement ajouté.</p>
+			<p><?php echo Utils::t('See all plugins:'); ?> <a href="http://www.zone-kev717.info/adminserv/plugins"><?php echo Utils::t('Click here'); ?></a></p>
+			<p>- <?php echo Utils::t('Unzip the plugin and place its contents into the &laquo; plugins &raquo; folder of Adminserv.'); ?><br />
+			- <?php echo Utils::t('In the Configuration Extension, add the name of the plugin folder previously added.'); ?></p>
 			<p>
 				<code>
 					public static $PLUGINS = array(<br />
@@ -40,10 +40,9 @@
 			</p>
 		</div>
 		
-		<h2>Comment créer son plugin ?</h2>
+		<h2><?php echo Utils::t('Create a new plugin'); ?></h2>
 		<div class="content">
-			<p>Pour créer son plugin, allez dans le dossier &laquo; Plugins  &raquo; et dupliquez le dossier &laquo; _newplugin &raquo. Remplacez les valeurs dans le fichier config.ini ainsi que le nom du dossier.<br />
-			Le fichier &laquo; index.php &raquo; est le fichier principal du plugin. A vous de créer les ressources (classes, js, css) puis de les inclures dans ce fichier.</p>
+			<?php echo Utils::t('<p>To create a plugin, go to the plugins folder and duplicate file _newplugin. Replace the values ​​in the config.ini file and folder name.<br />Then there are two PHP files:</p><ul><li>script.php : this file is executed before the header of the site. This is where all plugin script will be placed.</li><li>view.php : this file is the display of the plugin executed after the header. This is where everything will be placed the html code.</li></ul><p>You need to create resources (classes, js, css) then include these files.</p>'); ?>
 		</div>
 	</section>
 </section>
