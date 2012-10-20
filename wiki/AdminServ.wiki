@@ -144,7 +144,7 @@ You can remove admin levels in the server configuration. Just set the level valu
 
 You can press any entry in the page to automatically connect.
 
-To the display of DisplayServ, you must enable the option `use_displayserv` in the configuration `adminserv.cfg.php`. All about Displayserv: click here
+To the display of DisplayServ, you must enable the option `use_displayserv` in the configuration `adminserv.cfg.php`. All about Displayserv: [http://code.google.com/p/adminserv/wiki/DisplayServ]
 
 =5# Specifications on pages=
 
