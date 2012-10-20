@@ -225,7 +225,7 @@ function getCurrentServerInfo(mode, sort){
 					$.each(data.ply, function(i, player){
 						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">';
 							if(isTeamGameMode && mode == 'detail'){
-								out += '<td class="detailModeTd imgleft"><span class="team_'+player.TeamId+'" title="'+player.TeamName+'"></span>'+player.TeamName+'</td>';
+								out += '<td class="detailModeTd imgleft"><span class="team_'+player.TeamId+'" title="'+player.TeamName+'">&nbsp;</span>'+player.TeamName+'</td>';
 							}
 							out += '<td class="imgleft"><img src="'+path_ressources+'images/16/solo.png" alt="" />'+player.NickName+'</td>';
 							if( !isTeamGameMode && mode == "detail" ){
