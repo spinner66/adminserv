@@ -2,3 +2,7 @@
  * [Plugins]
  * [DisplayServ]
  * [Screenshots]
+ * In french
+   * [AdminServFR]
+   * [PluginsFR]
+   * [DisplayServFR]
