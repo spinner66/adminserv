@@ -72,7 +72,7 @@ La configuration d'AdminServ est optionnelle. Le fichier correspondant est : *co
   * *LOGO* : Le chemin de l'image principale de l'application à partir du dossier /ressources/images/. Mettez `null` pour désactiver.
   * *DEFAULT_THEME* : Thème par défaut chargé à la 1ère connexion. La valeur correspond à la configuration des thèmes : [AdminServ#Extension]
   * *DEFAULT_LANGUAGE* : Langue par défaut chargée à la 1ère connexion. La valeur correspond à la configuration des langues : [AdminServ#Extension]. Si la valeur est auto, alors la langue est récupérée automatiquement.
-  * *USE_DISPLAYSERV* : Utiliser l'outil *DisplayServ* sur la page de connexion. Pour la documentation : [DisplayServ]
+  * *USE_DISPLAYSERV* : Utiliser l'outil *DisplayServ* sur la page de connexion. Pour la documentation : [DisplayServFR]
   * *AUTOSAVE_MATCHSETTINGS* : Permet d'enregistrer automatiquement le MatchSettings à chaque modification des informations de jeu et d'ajout de map. Le matchsettings enregistré est celui défini dans la configuration du serveur.
   * *MD5_PASSWORD* : Si activé, le mot de passe pour la connexion sera testé en MD5. Il faudra alors mettre le mot de passe du serveur dédié en MD5 également.
   * *LIMIT_PLAYERS_LIST* : Permet de définir le nombre de lignes max sur la page "général".
