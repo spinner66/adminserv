@@ -1,16 +1,14 @@
-#summary Documentation, EN
 #labels Featured,Phase-Requirements,Phase-Implementation
+*DisplayServ* displays the status of your dedicated servers for TrackMania Forever and ManiaPlanet.
 
-DisplayServ displays the status of your dedicated servers for TrackMania Forever and ManiaPlanet.
 
-
-=1# Requirements=
+=Requirements=
  * A web server (preferably avoid free servers)
  * PHP version 5.3+
  * A dedicated server TrackMania Forever / ManiaPlanet in use
 
 
-=2# Installation=
+=Installation=
 Extract the file "displayserv.zip" where you want on a web server.
 
 ==Files to include on your page:==
@@ -31,10 +29,10 @@ Extract the file "displayserv.zip" where you want on a web server.
 <div id="displayserv"></div>
 }}}
 
-By default, DisplayServ use the User account to connect to the server with the default password: *User*.
+By default, DisplayServ use the User account to connect to the server with the default password: `User`.
 
 
-=3# Options=
+=Options=
 ==Example of setting parameters:==
 {{{
 <script>
@@ -52,13 +50,13 @@ By default, DisplayServ use the User account to connect to the server with the d
 }}}
 
 ==You can define the next parameters:==
- * *config*: path of the configuration file of your servers.By default : "config/servers.cfg.php"
- * *includes*: path of the includes’ folder. By default: includes/
- * *ressources*: path of the ressouces’ folder. By default: ressources/
- * *timeout*: Limit time to try to connect in seconds. By default: 3
- * *refresh*: Time before a refresh of servers info in seconds. By default: 30. Minimum 10 seconds.
- * *color*: Display color in hexa/rgb(a).
- * *links*: Links posted in overview of the server. Several possible parameters:
-    * *join*: activate the link to access the server as a player. Value true or false, by default true.
-    * *spectate*: activate the link to access the server as a spectator. Value true or false, by default true.
-    * *addfavourite*: show a link to add the server to your favorites. Value true or false, by default false.
+ * *config*: path of the configuration file of your servers. By default: `config/servers.cfg.php`
+ * *includes*: path of the includes folder. By default: `includes/`
+ * *ressources*: path of the ressouces folder. By default: `ressources/`
+ * *timeout*: limit time to try to connect in seconds. By default: `3`
+ * *refresh*: time before a refresh of servers info in seconds. By default: `30`. Minimum 10 seconds.
+ * *color*: display color in hexa/rgb(a).
+ * *links*: links posted in overview of the server. Several possible parameters:
+    * *join*: activate the link to access the server as a player. Value `true` or `false`, by default `true`.
+    * *spectate*: activate the link to access the server as a spectator. Value `true` or `false`, by default `true`.
+    * *addfavourite*: show a link to add the server to your favorites. Value `true` or `false`, by default `false`.
