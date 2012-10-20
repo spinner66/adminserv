@@ -56,6 +56,6 @@ By default, DisplayServ use the User account to connect to the server with the d
  * refresh : Time before a refresh of servers info in seconds. By default : 30. Minimum 10 seconds.
  * color : Display color in hexa/rgb(a).
  * links : Links posted in overview of the server. Several possible parameters:
- * * join : activate the link to access the server as a player. Value true or false, by default true.
- * * spectate : activate the link to access the server as a spectator. Value true or false, by default true.
- * * addfavourite : show a link to add the server to your favorites. Value true or false, by default false.
+    * join : activate the link to access the server as a player. Value true or false, by default true.
+    * spectate : activate the link to access the server as a spectator. Value true or false, by default true.
+    * addfavourite : show a link to add the server to your favorites. Value true or false, by default false.
