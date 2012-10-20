@@ -111,89 +111,87 @@ AdminServLogs ::add ('nom_du_fichier_log', 'texte à écrire');
 Ces 2 configurations ne sont pas utilisées par AdminServ. Mais elles pourront servir pour d’éventuels plugins...
 
 ==Extension==
-The configuration for the extension of Adminserv is in: *config/extension.cfg.php*
+La configuration pour l'extension d’AdminServ est dans : *config/extension.cfg.php*
 
-  * *PLUGINS*: List of installed plugins. We must put the name of the folder where are all downloaded plugin. To learn more about the plugins: [http://code.google.com/p/adminserv/wiki/Plugins]
-  * *THEMES*: List of the color themes. For each theme name, there are two colors to define. The first is the main color (bright color) and the second is the color used for items clicked (light color).
+  * *PLUGINS*: Liste des plugins installés. Il faut mettre le nom du dossier du plugin téléchargé. Pour tout savoir sur les plugins : [http://code.google.com/p/adminserv/wiki/Plugins]
+  * *THEMES*: Liste des thèmes de couleurs. Pour chaque nom de thème, il y a 2 couleurs à définir. La 1ère est la couleur principale (couleur vive) et la 2ème est la couleur utilisée pour les éléments cliqués (couleur clair).
 {{{
-    'name_of_the_color_of_the_theme' => array(
-        'red', // bright color
-        'rgba(0,0,0,.1)' // light color
+    'nom_de_la_couleur_du_theme' => array(
+        'red', // couleur vive
+        'rgba(0, 0, 0, .1)' // couleur clair
     )
 }}}
-    Colors can be in text, hex and rgb (a).
-  * *LANG*: List of available languages​​:
+    Les couleurs peuvent être en texte, hexadécimal et rgb(a).
+  * *LANG*:  Liste des langues disponibles:
 {{{
-    'code_lang' => 'title'
+    'code_lang' => 'titre'
 }}}
-     The language code corresponds both to name of the image (resources/images/lang/) and the file name (/includes/lang/). The title is indicative.
-  * *GAMEMODES*: List of game modes The list must be made ​​from ManiaPlanet.
-  * *MAPSMENU*: Menu list in the *Maps* pages. You can change the order or add an entry redirecting to a plugin for example.
+     Le code langue correspond à la fois au nom de l’image (ressources/images/lang/) et au nom du fichier (/includes/lang/). Le titre est indicatif.
+  * *GAMEMODES* : Liste des modes de jeu. La liste doit être faite à partir de ManiaPlanet.
+  * *MAPSMENU* : Liste du menu dans les pages *Maps*. Vous pouvez modifier l'ordre ou rajouter une entrée redirigeant vers un plugin par exemple.
 
+=Connexion=
+Une fois un serveur configuré, il suffit de le sélectionner et d'entrer le mot de passe du serveur dédié pour se connecter à l'administration.
 
-=Connection=
-Once a server configured, simply select it and enter the password of the dedicated server to connect to the administration.
+A la prochaine connexion, AdminServ enregistre automatiquement le dernier serveur utilisé et le sélectionne. Vous pouvez aussi sélectionner un serveur avec le paramètre ?server=1 pour sélectionner le 2ème serveur par exemple.
 
-At the next login, Adminserv automatically saves the last used server and selects it. You can also select a server using the ?server=1 to select the second server instance.
+Le mot de passe peut être crypté en MD5 si activé dans la configuration adminserv.cfg.php. Dans ce cas, il faudra aussi un mot de passe en md5 pour le serveur dédié.
 
+Vous pouvez enlever des niveaux admin dans la configuration des serveurs. Il suffit de définir la valeur du niveau à none.
 
-The password can be encrypted in MD5 if enabled in the configuration adminserv.cfg.php. In this case, it will also need a password md5 for the dedicated server.
+Vous pouvez appuyer sur entrée dans toute la page pour se connecter automatiquement.
 
-You can remove admin levels in the server configuration. Just set the level value to none.
+Pour l'affichage de DisplayServ, vous devez activer l'option use_displayserv dans la configuration adminserv.cfg.php. Tout savoir sur Displayserv : [http://code.google.com/p/adminserv/wiki/DisplayServ]
 
-You can press any entry in the page to automatically connect.
+=Spécifications sur les pages=
 
-To the display of DisplayServ, you must enable the option `use_displayserv` in the configuration `adminserv.cfg.php`. All about Displayserv: [http://code.google.com/p/adminserv/wiki/DisplayServ]
+==Général==
+  * Les données sont mises à jour toutes les 10 secondes.
+  * L'affichage de la page diffère si le mode de jeu est *Team*. Sous les infos de la map, il y a la possibilité de forcer les scores (envoi un message sur le serveur à chaque modification), et les joueurs sont triés et affichés par équipe. Il y a également 2 nouveaux boutons pour modifier l'équipe des joueurs.
+  * Le bouton Annuler le vote apparaît seulement s'il y a un vote en cours sur le serveur.
+  * Il est possible de stopper le serveur seulement sur cette page. Utilisez le paramètre `?stop` dans l'url. Cette action est disponible que pour le niveau SuperAdmin.
 
-=Specifications on pages=
+=Options du serveur==
+  * Les informations sont modifiées en direct sur le serveur mais ne sont pas enregistrées dans le fichier de configuration dedicated_cfg.txt
+  * Pour le nom et le commentaire du serveur, il y a un aperçu de l'affichage dans le jeu.
 
-==General==
-  * Data are updated every 10 seconds.
-  * The display of the page is different if the game mode is *Team*. Below the Information of the map, there is the possibility to force scores (sending a message to the server for each change), and players are sorted and displayed by team. There are also two new buttons to change the team of players.
-  * The button *Cancel the Vote* appears only if the vote is in progress on the server.
-  * It is possible to stop the server only on this page. Use the `?stop` in the url. This action is available only to the level SuperAdmin.
-
-=Server options==
-  * The information is changed directly on the server but are not stored in the configuration file dedicated_cfg.txt
-  * For the name and comment of the server, there is an overview of the display ingame.
-
-==Game information==
-  * At each selection of a new game mode, the configuration is loaded below.
-  * This game information can be saved in the current matchsettings.
+==Informations de jeu==
+  * A chaque sélection d'un nouveau mode de jeu, sa configuration est chargée en dessous.
+  * Ces informations de jeu peuvent être sauvegardées dans le matchsettings courant.
 
 ==Chat==
-  * Data are collected every 3 seconds.
-  * The link at the top right *Hide Rows of the server* will hide the rows that are generated by the server manager. Only lines of players will then be displayed.
-  * The nickname, if specified, appears in the chat as : `[admin:Nickname] Message`
-  * You can press enter in the message field to send your text.
+  * Les données sont récupérées toutes les 3 secondes.
+  * Le lien en haut à droite *Masquer les lignes du serveur* permet de masquer les lignes qui sont générées par le gestionnaire du serveur. Seules les lignes des joueurs seront alors affichées.
+  * Le pseudo, si spécifié, s’affiche dans le chat comme cela : *[admin:Pseudo] Message*
+  * Vous pouvez appuyer sur entrée dans le champ message pour envoyer votre texte.
 
-==Maps - List==
-  * The current map is highlighted in yellow. No action is possible for this map.
-  * From 25 maps, a link *Go to the current map* shown to scroll toward it.
+==Maps - Liste==
+  * La map en cours est surlignée en jaune. Aucune action n'est possible pour cette map.
+  * A partir de 25 maps, un lien *Allez à la map en cours* apparaît pour scroller vers celle-ci.
 
 ==Maps - Local==
-  * If you click on a folder, you have the folder's options. Then you can rename, move or delete a folder.
-  * All actions work with several maps. For the download action, you will have a zip file containing all maps. For the delete action, there is always a confirmation to perform.
-  * If maps are highlighted in yellow, is that they were recently added or modified.
+  * Si vous cliquez sur un dossier, vous aurez les options du dossier. Vous pouvez alors renommer, déplacer ou supprimer un dossier.
+  * Toutes les actions fonctionnent avec plusieurs maps. Pour l'action téléchargement, vous aurez un fichier zip contenant toutes les maps. Pour les actions de suppression, il y a toujours une confirmation à effectuer.
+  * Si les maps sont surlignées en jaune, c'est qu'elles ont étés ajoutées ou modifiées récemment.
 
-==Maps - Send==
-  * *Add*: to add maps at the end of list
-  * *Insert*: to insert maps after the current map
-  * *Send*: to simply send in the folder chosen.
-  * For the upload, you can upload multiple files simultaneously. Either by drag in the corresponding frame or by clicking on *Browse...*
+==Maps - Envoyer==
+  * *Ajouter* : pour ajouter les maps en fin de liste
+  * *Insérer* : pour insérer les maps après la map en cours
+  * *Envoyer* : pour simplement envoyer dans le dossier choisi.
+  * Pour l'upload, vous pouvez envoyer plusieurs fichiers en même temps. Soit par glissez-déposez dans le cadre correspondant ou en cliquant sur *Parcourir...*
 
-==Maps - Order==
-  * The current map is excluded from the display. At registration, the list will be sorted after the current map.
+==Maps - Ordonner==
+  * La map en cours est exclue de l'affichage. A l'enregistrement, la liste triée sera après la map en cours.
 
 ==Maps - MatchSettings==
-  * If the line is highlighted in yellow, is that the matchsettings was recently modified.
+  * Si la ligne est surlignée en jaune, c'est que le matchsettings a été modifié récemment.
 
 ==Maps - Create MatchSettings==
-  * A message appears if the name of the matchsettings exists. If you save without changing the name, it will be overwritten.
+  * Un message s'affiche si le nom du matchsettings existe déjà. Si vous enregistrez sans changer le nom, il sera écrasé.
 
 ==Plugins==
-  * List only the plugins compatible with the server version (ManiaPlanet or TmForever) and with the admin level.
-  * All about plugins: [http://code.google.com/p/adminserv/wiki/Plugins]
+  * Liste seulement les plugins compatible avec la version du serveur (ManiaPlanet ou TmForever) ainsi qu'avec le niveau admin.
+  * Tout savoir sur les plugins : [http://code.google.com/p/adminserv/wiki/Plugins]
 
-==Guest-Bans==
-  * You can add a player on the server (or have to login). If you want to add a player to a specific playlist, you must load first the playlist.
+==Invités-Bannis==
+  * Vous pouvez ajouter un joueur présent sur le serveur (ou taper le login). Si vous voulez ajouter un joueur à une playlist spécifique, il faut d'abord charger la playlist.
