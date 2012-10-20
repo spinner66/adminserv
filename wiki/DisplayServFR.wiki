@@ -1,6 +1,4 @@
-#summary Documentation, FR
-
-DisplayServ permet d’afficher le statut de vos serveurs dédiés pour TrackMania Forever et ManiaPlanet.
+*DisplayServ* permet d’afficher le statut de vos serveurs dédiés pour TrackMania Forever et ManiaPlanet.
 
 
 =Requis=
@@ -30,7 +28,7 @@ Extraire le fichier "displayserv.zip" où bon vous semble sur un serveur web.
 <div id="displayserv"></div>
 }}}
 
-Par défaut, DisplayServ utilise le compte User pour se connecter au serveur avec le mot de passe par défaut : *User*.
+Par défaut, DisplayServ utilise le compte User pour se connecter au serveur avec le mot de passe par défaut : `User`.
 
 
 =Options=
@@ -51,13 +49,13 @@ Par défaut, DisplayServ utilise le compte User pour se connecter au serveur ave
 }}}
 
 ==Vous pouvez définir les paramètres suivants :==
- * *config* : chemin vers le fichier de configuration des serveurs. Par défaut : "config/servers.cfg.php"
- * *includes* : chemin vers le dossier includes. Par défaut : includes/
- * *ressources* : chemin vers le dossier ressources. Par défaut : ressources/
- * *timeout* : temps de connexion maximal en seconde. Par défaut : 3
- * *refresh* :  temps pour réactualiser le statut des serveurs en seconde. Par défaut : 30. Minimum 10 secondes.
+ * *config* : chemin vers le fichier de configuration des serveurs. Par défaut : `config/servers.cfg.php`
+ * *includes* : chemin vers le dossier includes. Par défaut : `includes/`
+ * *ressources* : chemin vers le dossier ressources. Par défaut : `ressources/`
+ * *timeout* : temps de connexion maximal en seconde. Par défaut : `3`
+ * *refresh* :  temps pour réactualiser le statut des serveurs en seconde. Par défaut : `30`. Minimum 10 secondes.
  * *color* : couleur d'affichage en hexa/rgb(a).
  * *links* : liens affichés au survol du serveur. Plusieurs paramètres possibles :
-    * *join* : activer le lien pour accéder au serveur en tant que joueur. Valeur true ou false, par défaut true.
-    * *spectate* : pour accéder au serveur en tant que spectateur. Valeur true ou false, par défaut true.
-    * *addfavourite* : affiche un lien pour ajouter le serveur aux favoris. Valeur true ou false, par défaut false.
+    * *join* : activer le lien pour accéder au serveur en tant que joueur. Valeur `true` ou `false`, par défaut `true`.
+    * *spectate* : pour accéder au serveur en tant que spectateur. Valeur `true` ou `false`, par défaut `true`.
+    * *addfavourite* : affiche un lien pour ajouter le serveur aux favoris. Valeur `true` ou `false`, par défaut `false`.
