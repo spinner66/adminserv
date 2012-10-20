@@ -21,9 +21,9 @@ Extract the file "displayserv.zip" where you want on a web server.
 ==Execute the script:==
 {{{
 <script>
-       $(document).ready(function(){
-           $("#displayserv").displayServ();
-       });
+    $(document).ready(function(){
+        $('#displayserv').displayServ();
+    });
 </script>
 
 <div id="displayserv"></div>
@@ -36,9 +36,9 @@ By default, DisplayServ use the User account to connect to the server with the d
 {{{
 <script>
     $(document).ready(function(){
-        $("#displayserv").displayServ({
+        $('#displayserv').displayServ({
             refresh: 15,
-            color: “red”,
+            color: 'red',
             links: {
                spectate: false,
                addfavourite: true
@@ -46,7 +46,7 @@ By default, DisplayServ use the User account to connect to the server with the d
         });
     });
 </script>
-
+}}}
 
 ==You can define the next parameters:==
  * config : path of the configuration file of your servers.By default : "config/servers.cfg.php"
