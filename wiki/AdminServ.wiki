@@ -73,9 +73,9 @@ The configuration of Adminserv is optional. The corresponding file is: *config/a
   * *TITLE*: The title of the application. By default Admin,Serv knowing that the comma separates the color.
   * *SUBTITLE*: The subtitle of the application. Put null to disable.
   * *LOGO*: The path of the main picture of the application from the folder /ressources/images/. Put null to disable.
-  * *DEFAULT_THEME*: Default theme loaded at the first connection. The value corresponds to the configuration of the themes: [click here#Extension]
-  * *DEFAULT_LANGUAGE*: Default language loaded at the first connection. The value corresponds to the configuration of languages: [click here#Extension]. If the value is auto, then the language is collected automatically.
-  * *USE_DISPLAYSERV*: Use the DisplayServ's tool on the login page. For the documentation of DisplayServ: [click here http://code.google.com/p/adminserv/wiki/Plugins]
+  * *DEFAULT_THEME*: Default theme loaded at the first connection. The value corresponds to the configuration of the themes: [Extension#Extension]
+  * *DEFAULT_LANGUAGE*: Default language loaded at the first connection. The value corresponds to the configuration of languages: [Extension#Extension]. If the value is auto, then the language is collected automatically.
+  * *USE_DISPLAYSERV*: Use the DisplayServ's tool on the login page. For the documentation of DisplayServ: [DisplayServ http://code.google.com/p/adminserv/wiki/DisplayServ]
   * *AUTOSAVE_MATCHSETTINGS*: Saves MatchSettings automatically each time you change game information and add map. The matchsettings saved is defined in the server configuration.
   * *MD5_PASSWORD*: If enabled, the password for the connection will be tested in MD5. You will have to put the password of the dedicated server in MD5 also.
   * *LIMIT_PLAYERS_LIST*: Defines the maximum number of lines on the page "General".
