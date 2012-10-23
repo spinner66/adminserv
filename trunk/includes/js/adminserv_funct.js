@@ -337,7 +337,7 @@ function getScriptSettings(){
 						}
 						paramValueField = '<input class="text" data-type="'+param.Type+'" type="checkbox" name="'+param.Name+'" id="'+param.Name+'" value="'+param.Default+'"'+isChecked+' />';
 					}
-					else if(param.Type == 'int' || param.Type == 'float'){
+					else{
 						paramValueField = '<input class="text" data-type="'+param.Type+'" type="text" name="'+param.Name+'" id="'+param.Name+'" value="'+param.Default+'" />';
 					}
 					
@@ -388,9 +388,14 @@ function setScriptSettings(){
 		var type = $(this).find('.middle input').data('type');
 		
 		if(type == 'boolean'){
-			var val = $(this).find('.middle input').attr('checked');
+			if( $(this).find('.middle input').attr('checked') == 'checked' ){
+				var val = true;
+			}
+			else{
+				var val = false;
+			}
 		}
-		else if(type == 'int' || type == 'float'){
+		else{
 			var val = $(this).find('.middle input').val();
 		}
 		

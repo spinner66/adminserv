@@ -32,6 +32,9 @@
 							case 'float':
 								$value = (float)$param['value'];
 								break;
+							case 'double':
+								$value = (double)$param['value'];
+								break;
 							default:
 								$value = (string)$param['value'];
 						}
