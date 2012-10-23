@@ -1285,7 +1285,9 @@ abstract class AdminServ {
 			if( self::isGameMode('Script', $out['srv']['gameModeId']) ){
 				$client->query('GetModeScriptInfo');
 				$getModeScriptInfo = $client->getResponse();
-				$out['srv']['gameModeScriptName'] = self::formatScriptName($getModeScriptInfo['Name']);
+				if( isset($getModeScriptInfo['Name']) ){
+					$out['srv']['gameModeScriptName'] = self::formatScriptName($getModeScriptInfo['Name']);
+				}
 			}
 			
 			// CurrentMapInfo
@@ -1354,6 +1356,14 @@ abstract class AdminServ {
 			if( $countPlayerList > 0 ){
 				$client->query('GetCurrentRanking', AdminServConfig::LIMIT_PLAYERS_LIST, 0);
 				$rankingList = $client->GetResponse();
+				$rankingKeyList = array(
+					'Rank',
+					'BestTime',
+					'BestCheckpoints',
+					'Score',
+					'NbrLapsFinished',
+					'LadderScore'
+				);
 				$i = 0;
 				foreach($playerList as $player){
 					// Nickname et Playerlogin
@@ -1364,19 +1374,18 @@ abstract class AdminServ {
 					if($player['SpectatorStatus'] != 0){ $playerStatus = Utils::t('Spectator'); }else{ $playerStatus = Utils::t('Player'); }
 					$out['ply'][$i]['PlayerStatus'] = $playerStatus;
 					
-					// Autres
+					// Others
 					$out['ply'][$i]['PlayerId'] = $player['PlayerId'];
 					$out['ply'][$i]['TeamId'] = $player['TeamId'];
 					if($player['TeamId'] == 0){ $teamName = Utils::t('Blue'); }else if($player['TeamId'] == 1){ $teamName = Utils::t('Red'); }else{ $teamName = Utils::t('Spectator'); }
 					$out['ply'][$i]['TeamName'] = $teamName;
 					$out['ply'][$i]['SpectatorStatus'] = $player['SpectatorStatus'];
-					if( isset($rankingList[$i]) ){
-						$out['ply'][$i]['Rank'] = $rankingList[$i]['Rank'];
-						$out['ply'][$i]['BestTime'] = $rankingList[$i]['BestTime'];
-						$out['ply'][$i]['BestCheckpoints'] = $rankingList[$i]['BestCheckpoints'];
-						$out['ply'][$i]['Score'] = $rankingList[$i]['Score'];
-						$out['ply'][$i]['NbrLapsFinished'] = $rankingList[$i]['NbrLapsFinished'];
-						$out['ply'][$i]['LadderScore'] = $rankingList[$i]['LadderScore'];
+					
+					// Rankings
+					foreach($rankingKeyList as $rankName){
+						if( isset($rankingList[$i][$rankName]) ){
+							$out['ply'][$i][$rankName] = $rankingList[$i][$rankName];
+						}
 					}
 					if($player['LadderRanking'] == -1){
 						$player['LadderRanking'] = Utils::t('Not rated');
