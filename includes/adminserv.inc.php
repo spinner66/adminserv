@@ -1428,8 +1428,9 @@ abstract class AdminServ {
 							uasort($out['ply'], 'AdminServSort::sortByStatus');
 							break;
 						default:
-							uasort($out['ply'], 'AdminServSort::sortByRank');
-							break;
+							if( isset($rankingList[$i]['Rank']) ){
+								uasort($out['ply'], 'AdminServSort::sortByRank');
+							}
 					}
 				}
 			}
