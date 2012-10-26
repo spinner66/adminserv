@@ -29,7 +29,7 @@ Extract the file "displayserv.zip" where you want on a web server.
 <div id="displayserv"></div>
 }}}
 
-By default, DisplayServ use the User account to connect to the server with the default password: `User`.
+By default, DisplayServ uses the User account to connect to the server with the default password: `User`.
 
 
 =Options=
