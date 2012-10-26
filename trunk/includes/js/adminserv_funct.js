@@ -332,7 +332,7 @@ function getScriptSettings(){
 					var paramValueField = '';
 					if(param.Type == 'boolean'){
 						var isChecked = '';
-						if(param.Default){
+						if(param.Default == 'True'){
 							isChecked = ' checked="checked"';
 						}
 						paramValueField = '<input class="text" data-type="'+param.Type+'" type="checkbox" name="'+param.Name+'" id="'+param.Name+'" value="'+param.Default+'"'+isChecked+' />';
@@ -389,10 +389,10 @@ function setScriptSettings(){
 		
 		if(type == 'boolean'){
 			if( $(this).find('.middle input').attr('checked') == 'checked' ){
-				var val = true;
+				var val = 1;
 			}
 			else{
-				var val = false;
+				var val = 0;
 			}
 		}
 		else{
