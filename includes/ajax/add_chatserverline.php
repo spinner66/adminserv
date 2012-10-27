@@ -28,17 +28,15 @@
 				$nickname = ':$z$s'.str_replace('$s', '', $nickname).'$fff$z$s';
 			}
 			
-			$message = '[Admin'.$nickname.'] '.$color.$message;
+			$message = '$z$s[$fffAdmin'.$nickname.'] '.$color.$message;
 			
 			$_SESSION['adminserv']['chat_dst'] = $destination;
 			if($destination === 'server'){
-				// Envoi du message au serveur
 				if( !$client->query('ChatSendServerMessage', $message) ){
 					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 				}
 			}
 			else{
-				// Envoi du message au joueur
 				if( !$client->query('ChatSendServerMessageToLogin', $message, $destination) ){
 					$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 				}
