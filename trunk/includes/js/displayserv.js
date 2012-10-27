@@ -9,7 +9,7 @@
 			ressources: 'ressources/',
 			timeout: 3,
 			refresh: 30,
-			color: "",
+			color: '',
 			links: {
 				join: true,
 				spectate: true,
