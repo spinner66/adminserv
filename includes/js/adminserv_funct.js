@@ -183,7 +183,7 @@ function getCurrentServerInfo(mode, sort){
 				$("#map_enviro").html(data.map.enviro+'<img src="'+path_ressources+'images/env/'+data.map.enviro.toLowerCase()+'.png" alt="" />');
 				$("#map_uid").html(data.map.uid);
 				if(data.srv.gameModeScriptName){
-					var gameModeName = data.srv.gameModeName+' <span class="scriptName">('+data.srv.gameModeScriptName+')</span>';
+					var gameModeName = data.srv.gameModeScriptName+' <span class="scriptName">('+data.srv.gameModeName+')</span>';
 				}else{
 					var gameModeName = data.srv.gameModeName;
 				}

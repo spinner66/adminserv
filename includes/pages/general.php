@@ -183,7 +183,7 @@
 				<td class="value <?php echo strtolower($serverInfo['srv']['gameModeName']); ?>" id="map_gamemode">
 					<?php
 						if( isset($serverInfo['srv']['gameModeScriptName']) ){
-							echo $serverInfo['srv']['gameModeName'].' <span class="scriptName">('.$serverInfo['srv']['gameModeScriptName'].')</span>';
+							echo $serverInfo['srv']['gameModeScriptName'].' <span class="scriptName">('.$serverInfo['srv']['gameModeName'].')</span>';
 						}
 						else{
 							echo $serverInfo['srv']['gameModeName'];
