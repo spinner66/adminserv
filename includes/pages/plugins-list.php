@@ -26,7 +26,7 @@
 			<p><?php echo Utils::t('Plugins are extensions to add features to Adminserv.'); ?></p>
 		</div>
 		
-		<h2><?php echo Utils::t('Installing a plugin'); ?></h2>
+		<h2><?php echo Utils::t('Install a plugin'); ?></h2>
 		<div class="content">
 			<p><?php echo Utils::t('See all plugins:'); ?> <a href="http://www.zone-kev717.info/adminserv/plugins"><?php echo Utils::t('Click here'); ?></a></p>
 			<p>- <?php echo Utils::t('Unzip the plugin and place its contents into the &laquo; plugins &raquo; folder of Adminserv.'); ?><br />
