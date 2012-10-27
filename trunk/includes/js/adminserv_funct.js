@@ -221,7 +221,7 @@ function getCurrentServerInfo(mode, sort){
 				
 				// Création du tableau
 				out += '<tr class="table-separation"><td colspan="'; if(isTeamGameMode){ out += '6'; }else{ out += '5'; } out += '"></td></tr>';
-				if( typeof(data.ply) == 'object' && data.ply.length > 0 ){
+				if( typeof(data.ply) == 'object' ){
 					$.each(data.ply, function(i, player){
 						out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">';
 							if(isTeamGameMode && mode == 'detail'){
@@ -327,7 +327,7 @@ function getScriptSettings(){
 			
 			// Paramètres
 			paramsList = '';
-			if( typeof(data.ParamDescs) == 'object' && data.ParamDescs.length > 0 ){
+			if( typeof(data.ParamDescs) == 'object' ){
 				$.each(data.ParamDescs, function(i, param){
 					var paramValueField = '';
 					if(param.Type == 'boolean'){
@@ -564,7 +564,7 @@ function getMapList(mode, sort){
 				
 				// Création du tableau
 				out += '<tr class="table-separation"><td colspan="6"></td></tr>';
-				if( typeof(data.lst) == 'object' && data.lst.length > 0 ){
+				if( typeof(data.lst) == 'object' ){
 					$.each(data.lst, function(i, map){
 						out += '<tr'; if(data.cid == i){ out += ' id="currentMap"'; } out += ' class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } if(data.cid == i){ out += ' current'; } out += '">'
 							+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
@@ -736,7 +736,7 @@ function setMapsOrderSort(sort, order){
 	$.post(getIncludesPath()+'ajax/mapsorder_sort.php', {srt: sort, ord: order, lst: list}, function(data){
 		if(data != null){
 			var out = '';
-			if( typeof(data.lst) == 'object' && data.lst.length > 0 ){
+			if( typeof(data.lst) == 'object' ){
 				$.each(data.lst, function(id, map){
 					if(data.cid != id){
 						out += '<li class="ui-state-default">'
@@ -921,7 +921,7 @@ function matchset_mapImportSelection(){
 			
 			// Création du tableau
 			out += '<tr class="table-separation"><td colspan="4"></td></tr>';
-			if( typeof(data.lst) == 'object' && data.lst.length > 0 ){
+			if( typeof(data.lst) == 'object' ){
 				$.each(data.lst, function(i, map){
 					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
 						+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
@@ -1009,7 +1009,7 @@ function matchset_mapSelection(removeId){
 			
 			// Création du tableau
 			out += '<tr class="table-separation"><td colspan="4"></td></tr>';
-			if( typeof(data.lst) == 'object' && data.lst.length > 0 ){
+			if( typeof(data.lst) == 'object' ){
 				$.each(data.lst, function(i, map){
 					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
 						+ '<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
