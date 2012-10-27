@@ -1880,7 +1880,8 @@ abstract class AdminServ {
 	*/
 	public static function clearChatServerLine($line){
 		$char = substr(utf8_decode($line), 0, 1);
-		if($char == '<' || $char == '/' || substr($line, 0, 11) == '$99F[Admin]' || substr($line, 0, 11) == '$99F<Admin>' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
+		self::dsm($line);
+		if($char == '<' || $char == '[' || $char == '/' || substr($line, 0, 18) == '$99F$z$s[$fffAdmin' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
 			return $line;
 		}
 	}
