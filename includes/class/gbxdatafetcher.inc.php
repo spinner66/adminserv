@@ -2,13 +2,16 @@
 /* vim: set noexpandtab tabstop=2 softtabstop=2 shiftwidth=2: */
 
 /**
- * GBXDataFetcher - Fetch GBX challenge/map/replay data for TrackMania (TM) &
- *                  ManiaPlanet (MP) files
+ * GBXDataFetcher - Fetch GBX challenge/map/replay/pack data for TrackMania (TM)
+ *                  & ManiaPlanet (MP) files
  * Created by Xymph <tm@gamers.org>
  * Thanks to Electron for additional input & prototyping
- * Based on information at http://en.tm-wiki.org/wiki/GBX and
+ * Based on information at http://en.tm-wiki.org/wiki/GBX,
  * http://www.tm-forum.com/viewtopic.php?p=192817#p192817
+ * and http://en.tm-wiki.org/wiki/PAK#Header_versions_8.2B
  *
+ * v2.2: Add class GBXPackFetcher; limit loadGBXdata() to first 256KB
+ * v2.1: Add exception codes; add $thumbLen to GBXChallMapFetcher
  * v2.0: Complete rewrite
  */
 
@@ -36,6 +39,8 @@ class GBXBaseFetcher
 	const LITTLE_ENDIAN_ORDER  = 1;
 	const BIG_ENDIAN_ORDER     = 2;
 
+	const LOAD_LIMIT = 256;  // KBs to read in loadGBXdata()
+
 	// initialise new instance
 	public function __construct()
 	{
@@ -51,7 +56,7 @@ class GBXBaseFetcher
 		else
 			$this->_endianess = self::LITTLE_ENDIAN_ORDER;
 
-		$this->storeGBXdata('');
+		$this->clearGBXdata();
 		$this->clearLookbacks();
 		$this->_parsestack = array();
 
@@ -88,26 +93,26 @@ class GBXBaseFetcher
 	}
 
 	// exit with error exception
-	protected function errorOut($msg)
+	protected function errorOut($msg, $code = 0)
 	{
 		$this->clearGBXdata();
-		throw new Exception($this->_error . $msg);
+		throw new Exception($this->_error . $msg, $code);
 	}
 
 	// read in raw GBX data
 	protected function loadGBXdata($filename)
 	{
-		$gbxdata = @file_get_contents($filename);
+		$gbxdata = @file_get_contents($filename, false, null, 0, self::LOAD_LIMIT * 1024);
 		if ($gbxdata !== false)
 			$this->storeGBXdata($gbxdata);
 		else
-			$this->errorOut('Unable to read GBX data from ' . $filename);
+			$this->errorOut('Unable to read GBX data from ' . $filename, 1);
 	}
 
 	// store raw GBX data
 	protected function storeGBXdata($gbxdata)
 	{
-		$this->_gbxdata =& $gbxdata;
+		$this->_gbxdata = & $gbxdata;
 		$this->_gbxlen = strlen($gbxdata);
 		$this->_gbxptr = 0;
 	}
@@ -141,14 +146,14 @@ class GBXBaseFetcher
 	{
 		if ($this->_gbxptr + $len > $this->_gbxlen)
 			$this->errorOut(sprintf('Insufficient data for %d bytes at pos 0x%04X',
-			                        $len, $this->_gbxptr));
+			                        $len, $this->_gbxptr), 2);
 		$data = '';
 		while ($len-- > 0)
 			$data .= $this->_gbxdata[$this->_gbxptr++];
 		return $data;
 	}
 
-	// read unsigned byte from GBX data
+	// read signed byte from GBX data
 	protected function readInt8()
 	{
 		$data = $this->readData(1);
@@ -156,7 +161,7 @@ class GBXBaseFetcher
 		return $int8;
 	}
 
-	// read unsigned short from GBX data
+	// read signed short from GBX data
 	protected function readInt16()
 	{
 		$data = $this->readData(2);
@@ -166,7 +171,7 @@ class GBXBaseFetcher
 		return $int16;
 	}
 
-	// read unsigned long from GBX data
+	// read signed long from GBX data
 	protected function readInt32()
 	{
 		$data = $this->readData(4);
@@ -185,7 +190,7 @@ class GBXBaseFetcher
 		if ($len <= 0 || $len >= 0x12000) {  // for large XML & Data blocks
 			if ($len != 0)
 				$this->errorOut(sprintf('Invalid string length %d (0x%04X) at pos 0x%04X',
-				                        $len, $len, $gbxptr));
+				                        $len, $len, $gbxptr), 3);
 		}
 		$data = $this->readData($len);
 		return $data;
@@ -203,7 +208,7 @@ class GBXBaseFetcher
 		if (empty($this->_lookbacks)) {
 			$version = $this->readInt32();
 			if ($version != 3)
-				$this->errorOut('Unknown lookback strings version: ' . $version);
+				$this->errorOut('Unknown lookback strings version: ' . $version, 4);
 		}
 
 		// check index
@@ -265,6 +270,25 @@ class GBXBaseFetcher
 		array_pop($this->_parsestack);
 	}
 
+	protected function parseXMLstring()
+	{
+		// define a dedicated parser to handle the attributes
+		$xml_parser = xml_parser_create();
+		xml_set_object($xml_parser, $this);
+		xml_set_element_handler($xml_parser, 'startTag', 'endTag');
+		xml_set_character_data_handler($xml_parser, 'charData');
+
+		// escape '&' characters unless already a known entity
+		$xml = preg_replace('/&(?!(?:amp|quot|apos|lt|gt);)/', '&amp;', $this->xml);
+
+		if (!xml_parse($xml_parser, utf8_encode($xml), true))
+			$this->errorOut(sprintf('XML chunk parse error: %s at line %d',
+			                        xml_error_string(xml_get_error_code($xml_parser)),
+			                        xml_get_current_line_number($xml_parser)), 12);
+
+		xml_parser_free($xml_parser);
+	}
+
 	/**
 	 * Check GBX header, main class ID & header block
 	 * @param Array $classes
@@ -277,23 +301,23 @@ class GBXBaseFetcher
 		$data = $this->readData(3);
 		$version = $this->readInt16();
 		if ($data != 'GBX' || $version != 6)
-			$this->errorOut('No magic GBX header');
+			$this->errorOut('No magic GBX header', 5);
 
 		// check header block (un)compression
 		$data = $this->readData(4);
 		if ($data[1] != 'U')
-			$this->errorOut('Compressed GBX header block not supported');
+			$this->errorOut('Compressed GBX header block not supported', 6);
 
 		// check main class ID
 		$mainClass = $this->readInt32();
 		if (!in_array($mainClass, $classes))
-			$this->errorOut(sprintf('Main class ID %08X not supported', $mainClass));
+			$this->errorOut(sprintf('Main class ID %08X not supported', $mainClass), 7);
 		$this->debugLog(sprintf('GBX main class ID: %08X', $mainClass));
 
 		// get header size
 		$headerSize = $this->readInt32();
 		if ($headerSize == 0)
-			$this->errorOut('No GBX header block');
+			$this->errorOut('No GBX header block', 8);
 
 		$this->debugLog(sprintf('GBX header block size: %d (%.1f KB)',
 		                        $headerSize, $headerSize / 1024));
@@ -313,7 +337,7 @@ class GBXBaseFetcher
 		// get number of chunks
 		$numChunks = $this->readInt32();
 		if ($numChunks == 0)
-			$this->errorOut('No GBX header chunks');
+			$this->errorOut('No GBX header chunks', 9);
 
 		$this->debugLog('GBX number of header chunks: ' . $numChunks);
 		$chunkStart = $this->getGBXptr();
@@ -348,7 +372,7 @@ class GBXBaseFetcher
 		$totalSize = $chunkOffset - $chunkStart + 4;  // numChunks
 		if ($headerSize != $totalSize)
 			$this->errorOut(sprintf('Chunk list size mismatch: %d <> %d',
-			                        $headerSize, $totalSize));
+			                        $headerSize, $totalSize), 10);
 
 		return $chunksList;
 	}  // getChunksList
@@ -377,26 +401,23 @@ class GBXBaseFetcher
 
 		if ($chunksList['XML']['size'] != strlen($this->xml) + 4)
 			$this->errorOut(sprintf('XML chunk size mismatch: %d <> %d',
-			                        $chunksList['XML']['size'], strlen($this->xml) + 4));
+			                        $chunksList['XML']['size'], strlen($this->xml) + 4), 11);
 
-		if ($this->parseXml) {
-			// define a dedicated parser to handle the attributes
-			$xml_parser = xml_parser_create();
-			xml_set_object($xml_parser, $this);
-			xml_set_element_handler($xml_parser, 'startTag', 'endTag');
-			xml_set_character_data_handler($xml_parser, 'charData');
-
-			// escape '&' characters unless already a known entity
-			$xml = preg_replace('/&(?!(?:amp|quot|apos|lt|gt);)/', '&amp;', $this->xml);
-
-			if (!xml_parse($xml_parser, utf8_encode($xml), true))
-				$this->errorOut(sprintf('XML chunk parse error: %s at line %d',
-				                        xml_error_string(xml_get_error_code($xml_parser)),
-				                        xml_get_current_line_number($xml_parser)));
-
-			xml_parser_free($xml_parser);
-		}
+		if ($this->parseXml && $this->xml != '')
+			$this->parseXMLstring();
 	}  // getXMLChunk
+
+	/**
+	 * Get Author fields from GBX header block
+	 */
+	protected function getAuthorFields()
+	{
+		$this->authorVer   = $this->readInt32();
+		$this->authorLogin = $this->readString();
+		$this->authorNick  = $this->readString();
+		$this->authorZone  = $this->readString();
+		$this->authorEInfo = $this->readString();
+	}  // getAuthorFields
 
 	/**
 	 * Get Author chunk from GBX header block
@@ -411,11 +432,7 @@ class GBXBaseFetcher
 		$version = $this->readInt32();
 		$this->debugLog('GBX Author chunk version: ' . $version);
 
-		$this->authorVer   = $this->readInt32();
-		$this->authorLogin = $this->readString();
-		$this->authorNick  = $this->readString();
-		$this->authorZone  = $this->readString();
-		$this->authorEInfo = $this->readString();
+		$this->getAuthorFields();
 	}  // getAuthorChunk
 
 }  // class GBXBaseFetcher
@@ -436,7 +453,7 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 	       $mood, $envirBg, $authorBg, $mapType, $mapStyle, $lightmap, $titleUid;
 	public $xmlVer, $exeVer, $exeBld, $validated, $songFile, $songUrl,
 	       $modName, $modFile, $modUrl;
-	public $thumbnail, $comment;
+	public $thumbLen, $thumbnail, $comment;
 
 	const IMAGE_FLIP_HORIZONTAL = 1;
 	const IMAGE_FLIP_VERTICAL   = 2;
@@ -502,7 +519,7 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 	 *        If true, the fetcher prints debug logging to stderr
 	 * @return GBXChallMapFetcher
 	 *        If GBX data couldn't be extracted, an Exception is thrown with
-	 *        the error message
+	 *        the error message & code
 	 */
 	public function __construct($parsexml = false, $tnimage = false, $debug = false)
 	{
@@ -551,6 +568,7 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 		$this->modFile   = '';
 		$this->modUrl    = '';
 
+		$this->thumbLen  = 0;
 		$this->thumbnail = '';
 		$this->comment   = '';
 
@@ -632,7 +650,7 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 
 		if ($headerSize != $headerEnd - $headerStart)
 			$this->errorOut(sprintf('Header size mismatch: %d <> %d',
-			                        $headerSize, $headerEnd - $headerStart));
+			                        $headerSize, $headerEnd - $headerStart), 16);
 
 		if ($this->parseXml) {
 			if (isset($this->xmlParsed['HEADER']['VERSION']))
@@ -763,8 +781,7 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 
 		$this->uid = $this->readLookbackString();
 
-		$this->envir = $this->readLookbackString();
-
+		$this->envir  = $this->readLookbackString();
 		$this->author = $this->readLookbackString();
 
 		$this->name = $this->readString();
@@ -808,8 +825,7 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 			if ($version >= 2) {
 				$this->mood = $this->readLookbackString();
 
-				$this->envirBg = $this->readLookbackString();
-
+				$this->envirBg  = $this->readLookbackString();
 				$this->authorBg = $this->readLookbackString();
 
 				if ($version >= 3) {
@@ -822,8 +838,7 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 							$this->moveGBXptr(16);  // skip unknown
 
 							if ($version >= 9) {
-								$this->mapType = $this->readString();
-
+								$this->mapType  = $this->readString();
 								$this->mapStyle = $this->readString();
 
 								$this->moveGBXptr(8);  // skip lightmapCacheUID
@@ -874,6 +889,7 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 
 			$this->moveGBXptr(strlen('<Thumbnail.jpg>'));
 			$this->thumbnail = $this->readData($thumbSize);
+			$this->thumbLen = strlen($this->thumbnail);
 			$this->moveGBXptr(strlen('</Thumbnail.jpg>'));
 
 			$this->moveGBXptr(strlen('<Comments>'));
@@ -887,11 +903,11 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 				    function_exists('imagecopyresampled')) {
 					// flip thumbnail via temporary file
 					$tmp = tempnam(sys_get_temp_dir(), 'gbxflip');
-					if (@file_put_contents($tmp, $this->thumbnail)) {
+					if (@file_put_contents($tmp, $this->thumbnail) !== false) {
 						if ($tn = @imagecreatefromjpeg($tmp)) {
 							$tn = $this->imageFlip($tn, self::IMAGE_FLIP_HORIZONTAL);
 							if (@imagejpeg($tn, $tmp)) {
-								if ($tn = @file_get_contents($tmp)) {
+								if (($tn = @file_get_contents($tmp)) !== false) {
 									$this->thumbnail = $tn;
 								}
 							}
@@ -930,7 +946,8 @@ class GBXChallengeFetcher extends GBXChallMapFetcher
 	 *        If true, the script also extracts the thumbnail image; if GD/JPEG
 	 *        libraries are present, image will be flipped upright, otherwise
 	 *        it will be in the original upside-down format
-	 *        Warning: this is binary data in JPEG format, 256x256 pixels
+	 *        Warning: this is binary data in JPEG format, 256x256 pixels for
+   *        TMU/TMF or 512x512 pixels for MP
 	 * @return GBXChallengeFetcher
 	 *        If $uid is empty, GBX data couldn't be extracted
 	 */
@@ -970,6 +987,7 @@ class GBXChallengeFetcher extends GBXChallMapFetcher
 
 }  // class GBXChallengeFetcher
 
+
 /**
  * @class GBXReplayFetcher
  * @brief The class that fetches all GBX replay info
@@ -991,7 +1009,7 @@ class GBXReplayFetcher extends GBXBaseFetcher
 	 *        If true, the fetcher prints debug logging to stderr
 	 * @return GBXReplayFetcher
 	 *        If GBX data couldn't be extracted, an Exception is thrown with
-	 *        the error message
+	 *        the error message & code
 	 */
 	public function __construct($parsexml = false, $debug = false)
 	{
@@ -1080,7 +1098,7 @@ class GBXReplayFetcher extends GBXBaseFetcher
 
 		if ($headerSize != $headerEnd - $headerStart)
 			$this->errorOut(sprintf('Header size mismatch: %d <> %d',
-			                        $headerSize, $headerEnd - $headerStart));
+			                        $headerSize, $headerEnd - $headerStart), 20);
 
 		if ($this->parseXml) {
 			if (isset($this->xmlParsed['HEADER']['VERSION']))
@@ -1120,8 +1138,7 @@ class GBXReplayFetcher extends GBXBaseFetcher
 		if ($version >= 2) {
 			$this->uid = $this->readLookbackString();
 
-			$this->envir = $this->readLookbackString();
-
+			$this->envir  = $this->readLookbackString();
 			$this->author = $this->readLookbackString();
 
 			$this->replay = $this->readInt32();
@@ -1141,4 +1158,219 @@ class GBXReplayFetcher extends GBXBaseFetcher
 	}  // getStringChunk
 
 }  // class GBXReplayFetcher
+
+
+/**
+ * @class GBXPackFetcher
+ * @brief The class that fetches all GBX pack info
+ */
+class GBXPackFetcher extends GBXBaseFetcher
+{
+	public $headerVersn, $flags, $infoMlUrl, $creatDate, $comment, $titleId,
+	       $usageSubdir, $buildInfo, $authorUrl, $exeVer, $exeBld, $xmlDate;
+
+	/**
+	 * Read Windows FileTime and convert to Unix timestamp
+	 * Filetime = 64-bit value with the number of 100-nsec intervals since Jan 1, 1601 (UTC)
+	 * Based on http://www.mysqlperformanceblog.com/2007/03/27/integers-in-php-running-with-scissors-and-portability/
+	 * @return Unix timestamp, or -1 on error
+	 */
+	private function readFiletime()
+	{
+		// Unix epoch (1970-01-01) - Windows epoch (1601-01-01) in 100ns units
+		$EPOCHDIFF = '116444735995904000';
+		$UINT32MAX = '4294967296';
+		$USEC2SEC  = 1000000;
+
+		$lo = $this->readInt32();
+		$hi = $this->readInt32();
+
+		// check for 64-bit platform
+		if (PHP_INT_SIZE >= 8) {
+			// use native math
+			if ($lo < 0) $lo += (1 << 32);
+			$date = ($hi << 32) + $lo;
+			$this->debugLog(sprintf('PAK CreationDate source: %016x', $date));
+			if ($date == 0) return -1;
+
+			// convert to Unix timestamp in usec
+			$stamp = ($date - (int)$EPOCHDIFF) / 10;
+			$this->debugLog(sprintf('PAK CreationDate 64-bit: %u.%06u',
+			                        $stamp / $USEC2SEC, $stamp % $USEC2SEC));
+			return (int)($stamp / $USEC2SEC);
+
+		// check for 32-bit platform
+		} elseif (PHP_INT_SIZE >= 4) {
+			$this->debugLog(sprintf('PAK CreationDate source: %08x%08x', $hi, $lo));
+			if ($lo == 0 && $hi == 0) return -1;
+
+			// workaround signed/unsigned braindamage on x32
+			$lo = sprintf('%u', $lo);
+			$hi = sprintf('%u', $hi);
+
+			// try and use GMP
+			if (function_exists('gmp_mul')) {
+				$date = gmp_add(gmp_mul($hi, $UINT32MAX), $lo);
+				// convert to Unix timestamp in usec
+				$stamp = gmp_div(gmp_sub($date, $EPOCHDIFF), 10);
+				$stamp = gmp_div_qr($stamp, $USEC2SEC);
+				$this->debugLog(sprintf('PAK CreationDate GNU MP: %u.%06u',
+				                        gmp_strval($stamp[0]), gmp_strval($stamp[1])));
+				return (int)gmp_strval($stamp[0]);
+			}
+
+			// try and use BC Math
+			if (function_exists('bcmul')) {
+				$date = bcadd(bcmul($hi, $UINT32MAX), $lo);
+				// convert to Unix timestamp in usec
+				$stamp = bcdiv(bcsub($date, $EPOCHDIFF), 10, 0);
+				$this->debugLog(sprintf('PAK CreationDate BCMath: %u.%06u',
+				                        bcdiv($stamp, $USEC2SEC), bcmod($stamp, $USEC2SEC)));
+				return (int)bcdiv($stamp, $USEC2SEC);
+			}
+
+			// compute everything manually
+			$a = substr($hi, 0, -5);
+			$b = substr($hi, -5);
+			// hope that float precision is enough
+			$ac = $a * 42949;
+			$bd = $b * 67296;
+			$adbc = $a * 67296 + $b * 42949;
+			$r4 = substr($bd, -5) + substr($lo, -5);
+			$r3 = substr($bd, 0, -5) + substr($adbc, -5) + substr($lo, 0, -5);
+			$r2 = substr($adbc, 0, -5) + substr($ac, -5);
+			$r1 = substr($ac, 0, -5);
+			while ($r4 >= 100000) { $r4 -= 100000; $r3++; }
+			while ($r3 >= 100000) { $r3 -= 100000; $r2++; }
+			while ($r2 >= 100000) { $r2 -= 100000; $r1++; }
+			$date = ltrim(sprintf('%d%05d%05d%05d', $r1, $r2, $r3, $r4), '0');
+
+			// convert to Unix timestamp in usec
+			$r3 = substr($date, -6)     - substr($EPOCHDIFF, -6);
+			$r2 = substr($date, -12, 6) - substr($EPOCHDIFF, -12, 6);
+			$r1 = substr($date, -18, 6) - substr($EPOCHDIFF, -18, 6);
+			if ($r3 < 0) { $r3 += 1000000; $r2--; }
+			if ($r2 < 0) { $r2 += 1000000; $r1--; }
+			$stamp = substr(sprintf('%d%06d%06d', $r1, $r2, $r3), 0, -1);
+			$this->debugLog(sprintf('PAK CreationDate manual: %s.%s',
+			                        substr($stamp, 0, -6), substr($stamp, -6)));
+			return (int)substr($stamp, 0, -6);
+		} else {
+			return -1;
+		}
+	}
+
+	/**
+	 * Instantiate GBX pack fetcher
+	 *
+	 * @param Boolean $parsexml
+	 *        If true, the fetcher also parses the XML block
+	 * @param Boolean $debug
+	 *        If true, the fetcher prints debug logging to stderr
+	 * @return GBXPackFetcher
+	 *        If GBX data couldn't be extracted, an Exception is thrown with
+	 *        the error message & code
+	 */
+	public function __construct($parsexml = false, $debug = false)
+	{
+		parent::__construct();
+
+		$this->headerVersn = 0;
+		$this->flags       = 0;
+		$this->infoMlUrl   = '';
+		$this->creatDate   = -1;
+		$this->comment     = '';
+		$this->titleId     = '';
+		$this->usageSubdir = '';
+		$this->buildInfo   = '';
+		$this->authorUrl   = '';
+		$this->exeVer      = '';
+		$this->exeBld      = '';
+		$this->xmlDate     = '';
+
+		$this->parseXml = (bool)$parsexml;
+		if ((bool)$debug)
+			$this->enableDebug();
+
+		$this->setError('GBX pack error: ');
+	}  // __construct
+
+	/**
+	 * Process GBX pack file
+	 *
+	 * @param String $filename
+	 *        The pack filename
+	 */
+	public function processFile($filename)
+	{
+		$this->loadGBXdata((string)$filename);
+
+		$this->processGBX();
+	}  // processFile
+
+	/**
+	 * Process GBX pack data
+	 *
+	 * @param String $gbxdata
+	 *        The pack data
+	 */
+	public function processData($gbxdata)
+	{
+		$this->storeGBXdata((string)$gbxdata);
+
+		$this->processGBX();
+	}  // processData
+
+	// process GBX data
+	private function processGBX()
+	{
+		// check magic header
+		$data = $this->readData(8);
+		if ($data != 'NadeoPak')
+			$this->errorOut('No magic NadeoPak header', 5);
+
+		$this->headerVersn = $this->readInt32();
+		if ($this->headerVersn < 8)
+			$this->errorOut(sprintf('Pack version %d not supported', $this->headerVersn), 24);
+
+		$this->moveGBXptr(32);  // skip ContentsChecksum
+
+		$this->flags = $this->readInt32();
+
+		$this->getAuthorFields();
+
+		$this->infoMlUrl = $this->readString();
+
+		$this->creatDate = $this->readFiletime();
+
+		$this->comment = $this->readString();
+
+		if ($this->headerVersn >= 12) {
+			$this->xml = $this->readString();
+			$this->titleId = $this->readString();
+			if ($this->parseXml && $this->xml != '') {
+				$this->parseXMLstring();
+
+				if (isset($this->xmlParsed['HEADER']['EXEVER']))
+					$this->exeVer = $this->xmlParsed['HEADER']['EXEVER'];
+				if (isset($this->xmlParsed['HEADER']['EXEBUILD']))
+					$this->exeBld = $this->xmlParsed['HEADER']['EXEBUILD'];
+				if (isset($this->xmlParsed['IDENT']['CREATIONDATE']))
+					$this->xmlDate = $this->xmlParsed['IDENT']['CREATIONDATE'];
+			}
+		}
+
+		$this->usageSubdir = $this->readString();
+
+		$this->buildInfo = $this->readString();
+
+		$this->authorUrl = $this->readString();
+
+		if ($this->headerVersn >= 10)
+			$this->moveGBXptr(16);  // skip unused
+
+		$this->clearGBXdata();
+	}  // processGBX
+
+}  // class GBXPackFetcher
 ?>

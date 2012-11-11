@@ -19,7 +19,12 @@ abstract class AdminServUI {
 		}
 		
 		if($type == 'html'){
-			$out = str_replace(',', '<span class="title-color">', $title).'</span>';
+			if( strstr($title, ',') ){
+				$out = str_replace(',', '<span class="title-color">', $title).'</span>';
+			}
+			else{
+				$out = $title;
+			}
 		}
 		else{
 			$out = str_replace(',', '', $title);
