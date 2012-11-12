@@ -1848,6 +1848,10 @@ abstract class AdminServ {
 	public static function getChatServerLines($hideServerLines = false){
 		global $client;
 		$out = null;
+		$showColor = false;
+		if( defined('AdminServConfig::COLORS_CHAT') ){
+			$showColor = AdminServConfig::COLORS_CHAT;
+		}
 		
 		if( !$client->query('GetChatLines') ){
 			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
@@ -1863,12 +1867,16 @@ abstract class AdminServ {
 				if($line == '$99FThe $<$00FBlue team$> wins this round.'){ $line = Utils::t('$99FThe $<$00FBlue team$> wins this round.'); }
 				if($line == '$99FThe $<$F00Red team$> wins this round.'){ $line = Utils::t('$99FThe $<$F00Red team$> wins this round.'); }
 				
-				$line = TmNick::stripNadeoCode($line);
-				$line = str_replace('$>', '$z', $line);
-				$line = htmlspecialchars($line, ENT_QUOTES, 'UTF-8');
-				
-				if($line != null){
-					$out .= TmNick::toHtml($line, 10, false, true, '#666');
+				if($showColor){
+					$line = str_replace('<$', '', $line);
+					$line = str_replace('$>', '$ff0', $line);
+					$out .= TmNick::toHtml('$ff0'.$line, 10, true);
+				}
+				else{
+					$line = TmNick::stripNadeoCode($line);
+					$line = str_replace('$>', '$z', $line);
+					$line = htmlspecialchars($line, ENT_QUOTES, 'UTF-8');
+					$out .= TmNick::toHtml($line, 10, false, true, '#888');
 				}
 			}
 		}
@@ -1885,7 +1893,6 @@ abstract class AdminServ {
 	*/
 	public static function clearChatServerLine($line){
 		$char = substr(utf8_decode($line), 0, 1);
-		self::dsm($line);
 		if($char == '<' || $char == '[' || $char == '/' || substr($line, 0, 18) == '$99F$z$s[$fffAdmin' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
 			return $line;
 		}
