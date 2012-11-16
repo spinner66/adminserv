@@ -1840,6 +1840,71 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Add chat line on server
+	*
+	* @param string $message       -> Text message
+	* @param string $nickname      -> Nickname
+	* @param string $color         -> Text color
+	* @param string $destination   -> Message destination: server or player login
+	* @param string $showAdminText -> Display "Admin" before the message
+	* @return bool or text error
+	*/
+	public static function addChatServerLine($message, $nickname = null, $color = '$ff0', $destination = 'server', $showAdminText = true){
+		global $client;
+		$out = false;
+		$showColors = false;
+		if( defined('AdminServConfig::CHAT_COLORS') && AdminServConfig::CHAT_COLORS ){
+			$showColors = true;
+		}
+		Utils::addCookieData('adminserv_user', array(USER_THEME, USER_LANG, $nickname, $color), AdminServConfig::COOKIE_EXPIRE);
+		
+		if($nickname && !$showColors){
+			if( substr($nickname, 0, 1) !== '$' ){ $nickname = '$fff'.$nickname; }
+			$nickname = TmNick::stripNadeoCode($nickname, array('$s') );
+		}
+		
+		$admin = null;
+		if($showAdminText){
+			$admin = '$fffAdmin';
+		}
+		
+		if($showColors){
+			if($nickname){
+				$nickname = '$s:$g$ff0'.$nickname.'$f00$g$s';
+			}
+			$nickname = '$s$ff0['.$admin.$nickname.'$ff0]';
+		}
+		else{
+			if($nickname){
+				$nickname = '$s:$z$s'.$nickname.'$fff$z$s';
+			}
+			$nickname = '$z$s['.$admin.$nickname.']';
+		}
+		$message = $nickname.' '.$color.$message;
+		
+		$_SESSION['adminserv']['chat_dst'] = $destination;
+		if($destination === 'server'){
+			if( !$client->query('ChatSendServerMessage', $message) ){
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+			}
+			else{
+				$out = true;
+			}
+		}
+		else{
+			if( !$client->query('ChatSendServerMessageToLogin', $message, $destination) ){
+				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
+			}
+			else{
+				$out = true;
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère les lignes du chat serveur
 	*
 	* @param bool $hideServerLines -> Masquer les lignes provenant d'un gestionnaire de serveur
@@ -1849,8 +1914,8 @@ abstract class AdminServ {
 		global $client;
 		$out = null;
 		$showColor = false;
-		if( defined('AdminServConfig::COLORS_CHAT') ){
-			$showColor = AdminServConfig::COLORS_CHAT;
+		if( defined('AdminServConfig::CHAT_COLORS') ){
+			$showColor = AdminServConfig::CHAT_COLORS;
 		}
 		
 		if( !$client->query('GetChatLines') ){
