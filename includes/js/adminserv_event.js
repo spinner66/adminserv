@@ -19,7 +19,7 @@ $(document).ready(function(){
 		*/
 		if( $('body').hasClass('section-servers') ){
 			// Clic sur les lignes
-			$('#serverList tr').live('click', function(){
+			$('#serverList').on('click', 'tr', function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
@@ -228,7 +228,7 @@ $(document).ready(function(){
 			});
 			
 			// Clic sur les lignes
-			$('#playerlist tr').live('click', function(){
+			$('#playerlist').on('click', 'tr', function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
@@ -427,7 +427,7 @@ $(document).ready(function(){
 				});
 				
 				// Clic sur les lignes
-				$('#mapImportSelectionDialog tr').live('click', function(){
+				$('#mapImportSelectionDialog').on('click', 'tr', function(){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
 						$(this).removeClass('selected');
@@ -449,7 +449,7 @@ $(document).ready(function(){
 				});
 				
 				// Enlever une map de la sélection
-				$('#mapSelectionDialog tr a').live('click', function(){
+				$('#mapSelectionDialog').on('click', 'tr a', function(){
 					matchset_mapSelection( parseInt($(this).parent('td').parent('tr')[0].sectionRowIndex) );
 					return false;
 				});
@@ -558,7 +558,7 @@ $(document).ready(function(){
 			});
 			
 			// Clic sur les lignes
-			$('#maplist tr').live('click', function(){
+			$('#maplist').on('click', 'tr', function(){
 				if( !$(this).hasClass('current') && !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
@@ -630,7 +630,7 @@ $(document).ready(function(){
 			});
 			
 			// Clic sur les lignes
-			$('#maplist tr').live('click', function(){
+			$('#maplist').on('click', 'tr', function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
@@ -677,7 +677,7 @@ $(document).ready(function(){
 					scrollTop();
 				}
 			});
-			$('#renameMapCancel').live('click', function(){
+			$('#form-rename-map').on('click', '#renameMapCancel', function(){
 				slideUpRenameForm();
 			});
 			
@@ -701,7 +701,7 @@ $(document).ready(function(){
 					scrollTop();
 				}
 			});
-			$('#moveMapCancel').live('click', function(){
+			$('#form-move-map').on('click', '#moveMapCancel', function(){
 				slideUpMoveForm();
 			});
 			
@@ -732,7 +732,7 @@ $(document).ready(function(){
 			});
 			
 			// Clic sur les lignes
-			$('#matchsetlist tr').live('click', function(){
+			$('#matchsetlist').on('click', 'tr', function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
@@ -863,7 +863,7 @@ $(document).ready(function(){
 			});
 			
 			// Clic sur les lignes
-			$('#banlist tr, #blacklist tr, #guestlist tr, #ignorelist tr').live('click', function(){
+			$('#banlist, #blacklist, #guestlist, #ignorelist').on('click', 'tr', function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
@@ -881,7 +881,7 @@ $(document).ready(function(){
 					$('.cadre.left').updateCheckAll( $(this).parent('tbody').parent('table').parent('div').find('input[type=checkbox]') );
 				}
 			});
-			$('#playlists tr').live('click', function(){
+			$('#playlists').on('click', 'tr', function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){

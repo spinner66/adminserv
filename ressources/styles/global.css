@@ -1344,6 +1344,7 @@ footer {
 }
 .section-chat #chat .tmnick_global {
 	display: block;
+	line-height: 17px;
 	overflow: hidden;
 }
 .section-chat .options {
