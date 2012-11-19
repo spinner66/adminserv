@@ -530,17 +530,13 @@ class TmNick {
 	*/
 	public static function stripNadeoCode($str, $select = array() ){
 		if( count($select) > 0 ){
-			$stripNadeoCode = array();
-			foreach($select as $code){
-				$stripNadeoCode[] = strtolower($code);
-				$stripNadeoCode[] = strtoupper($code);
-			}
+			$stripNadeoCode = $select;
 		}
 		else{
 			$stripNadeoCode = array('$w', '$W', '$n', '$N', '$o', '$O', '$i', '$I', '$t', '$T', '$s', '$S', '$g', '$G', '$z', '$Z', '$<');
 		}
 		
-		return str_replace($stripNadeoCode, '', $str);
+		return str_ireplace($stripNadeoCode, '', $str);
 	}
 	
 	
