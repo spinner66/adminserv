@@ -418,7 +418,7 @@ abstract class AdminServUI {
 					}
 					$out .= '<td class="value">'
 						.'<select class="width2" name="NextGameMode" id="NextGameMode">'
-							.AdminServUI::getGameModeList($nextGamInf['GameMode'])
+							.self::getGameModeList($nextGamInf['GameMode'])
 						.'</select>'
 					.'</td>'
 					.'<td class="preview"></td>'
@@ -1227,6 +1227,33 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Vérifie si la configuration du serveur est compatible avec le mode équipe
+	*
+	* @params int    $gameMode   -> ID du mode de jeu
+	* @params string $scriptName -> Nom du script si le mode de jeu est 0
+	*/
+	public static function checkDisplayTeamMode($gameMode, $scriptName = null){
+		$out = false;
+		
+		if($gameMode == 0 && SERVER_VERSION_NAME == 'ManiaPlanet' && class_exists('ExtensionConfig') && isset(ExtensionConfig::$TEAMSCRIPTS) && count(ExtensionConfig::$TEAMSCRIPTS) > 0 ){
+			foreach(ExtensionConfig::$TEAMSCRIPTS as $script){
+				if($script == $scriptName){
+					$out = true;
+					break;
+				}
+			}
+		}
+		else{
+			if( self::isGameMode('Team', $gameMode) ){
+				$out = true;
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Formate le nom d'un script
 	*
 	* @param string $scriptName -> Le nom du script retourné par le serveur
@@ -1292,7 +1319,11 @@ abstract class AdminServ {
 				$getModeScriptInfo = $client->getResponse();
 				if( isset($getModeScriptInfo['Name']) ){
 					$out['srv']['gameModeScriptName'] = self::formatScriptName($getModeScriptInfo['Name']);
+					$displayTeamMode = self::checkDisplayTeamMode($out['srv']['gameModeId'], $out['srv']['gameModeScriptName']);
 				}
+			}
+			else{
+				$displayTeamMode = self::checkDisplayTeamMode($out['srv']['gameModeId']);
 			}
 			
 			// CurrentMapInfo
@@ -1325,7 +1356,7 @@ abstract class AdminServ {
 			$out['map']['callvote']['cmdparam'] = $queriesData['GetCurrentCallVote']['CmdParam'];
 			
 			// TeamScores (mode team)
-			if( self::isGameMode('Team', $out['srv']['gameModeId']) ){
+			if($displayTeamMode){
 				$client->query('GetCurrentRanking', 2, 0);
 				$currentRanking = $client->getResponse();
 				$out['map']['scores']['blue'] = $currentRanking[0]['Score'];
@@ -1403,6 +1434,7 @@ abstract class AdminServ {
 				$out['ply'] = Utils::t('No player');
 			}
 			
+			
 			// Nombre de joueurs
 			if($countPlayerList > 1){
 				$out['nbp'] = $countPlayerList.' '.Utils::t('players');
@@ -1415,7 +1447,8 @@ abstract class AdminServ {
 			// TRI
 			if( is_array($out['ply']) && count($out['ply']) > 0 ){
 				// Si on est en mode équipe, on tri par équipe
-				if( self::isGameMode('Team', $out['srv']['gameModeId']) ){
+				if($displayTeamMode){
+					uasort($out['ply'], 'AdminServSort::sortByRank');
 					uasort($out['ply'], 'AdminServSort::sortByTeam');
 				}
 				else{
@@ -1433,9 +1466,8 @@ abstract class AdminServ {
 							uasort($out['ply'], 'AdminServSort::sortByStatus');
 							break;
 						default:
-							if( isset($rankingList[$i]['Rank']) ){
-								uasort($out['ply'], 'AdminServSort::sortByRank');
-							}
+							uasort($out['ply'], 'AdminServSort::sortByRank');
+							uasort($out['ply'], 'AdminServSort::sortByStatus');
 					}
 				}
 			}
@@ -1856,7 +1888,7 @@ abstract class AdminServ {
 		if( defined('AdminServConfig::CHAT_COLORS') && AdminServConfig::CHAT_COLORS ){
 			$showColors = true;
 		}
-		Utils::addCookieData('adminserv_user', array(USER_THEME, USER_LANG, $nickname, $color), AdminServConfig::COOKIE_EXPIRE);
+		Utils::addCookieData('adminserv_user', array(AdminServUI::getTheme(), AdminServUI::getLang(), $nickname, $color), AdminServConfig::COOKIE_EXPIRE);
 		
 		if($nickname && !$showColors){
 			if( substr($nickname, 0, 1) !== '$' ){ $nickname = '$fff'.$nickname; }
@@ -1958,7 +1990,7 @@ abstract class AdminServ {
 	*/
 	public static function clearChatServerLine($line){
 		$char = substr(utf8_decode($line), 0, 1);
-		if($char == '<' || $char == '[' || $char == '/' || substr($line, 0, 18) == '$99F$z$s[$fffAdmin' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
+		if($char == '<' || $char == '[' || $char == '/' || substr($line, 0, 11) == '$99F$s$ff0[' || substr($line, 0, 9) == '$99F$z$s[' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
 			return $line;
 		}
 	}
@@ -2711,10 +2743,10 @@ abstract class AdminServSort {
 		}
 	}
 	public static function sortByStatus($a, $b){
-		if($a['IsSpectator'] == $b['IsSpectator']){
+		if($a['SpectatorStatus'] == $b['SpectatorStatus']){
 			return 0;
 		}
-		if($a['IsSpectator'] < $b['IsSpectator']){
+		if($a['SpectatorStatus'] < $b['SpectatorStatus']){
 			return -1;
 		}else{
 			return 1;

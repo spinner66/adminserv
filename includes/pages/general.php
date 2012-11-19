@@ -142,9 +142,13 @@
 	
 	// Info serveur
 	$serverInfo = AdminServ::getCurrentServerInfo();
-	$isTeamGameMode = AdminServ::isGameMode('Team', $serverInfo['srv']['gameModeId']);
+	$scriptName = null;
+	if( isset($serverInfo['srv']['gameModeScriptName']) ){
+		$scriptName = $serverInfo['srv']['gameModeScriptName'];
+	}
+	$displayTeamMode = AdminServ::checkDisplayTeamMode($serverInfo['srv']['gameModeId'], $scriptName);
 	// Si on est en mode équipe, on force l'affichage en mode détail
-	if($isTeamGameMode){
+	if($displayTeamMode){
 		$_SESSION['adminserv']['mode'] = 'detail';
 	}
 	if( defined('IS_RELAY') && IS_RELAY ){
@@ -157,7 +161,7 @@
 	$client->Terminate();
 	AdminServUI::getHeader();
 ?>
-<section class="cadre left<?php if($isTeamGameMode){ echo ' isTeamGameMode'; } ?>">
+<section class="cadre left<?php if($displayTeamMode){ echo ' isTeamGameMode'; } ?>">
 	<h1><?php echo Utils::t('Current map'); ?></h1>
 	<form method="post" action=".">
 	<div class="content">
@@ -200,7 +204,7 @@
 					</td>
 				</tr>
 			<?php } ?>
-			<?php if($isTeamGameMode){ ?>
+			<?php if($displayTeamMode){ ?>
 				<tr>
 					<td class="key"><?php echo Utils::t('Scores'); ?></td>
 					<td class="value" id="map_teamscore">
@@ -299,7 +303,7 @@
 	<?php } ?>
 </section>
 
-<section class="cadre right<?php if($isTeamGameMode){ echo ' isTeamGameMode'; } ?>">
+<section class="cadre right<?php if($displayTeamMode){ echo ' isTeamGameMode'; } ?>">
 	<h1><?php echo Utils::t('Players'); ?></h1>
 	<div class="title-detail">
 		<ul>
@@ -314,11 +318,11 @@
 		<table>
 			<thead>
 				<tr>
-					<?php if($isTeamGameMode){ ?>
+					<?php if($displayTeamMode){ ?>
 						<th class="detailModeTh thleft"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=team"><?php echo Utils::t('Team'); ?></a></th>
 					<?php } ?>
-					<th class="firstTh <?php if(USER_MODE == 'simple' || !$isTeamGameMode){ echo 'thleft'; } ?>"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
-					<?php if(!$isTeamGameMode){ ?>
+					<th class="firstTh <?php if(USER_MODE == 'simple' || !$displayTeamMode){ echo 'thleft'; } ?>"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
+					<?php if(!$displayTeamMode){ ?>
 						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=ladder"><?php echo Utils::t('Ladder'); ?></a></th>
 					<?php } ?>
 					<th><a href="?sort=login"><?php echo Utils::t('Login'); ?></a></th>
@@ -327,7 +331,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr class="table-separation"><td colspan="<?php if($isTeamGameMode){ echo '6'; }else{ echo '5'; } ?>"></td></tr>
+				<tr class="table-separation"><td colspan="<?php if($displayTeamMode){ echo '6'; }else{ echo '5'; } ?>"></td></tr>
 				<?php
 					$showPlayerList = null;
 					
@@ -337,12 +341,12 @@
 						foreach($serverInfo['ply'] as $player){
 							// Ligne
 							$showPlayerList .= '<tr class="'; if($i%2){ $showPlayerList .= 'even'; }else{ $showPlayerList .= 'odd'; } $showPlayerList .= '">';
-								if($isTeamGameMode && USER_MODE == 'detail'){
+								if($displayTeamMode && USER_MODE == 'detail'){
 									$showPlayerList .= '<td class="detailModeTd imgleft"><span class="team_'.$player['TeamId'].'" title="'.$player['TeamName'].'">&nbsp;</span>'.$player['TeamName'].'</td>';
 								}
 								
 								$showPlayerList .= '<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>';
-								if(!$isTeamGameMode){
+								if(!$displayTeamMode){
 									$showPlayerList .= '<td class="detailModeTd imgleft"'; if(USER_MODE == 'simple'){ $showPlayerList .= ' hidden="hidden"'; } $showPlayerList .= '><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/leagueladder.png" alt="" />'.$player['LadderRanking'].'</td>';
 								}
 								$showPlayerList .= '<td>'.$player['Login'].'</td>'
@@ -353,7 +357,7 @@
 						}
 					}
 					else{
-						$showPlayerList .= '<tr class="no-line"><td class="center" colspan="'; if($isTeamGameMode){ $showPlayerList .= '6'; }else{ $showPlayerList .= '5'; } $showPlayerList .= '">'.$serverInfo['ply'].'</td></tr>';
+						$showPlayerList .= '<tr class="no-line"><td class="center" colspan="'; if($displayTeamMode){ $showPlayerList .= '6'; }else{ $showPlayerList .= '5'; } $showPlayerList .= '">'.$serverInfo['ply'].'</td></tr>';
 					}
 					
 					// Affichage
@@ -376,7 +380,7 @@
 					<input class="button dark" type="submit" name="GuestLoginList" id="GuestLoginList" value="<?php echo Utils::t('Guest'); ?>" />
 					<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="<?php echo Utils::t('Ban'); ?>" />
 					<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="<?php echo Utils::t('Kick'); ?>" />
-					<?php if($isTeamGameMode){ ?>
+					<?php if($displayTeamMode){ ?>
 						<input class="button dark" type="submit" name="ForceBlueTeam" id="ForceBlueTeam" value="<?php echo Utils::t('Blue team'); ?>" />
 						<input class="button dark" type="submit" name="ForceRedTeam" id="ForceRedTeam" value="<?php echo Utils::t('Red team'); ?>" />
 					<?php } ?>
@@ -388,7 +392,7 @@
 	</div>
 	
 	<input type="hidden" id="currentSort" name="currentSort" value="" />
-	<input type="hidden" id="isTeamGameMode" name="isTeamGameMode" value="<?php echo $isTeamGameMode; ?>" />
+	<input type="hidden" id="isTeamGameMode" name="isTeamGameMode" value="<?php echo $displayTeamMode; ?>" />
 	</form>
 </section>
 <?php

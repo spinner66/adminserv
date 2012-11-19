@@ -11,7 +11,7 @@
 	AdminServUI::getClass();
 	
 	// ISSET
-	if( isset($_GET['s']) ){ $hideServerLines = intval($_GET['s']); }else{ $hideServerLines = 0; }
+	if( isset($_GET['s']) ){ $hideServerLines = $_GET['s']; }else{ $hideServerLines = false; }
 	
 	// DATA
 	$out = null;

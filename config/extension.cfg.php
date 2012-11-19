@@ -57,6 +57,9 @@ class ExtensionConfig {
 		5 => 'Stunts',
 		6 => 'Cup'
 	);
+	public static $TEAMSCRIPTS = array(
+		'elite'
+	);
 	
 	
 	// Menu list in maps page

@@ -481,15 +481,14 @@ $(document).ready(function(){
 		* Chat
 		*/
 		else if( $('body').hasClass('section-chat') ){
-			// ChatServerLines
 			var hideServerLines = 0;
 			
 			// Clique sur 'Masquer les lignes du serveur'
 			$('.title-detail a').click(function(){
 				// Valeur
 				hideServerLines = $(this).data('val');
-				if(hideServerLines == '0'){ hideServerLines = '1'; }
-				else{ hideServerLines = '0'; }
+				if(hideServerLines == 0){ hideServerLines = 1; }
+				else{ hideServerLines = 0; }
 				getChatServerLines(hideServerLines);
 				$(this).data('val', hideServerLines);
 				

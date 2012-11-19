@@ -117,7 +117,7 @@
 	<?php
 		if(AdminServConfig::USE_DISPLAYSERV){
 			$themeColor = null;
-			if( ($theme = AdminServUI::getTheme()) && AdminServUI::hasTheme() ){
+			if( AdminServUI::hasTheme() && ($theme = AdminServUI::getTheme()) ){
 				if( isset(ExtensionConfig::$THEMES[$theme]) && isset(ExtensionConfig::$THEMES[$theme][0]) ){
 					$themeColor = ExtensionConfig::$THEMES[$theme][0];
 				}
@@ -127,7 +127,7 @@
 		<script src="<?php echo AdminServConfig::PATH_INCLUDES; ?>js/displayserv.js"></script>
 		<script>
 			$(document).ready(function(){
-				$("#displayserv").displayServ({
+				$('#displayserv').displayServ({
 					color: "<?php echo $themeColor; ?>"
 				});
 			});
