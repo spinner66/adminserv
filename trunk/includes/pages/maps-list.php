@@ -50,7 +50,7 @@
 				<?php if(is_array($mapsList) && count($mapsList) > 0 && count($mapsList['lst']) > 25){ ?>
 					<li><a id="scrollToCurrentMap" href="#currentMap"><?php echo Utils::t('Go to the current map'); ?></a></li>
 				<?php } ?>
-				<li><a id="detailMode" href="." data-statusmode="<?php echo USER_MODE; ?>" data-textdetail="<?php echo Utils::t('Detailed mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detailed mode'); } ?></a></li>
+				<li><a id="detailMode" href="." data-statusmode="<?php echo USER_MODE_MAPS; ?>" data-textdetail="<?php echo Utils::t('Detailed mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE_MAPS == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detailed mode'); } ?></a></li>
 				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($mapsList['lst']) ){ echo ' disabled="disabled"'; } ?> /></li>
 			</ul>
 		</div>
@@ -63,8 +63,8 @@
 						<th class="thleft"><?php echo Utils::t('Map'); ?></th>
 						<th><?php echo Utils::t('Environment'); ?></th>
 						<th><?php echo Utils::t('Author'); ?></th>
-						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Gold time'); ?></th>
-						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Cost'); ?></th>
+						<th class="detailModeTh"<?php if(USER_MODE_MAPS == 'simple'){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Gold time'); ?></th>
+						<th class="detailModeTh"<?php if(USER_MODE_MAPS == 'simple'){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Cost'); ?></th>
 						<th class="thright"></th>
 					</tr>
 				</thead>
@@ -82,14 +82,14 @@
 								$showMapList .= '<tr'; if($id == $mapsList['cid']){ $showMapList .= ' id="currentMap"'; } $showMapList .= ' class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($id == $mapsList['cid']){ $showMapList .= ' current'; } $showMapList .= '">'
 									.'<td class="imgleft"><img src="'.$pathRessources.'images/16/map.png" alt="" />'
 										.'<span title="'.$map['FileName'].'">'.$map['Name'].'</span>';
-										if(USER_MODE == 'detail'){
+										if(USER_MODE_MAPS == 'detail'){
 											$showMapList .= '<span class="detailModeTd">'.$map['UId'].'</span>';
 										}
 									$showMapList .= '</td>'
 									.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
 									.'<td>'.$map['Author'].'</td>'
-									.'<td'; if(USER_MODE == 'simple'){ $showMapList .= ' hidden="hidden"'; } $showMapList .= '>'.$map['GoldTime'].'</td>'
-									.'<td'; if(USER_MODE == 'simple'){ $showMapList .= ' hidden="hidden"'; } $showMapList .= '>'.$map['CopperPrice'].'</td>'
+									.'<td'; if(USER_MODE_MAPS == 'simple'){ $showMapList .= ' hidden="hidden"'; } $showMapList .= '>'.$map['GoldTime'].'</td>'
+									.'<td'; if(USER_MODE_MAPS == 'simple'){ $showMapList .= ' hidden="hidden"'; } $showMapList .= '>'.$map['CopperPrice'].'</td>'
 									.'<td class="checkbox">'; if($id != $mapsList['cid']){ $showMapList .= '<input type="checkbox" name="map[]" value="'.$map['FileName'].'" />'; } $showMapList .= '</td>'
 								.'</tr>';
 								$i++;

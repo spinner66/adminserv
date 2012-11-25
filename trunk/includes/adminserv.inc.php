@@ -1029,11 +1029,17 @@ abstract class AdminServ {
 								define('LINK_PROTOCOL', TmNick::$linkProtocol);
 								
 								// Mode d'affichage : detail ou simple
-								if( isset($_SESSION['adminserv']['mode']) ){
-									define('USER_MODE', $_SESSION['adminserv']['mode']);
+								if( isset($_SESSION['adminserv']['mode']['general']) ){
+									define('USER_MODE_GENERAL', $_SESSION['adminserv']['mode']['general']);
 								}
 								else{
-									define('USER_MODE', 'simple');
+									define('USER_MODE_GENERAL', 'simple');
+								}
+								if( isset($_SESSION['adminserv']['mode']['maps']) ){
+									define('USER_MODE_MAPS', $_SESSION['adminserv']['mode']['maps']);
+								}
+								else{
+									define('USER_MODE_MAPS', 'simple');
 								}
 								
 								// TmForever
@@ -1231,13 +1237,14 @@ abstract class AdminServ {
 	*
 	* @params int    $gameMode   -> ID du mode de jeu
 	* @params string $scriptName -> Nom du script si le mode de jeu est 0
+	* @return bool
 	*/
 	public static function checkDisplayTeamMode($gameMode, $scriptName = null){
 		$out = false;
 		
 		if($gameMode == 0 && SERVER_VERSION_NAME == 'ManiaPlanet' && class_exists('ExtensionConfig') && isset(ExtensionConfig::$TEAMSCRIPTS) && count(ExtensionConfig::$TEAMSCRIPTS) > 0 ){
-			foreach(ExtensionConfig::$TEAMSCRIPTS as $script){
-				if($script == $scriptName){
+			foreach(ExtensionConfig::$TEAMSCRIPTS as $teamScript){
+				if( strstr($scriptName, $teamScript) ){
 					$out = true;
 					break;
 				}
@@ -1356,9 +1363,10 @@ abstract class AdminServ {
 			$out['map']['callvote']['cmdparam'] = $queriesData['GetCurrentCallVote']['CmdParam'];
 			
 			// TeamScores (mode team)
-			if($displayTeamMode){
+			if( self::isGameMode('Team', $out['srv']['gameModeId']) ){
 				$client->query('GetCurrentRanking', 2, 0);
 				$currentRanking = $client->getResponse();
+				self::dsm($currentRanking);
 				$out['map']['scores']['blue'] = $currentRanking[0]['Score'];
 				$out['map']['scores']['red'] = $currentRanking[1]['Score'];
 			}
@@ -1504,9 +1512,10 @@ abstract class AdminServ {
 	/**
 	* Récupère le nombre de joueurs présent sur le serveur
 	*
+	* @param bool $spectator -> Inclus les spectateurs dans le calcul
 	* @return int
 	*/
-	public static function getNbPlayers(){
+	public static function getNbPlayers($spectator = true){
 		global $client;
 		$out = 0;
 		
@@ -1514,7 +1523,21 @@ abstract class AdminServ {
 			self::error();
 		}
 		else{
-			$out = count( $client->getResponse() );
+			$playerList = $client->getResponse();
+			$countPlayerList = count($playerList);
+			
+			if($spectator){
+				$out = $countPlayerList;
+			}
+			else{
+				if($countPlayerList > 0){
+					foreach($playerList as $player){
+						if($player['SpectatorStatus'] == 0){
+							$out++;
+						}
+					}
+				}
+			}
 		}
 		
 		return $out;

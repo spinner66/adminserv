@@ -142,14 +142,10 @@
 	
 	// Info serveur
 	$serverInfo = AdminServ::getCurrentServerInfo();
-	$scriptName = null;
-	if( isset($serverInfo['srv']['gameModeScriptName']) ){
-		$scriptName = $serverInfo['srv']['gameModeScriptName'];
-	}
-	$displayTeamMode = AdminServ::checkDisplayTeamMode($serverInfo['srv']['gameModeId'], $scriptName);
+	$displayTeamMode = AdminServ::checkDisplayTeamMode($serverInfo['srv']['gameModeId'], $serverInfo['srv']['gameModeScriptName']);
 	// Si on est en mode équipe, on force l'affichage en mode détail
 	if($displayTeamMode){
-		$_SESSION['adminserv']['mode'] = 'detail';
+		$_SESSION['adminserv']['mode']['general'] = 'detail';
 	}
 	if( defined('IS_RELAY') && IS_RELAY ){
 		// @deprecated $mainServerLogin = AdminServ::getMainServerLoginFromRelay();
@@ -204,7 +200,7 @@
 					</td>
 				</tr>
 			<?php } ?>
-			<?php if($displayTeamMode){ ?>
+			<?php if( AdminServ::isGameMode('Team', $serverInfo['srv']['gameModeId']) ){ ?>
 				<tr>
 					<td class="key"><?php echo Utils::t('Scores'); ?></td>
 					<td class="value" id="map_teamscore">
@@ -307,7 +303,7 @@
 	<h1><?php echo Utils::t('Players'); ?></h1>
 	<div class="title-detail">
 		<ul>
-			<li><a id="detailMode" href="." data-statusmode="<?php echo USER_MODE; ?>" data-textdetail="<?php echo Utils::t('Detailed mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detailed mode'); } ?></a></li>
+			<li><a id="detailMode" href="." data-statusmode="<?php echo USER_MODE_GENERAL; ?>" data-textdetail="<?php echo Utils::t('Detailed mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE_GENERAL == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detailed mode'); } ?></a></li>
 			<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($serverInfo['ply']) ){ echo ' disabled="disabled"'; } ?> /></li>
 		</ul>
 	</div>
@@ -319,11 +315,11 @@
 			<thead>
 				<tr>
 					<?php if($displayTeamMode){ ?>
-						<th class="detailModeTh thleft"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=team"><?php echo Utils::t('Team'); ?></a></th>
+						<th class="detailModeTh thleft"<?php if(USER_MODE_GENERAL == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=team"><?php echo Utils::t('Team'); ?></a></th>
 					<?php } ?>
-					<th class="firstTh <?php if(USER_MODE == 'simple' || !$displayTeamMode){ echo 'thleft'; } ?>"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
+					<th class="firstTh <?php if(USER_MODE_GENERAL == 'simple' || !$displayTeamMode){ echo 'thleft'; } ?>"><a href="?sort=nickname"><?php echo Utils::t('Nickname'); ?></a></th>
 					<?php if(!$displayTeamMode){ ?>
-						<th class="detailModeTh"<?php if(USER_MODE == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=ladder"><?php echo Utils::t('Ladder'); ?></a></th>
+						<th class="detailModeTh"<?php if(USER_MODE_GENERAL == 'simple'){ echo ' hidden="hidden"'; } ?>><a href="?sort=ladder"><?php echo Utils::t('Ladder'); ?></a></th>
 					<?php } ?>
 					<th><a href="?sort=login"><?php echo Utils::t('Login'); ?></a></th>
 					<th><a href="?sort=status"><?php echo Utils::t('Status'); ?></a></th>
@@ -341,13 +337,13 @@
 						foreach($serverInfo['ply'] as $player){
 							// Ligne
 							$showPlayerList .= '<tr class="'; if($i%2){ $showPlayerList .= 'even'; }else{ $showPlayerList .= 'odd'; } $showPlayerList .= '">';
-								if($displayTeamMode && USER_MODE == 'detail'){
+								if($displayTeamMode && USER_MODE_GENERAL == 'detail'){
 									$showPlayerList .= '<td class="detailModeTd imgleft"><span class="team_'.$player['TeamId'].'" title="'.$player['TeamName'].'">&nbsp;</span>'.$player['TeamName'].'</td>';
 								}
 								
 								$showPlayerList .= '<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>';
 								if(!$displayTeamMode){
-									$showPlayerList .= '<td class="detailModeTd imgleft"'; if(USER_MODE == 'simple'){ $showPlayerList .= ' hidden="hidden"'; } $showPlayerList .= '><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/leagueladder.png" alt="" />'.$player['LadderRanking'].'</td>';
+									$showPlayerList .= '<td class="detailModeTd imgleft"'; if(USER_MODE_GENERAL == 'simple'){ $showPlayerList .= ' hidden="hidden"'; } $showPlayerList .= '><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/leagueladder.png" alt="" />'.$player['LadderRanking'].'</td>';
 								}
 								$showPlayerList .= '<td>'.$player['Login'].'</td>'
 								.'<td>'.$player['PlayerStatus'].'</td>'

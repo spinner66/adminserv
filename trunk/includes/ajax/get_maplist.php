@@ -19,7 +19,7 @@
 	if( isset($_GET['mode']) ){ $mode = addslashes($_GET['mode']); }else{ $mode = null; }
 	if( isset($_GET['sort']) ){ $sort = addslashes($_GET['sort']); }else{ $sort = null; }
 	if($mode){
-		$_SESSION['adminserv']['mode'] = $mode;
+		$_SESSION['adminserv']['mode']['maps'] = $mode;
 	}
 	
 	// DATA
