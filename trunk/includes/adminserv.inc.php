@@ -1321,17 +1321,15 @@ abstract class AdminServ {
 			// GameMode
 			$out['srv']['gameModeId'] = $queriesData['GetGameMode'];
 			$out['srv']['gameModeName'] = self::getGameModeName($out['srv']['gameModeId']);
+			$out['srv']['gameModeScriptName'] = null;
 			if( self::isGameMode('Script', $out['srv']['gameModeId']) ){
 				$client->query('GetModeScriptInfo');
 				$getModeScriptInfo = $client->getResponse();
 				if( isset($getModeScriptInfo['Name']) ){
 					$out['srv']['gameModeScriptName'] = self::formatScriptName($getModeScriptInfo['Name']);
-					$displayTeamMode = self::checkDisplayTeamMode($out['srv']['gameModeId'], $out['srv']['gameModeScriptName']);
 				}
 			}
-			else{
-				$displayTeamMode = self::checkDisplayTeamMode($out['srv']['gameModeId']);
-			}
+			$displayTeamMode = self::checkDisplayTeamMode($out['srv']['gameModeId'], $out['srv']['gameModeScriptName']);
 			
 			// CurrentMapInfo
 			$currentMapInfo = $queriesData[$queryName['getMapInfo']];
@@ -1366,7 +1364,6 @@ abstract class AdminServ {
 			if( self::isGameMode('Team', $out['srv']['gameModeId']) ){
 				$client->query('GetCurrentRanking', 2, 0);
 				$currentRanking = $client->getResponse();
-				self::dsm($currentRanking);
 				$out['map']['scores']['blue'] = $currentRanking[0]['Score'];
 				$out['map']['scores']['red'] = $currentRanking[1]['Score'];
 			}
