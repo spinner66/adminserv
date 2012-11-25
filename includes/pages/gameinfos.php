@@ -70,7 +70,7 @@
 		<div class="content gameinfos">
 			<?php echo AdminServUI::getGameInfosGeneralForm($gameInfosData); ?>
 			
-			<?php if( AdminServ::isGameMode('Team', $gameInfos['next']['GameMode']) || AdminServ::isGameMode('Script', $gameInfos['next']['GameMode']) ){ ?>
+			<?php if( AdminServ::checkDisplayTeamMode($gameInfos['next']['GameMode'], $gameInfos['next']['ScriptName']) ){ ?>
 				<fieldset class="gameinfos_teaminfos">
 					<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Team infos'); ?></legend>
 					<table>

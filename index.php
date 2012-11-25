@@ -25,18 +25,6 @@
 	}
 	
 	
-	// VÉRIFICATION DES DROITS
-	$checkRightsList = array(
-		'./config/adminserv.cfg.php' => 666,
-		'./config/servers.cfg.php' => 666,
-	);
-	if( in_array(true, AdminServConfig::$LOGS) ){
-		if( Utils::isWinServer() ){ $checkRightsList['./logs/'] = 666; }
-		else{ $checkRightsList['./logs/'] = 777; }
-	}
-	AdminServ::checkRights($checkRightsList);
-	
-	
 	// ISSET
 	if( isset($_GET['p']) ){
 		define('USER_PAGE', htmlspecialchars($_GET['p']) );
@@ -56,20 +44,6 @@
 	if( isset($_GET['d']) ){ $directory = addslashes( urldecode($_GET['d']) ); }else{ $directory = null; }
 	if( isset($_GET['th']) ){ $forceTheme = addslashes($_GET['th']); }else{ $forceTheme = null; }
 	if( isset($_GET['lg']) ){ $forceLang = addslashes($_GET['lg']); }else{ $forceLang = null; }
-	
-	
-	// DÉCONNEXION
-	if( isset($_GET['error']) || isset($_GET['logout']) ){
-		session_unset();
-		session_destroy();
-		if( isset($_GET['logout']) ){
-			Utils::redirection(false);
-		}
-	}
-	
-	
-	// LOGS
-	AdminServLogs::initialize();
 	
 	
 	// THEME
@@ -104,6 +78,32 @@
 			require_once $langFile;
 		}
 	}
+	
+	
+	// VÉRIFICATION DES DROITS
+	$checkRightsList = array(
+		'./config/adminserv.cfg.php' => 666,
+		'./config/servers.cfg.php' => 666,
+	);
+	if( in_array(true, AdminServConfig::$LOGS) ){
+		if( Utils::isWinServer() ){ $checkRightsList['./logs/'] = 666; }
+		else{ $checkRightsList['./logs/'] = 777; }
+	}
+	AdminServ::checkRights($checkRightsList);
+	
+	
+	// DÉCONNEXION
+	if( isset($_GET['error']) || isset($_GET['logout']) ){
+		session_unset();
+		session_destroy();
+		if( isset($_GET['logout']) ){
+			Utils::redirection(false);
+		}
+	}
+	
+	
+	// LOGS
+	AdminServLogs::initialize();
 	
 	
 	// PLUGINS
