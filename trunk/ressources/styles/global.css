@@ -540,7 +540,6 @@ select.width3 {
 /* Fielset
 -------------------------------*/
 fieldset {
-	overflow: hidden;
 	margin: 10px 5px;
 	background: #fff;
 	border: 1px solid #ddd;
@@ -687,7 +686,7 @@ tr.table-separation {
 	cursor: auto !important;
 }
 tbody tr.recent {
-	background: #fffecf;
+	background: #f7f59e;
 }
 tbody tr:hover {
 	width: 100%;
@@ -699,7 +698,7 @@ tbody tr.current,
 tbody tr.current:hover {
 	cursor: default;
 	border: 0;
-	background: #fffecf;
+	background: #f7f59e;
 }
 tbody tr.selected {
 	background: #d9e8ff;

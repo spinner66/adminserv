@@ -1901,40 +1901,24 @@ abstract class AdminServ {
 	* @param string $showAdminText -> Display "Admin" before the message
 	* @return bool or text error
 	*/
-	public static function addChatServerLine($message, $nickname = null, $color = '$ff0', $destination = 'server', $showAdminText = true){
+	public static function addChatServerLine($message, $nickname = null, $color = '$ff0', $destination = 'server', $showAdminText = false){
 		global $client;
 		$out = false;
-		$showColors = false;
-		if( defined('AdminServConfig::CHAT_COLORS') && AdminServConfig::CHAT_COLORS ){
-			$showColors = true;
-		}
+		$admin = null;
 		Utils::addCookieData('adminserv_user', array(AdminServUI::getTheme(), AdminServUI::getLang(), $nickname, $color), AdminServConfig::COOKIE_EXPIRE);
 		
-		if($nickname && !$showColors){
-			if( substr($nickname, 0, 1) !== '$' ){ $nickname = '$fff'.$nickname; }
-			$nickname = TmNick::stripNadeoCode($nickname, array('$s') );
-		}
-		
-		$admin = null;
 		if($showAdminText){
-			$admin = '$fffAdmin';
+			$admin = '$fffAdmin:';
 		}
 		
-		if($showColors){
-			if($nickname){
-				$nickname = '$s:$g$ff0'.$nickname.'$f00$g$s';
-			}
-			$nickname = '$s$ff0['.$admin.$nickname.'$ff0]';
+		if($nickname){
+			$nickname = '$g$ff0'.TmNick::stripNadeoCode($nickname, array('$s') );
 		}
-		else{
-			if($nickname){
-				$nickname = '$s:$z$s'.$nickname.'$fff$z$s';
-			}
-			$nickname = '$z$s['.$admin.$nickname.']';
-		}
+		
+		$nickname = '$s$ff0['.$admin.$nickname.'$z$s$ff0]$z';
 		$message = $nickname.' '.$color.$message;
-		
 		$_SESSION['adminserv']['chat_dst'] = $destination;
+		
 		if($destination === 'server'){
 			if( !$client->query('ChatSendServerMessage', $message) ){
 				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
@@ -1965,35 +1949,56 @@ abstract class AdminServ {
 	public static function getChatServerLines($hideServerLines = false){
 		global $client;
 		$out = null;
-		$showColor = false;
-		if( defined('AdminServConfig::CHAT_COLORS') ){
-			$showColor = AdminServConfig::CHAT_COLORS;
-		}
 		
 		if( !$client->query('GetChatLines') ){
 			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 		}
 		else{
 			$chatLines = $client->getResponse();
+			
 			foreach($chatLines as $line){
-				if($hideServerLines){
-					$line = self::clearChatServerLine($line);
-				}
-				
-				if($line == '$99FThis is a draw round.'){ $line = Utils::t('$99FThis is a draw round.'); }
-				if($line == '$99FThe $<$00FBlue team$> wins this round.'){ $line = Utils::t('$99FThe $<$00FBlue team$> wins this round.'); }
-				if($line == '$99FThe $<$F00Red team$> wins this round.'){ $line = Utils::t('$99FThe $<$F00Red team$> wins this round.'); }
-				
-				if($showColor){
-					$line = str_replace('<$', '', $line);
-					$line = str_replace('$>', '$ff0', $line);
-					$out .= TmNick::toHtml('$ff0'.$line, 10, true);
+				if( self::isServerLine($line) ){
+					if($hideServerLines){
+						unset($line);
+					}
+					else{
+						$tradLines = array(
+							'$99FThis is a draw round.',
+							'$99FThe $<$00FBlue team$> wins this round.',
+							'$99FThe $<$F00Red team$> wins this round.'
+						);
+						if( in_array($line, $tradLines) ){
+							foreach($tradLines as $tradLine){
+								if(line == $tradLine){
+									$line = Utils::t($tradLine);
+									break;
+								}
+							}
+						}
+						else{
+							if( strstr($line, 'Admin:') ){
+								$pattern = '$ff0]$z';
+								$lineEx = explode($pattern, $line);
+								$nickname = $lineEx[0].$pattern;
+								$message = TmNick::toText( trim($lineEx[1]) );
+								$line = $nickname.' $666'.$message;
+							}
+							else{
+								$line = '$999'.TmNick::toText($line);
+							}
+						}
+					}
 				}
 				else{
-					$line = TmNick::stripNadeoCode($line);
-					$line = str_replace('$>', '$z', $line);
-					$line = htmlspecialchars($line, ENT_QUOTES, 'UTF-8');
-					$out .= TmNick::toHtml($line, 10, false, true, '#888');
+					$lineEx = explode('$>', $line);
+					$nickname = TmNick::stripNadeoCode($lineEx[0], array('$s', '[$<') );
+					$message = TmNick::toText( substr($lineEx[1], 2) );
+					
+					$line = '$s$ff0['.$nickname.'$g$ff0]$z $666'.$message;
+				}
+				
+				if( isset($line) ){
+					$out .= TmNick::toHtml($line, 10);
 				}
 			}
 		}
@@ -2003,16 +2008,20 @@ abstract class AdminServ {
 	
 	
 	/**
-	* Masque les lignes générées par le gestionnaire de serveur
+	* Retourne true si la ligne est générée par le serveur
 	*
 	* @param string $line -> La ligne de la réponse GetChatLines
-	* @return string
+	* @return bool
 	*/
-	public static function clearChatServerLine($line){
+	public static function isServerLine($line){
+		$out = false;
 		$char = substr(utf8_decode($line), 0, 1);
-		if($char == '<' || $char == '[' || $char == '/' || substr($line, 0, 11) == '$99F$s$ff0[' || substr($line, 0, 9) == '$99F$z$s[' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
-			return $line;
+		
+		if($char == '<' || $char == '/' || substr($line, 0, 4) == '$99F' || substr($line, 0, 12) == 'Invalid time' || $char == '?'){
+			$out = true;
 		}
+		
+		return $out;
 	}
 	
 	

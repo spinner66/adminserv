@@ -20,7 +20,7 @@
 	$out = null;
 	if($message != null && $destination != null){
 		if( AdminServ::initialize(false) ){
-			$out = AdminServ::addChatServerLine($message, $nickname, $color, $destination);
+			$out = AdminServ::addChatServerLine($message, $nickname, $color, $destination, true);
 		}
 		$client->Terminate();
 	}
