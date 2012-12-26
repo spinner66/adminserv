@@ -2,7 +2,6 @@
 	// INCLUDES
 	session_start();
 	define('ADMINSERV_TIMER', false);
-	define('ADMINSERV_VERSION', '2.0.2');
 	require_once 'config/adminserv.cfg.php';
 	if( file_exists('config/servers.cfg.php') ){
 		include_once 'config/servers.cfg.php';

@@ -9,6 +9,11 @@
 	require_once $pathConfig.'servers.cfg.php';
 	require_once '../adminserv.inc.php';
 	AdminServUI::getClass();
+	$langCode = AdminServUI::getLang();
+	$langFile = '../lang/'.$langCode.'.php';
+	if( file_exists($langFile) ){
+		require_once $langFile;
+	}
 	
 	// ISSET
 	if( isset($_GET['s']) ){ $hideServerLines = $_GET['s']; }else{ $hideServerLines = false; }

@@ -424,9 +424,7 @@ function setScriptSettings(){
 */
 function getChatServerLines(hideServerLines){
 	$.getJSON(getIncludesPath()+'ajax/get_chatserverlines.php', {s: hideServerLines}, function(data){
-		if(data != null){
-			$('#chat').html(data);
-		}
+		$('#chat').html(data);
 	});
 }
 
