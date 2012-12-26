@@ -389,7 +389,7 @@ abstract class AdminServUI {
 				.'</td>';
 			}
 			$out .= '<td class="value">'
-				.'<input class="text width2" type="text" name="Next'.$id.'" id="Next'.$id.'" value="'.$nextGamInf[$id].'" />'
+				.'<input class="text width2" type="'; if( is_numeric($nextGamInf[$id]) ){ $out .= 'number" min="0"'; }else{ $out .= 'text'; } $out .= '" name="Next'.$id.'" id="Next'.$id.'" value="'.$nextGamInf[$id].'" />'
 			.'</td>'
 			.'<td class="preview"></td>'
 		.'</tr>';
@@ -433,7 +433,7 @@ abstract class AdminServUI {
 						.'</td>';
 					}
 					$out .= '<td class="value">'
-						.'<input class="text width2" type="text" name="NextChatTime" id="NextChatTime" value="'.TimeDate::millisecToSec($nextGamInf['ChatTime'] + 8000).'" />'
+						.'<input class="text width2" type="number" min="0" name="NextChatTime" id="NextChatTime" value="'.TimeDate::millisecToSec($nextGamInf['ChatTime'] + 8000).'" />'
 					.'</td>'
 					.'<td class="preview"></td>'
 				.'</tr>'
@@ -450,7 +450,7 @@ abstract class AdminServUI {
 							.'<option value="1"'; if($nextGamInf['FinishTimeout'] == 1){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('Auto (based on map)').'</option>'
 							.'<option value="more">'.Utils::t('Choose time').'</option>'
 						.'</select>'
-						.'<input class="text width2" type="text" name="NextFinishTimeoutValue" id="NextFinishTimeoutValue" value="'; if($nextGamInf['FinishTimeout'] > 1){ $out .= TimeDate::millisecToSec($nextGamInf['FinishTimeout']); } $out .= '"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= ' />'
+						.'<input class="text width2" type="number" min="0" name="NextFinishTimeoutValue" id="NextFinishTimeoutValue" value="'; if($nextGamInf['FinishTimeout'] > 1){ $out .= TimeDate::millisecToSec($nextGamInf['FinishTimeout']); } $out .= '"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= ' />'
 					.'</td>'
 					.'<td class="preview"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= '><a class="returnDefaultValue" href="?p='. USER_PAGE .'">'.Utils::t('Return to the default value').'</a></td>'
 				.'</tr>'
@@ -596,7 +596,7 @@ abstract class AdminServUI {
 						.'</td>';
 					}
 					$out .= '<td class="value">'
-						.'<input class="text width2" type="text" name="NextTimeAttackLimit" id="NextTimeAttackLimit" value="'.TimeDate::millisecToSec($nextGamInf['TimeAttackLimit']).'" />'
+						.'<input class="text width2" type="number" min="0" name="NextTimeAttackLimit" id="NextTimeAttackLimit" value="'.TimeDate::millisecToSec($nextGamInf['TimeAttackLimit']).'" />'
 					.'</td>'
 					.'<td class="preview"></td>'
 				.'</tr>'

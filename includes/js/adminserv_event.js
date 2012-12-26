@@ -365,6 +365,9 @@ $(document).ready(function(){
 			$('#NextTimeAttackLimit, #NextLapsTimeLimit, #hotSeatTimeLimit').click(function(){
 				$(this).parent('td').parent('tr').find('td.preview').html('['+secToMin( $(this).val() )+' min]');
 			});
+			$('#NextTimeAttackLimit, #NextLapsTimeLimit, #hotSeatTimeLimit').change(function(){
+				$(this).parent('td').parent('tr').find('td.preview').html('['+secToMin( $(this).val() )+' min]');
+			});
 			$('#NextTimeAttackLimit, #NextLapsTimeLimit, #hotSeatTimeLimit').keyup(function(){
 				$(this).parent('td').parent('tr').find('td.preview').html('['+secToMin( $(this).val() )+' min]');
 			});

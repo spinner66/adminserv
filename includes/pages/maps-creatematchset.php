@@ -247,14 +247,14 @@
 					<tr>
 						<td class="key"><label for="hotSeatTimeLimit"><?php echo Utils::t('Time limit'); ?></label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="hotSeatTimeLimit" id="hotSeatTimeLimit" value="<?php echo TimeDate::millisecToSec($matchSetting['hotseat']['TimeLimit']); ?>" />
+							<input class="text width2" type="number" min="0" name="hotSeatTimeLimit" id="hotSeatTimeLimit" value="<?php echo TimeDate::millisecToSec($matchSetting['hotseat']['TimeLimit']); ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="hotSeatCountRound"><?php echo Utils::t('Rounds count'); ?></label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="hotSeatCountRound" id="hotSeatCountRound" value="<?php echo $matchSetting['hotseat']['RoundsCount']; ?>" />
+							<input class="text width2" type="number" min="0" name="hotSeatCountRound" id="hotSeatCountRound" value="<?php echo $matchSetting['hotseat']['RoundsCount']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
@@ -297,7 +297,7 @@
 					<tr>
 						<td class="key"><label for="filterSortIndex"><?php echo Utils::t('Sort index'); ?></label></td>
 						<td class="value">
-							<input class="text width2" type="text" name="filterSortIndex" id="filterSortIndex" value="<?php echo $matchSetting['filter']['SortIndex']; ?>" />
+							<input class="text width2" type="number" min="0" name="filterSortIndex" id="filterSortIndex" value="<?php echo $matchSetting['filter']['SortIndex']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>

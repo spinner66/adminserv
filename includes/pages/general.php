@@ -205,9 +205,9 @@
 					<td class="key"><?php echo Utils::t('Scores'); ?></td>
 					<td class="value" id="map_teamscore">
 						<span class="team_0" title="<?php echo Utils::t('Blue team'); ?>"></span>
-						<input class="text" type="text" name="ScoreTeamBlue" id="ScoreTeamBlue" value="<?php echo $serverInfo['map']['scores']['blue']; ?>" />
+						<input class="text" type="number" min="0" name="ScoreTeamBlue" id="ScoreTeamBlue" value="<?php echo $serverInfo['map']['scores']['blue']; ?>" />
 						<span class="team_1" title="<?php echo Utils::t('Red team'); ?>"></span>
-						<input class="text" type="text" name="ScoreTeamRed" id="ScoreTeamRed" value="<?php echo $serverInfo['map']['scores']['red']; ?>" />
+						<input class="text" type="number" min="0" name="ScoreTeamRed" id="ScoreTeamRed" value="<?php echo $serverInfo['map']['scores']['red']; ?>" />
 						<input class="button light" type="submit" name="ForceScores" id="ForceScores" value="Forcer les scores" />
 					</td>
 				</tr>
