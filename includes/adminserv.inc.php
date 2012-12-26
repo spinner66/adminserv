@@ -2267,10 +2267,13 @@ abstract class AdminServ {
 		if(AdminServConfig::LOCAL_GET_MAPS_ON_SERVER){
 			$currentMapsListUId = self::getMapListField('UId');
 		}
+		$mapsDirectoryPath = self::getMapsDirectoryPath();
+		$pathFromMaps = str_replace($mapsDirectoryPath, '', $path);
 		
 		if( class_exists('Folder') && class_exists('GBXChallMapFetcher') ){
 			$directory = Folder::read($path, AdminServConfig::$MAPS_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
 			if( is_array($directory) ){
+				
 				$countMapList = count($directory['files']);
 				if($countMapList > 0){
 					$i = 0;
@@ -2301,7 +2304,7 @@ abstract class AdminServ {
 							$out['lst'][$i]['Environnement'] = $env;
 							
 							// Autres
-							$out['lst'][$i]['FileName'] = $file;
+							$out['lst'][$i]['FileName'] = $pathFromMaps.$file;
 							$uid = $Gbx->uid;
 							if($uid == 'read error'){ $uid = null; }
 							$out['lst'][$i]['UId'] = $uid;
@@ -2362,7 +2365,7 @@ abstract class AdminServ {
 			}
 		}
 		else{
-			$out['error'] = 'Class "Folder" or "GBXChallMapFetcher" not found';
+			$out = 'Class "Folder" or "GBXChallMapFetcher" not found';
 		}
 		
 		return $out;
@@ -2381,8 +2384,7 @@ abstract class AdminServ {
 		if( class_exists('Folder') && class_exists('File') ){
 			$directory = Folder::read($path, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
 			if( is_array($directory) ){
-				$countMatchsetList = count($directory['files']);
-				if($countMatchsetList > 0){
+				if( count($directory['files']) > 0){
 					$i = 0;
 					foreach($directory['files'] as $file => $values){
 						if( in_array(File::getExtension($file), AdminServConfig::$MATCHSET_EXTENSION) ){
@@ -2410,8 +2412,8 @@ abstract class AdminServ {
 				
 				// Nombre de matchsettings
 				if( isset($out['lst']) && is_array($out['lst']) ){
-					$out['nbm']['count'] = $countMatchsetList;
-					if( count($out['lst']) > 1){
+					$out['nbm']['count'] = count($out['lst']);
+					if($out['nbm']['count'] > 1){
 						$out['nbm']['title'] = Utils::t('matchsettings');
 					}
 					else{
@@ -2432,7 +2434,7 @@ abstract class AdminServ {
 			}
 		}
 		else{
-			$out['error'] = 'Class "Folder" or "File" not found';
+			$out = 'Class "Folder" or "File" not found';
 		}
 		
 		return $out;
@@ -2556,7 +2558,7 @@ abstract class AdminServ {
 	*
 	* @param string $filename -> L'url du MatchSettings
 	* @param array  $list     -> Liste des champs à retourner
-	* @return array si le fichier existe, sinon false
+	* @return array
 	*/
 	public static function getMatchSettingsData($filename, $list = array('gameinfos', 'hotseat', 'filter', 'maps') ){
 		$out = array();
@@ -2564,7 +2566,7 @@ abstract class AdminServ {
 		
 		if( @file_exists($filename) ){
 			if( !($xml = @simplexml_load_file($filename)) ){
-				$out['error'] = 'simplexml_load_file error';
+				$out = 'simplexml_load_file error';
 			}
 		}
 		
@@ -2707,7 +2709,7 @@ abstract class AdminServ {
 	* Extrait les données d'une playlist (blacklist ou guestlist) et renvoi un tableau
 	*
 	* @param string $filename -> L'url de la playlist
-	* @return array si le fichier existe, sinon false
+	* @return array
 	*/
 	public static function getPlaylistData($filename){
 		$out = array();
@@ -2715,7 +2717,7 @@ abstract class AdminServ {
 		$xml = null;
 		if( @file_exists($filename) ){
 			if( !($xml = @simplexml_load_file($filename)) ){
-				$out['error'] = 'simplexml_load_file error';
+				$out = 'simplexml_load_file error';
 			}
 		}
 		
