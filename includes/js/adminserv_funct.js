@@ -78,16 +78,15 @@ function round(value, precision){
 * Affichage du texte d'erreur
 */
 function error(text, hide){
-	$('#error').fadeIn('fast');
-	if( $('#error').attr('hidden') ){
-		$('#error').removeAttr('hidden');
+	var selector = $('#error');
+	selector.fadeIn('fast').html(text);
+	if( selector.attr('hidden') ){
+		selector.removeAttr('hidden');
 	}
-	$('#error').html(text);
 	
 	if(hide){
 		setTimeout(function(){
-			$('#error').attr('hidden', true);
-			$('#error').fadeOut('fast');
+			selector.attr('hidden', true).fadeOut('fast');
 		}, 4000);
 	}
 }
@@ -97,16 +96,15 @@ function error(text, hide){
 * Affichage du texte d'erreur
 */
 function info(text, hide){
-	$('#info').fadeIn('fast');
-	if( $('#info').attr('hidden') ){
-		$('#info').removeAttr('hidden');
+	var selector = $('#info');
+	selector.fadeIn('fast').html(text);
+	if( selector.attr('hidden') ){
+		selector.removeAttr('hidden');
 	}
-	$('#info').text(text);
 	
 	if(hide){
 		setTimeout(function(){
-			$('#info').attr('hidden', true);
-			$('#info').fadeOut('fast');
+			selector.attr('hidden', true).fadeOut('fast');
 		}, 4000);
 	}
 }
@@ -140,7 +138,7 @@ function speedAdmin(cmd){
 * Récupère la liste des niveaux admin suivant le serveur sélectionné
 */
 function getServerAdminLevel(){
-	var serverName = $('select#as_server').val();
+	var serverName = $('#as_server').val();
 	var adminLevelList = '';
 	
 	$.getJSON(getIncludesPath()+'ajax/get_server_adminlevel.php', {srv: serverName}, function(response){
@@ -151,11 +149,11 @@ function getServerAdminLevel(){
 				adminLevelList += '<option value="'+n+'"'+selected+'>'+n+'</option>';
 			});
 			
-			$('select#as_adminlevel').html(adminLevelList);
+			$('#as_adminlevel').html(adminLevelList);
 		}
 		else{
-			$('select#as_adminlevel').empty();
-			error( $('select#as_adminlevel').data('error') );
+			$('#as_adminlevel').empty();
+			error( $('#as_adminlevel').data('error') );
 		}
 	});
 }
@@ -178,10 +176,10 @@ function getCurrentServerInfo(mode, sort){
 		if(data != null){
 			// Map
 			if(data.map != null){
-				$("#map_name").html(data.map.name);
-				$("#map_author").html(data.map.author);
-				$("#map_enviro").html(data.map.enviro+'<img src="'+path_ressources+'images/env/'+data.map.enviro.toLowerCase()+'.png" alt="" />');
-				$("#map_uid").html(data.map.uid);
+				$('#map_name').html(data.map.name);
+				$('#map_author').html(data.map.author);
+				$('#map_enviro').html(data.map.enviro+'<img src="'+path_ressources+'images/env/'+data.map.enviro.toLowerCase()+'.png" alt="" />');
+				$('#map_uid').html(data.map.uid);
 				if(data.srv.gameModeScriptName){
 					var gameModeName = data.srv.gameModeScriptName+' <span class="scriptName">('+data.srv.gameModeName+')</span>';
 				}else{
@@ -237,13 +235,13 @@ function getCurrentServerInfo(mode, sort){
 						+'</tr>';
 					});
 					
-					if( $('input#checkAll').attr('disabled') ){
-						$('input#checkAll').attr('disabled', false);
+					if( $('#checkAll').attr('disabled') ){
+						$('#checkAll').attr('disabled', false);
 					}
 				}
 				else{
-					if( !$('input#checkAll').attr('disabled') ){
-						$('input#checkAll').attr('disabled', true);
+					if( !$('#checkAll').attr('disabled') ){
+						$('#checkAll').attr('disabled', true);
 					}
 					out += '<tr class="no-line"><td class="center" colspan="'; if(isTeamGameMode){ out += '6'; }else{ out += '5'; } out += '">'+data.ply+'</td></tr>';
 				}
@@ -266,7 +264,7 @@ function getCurrentServerInfo(mode, sort){
 * @param string str
 */
 (function($){
-	$.fn.getColorStr = function(str){
+	$.fn.getColorHtml = function(str){
 		var selector = $(this);
 		
 		$.getJSON(getIncludesPath()+'ajax/get_colorstr.php', {t: str}, function(data){
@@ -282,7 +280,7 @@ function getCurrentServerInfo(mode, sort){
 * Récupère la configuration du gameMode sélectionné
 */
 function getCurrentGameModeConfig(){
-	var gameMode = $('select#NextGameMode option:selected').text();
+	var gameMode = $('#NextGameMode option:selected').text();
 	var selector = $('#gameMode-'+gameMode.toLowerCase() );
 	
 	// Fermeture de tous les modes par défaut
@@ -305,8 +303,7 @@ function getCurrentGameModeConfig(){
 	
 	// Affichage du mode de jeu sélectionné
 	if( selector.attr('hidden') ){
-		selector.slideDown('fast');
-		selector.removeAttr('hidden');
+		selector.slideDown('fast').removeAttr('hidden');
 	}
 }
 
@@ -460,9 +457,10 @@ function addChatServerLine(){
 * Initialisation de l'uploader Ajax
 */
 function initializeUploader(){
+	var formSelector = $('#formUpload');
 	var statusFiles = [];
 	var uploader = new qq.FileUploader({
-		element: $('#formUpload')[0],
+		element: formSelector[0],
 		action: getIncludesPath()+'ajax/upload.php',
 		maxConnections: 2,
 		params: {
@@ -473,8 +471,8 @@ function initializeUploader(){
 		},
 		template:
 		'<div class="qq-uploader">'
-			+ '<div class="qq-upload-drop-area"><span>'+ $('#formUpload').data('dropfiles') +'</span></div>'
-			+ '<div class="qq-upload-button">'+ $('#formUpload').data('uploadfile') +'</div>'
+			+ '<div class="qq-upload-drop-area"><span>'+ formSelector.data('dropfiles') +'</span></div>'
+			+ '<div class="qq-upload-button">'+ formSelector.data('uploadfile') +'</div>'
 			+ '<ul class="qq-upload-list"></ul>'
 		+ '</div>',
 		fileTemplate:
@@ -482,21 +480,21 @@ function initializeUploader(){
 			+ '<span class="qq-upload-file"></span>'
 			+ '<span class="qq-upload-spinner"><span class="qq-progress-bar"></span></span>'
 			+ '<span class="qq-upload-size"></span>'
-			+ '<a class="qq-upload-cancel" href="./">'+ $('#formUpload').data('cancel') +'</a>'
-			+ '<span class="qq-upload-failed-text">'+ $('#formUpload').data('failed') +'</span>'
+			+ '<a class="qq-upload-cancel" href="./">'+ formSelector.data('cancel') +'</a>'
+			+ '<span class="qq-upload-failed-text">'+ formSelector.data('failed') +'</span>'
 		+ '</li>',
 		onProgress: function(id, fileName, loaded, total){
 			window.onbeforeunload = function(){
-				return $('#formUpload').data('uploadnotfinished');
+				return formSelector.data('uploadnotfinished');
 			}
 			$.each( $('.qq-upload-list li'), function(key, value){
-				var text = $(this).children('.qq-upload-size').text();
+				var text = $(this).find('.qq-upload-size').text();
 				var newtext = t(text);
 				var lastpos = text.indexOf('%');
 				var pourcent = text.substring(0, lastpos);
 				
-				$(this).children('.qq-upload-size').text(newtext);
-				$(this).children('.qq-upload-spinner').children('.qq-progress-bar').css('width', pourcent+'px');
+				$(this).find('.qq-upload-size').text(newtext);
+				$(this).find('.qq-progress-bar').css('width', pourcent+'px');
 			});
 		},
 		onComplete: function(id, fileName, responseJSON){
@@ -521,7 +519,7 @@ function initializeUploader(){
 					}
 					
 					if(allowRedirect){
-						location.href = '?p='+$('#formUpload').data('mapspagename');
+						location.href = '?p='+formSelector.data('mapspagename');
 					}
 				}
 			}
@@ -530,11 +528,11 @@ function initializeUploader(){
 			window.onbeforeunload = function(){}
 		},
 		messages: {
-			typeError: $('#formUpload').data('type-error'),
-			sizeError: $('#formUpload').data('size-error'),
-			minSizeError: $('#formUpload').data('minsize-error'),
-			emptyError: $('#formUpload').data('empty-error'),
-			onLeave: $('#formUpload').data('onleave')
+			typeError: formSelector.data('type-error'),
+			sizeError: formSelector.data('size-error'),
+			minSizeError: formSelector.data('minsize-error'),
+			emptyError: formSelector.data('empty-error'),
+			onLeave: formSelector.data('onleave')
 		},
 		showMessage: function(message){
 			error(message);
@@ -583,13 +581,13 @@ function getMapList(mode, sort){
 						+'</tr>';
 					});
 					
-					if( $('input#checkAll').attr('disabled') ){
-						$('input#checkAll').attr('disabled', false);
+					if( $('#checkAll').attr('disabled') ){
+						$('#checkAll').attr('disabled', false);
 					}
 				}
 				else{
-					if( !$('input#checkAll').attr('disabled') ){
-						$('input#checkAll').attr('disabled', true);
+					if( !$('#checkAll').attr('disabled') ){
+						$('#checkAll').attr('disabled', true);
 					}
 					out += '<tr class="no-line"><td class="center" colspan="6">'+data.lst+'</td></tr>';
 				}
@@ -633,9 +631,9 @@ function getMapList(mode, sort){
 		
 		// HTML
 		out += '<div class="form-input-submit">'
-			+ '<input class="button dark" type="button" id="renameMapCancel" name="renameMapCancel" value="'+formSelector.data("cancel")+'" />'+"\n"
-			+ '<input class="button dark" type="submit" id="renameMapValid" name="renameAutoValid" value="'+formSelector.data("autorename")+'" />'
-			+ '<input class="button dark" type="submit" id="renameMapValid" name="renameMapValid" value="'+formSelector.data("rename")+'" />'
+			+ '<input class="button dark" type="button" id="renameMapCancel" name="renameMapCancel" value="'+formSelector.data('cancel')+'" />'+"\n"
+			+ '<input class="button dark" type="submit" id="renameMapValid" name="renameAutoValid" value="'+formSelector.data('autorename')+'" />'
+			+ '<input class="button dark" type="submit" id="renameMapValid" name="renameMapValid" value="'+formSelector.data('rename')+'" />'
 		+ '</div>';
 		formSelector.html(out);
 	};
@@ -655,16 +653,16 @@ function getMoveFolderList(nbFiles){
 			}else{
 				var nbName = '1 map';
 			}
-			out += '<label for="moveDirectoryList">'+formSelector.data("move")+' '+nbName+' '+formSelector.data("inthefolder")+'</label>'
+			out += '<label for="moveDirectoryList">'+formSelector.data('move')+' '+nbName+' '+formSelector.data('inthefolder')+'</label>'
 			+ '<select name="moveDirectoryList" id="moveDirectoryList">'
-				+ '<option value=".">'+formSelector.data("root")+'</option>';
+				+ '<option value=".">'+formSelector.data('root')+'</option>';
 				$.each(data, function(i, n){
 					out += '<option value="'+n.path+'">'+n.level+n.name+'</option>';
 				});
 			out += '</select>'
 			+ '<div class="form-input-submit">'
-				+ '<input class="button dark" type="button" id="moveMapCancel" name="moveMapCancel" value="'+formSelector.data("cancel")+'" />'+"\n"
-				+ '<input class="button dark" type="submit" id="moveMapValid" name="moveMapValid" value="'+formSelector.data("move")+'" />'
+				+ '<input class="button dark" type="button" id="moveMapCancel" name="moveMapCancel" value="'+formSelector.data('cancel')+'" />'+"\n"
+				+ '<input class="button dark" type="submit" id="moveMapValid" name="moveMapValid" value="'+formSelector.data('move')+'" />'
 			+ '</div>';
 			
 			// HTML
@@ -679,21 +677,18 @@ function getMoveFolderList(nbFiles){
 function slideDownRenameForm(){
 	$('#form-rename-map').slideDown('fast');
 	$('#renameMap').addClass('active');
-	$('.options').addClass('form');
-	$('.options .selected-files-label').addClass('optHover');
+	$('.options').addClass('form').find('.selected-files-label').addClass('optHover');
 	$('#maplist table tbody tr.selected td.checkbox input').getMapRenameList();
 }
 function slideUpRenameForm(){
 	$('#form-rename-map').slideUp('fast');
 	$('#renameMap').removeClass('active');
-	$('.options').removeClass('form');
-	$('.options .selected-files-label').removeClass('optHover');
+	$('.options').removeClass('form').find('.selected-files-label').removeClass('optHover');
 }
 function slideDownMoveForm(){
 	$('#form-move-map').slideDown('fast');
 	$('#moveMap').addClass('active');
-	$('.options').addClass('form');
-	$('.options .selected-files-label').addClass('optHover');
+	$('.options').addClass('form').find('.selected-files-label').addClass('optHover');
 	if( $('#form-move-map').text() == '' ){
 		getMoveFolderList( $('#maplist table tbody tr.selected td.checkbox input').length );
 	}
@@ -701,16 +696,14 @@ function slideDownMoveForm(){
 function slideUpMoveForm(){
 	$('#form-move-map').slideUp('fast');
 	$('#moveMap').removeClass('active');
-	$('.options').removeClass('form');
-	$('.options .selected-files-label').removeClass('optHover');
+	$('.options').removeClass('form').find('.selected-files-label').removeClass('optHover');
 }
 function slideDownNewFolderForm(){
 	$('#form-new-folder').animate({
 		height: '25px',
 		marginTop: '6px',
 		marginBottom: '6px'
-	}, 'fast');
-	$('#form-new-folder').removeAttr('hidden');
+	}, 'fast').removeAttr('hidden');
 	$('#newfolder').text( $('#newfolder').data('cancel') );
 	$('#newFolderName').select();
 }
@@ -774,10 +767,8 @@ function setMapsOrderSort(sort, order){
 			else if(type == 'playerlist'){
 				getCurrentServerInfo('detail', sort);
 			}
-			$('#detailMode').text( $('#detailMode').data('textsimple') );
-			$(this).find('table th.detailModeTh').attr('hidden', false);
-			$(this).addClass('loading');
-			$('#detailMode').data('statusmode', 'detail');
+			$('#detailMode').text( $('#detailMode').data('textsimple') ).data('statusmode', 'detail');
+			$(this).addClass('loading').find('table th.detailModeTh').attr('hidden', false);
 		}
 		else{
 			if(type == 'maplist'){
@@ -786,10 +777,8 @@ function setMapsOrderSort(sort, order){
 			else if(type == 'playerlist'){
 				getCurrentServerInfo('simple', sort);
 			}
-			$('#detailMode').text( $('#detailMode').data('textdetail') );
-			$(this).find('table th.detailModeTh').attr('hidden', true);
-			$(this).addClass('loading');
-			$('#detailMode').data('statusmode', 'simple');
+			$('#detailMode').text( $('#detailMode').data('textdetail') ).data('statusmode', 'simple');
+			$(this).addClass('loading').find('table th.detailModeTh').attr('hidden', true);
 		}
 	};
 })(jQuery);
@@ -888,13 +877,10 @@ function setMapsOrderSort(sort, order){
 function matchset_getFileExists(filename){
 	$.getJSON(getIncludesPath()+'ajax/get_matchset_fileexists.php', {path: getPath(), name: filename}, function(response){
 		if(response){
-			$('#matchSettingNameExists').attr('hidden', false);
-			$('#matchSettingNameExists').hide();
-			$('#matchSettingNameExists').fadeIn('fast');
+			$('#matchSettingNameExists').attr('hidden', false).hide().fadeIn('fast');
 		}
 		else{
-			$('#matchSettingNameExists').attr('hidden', true);
-			$('#matchSettingNameExists').fadeOut('fast');
+			$('#matchSettingNameExists').attr('hidden', true).fadeOut('fast');
 		}
 	});
 }
@@ -939,20 +925,19 @@ function matchset_mapImportSelection(){
 					+'</tr>';
 				});
 				
-				if( $('input#checkAllMapImport').attr('disabled') ){
-					$('input#checkAllMapImport').attr('disabled', false);
+				if( $('#checkAllMapImport').attr('disabled') ){
+					$('#checkAllMapImport').attr('disabled', false);
 				}
 			}
 			else{
-				if( !$('input#checkAllMapImport').attr('disabled') ){
-					$('input#checkAllMapImport').attr('disabled', true);
+				if( !$('#checkAllMapImport').attr('disabled') ){
+					$('#checkAllMapImport').attr('disabled', true);
 				}
 				out += '<tr class="no-line"><td class="center" colspan="4">'+data.lst+'</td></tr>';
 			}
 			
 			// HTML
-			$('#mapImportSelectionDialog').removeAttr('hidden');
-			$('#mapImportSelectionDialog table tbody').html(out);
+			$('#mapImportSelectionDialog').removeAttr('hidden').find('table tbody').html(out);
 			$('.creatematchset .maps').removeClass('loading');
 			$('#mapImportSelectionDialog').dialog({
 				title: $('#mapImportSelectionDialog').data('title'),
@@ -1033,8 +1018,7 @@ function matchset_mapSelection(removeId){
 			
 			// HTML
 			matchset_setNbMapSelection(data.nbm.count);
-			$('#mapSelectionDialog').removeAttr('hidden');
-			$('#mapSelectionDialog table tbody').html(out);
+			$('#mapSelectionDialog').removeAttr('hidden').find('table tbody').html(out);
 			$('.creatematchset .maps').removeClass('loading');
 			$('#mapSelectionDialog').dialog({
 				title: $('#mapSelectionDialog').data('title'),
