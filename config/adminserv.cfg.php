@@ -22,7 +22,6 @@ class AdminServConfig {
 	
 	/* ADVANCED */
 	const MD5_PASSWORD = false; // if true, the dedicated server password is checked in MD5
-	const CHAT_COLORS = false; // Display colors in chat page
 	const LIMIT_PLAYERS_LIST = 250; // Display limit for lines in player list
 	const LIMIT_MAPS_LIST = 1000; // Display limit for lines in maps list
 	const LOCAL_GET_MAPS_ON_SERVER = true; // if true, the current server maps list is loaded in local maps page for easy compare with icon change. But if you have a lot of maps in server, it is better to disable it

@@ -139,19 +139,16 @@ class TmNick {
 					else if($tag == 'color'){
 						if($forcedDefault){
 							$lstStyle[] = 'color:'.$defaultHTMLColor;
-						}else{
+						}
+						else{
 							$lstStyle[] = 'color:'.$open;
 						}
-					}else{
-						/*if($tag == 's'){
-							$preContent .= '<span class="tmnick_shadow {$class$}">{$content$}</span><span>';
-							$preContent = str_replace('{$class$}', implode(' ', $lstClass), $preContent);
-							$postContent .= '</span>';
-						}*/
-						
+					}
+					else{
 						$lstClass[] = self::$m_css[$tag];
 					}
-				}else{
+				}
+				else{
 					if($tag == $lastLinkTag and $lastLink !== $open){
 						$prefix .= '</a>';
 						$lastLink = false;
@@ -524,7 +521,7 @@ class TmNick {
 	/**
 	* Enlève tous les codes de trackmania
 	*
-	* @param string $str    -> Texte à traiter
+	* @param string $str   -> Texte à traiter
 	* @param array $select -> Un ou plusieurs codes à enlever. Par exemple, si on veut enlever seulement le code "$s"
 	* @return string texte sans codes $s, $o, etc ...
 	*/
