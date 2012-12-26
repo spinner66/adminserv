@@ -614,16 +614,17 @@ function getMapList(mode, sort){
 		var list = $(this);
 		if( list.length > 0 ){
 			out += '<ul>';
-			$.each(list, function(i, n){
-				if(n.value.length > 36){
-					var title = ' title="'+n.value+'"';
+			list.each(function(){
+				var mapName = $(this).val().replace(getUrlParams('d'), '');
+				if(mapName.length > 36){
+					var title = ' title="'+mapName+'"';
 				}else{
 					var title = '';
 				}
 				out += '<li>'
-					+ '<span class="rename-map-name"'+title+'>'+n.value+'</span>'
+					+ '<span class="rename-map-name"'+title+'>'+mapName+'</span>'
 					+ '<span class="rename-map-arrow">&nbsp;</span>'
-					+ '<input class="text width3" type="text" id="renameMapList" name="renameMapList[]" value="'+n.value+'" />'
+					+ '<input class="text width3" type="text" id="renameMapList" name="renameMapList[]" value="'+mapName+'" />'
 				+ '</li>';
 			});
 			out += '</ul>';

@@ -17,7 +17,7 @@
 	// ACTIONS
 	if( isset($_POST['addMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			if( !$client->query($queries['add'], $mapsDirectoryPath.$directory.$map) ){
+			if( !$client->query($queries['add'], $mapsDirectoryPath.$map) ){
 				AdminServ::error();
 				break;
 			}
@@ -28,7 +28,7 @@
 	}
 	else if( isset($_POST['insertMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			if( !$client->query($queries['insert'], $mapsDirectoryPath.$directory.$map) ){
+			if( !$client->query($queries['insert'], $mapsDirectoryPath.$map) ){
 				AdminServ::error();
 				break;
 			}
@@ -43,7 +43,7 @@
 		if($countMaps > 1){
 			$struct = array();
 			foreach($_POST['map'] as $map){
-				$struct[] = $mapsDirectoryPath.$directory.$map;
+				$struct[] = $mapsDirectoryPath.$map;
 			}
 			$zipError = null;
 			$zipFileName = 'maps.zip';
@@ -60,14 +60,14 @@
 		}
 		// Sinon on envoi le fichier seul
 		else{
-			File::download($mapsDirectoryPath.$directory.$_POST['map'][0]);
+			File::download($mapsDirectoryPath.$_POST['map'][0]);
 			AdminServLogs::add('action', 'Download map: '.$_POST['map'][0]);
 		}
 	}
 	else if( isset($_POST['renameMapValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
 		$i = 0;
 		foreach($_POST['renameMapList'] as $newMapName){
-			$result = File::rename($mapsDirectoryPath.$directory.$_POST['map'][$i], $mapsDirectoryPath.$directory.$newMapName);
+			$result = File::rename($mapsDirectoryPath.$_POST['map'][$i], $mapsDirectoryPath.$directory.$newMapName);
 			if($result !== true ){
 				AdminServ::error(Utils::t('Unable to rename the map').' : '.$newMapName.' ('.$result.')');
 				break;
@@ -81,7 +81,7 @@
 	else if( isset($_POST['renameAutoValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
 		$i = 0;
 		foreach($_POST['renameMapList'] as $newMapName){
-			$result = File::rename($mapsDirectoryPath.$directory.$_POST['map'][$i], $mapsDirectoryPath.$directory.Str::replaceChars($newMapName));
+			$result = File::rename($mapsDirectoryPath.$_POST['map'][$i], $mapsDirectoryPath.$directory.Str::replaceChars($newMapName));
 			if($result !== true){
 				AdminServ::error(Utils::t('Unable to rename the map').' : '.$newMapName.' ('.$result.')');
 				break;
@@ -103,19 +103,19 @@
 		
 		// Déplacement
 		foreach($_POST['map'] as $map){
-			$result = File::rename($mapsDirectoryPath.$directory.$map, $newPath.$map);
+			$result = File::rename($mapsDirectoryPath.$map, $newPath.$map);
 			if($result !== true ){
 				AdminServ::error(Utils::t('Unable to move the map').' : '.$map.' ('.$result.')');
 				break;
 			}
 			else{
-				AdminServLogs::add('action', 'Move map: '.$directory.$map.' to '.$newPath.$map);
+				AdminServLogs::add('action', 'Move map: '.$map.' to '.$newPath.$map);
 			}
 		}
 	}
 	else if( isset($_POST['deleteMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
-			$result = File::delete($mapsDirectoryPath.$directory.$map);
+			$result = File::delete($mapsDirectoryPath.$map);
 			if($result !== true){
 				AdminServ::error(Utils::t('Unable to delete the map').' : '.$map.' ('.$result.')');
 				break;
