@@ -1,4 +1,6 @@
 <?php
+define('ADMINSERV_VERSION', '2.0.2');
+
 
 /**
 * Classe pour l'interface d'AdminServ
@@ -1954,6 +1956,7 @@ abstract class AdminServ {
 			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 		}
 		else{
+			$langCode = AdminServUI::getLang();
 			$chatLines = $client->getResponse();
 			
 			foreach($chatLines as $line){
@@ -1963,14 +1966,19 @@ abstract class AdminServ {
 					}
 					else{
 						$tradLines = array(
-							'$99FThis is a draw round.',
+							'$99FThis round is a draw.',
 							'$99FThe $<$00FBlue team$> wins this round.',
 							'$99FThe $<$F00Red team$> wins this round.'
 						);
 						if( in_array($line, $tradLines) ){
 							foreach($tradLines as $tradLine){
-								if(line == $tradLine){
-									$line = Utils::t($tradLine);
+								if($line == $tradLine){
+									if($langCode == 'en'){
+										$line = '$999'.TmNick::toText( TmNick::stripNadeoCode($tradLine, array('$<', '$>')) );
+									}
+									else{
+										$line = '$999'.TmNick::toText( Utils::t($tradLine) );
+									}
 									break;
 								}
 							}
