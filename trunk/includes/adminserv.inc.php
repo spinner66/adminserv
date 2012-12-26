@@ -1244,7 +1244,7 @@ abstract class AdminServ {
 		
 		if($gameMode == 0 && SERVER_VERSION_NAME == 'ManiaPlanet' && class_exists('ExtensionConfig') && isset(ExtensionConfig::$TEAMSCRIPTS) && count(ExtensionConfig::$TEAMSCRIPTS) > 0 ){
 			foreach(ExtensionConfig::$TEAMSCRIPTS as $teamScript){
-				if( strstr($scriptName, $teamScript) ){
+				if( stristr($scriptName, $teamScript) ){
 					$out = true;
 					break;
 				}
@@ -1872,7 +1872,7 @@ abstract class AdminServ {
 	
 	/**
 	* Enregistre les infos sur les équipes
-	* @param array $team1 -> (assoc) array(name, color, country)
+	* @param array $team1 -> (assoc) array(name, color (0 to 1), country)
 	* @param array $team2
 	* @return bool
 	*/
@@ -1880,7 +1880,7 @@ abstract class AdminServ {
 		global $client;
 		$out = false;
 		
-		if( !$client->query('SetTeamInfo', 'Unused', 0., 'World', $team1['name'], $team1['color'], $team1['country'], $team2['name'], $team2['color'], $team2['country']) ){
+		if( !$client->query('SetTeamInfo', 'Unused', 0., 'World', $team1['name'], (double)$team1['color'], $team1['country'], $team2['name'], (double)$team2['color'], $team2['country']) ){
 			AdminServ::error();
 		}
 		else{

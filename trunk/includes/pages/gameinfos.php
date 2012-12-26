@@ -13,12 +13,12 @@
 			if( isset($_POST['teamInfo1Name']) ){
 				$team1 = array(
 					'name' => $_POST['teamInfo1Name'],
-					'color' => (double)hexdec($_POST['teamInfo1Color']),
+					'color' => $_POST['teamInfo1Color'],
 					'country' => $_POST['teamInfo1Country']
 				);
 				$team2 =  array(
 					'name' => $_POST['teamInfo2Name'],
-					'color' => (double)hexdec($_POST['teamInfo2Color']),
+					'color' => $_POST['teamInfo2Color'],
 					'country' => $_POST['teamInfo2Country']
 				);
 				
@@ -80,7 +80,7 @@
 								<input class="text width2" type="text" name="teamInfo1Name" id="teamInfo1Name" value="<?php echo Utils::t('Blue'); ?>" />
 								<div class="colorSelectorWrapper">
 									<div id="colorPickerTeam1" class="colorSelector" title="<?php echo Utils::t('Color'); ?>"></div>
-									<input type="hidden" name="teamInfo1Color" id="teamInfo1Color" value="0000ff" />
+									<input type="hidden" name="teamInfo1Color" id="teamInfo1Color" value="0.667" />
 								</div>
 							</td>
 							<td class="value">
@@ -94,7 +94,7 @@
 								<input class="text width2" type="text" name="teamInfo2Name" id="teamInfo2Name" value="<?php echo Utils::t('Red'); ?>" />
 								<div class="colorSelectorWrapper">
 									<div id="colorPickerTeam2" class="colorSelector" title="<?php echo Utils::t('Color'); ?>"></div>
-									<input type="hidden" name="teamInfo2Color" id="teamInfo2Color" value="ff0000" />
+									<input type="hidden" name="teamInfo2Color" id="teamInfo2Color" value="0" />
 								</div>
 							</td>
 							<td class="value">
