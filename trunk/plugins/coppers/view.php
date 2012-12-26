@@ -18,7 +18,7 @@
 					<label for="serverToServerAmout"><?php echo Utils::t('Amount'); ?></label>
 				</td>
 				<td class="value">
-					<input class="text width2" type="text" name="serverToServerAmout" id="serverToServerAmout" value="" />
+					<input class="text width2" type="number" min="0" name="serverToServerAmout" id="serverToServerAmout" value="" />
 				</td>
 			</tr>
 			<tr>
@@ -40,7 +40,7 @@
 					<label for="serverToPlayerAmount"><?php echo Utils::t('Amount'); ?></label>
 				</td>
 				<td class="value">
-					<input class="text width2" type="text" name="serverToPlayerAmount" id="serverToPlayerAmount" value="" />
+					<input class="text width2" type="number" min="0" name="serverToPlayerAmount" id="serverToPlayerAmount" value="" />
 				</td>
 			</tr>
 			<tr>
@@ -74,7 +74,7 @@
 					<label for="playerToServerAmount"><?php echo Utils::t('Amount'); ?></label>
 				</td>
 				<td class="value">
-					<input class="text width1" type="text" name="playerToServerAmount" id="playerToServerAmount" value="" />
+					<input class="text width1" type="number" min="0" name="playerToServerAmount" id="playerToServerAmount" value="" />
 				</td>
 			</tr>
 			<tr>

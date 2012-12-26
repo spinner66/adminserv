@@ -97,7 +97,7 @@
 						</td>
 						<td class="key col3"><label for="NextMaxPlayers"><?php echo Utils::t('Next value'); ?></label></td>
 						<td class="value">
-							<input class="text width1" type="text" name="NextMaxPlayers" id="NextMaxPlayers" value="<?php echo $srvOpt['NextMaxPlayers']; ?>" />
+							<input class="text width1" type="number" min="0" name="NextMaxPlayers" id="NextMaxPlayers" value="<?php echo $srvOpt['NextMaxPlayers']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
@@ -108,7 +108,7 @@
 						</td>
 						<td class="key col3"><label for="NextMaxSpectators"><?php echo Utils::t('Next value'); ?></label></td>
 						<td class="value">
-							<input class="text width1" type="text" name="NextMaxSpectators" id="NextMaxSpectators" value="<?php echo $srvOpt['NextMaxSpectators']; ?>" />
+							<input class="text width1" type="number" min="0" name="NextMaxSpectators" id="NextMaxSpectators" value="<?php echo $srvOpt['NextMaxSpectators']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
@@ -168,14 +168,14 @@
 						</td>
 						<td class="key col3"><label for="NextCallVoteTimeOut"><?php echo Utils::t('Next value'); ?></label></td>
 						<td class="value">
-							<input class="text width1" type="text" name="NextCallVoteTimeOut" id="NextCallVoteTimeOut" value="<?php echo TimeDate::millisecToSec($srvOpt['NextCallVoteTimeOut']); ?>" />
+							<input class="text width1" type="number" min="0" name="NextCallVoteTimeOut" id="NextCallVoteTimeOut" value="<?php echo TimeDate::millisecToSec($srvOpt['NextCallVoteTimeOut']); ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="CallVoteRatio"><?php echo Utils::t('Vote ratio'); ?></label></td>
 						<td class="value" colspan="4">
-							<input class="text" type="text" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $srvOpt['CallVoteRatio']; ?>" />
+							<input class="text" type="number" min="0" max="1" step=".1" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $srvOpt['CallVoteRatio']; ?>" />
 						</td>
 					</tr>
 					<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
@@ -186,7 +186,7 @@
 									<option value="0"><?php echo Utils::t('Automatic'); ?></option>
 									<option value="more"><?php echo Utils::t('Choose number'); ?></option>
 								</select>
-								<input class="text" type="text" name="ClientInputsMaxLatencyValue" id="ClientInputsMaxLatencyValue" value="<?php echo $srvOpt['ClientInputsMaxLatency']; ?>"<?php if($srvOpt['ClientInputsMaxLatency'] == 0){ echo ' hidden="hidden"'; } ?> />
+								<input class="text" type="number" min="0" name="ClientInputsMaxLatencyValue" id="ClientInputsMaxLatencyValue" value="<?php echo $srvOpt['ClientInputsMaxLatency']; ?>"<?php if($srvOpt['ClientInputsMaxLatency'] == 0){ echo ' hidden="hidden"'; } ?> />
 								<a class="returnDefaultValue" href="?p=<?php echo USER_PAGE; ?>"<?php if($srvOpt['ClientInputsMaxLatency'] == 0){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Return to the default value'); ?></a>
 							</td>
 						</tr>
