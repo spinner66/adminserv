@@ -2470,6 +2470,9 @@ abstract class AdminServ {
 				$out['lst'][] = $values;
 			}
 		}
+		if( isset($out['lst']) && count($out['lst']) > 0 ){
+			$out['lst'] = array_unique($out['lst'], SORT_REGULAR);
+		}
 		
 		// Nombre de maps
 		$out += self::getNbMaps($out);
