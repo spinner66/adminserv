@@ -126,6 +126,7 @@
 		if( isset($_GET['switch']) && $_GET['switch'] != null ){
 			$_SESSION['adminserv']['sid'] = AdminServServerConfig::getServerId($_GET['switch']);
 			$_SESSION['adminserv']['name'] = $_GET['switch'];
+			unset($_SESSION['adminserv']['teaminfo']);
 			Utils::addCookieData('adminserv', array($_SESSION['adminserv']['sid'], Utils::readCookieData('adminserv', 1)), AdminServConfig::COOKIE_EXPIRE);
 			if(USER_PAGE && USER_PAGE != 'index'){
 				Utils::redirection(false, '?p='.USER_PAGE);

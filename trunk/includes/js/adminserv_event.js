@@ -322,8 +322,9 @@ $(document).ready(function(){
 			});
 			
 			// Infos équipes
+			$('#colorPickerTeam1').css('backgroundColor', $('#teamInfo1ColorHex').val());
 			$('#colorPickerTeam1').ColorPicker({
-				color: '#0000ff',
+				color: $('#teamInfo1ColorHex').val(),
 				onShow: function (colpkr) {
 					$(colpkr).slideDown('fast');
 					return false;
@@ -334,12 +335,14 @@ $(document).ready(function(){
 				},
 				onChange: function (hsb, hex, rgb) {
 					$('#colorPickerTeam1').css('backgroundColor', '#'+hex);
+					$('#teamInfo1ColorHex').val('#'+hex);
 					var val = $('#colorPickerTeam1 .colorpicker_hue div').css('top');
 					$('#teamInfo1Color').val(round(1 - val.substring(0, val.length-2)/150, 3));
 				}
 			});
+			$('#colorPickerTeam2').css('backgroundColor', $('#teamInfo2ColorHex').val());
 			$('#colorPickerTeam2').ColorPicker({
-				color: '#ff0000',
+				color: $('#teamInfo2ColorHex').val(),
 				onShow: function (colpkr) {
 					$(colpkr).slideDown('fast');
 					return false;
@@ -350,6 +353,7 @@ $(document).ready(function(){
 				},
 				onChange: function (hsb, hex, rgb) {
 					$('#colorPickerTeam2').css('backgroundColor', '#'+hex);
+					$('#teamInfo2ColorHex').val('#'+hex);
 					var val = $('#colorPickerTeam2 .colorpicker_hue div').css('top');
 					$('#teamInfo2Color').val(round(1 - val.substring(0, val.length-2)/150, 3));
 				}

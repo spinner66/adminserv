@@ -1841,12 +1841,6 @@ a.tmnick_externallink:hover {
 
 /* ColorPicker
 ------------------------*/
-#colorPickerTeam1 {
-	background: #0000ff;
-}
-#colorPickerTeam2 {
-	background: #ff0000;
-}
 .section-gameinfos .colorSelectorWrapper {
 	position: relative;
 	float: right;

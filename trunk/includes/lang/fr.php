@@ -349,5 +349,9 @@ $translate = array(
 	'Automatic' => 'Automatique',
 	'Choose number' => 'Choisir un nombre',
 	'Client inputs max latency' => 'Latence max des clients',
+	'Script info' => 'Informations',
+	'Compatible map types' => 'Types de map compatibles',
+	'Script parameters' => 'Paramètres',
+	'Value' => 'Valeur',
 );
 ?>
