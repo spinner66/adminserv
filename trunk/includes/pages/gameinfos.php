@@ -52,7 +52,7 @@
 			}
 			
 			AdminServLogs::add('action', 'Save game infos');
-			//Utils::redirection(false, '?p='.USER_PAGE);
+			Utils::redirection(false, '?p='.USER_PAGE);
 		}
 	}
 	
