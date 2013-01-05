@@ -1,6 +1,6 @@
 <?php
+define('ADMINSERV_TIMER', false);
 define('ADMINSERV_VERSION', '2.0.2');
-
 
 /**
 * Classe pour l'interface d'AdminServ
