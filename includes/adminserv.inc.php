@@ -1865,7 +1865,7 @@ abstract class AdminServ {
 			'CupWarmUpDuration' => intval($_POST['NextCupWarmUpDuration'])
 		);
 		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-			$out += array('ScriptName' => Str::replaceChars($_POST['NextScriptName']));
+			$out += array('ScriptName' => $_POST['NextScriptName']);
 		}
 		
 		return $out;
@@ -1886,6 +1886,10 @@ abstract class AdminServ {
 			AdminServ::error();
 		}
 		else{
+			$_SESSION['adminserv']['teaminfo'] = array(
+				'team1' => $team1,
+				'team2' => $team2
+			);
 			$out = true;
 		}
 		

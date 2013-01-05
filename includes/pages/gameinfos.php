@@ -14,11 +14,13 @@
 				$team1 = array(
 					'name' => $_POST['teamInfo1Name'],
 					'color' => $_POST['teamInfo1Color'],
+					'colorhex' => $_POST['teamInfo1ColorHex'],
 					'country' => $_POST['teamInfo1Country']
 				);
 				$team2 =  array(
 					'name' => $_POST['teamInfo2Name'],
 					'color' => $_POST['teamInfo2Color'],
+					'colorhex' => $_POST['teamInfo2ColorHex'],
 					'country' => $_POST['teamInfo2Country']
 				);
 				
@@ -58,6 +60,15 @@
 	// LECTURE
 	$gameInfos = AdminServ::getGameInfos();
 	$gameInfosData = array($gameInfos['curr'], $gameInfos['next']);
+	$getTeamInfo = array();
+	$hasTeamInfo = false;
+	if( isset($_SESSION['adminserv']['teaminfo']) && count($_SESSION['adminserv']['teaminfo']) > 0 ){
+		$getTeamInfo = array(
+			'team1' => $_SESSION['adminserv']['teaminfo']['team1'],
+			'team2' => $_SESSION['adminserv']['teaminfo']['team2']
+		);
+		$hasTeamInfo = true;
+	}
 	
 	
 	// HTML
@@ -77,28 +88,30 @@
 						<tr>
 							<td class="key"><label for="teamInfo1Name"><?php echo Utils::t('Team 1'); ?></label></td>
 							<td class="value">
-								<input class="text width2" type="text" name="teamInfo1Name" id="teamInfo1Name" value="<?php echo Utils::t('Blue'); ?>" />
+								<input class="text width2" type="text" name="teamInfo1Name" id="teamInfo1Name" value="<?php if($hasTeamInfo){ echo $getTeamInfo['team1']['name']; }else{ echo Utils::t('Blue'); } ?>" />
 								<div class="colorSelectorWrapper">
 									<div id="colorPickerTeam1" class="colorSelector" title="<?php echo Utils::t('Color'); ?>"></div>
-									<input type="hidden" name="teamInfo1Color" id="teamInfo1Color" value="0.667" />
+									<input type="hidden" name="teamInfo1Color" id="teamInfo1Color" value="<?php if($hasTeamInfo){ echo $getTeamInfo['team1']['color']; }else{ echo '0.667'; } ?>" />
+									<input type="hidden" name="teamInfo1ColorHex" id="teamInfo1ColorHex" value="<?php if($hasTeamInfo){ echo $getTeamInfo['team1']['colorhex']; }else{ echo '#0000ff'; } ?>" />
 								</div>
 							</td>
 							<td class="value">
-								<input class="text width2" type="text" name="teamInfo1Country" id="teamInfo1Country" value="World|France" />
+								<input class="text width2" type="text" name="teamInfo1Country" id="teamInfo1Country" value="<?php if($hasTeamInfo){ echo $getTeamInfo['team1']['country']; }else{ echo 'World|France'; } ?>" />
 							</td>
 							<td class="preview"></td>
 						</tr>
 						<tr>
 							<td class="key"><label for="teamInfo2Name"><?php echo Utils::t('Team 2'); ?></label></td>
 							<td class="value">
-								<input class="text width2" type="text" name="teamInfo2Name" id="teamInfo2Name" value="<?php echo Utils::t('Red'); ?>" />
+								<input class="text width2" type="text" name="teamInfo2Name" id="teamInfo2Name" value="<?php if($hasTeamInfo){ echo $getTeamInfo['team2']['name']; }else{ echo Utils::t('Red'); } ?>" />
 								<div class="colorSelectorWrapper">
 									<div id="colorPickerTeam2" class="colorSelector" title="<?php echo Utils::t('Color'); ?>"></div>
-									<input type="hidden" name="teamInfo2Color" id="teamInfo2Color" value="0" />
+									<input type="hidden" name="teamInfo2Color" id="teamInfo2Color" value="<?php if($hasTeamInfo){ echo $getTeamInfo['team2']['color']; }else{ echo '0'; } ?>" />
+									<input type="hidden" name="teamInfo2ColorHex" id="teamInfo2ColorHex" value="<?php if($hasTeamInfo){ echo $getTeamInfo['team2']['colorhex']; }else{ echo '#ff0000'; } ?>" />
 								</div>
 							</td>
 							<td class="value">
-								<input class="text width2" type="text" name="teamInfo2Country" id="teamInfo2Country" value="World|France" />
+								<input class="text width2" type="text" name="teamInfo2Country" id="teamInfo2Country" value="<?php if($hasTeamInfo){ echo $getTeamInfo['team2']['country']; }else{ echo 'World|France'; } ?>" />
 							</td>
 							<td class="preview"></td>
 						</tr>

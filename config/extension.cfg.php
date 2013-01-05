@@ -58,7 +58,11 @@ class ExtensionConfig {
 		6 => 'Cup'
 	);
 	public static $TEAMSCRIPTS = array(
-		'Elite'
+		'Elite',
+		'Battle',
+		'Siege',
+		'Heroes',
+		'SpeedBall'
 	);
 	
 	
