@@ -5,7 +5,7 @@
 		$struct = AdminServ::getGameInfosStructFromPOST();
 		
 		// Requêtes
-		if( !$client->query('SetGameInfos', $struct) ){
+		if(!$client->query('SetGameInfos', $struct) && $client->getErrorMessage() != 'Script not allowed for this title.' ){
 			AdminServ::error();
 		}
 		else{
@@ -52,7 +52,7 @@
 			}
 			
 			AdminServLogs::add('action', 'Save game infos');
-			Utils::redirection(false, '?p='.USER_PAGE);
+			//Utils::redirection(false, '?p='.USER_PAGE);
 		}
 	}
 	

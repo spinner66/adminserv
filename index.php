@@ -1,7 +1,6 @@
 <?php
 	// INCLUDES
 	session_start();
-	define('ADMINSERV_TIMER', false);
 	require_once 'config/adminserv.cfg.php';
 	if( file_exists('config/servers.cfg.php') ){
 		include_once 'config/servers.cfg.php';
