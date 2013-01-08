@@ -138,9 +138,9 @@ Le mot de passe peut être crypté en MD5 si activé dans la configuration `admi
 
 Vous pouvez enlever des niveaux admin dans la configuration des serveurs. Il suffit de définir la valeur du niveau à `none`.
 
-Vous pouvez appuyer sur entrée dans toute la page pour se connecter automatiquement.
+Vous pouvez appuyer sur entrée dans toute la page pour se connecter automatiquement si toutes les valeurs demandées sont remplies.
 
-Pour l'affichage de DisplayServ, vous devez activer l'option `use_displayserv` dans la configuration `adminserv.cfg.php`. Tout savoir sur Displayserv : [DisplayServFR]
+Pour masquer l'affichage de DisplayServ, vous devez désactiver l'option `use_displayserv` dans la configuration `adminserv.cfg.php`. Tout savoir sur Displayserv : [DisplayServFR]
 
 =Spécifications sur les pages=
 
@@ -150,7 +150,7 @@ Pour l'affichage de DisplayServ, vous devez activer l'option `use_displayserv` d
   * Le bouton *Annuler le vote* apparaît seulement s'il y a un vote en cours sur le serveur.
   * Il est possible de stopper le serveur seulement sur cette page. Utilisez le paramètre `?stop` dans l'url. Cette action est disponible que pour le niveau SuperAdmin.
 
-=Options du serveur==
+==Options du serveur==
   * Les informations sont modifiées en direct sur le serveur mais ne sont pas enregistrées dans le fichier de configuration `dedicated_cfg.txt`
   * Pour le nom et le commentaire du serveur, il y a un aperçu de l'affichage dans le jeu.
 
