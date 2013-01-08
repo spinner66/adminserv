@@ -127,6 +127,7 @@ The configuration for the extension of Adminserv is in: *config/extension.cfg.ph
 }}}
      The language code corresponds both to the name of the image (resources/images/lang/) and the file name (/includes/lang/). The title is indicative.
   * *GAMEMODES*: List of game modes. The list must be made ​​from ManiaPlanet.
+  * *TEAMSCRIPTS*: List of team scripts. Improves the display to team mode.
   * *MAPSMENU*: Menu list in the *Maps* pages. You can change the order or add an entry redirecting to a plugin for example.
 
 
