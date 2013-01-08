@@ -126,6 +126,7 @@ La configuration pour l'extension d'AdminServ est dans : *config/extension.cfg.p
 }}}
      Le code langue correspond à la fois au nom de l’image (ressources/images/lang/) et au nom du fichier (/includes/lang/). Le titre est indicatif.
   * *GAMEMODES* : Liste des modes de jeu. La liste doit être faite à partir de ManiaPlanet.
+  * *TEAMSCRIPTS* : Liste des scripts qui se jouent en mode équipe. Permet d'optimiser l'affichage en mode équipe si le serveur utilise un des script listés.
   * *MAPSMENU* : Liste du menu dans les pages *Maps*. Vous pouvez modifier l'ordre ou rajouter une entrée redirigeant vers un plugin par exemple.
 
 =Connexion=
