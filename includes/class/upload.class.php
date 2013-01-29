@@ -540,9 +540,7 @@ class FileUploader {
 	*/
 	public static function saveUploadedFile($uploadDirectory, $replaceOldFile = false, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
-		$result = $uploader->handleUpload($uploadDirectory, $replaceOldFile, $filenameFunction);
-		
-		return htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+		return $uploader->handleUpload($uploadDirectory, $replaceOldFile, $filenameFunction);
 	}
 	
 	
@@ -559,9 +557,7 @@ class FileUploader {
 	*/
 	public static function saveUploadedFileToFTP($ftp_stream, $uploadDirectory, $replaceOldFile = false, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
-		$result = $uploader->handleUploadFTP($ftp_stream, $uploadDirectory, $replaceOldFile, $filenameFunction);
-		
-		return htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+		return $uploader->handleUploadFTP($ftp_stream, $uploadDirectory, $replaceOldFile, $filenameFunction);
 	}
 	
 	
@@ -578,9 +574,7 @@ class FileUploader {
 	*/
 	public static function saveUploadedFileToManiaPlanetServer($client, $uploadDirectory, $queries, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
-		$result = $uploader->handleUploadManiaPlanet($client, $uploadDirectory, $queries, $filenameFunction);
-		
-		return htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+		return $uploader->handleUploadManiaPlanet($client, $uploadDirectory, $queries, $filenameFunction);
 	}
 }
 ?>

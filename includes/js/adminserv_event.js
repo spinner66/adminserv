@@ -90,15 +90,14 @@ $(document).ready(function(){
 		/**
 		* Nouveau dossier
 		*/
-		$('#newfolder').click(function(){
+		$('#newfolder').click(function(event){
+			event.preventDefault();
 			if( $('#form-new-folder').attr('hidden') ){
 				slideDownNewFolderForm();
 			}
 			else{
 				slideUpNewFolderForm();
 			}
-			
-			return false;
 		});
 		$('#newFolderName').keypress(function(event){
 			if(event.keyCode == 13){
@@ -171,17 +170,8 @@ $(document).ready(function(){
 		* SwitchServer
 		*/
 		$('#switchServerList').change(function(){
-			var params = location.search;
-			if(params != ''){
-				if( params.indexOf('&') == -1 ){
-					var page = params.substring(3);
-				}
-				else{
-					var page = params.split('&')[0].substring(3);
-				}
-			}
-			
-			var option = $('#switchServerList option:selected').val();
+			var page = getUrlParams('p');
+			var option = $(this).find('option:selected').val();
 			if(page){
 				location.href = '?p='+page+'&switch='+option;
 			}
@@ -564,9 +554,9 @@ $(document).ready(function(){
 			});
 			
 			// Mode détail
-			$('#detailMode').click(function(){
+			$('#detailMode').click(function(event){
+				event.preventDefault();
 				mapList.setDetailMode();
-				return false;
 			});
 		}
 		/**
@@ -584,22 +574,12 @@ $(document).ready(function(){
 				if( $(this).find('input').val() == 'local' ){
 					$('#GotoListMaps').attr('checked', false);
 				}
-				uploader.setParams({
-					path: getPath(),
-					type: $('.transferMode li.selected input').val(),
-					mset: ( $('#SaveCurrentMatchSettings').attr('checked') ) ? true : false,
-					gtlm: ( $('#GotoListMaps').attr('checked') ) ? true : false
-				});
+				uploader.setParams( getUploaderUserParams() );
 			});
 			
 			// Options
 			$('.options-checkbox input, .options-checkbox label').click(function(){
-				uploader.setParams({
-					path: getPath(),
-					type: $('.transferMode li.selected input').val(),
-					mset: ( $('#SaveCurrentMatchSettings').attr('checked') ) ? true : false,
-					gtlm: ( $('#GotoListMaps').attr('checked') ) ? true : false
-				});
+				uploader.setParams( getUploaderUserParams() );
 			});
 		}
 		/**
