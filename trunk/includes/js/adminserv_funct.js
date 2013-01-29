@@ -461,12 +461,7 @@ function initializeUploader(){
 		element: formSelector[0],
 		action: getIncludesPath()+'ajax/upload.php',
 		maxConnections: 2,
-		params: {
-			path: getPath(),
-			type: $('.transferMode li.selected input').val(),
-			mset: ( $('#SaveCurrentMatchSettings').attr('checked') ) ? true : false,
-			gtlm: ( $('#GotoListMaps').attr('checked') ) ? true : false
-		},
+		params: getUploaderUserParams(),
 		template:
 		'<div class="qq-uploader">'
 			+ '<div class="qq-upload-drop-area"><span>'+ formSelector.data('dropfiles') +'</span></div>'
@@ -538,6 +533,19 @@ function initializeUploader(){
 	});
 	
 	return uploader;
+}
+
+
+/**
+* Récupère les paramètres utilisateur de l'uploader
+*/
+function getUploaderUserParams(){
+	return {
+		path: getPath(),
+		type: $('.transferMode li.selected input').val(),
+		mset: ( $('#SaveCurrentMatchSettings').attr('checked') ) ? true : false,
+		gtlm: ( $('#GotoListMaps').attr('checked') ) ? true : false
+	};
 }
 
 
