@@ -353,5 +353,6 @@ $translate = array(
 	'Compatible map types' => 'Types de map compatibles',
 	'Script parameters' => 'Paramètres',
 	'Value' => 'Valeur',
+	'The server already exist! Change the name.' => 'Le serveur existe déjà ! Changez le nom.',
 );
 ?>

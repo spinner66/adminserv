@@ -55,7 +55,6 @@
 				AdminServ::info($action);
 				AdminServLogs::add('action', $action);
 				Utils::redirection(false, '?p=servers');
-				
 			}
 		}
 		else{
@@ -130,7 +129,7 @@
 					<tr>
 						<td class="key"><label for="addServerPort"><?php echo Utils::t('XMLRPC port'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerPort" id="addServerPort" value="<?php echo $serverPort; ?>" />
+							<input class="text width3" type="number" name="addServerPort" id="addServerPort" value="<?php echo $serverPort; ?>" />
 						</td>
 						<td class="info">
 							<?php echo Utils::t('Port for remote control'); ?>

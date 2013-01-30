@@ -1,6 +1,6 @@
 <?php
 define('ADMINSERV_TIMER', false);
-define('ADMINSERV_VERSION', '2.0.2');
+define('ADMINSERV_VERSION', '2.0.3');
 
 /**
 * Classe pour l'interface d'AdminServ
@@ -3031,8 +3031,9 @@ abstract class AdminServServerConfig {
 	*/
 	public static function hasServer(){
 		$out = false;
+		$serverList = ServerConfig::$SERVERS;
 		
-		if( isset(ServerConfig::$SERVERS) && count(ServerConfig::$SERVERS) > 0 && !isset(ServerConfig::$SERVERS['new server name']) && !isset(ServerConfig::$SERVERS['']) ){
+		if( isset($serverList) && count($serverList) > 0 && !isset($serverList['new server name']) && !isset($serverList['']) ){
 			$out = true;
 		}
 		
@@ -3233,7 +3234,12 @@ abstract class AdminServServerConfig {
 		
 		// Ajout d'un nouveau
 		if($editServer === -1 && isset($serverData) && count($serverData) > 0 ){
-			$fileTemplate .= self::getServerTemplate($serverData);
+			if( self::getServerId($serverData['name']) === -1 ){
+				$fileTemplate .= self::getServerTemplate($serverData);
+			}
+			else{
+				return Utils::t('The server already exist! Change the name.');
+			}
 		}
 		$fileTemplate .= self::$CONFIG_END_TEMPLATE;
 		
