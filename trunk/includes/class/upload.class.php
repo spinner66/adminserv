@@ -499,6 +499,7 @@ class FileUploader {
 			}
 		}
 		
+		
 		if(!$error){
 			// Ajout/insert la map
 			if( isset($_GET['type']) && $_GET['type'] != 'local' ){
@@ -518,6 +519,7 @@ class FileUploader {
 				$out = 'write error';
 			}
 		}
+		
 		
 		if($out === true){
 			return array('success' => true, 'out' => $out);
