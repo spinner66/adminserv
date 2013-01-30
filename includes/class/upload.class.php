@@ -444,7 +444,7 @@ class FileUploader {
 	
 	
 	/**
-	* Enregistre le fichier envoyé dans un dossier sur un serveur FTP
+	* Enregistre le fichier envoyé dans un dossier sur un serveur Maniaplanet
 	*
 	* @param resource $client           -> La ressource du client XMLRPC
 	* @param string   $uploadDirectory  -> Le chemin du dossier de destination
@@ -452,7 +452,7 @@ class FileUploader {
 	* @param function $filenameFunction -> La fonction de traitement du filename
 	* @return array('success' => true) ou array('error' => 'error message')
 	*/
-	public function handleUploadManiaPlanet($client, $uploadDirectory, $queries, $filenameFunction = null){
+	public function handleUploadManiaPlanetServer($client, $uploadDirectory, $queries, $filenameFunction = null){
 		// Si le client est initialisé
 		if (!$client->socket || $client->protocol == 0) {
 			return array('error' => Utils::t('Client not initialized'));
@@ -487,8 +487,8 @@ class FileUploader {
 		
 		// Enregistrement du fichier
 		$error = false;
-		$pathToFile = $uploadDirectory . $filename.'.'.$ext;
-		if( file_exists($uploadDirectory) ){
+		$pathToFile = $uploadDirectory.$filename.'.'.$ext;
+		if( file_exists($pathToFile) ){
 			if( ($result = $this->file->save($pathToFile)) !== true ){
 				$error = true;
 			}
@@ -498,7 +498,6 @@ class FileUploader {
 				$error = true;
 			}
 		}
-		
 		
 		if(!$error){
 			// Ajout/insert la map
@@ -519,7 +518,6 @@ class FileUploader {
 				$out = 'write error';
 			}
 		}
-		
 		
 		if($out === true){
 			return array('success' => true, 'out' => $out);
@@ -576,7 +574,7 @@ class FileUploader {
 	*/
 	public static function saveUploadedFileToManiaPlanetServer($client, $uploadDirectory, $queries, $allowedExtensions = array(), $sizeLimit = 10485760, $filenameFunction = null){
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
-		return $uploader->handleUploadManiaPlanet($client, $uploadDirectory, $queries, $filenameFunction);
+		return $uploader->handleUploadManiaPlanetServer($client, $uploadDirectory, $queries, $filenameFunction);
 	}
 }
 ?>
