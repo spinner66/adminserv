@@ -19,12 +19,6 @@ function getCurrentSort(){
 function setCurrentSort(sort){
 	return $('#currentSort').val(sort);
 }
-function t(text){
-	text = text.replace('from', $('#formUpload').data('from') );
-	text = text.replace('Kb', $('#formUpload').data('kb') );
-	text = text.replace('Mb', $('#formUpload').data('mb') );
-	return text;
-}
 function scrollTop(){
 	$('html, body').animate({  
 		scrollTop: 0
@@ -481,12 +475,15 @@ function initializeUploader(){
 				return formSelector.data('uploadnotfinished');
 			}
 			$.each( $('.qq-upload-list li'), function(key, value){
-				var text = $(this).find('.qq-upload-size').text();
-				var newtext = t(text);
+				var uploadSizeSelector = $(this).find('.qq-upload-size');
+				var text = uploadSizeSelector.text();
+				var newtext = text.replace(/from/gi, formSelector.data('from') );
+				newtext = newtext.replace(/kb/gi, formSelector.data('kb') );
+				newtext = newtext.replace(/mb/gi, formSelector.data('mb') );
 				var lastpos = text.indexOf('%');
 				var pourcent = text.substring(0, lastpos);
 				
-				$(this).find('.qq-upload-size').text(newtext);
+				uploadSizeSelector.text(newtext);
 				$(this).find('.qq-progress-bar').css('width', pourcent+'px');
 			});
 		},
