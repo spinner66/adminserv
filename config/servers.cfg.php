@@ -4,12 +4,12 @@ class ServerConfig {
 		/********************* SERVER CONFIGURATION *********************/
 		
     /*
-		'new server name' => array(
-			'address'		=> 'localhost',
-			'port'			=> 5000,
-			'matchsettings'	=> '',
-			'adminlevel'	=> array('SuperAdmin' => 'all', 'Admin' => 'all', 'User' => 'all')
-		),
+        'new server name' => array(
+            'address'		=> 'localhost',
+            'port'			=> 5000,
+            'matchsettings'	=> 'MatchSettings/',
+            'adminlevel'	=> array('SuperAdmin' => 'all', 'Admin' => 'all', 'User' => 'all')
+        ),
     */
 	);
 }
