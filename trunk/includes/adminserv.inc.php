@@ -257,6 +257,8 @@ abstract class AdminServUI {
 	* Récupère le header/footer du site
 	*/
 	public static function getHeader(){
+		global $id;
+		
 		if( !isset($GLOBALS['body_class']) ){
 			$GLOBALS['body_class'] = null;
 		}
