@@ -76,7 +76,7 @@
 	$serverName = null;
 	$serverAddress = 'localhost';
 	$serverPort = 5000;
-	$serverMatchSet = null;
+	$serverMatchSet = 'MatchSettings/';
 	$serverAdmLvl_SA = 'all';
 	$serverAdmLvl_ADM = 'all';
 	$serverAdmLvl_USR = 'all';

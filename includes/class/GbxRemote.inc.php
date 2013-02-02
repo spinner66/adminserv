@@ -661,7 +661,7 @@ class IXR_Client_Gbx {
 		$request = new IXR_Request($method, $args);
 
 		// Check if request is larger than 512 Kbytes
-		if (($size = $request->getLength()) > 512*1024-8) {
+		if (($size = $request->getLength()) > 1024*1024-8) {
 			$this->error = new IXR_Error(-32300, "transport error - request too large ($size)");
 			return false;
 		}
@@ -691,7 +691,7 @@ class IXR_Client_Gbx {
 
 		// Check if the request is greater than 512 Kbytes to avoid errors
 		// If the method is system.multicall, make two calls (possibly recursively)
-		if (($size = $request->getLength()) > 512*1024-8) {
+		if (($size = $request->getLength()) > 1024*1024-8) {
 			if ($method = 'system.multicall' && isset($args[0])) {
 				$count = count($args[0]);
 				// If count is 1, query cannot be reduced
