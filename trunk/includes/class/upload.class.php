@@ -128,7 +128,6 @@ class UploadedFileXhr {
 		}
 		else{
 			if( !$client->query($queries['add'], $filename) ){
-				AdminServ::dsm('query: '.$queries['add'].' #### filename: '.$filename);
 				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 			}
 		}
