@@ -124,29 +124,49 @@ abstract class Folder {
 	
 	
 	/**
-	* Supprime un dossier
+	* Supprime un dossier avec son contenu (dossiers + fichiers)
 	*
 	* @param string $dirname -> Chemin du dossier à supprimer
 	* @return true si réussi sinon message d'erreur
 	*/
 	public static function delete($dirname){
 		$out = null;
+		if( substr($dirname, -1, 1) != '/'){ $dirname = $dirname.'/'; }
 		
-		if( file_exists($dirname) ){
-			if( is_dir($dirname) ){
-				if( rmdir($dirname) ){
-					$out = true;
+		if( class_exists('File') ){
+			if( file_exists($dirname) ){
+				$dir = scandir($dirname);
+				foreach($dir as $file){
+					if($file != '.' && $file != '..'){
+						$pathToFile = $dirname.$file;
+						
+						if( is_dir($pathToFile) ){
+							self::delete($pathToFile);
+						}
+						else{
+							if( $result = File::delete($pathToFile) !== true ){
+								$out = 'Unable to delete '.$file.' file ('.$result.')';
+							}
+							else{
+								$out = $result;
+							}
+						}
+					}
+				}
+				
+				if( @rmdir($dirname) !== true ){
+					$out = 'Unable to delete '.$dirname;
 				}
 				else{
-					$out = 'Delete '.$dirname.' failed';
+					$out = true;
 				}
 			}
 			else{
-				$out = 'Not directory';
+				$out = 'Dir not exists';
 			}
 		}
 		else{
-			$out = 'Folder no exists';
+			$out = 'Class "File" not exists';
 		}
 		
 		return $out;

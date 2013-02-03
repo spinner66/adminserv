@@ -83,7 +83,7 @@ class UploadedFileXhr {
 	* Écrit la map dans le dossier "Maps" via le serveur
 	*
 	* @param resource $client   -> La ressource du client GbxRemote
-	* @param string   $filename -> Le chemin vers le fichier
+	* @param string   $filename -> Le chemin vers le fichier à partir du dossier "Maps"
 	*/
 	public function writeMap($client, $filename){
 		$out = true;
@@ -128,6 +128,7 @@ class UploadedFileXhr {
 		}
 		else{
 			if( !$client->query($queries['add'], $filename) ){
+				AdminServ::dsm('query: '.$queries['add'].' #### filename: '.$filename);
 				$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 			}
 		}
@@ -488,7 +489,7 @@ class FileUploader {
 		// Enregistrement du fichier
 		$error = false;
 		$pathToFile = $uploadDirectory.$filename.'.'.$ext;
-		if( file_exists($pathToFile) ){
+		if( file_exists($uploadDirectory) ){
 			if( ($result = $this->file->save($pathToFile)) !== true ){
 				$error = true;
 			}
