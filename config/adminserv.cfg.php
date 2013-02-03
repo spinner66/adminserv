@@ -45,7 +45,7 @@ class AdminServConfig {
 	/* UPLOAD */
 	public static $ALLOWED_EXTENSIONS = array('gbx'); // Extensions allowed for upload
 	const SIZE_LIMIT = 'auto'; // Limit size per file in MB. If auto, the limit size in php.ini config file is used
-	const UPLOAD_ONLINE_FOLDER = 'AdminServ/'; // Path from "Maps" folder for upload in online mode only
+	const UPLOAD_ONLINE_FOLDER = 'AdminServ/'; // Path from "Maps" folder for upload online mode
 	
 	/* LOGS */
 	public static $LOGS = array(
