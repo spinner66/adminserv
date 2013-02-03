@@ -208,8 +208,9 @@
 							}
 						}
 						else{
-							$showMapList .= '<tr class="no-line"><td class="center" colspan="4">'.$mapsList['lst'].'</td></tr>';
+							$showMapList .= '<tr class="no-line"><td class="center" colspan="4">'; if( is_array($mapsList) ){ $showMapList .= $mapsList['lst']; }else{ $showMapList .= $mapsList; } $showMapList .= '</td></tr>';
 						}
+						
 						
 						// Affichage
 						echo $showMapList;
@@ -220,7 +221,7 @@
 		
 		<div class="options" data-mapisused="<?php echo Utils::t('The map,is currently used by the server.'); ?>">
 			<div class="fleft">
-				<span class="nb-line"><?php echo $mapsList['nbm']['count'].' '.$mapsList['nbm']['title']; ?></span>
+				<span class="nb-line"><?php if( is_array($mapsList) ){ echo $mapsList['nbm']['count'].' '.$mapsList['nbm']['title']; } ?></span>
 			</div>
 			<div class="fright">
 				<div class="selected-files-label locked">
