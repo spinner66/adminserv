@@ -144,12 +144,7 @@ abstract class Folder {
 							self::delete($pathToFile);
 						}
 						else{
-							if( $result = File::delete($pathToFile) !== true ){
-								$out = 'Unable to delete '.$file.' file ('.$result.')';
-							}
-							else{
-								$out = $result;
-							}
+							File::delete($pathToFile);
 						}
 					}
 				}
