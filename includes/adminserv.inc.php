@@ -1990,7 +1990,7 @@ abstract class AdminServ {
 							}
 						}
 						else{
-							if( strstr($line, 'Admin:') ){
+							if( strstr($line, '$fffAdmin:') ){
 								$pattern = '$ff0]$z';
 								$lineEx = explode($pattern, $line);
 								$nickname = $lineEx[0].$pattern;
