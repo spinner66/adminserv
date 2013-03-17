@@ -175,7 +175,7 @@
 					<tr>
 						<td class="key"><label for="CallVoteRatio"><?php echo Utils::t('Vote ratio'); ?></label></td>
 						<td class="value" colspan="4">
-							<input class="text" type="number" min="0" max="1" step=".1" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $srvOpt['CallVoteRatio']; ?>" />
+							<input class="text" type="number" min="-1" max="1" step=".1" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $srvOpt['CallVoteRatio']; ?>" />
 						</td>
 					</tr>
 					<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
