@@ -261,6 +261,27 @@ $(document).ready(function(){
 				}
 			});
 			
+			// VoteRato
+			$('#callVoteRatioDisabled').change(function(){
+				if( $(this).val() == '0' ){
+					$(this).hide();
+					$('#CallVoteRatio')
+						.fadeIn('fast').removeAttr('hidden')
+						.parent('td').find('.returnDefaultValue').fadeIn('fast').removeAttr('hidden');
+					if( $('#CallVoteRatio').val() == -1 ){
+						$('#CallVoteRatio').val('0.5');
+					}
+				}
+			});
+			// Revenir à la valeur par défaut
+			$('#resetCallVoteRatio').click(function(event){
+				event.preventDefault();
+				$(this).fadeOut().attr('hidden', true);
+				$('#CallVoteRatio').hide().attr('hidden', true);
+				$('#callVoteRatioDisabled').fadeIn('fast').removeAttr('hidden').find('option').removeAttr('selected');
+				$('#callVoteRatioDisabled option:first').select();
+			});
+			
 			// ClientInputsMaxLatency
 			$('#ClientInputsMaxLatency').change(function(){
 				if( $(this).val() == 'more' ){
@@ -269,7 +290,7 @@ $(document).ready(function(){
 				}
 			});
 			// Revenir à la valeur par défaut
-			$('.returnDefaultValue').click(function(event){
+			$('#resetClientInputsMaxLarency').click(function(event){
 				event.preventDefault();
 				$(this).fadeOut().attr('hidden', true);
 				$('#ClientInputsMaxLatencyValue').hide().attr('hidden', true).val('');
@@ -569,9 +590,19 @@ $(document).ready(function(){
 			// Mode de transfert
 			$('.transferMode li').click(function(){
 				$('.transferMode li').removeClass('selected');
-				$(this).addClass('selected').find('input').attr('checked', true);
+				$('.options-checkbox li')
+					.removeClass('disabled')
+					.find('input').attr('disabled', false);
+				$('#GotoListMaps').attr('checked', true);
+				
+				$(this)
+					.addClass('selected')
+					.find('input').attr('checked', true);
 				
 				if( $(this).find('input').val() == 'local' ){
+					$('#SaveCurrentMatchSettings')
+						.attr('disabled', true)
+						.parent().addClass('disabled');
 					$('#GotoListMaps').attr('checked', false);
 				}
 				uploader.setParams( getUploaderUserParams() );
