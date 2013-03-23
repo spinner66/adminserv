@@ -846,6 +846,9 @@ td .detailModeTd {
 .options-checkbox li {
 	margin-bottom: 6px;
 }
+.options-checkbox .disabled label {
+	color: #aaa;
+}
 .option-form {
 	clear: both;
 	margin: 32px 0 10px;
@@ -1287,11 +1290,13 @@ footer {
 	color: #888;
 	text-decoration: none;
 }
-#ClientInputsMaxLatency {
+#ClientInputsMaxLatency,
+#callVoteRatioDisabled {
 	margin: 1px 12px 0 0;
 	width: 22%;
 }
-#ClientInputsMaxLatencyValue {
+#ClientInputsMaxLatencyValue,
+#CallVoteRatio {
 	margin: 1px 12px 0 0;
 	width: 20.4%;
 }
