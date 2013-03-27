@@ -43,7 +43,8 @@ class ExtensionConfig {
 		'fr' => 'Français',
 		'en' => 'English',
 		'de' => 'Deutsch',
-		'es' => 'Español'
+		'es' => 'Español',
+		'no' => 'Norsk'
 	);
 	
 	
