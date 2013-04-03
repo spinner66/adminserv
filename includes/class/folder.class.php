@@ -18,7 +18,7 @@ abstract class Folder {
 	public static function read($path = '.', $hiddenFolders = array(), $hiddenFiles = array(), $recentStatusPeriod = 86400){
 		$out = array();
 		$midnight = time() - (date('H') * 3600) - (date('i') * 60);
-		if( substr($path, -1, 1) != '/'){ $path = $path.'/'; }
+		if( substr($path, -1, 1) != '/'){ $path .= '/'; }
 		
 		if( !class_exists('File') && !class_exists('Str') ){
 			$out = 'Class "File" or "Str" not exists';
@@ -131,7 +131,7 @@ abstract class Folder {
 	*/
 	public static function delete($dirname){
 		$out = null;
-		if( substr($dirname, -1, 1) != '/'){ $dirname = $dirname.'/'; }
+		if( substr($dirname, -1, 1) != '/'){ $dirname .= '/'; }
 		
 		if( class_exists('File') ){
 			if( file_exists($dirname) ){
@@ -177,7 +177,7 @@ abstract class Folder {
 	*/
 	public static function countFiles($path, $hiddenFiles = array() ){
 		$out = 0;
-		if( substr($path, -1, 1) != '/'){ $path = $path.'/'; }
+		if( substr($path, -1, 1) != '/'){ $path .= '/'; }
 		
 		if( class_exists('File') ){
 			if( file_exists($path) ){
@@ -225,7 +225,7 @@ abstract class Folder {
 	*/
 	public static function getSize($path){
 		$out = 0;
-		if( substr($path, -1, 1) != '/'){ $path = $path.'/'; }
+		if( substr($path, -1, 1) != '/'){ $path .= '/'; }
 		
 		if( file_exists($path) ){
 			$dir = scandir($path);

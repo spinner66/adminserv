@@ -1,6 +1,6 @@
 <?php
 define('ADMINSERV_TIMER', false);
-define('ADMINSERV_VERSION', '2.0.3');
+define('ADMINSERV_VERSION', '2.0.4');
 
 /**
 * Classe pour l'interface d'AdminServ
@@ -974,6 +974,7 @@ abstract class AdminServ {
 			define('SERVER_ADDR', ServerConfig::$SERVERS[SERVER_NAME]['address']);
 			define('SERVER_XMLRPC_PORT', ServerConfig::$SERVERS[SERVER_NAME]['port']);
 			define('SERVER_MATCHSET', ServerConfig::$SERVERS[SERVER_NAME]['matchsettings']);
+			define('SERVER_MAPS_BASEPATH', isset(ServerConfig::$SERVERS[SERVER_NAME]['maps_basepath']) ? ServerConfig::$SERVERS[SERVER_NAME]['maps_basepath'] : '');
 			define('SERVER_ADMINLEVEL', serialize( ServerConfig::$SERVERS[SERVER_NAME]['adminlevel']) );
 			
 			// CONNEXION
@@ -2060,8 +2061,13 @@ abstract class AdminServ {
 			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 		}
 		else{
-			$out = Str::toSlash( $client->getResponse() );
+			$out = $client->getResponse();
 			if( substr($out, -1, 1) != '/'){ $out .= '/'; }
+			if(SERVER_MAPS_BASEPATH){
+				$out .= SERVER_MAPS_BASEPATH;
+				if( substr($out, -1, 1) != '/'){ $out .= '/'; }
+			}
+			$out = Str::toSlash($out);
 		}
 		return $out;
 	}
