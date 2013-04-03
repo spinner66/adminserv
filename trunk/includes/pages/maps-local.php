@@ -103,13 +103,13 @@
 		
 		// Déplacement
 		foreach($_POST['map'] as $map){
-			$result = File::rename($mapsDirectoryPath.$map, $newPath.$map);
+			$result = File::rename($mapsDirectoryPath.$map, $newPath.basename($map) );
 			if($result !== true ){
 				AdminServ::error(Utils::t('Unable to move the map').' : '.$map.' ('.$result.')');
 				break;
 			}
 			else{
-				AdminServLogs::add('action', 'Move map: '.$map.' to '.$newPath.$map);
+				AdminServLogs::add('action', 'Move map: '.$map.' to '.$newPath.basename($map) );
 			}
 		}
 	}
