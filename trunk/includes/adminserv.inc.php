@@ -974,7 +974,7 @@ abstract class AdminServ {
 			define('SERVER_ADDR', ServerConfig::$SERVERS[SERVER_NAME]['address']);
 			define('SERVER_XMLRPC_PORT', ServerConfig::$SERVERS[SERVER_NAME]['port']);
 			define('SERVER_MATCHSET', ServerConfig::$SERVERS[SERVER_NAME]['matchsettings']);
-			define('SERVER_MAPS_BASEPATH', isset(ServerConfig::$SERVERS[SERVER_NAME]['maps_basepath']) ? ServerConfig::$SERVERS[SERVER_NAME]['maps_basepath'] : '');
+			define('SERVER_MAPS_BASEPATH', isset(ServerConfig::$SERVERS[SERVER_NAME]['mapsbasepath']) ? ServerConfig::$SERVERS[SERVER_NAME]['mapsbasepath'] : '');
 			define('SERVER_ADMINLEVEL', serialize( ServerConfig::$SERVERS[SERVER_NAME]['adminlevel']) );
 			
 			// CONNEXION
@@ -2061,14 +2061,14 @@ abstract class AdminServ {
 			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 		}
 		else{
-			$out = $client->getResponse();
+			$out = Str::toSlash( $client->getResponse() );
 			if( substr($out, -1, 1) != '/'){ $out .= '/'; }
 			if(SERVER_MAPS_BASEPATH){
-				$out .= SERVER_MAPS_BASEPATH;
+				$out .= Str::toSlash(SERVER_MAPS_BASEPATH);
 				if( substr($out, -1, 1) != '/'){ $out .= '/'; }
 			}
-			$out = Str::toSlash($out);
 		}
+		
 		return $out;
 	}
 	
@@ -3137,30 +3137,30 @@ abstract class AdminServServerConfig {
 	/**
 	* Créer le template d'un serveur
 	*
-	* @param array $serverData -> assoc array(name, address, port, matchsettings, adminlevel => array(SuperAdmin, Admin, User));
+	* @param array $serverData -> assoc array(name, address, port, mapsbasepath, matchsettings, adminlevel => array(SuperAdmin, Admin, User));
 	*/
 	public static function getServerTemplate($serverData){
 		$out = "\t\t'".$serverData['name']."' => array(\n"
 			."\t\t\t'address'\t\t=> '".$serverData['address']."',\n"
 			."\t\t\t'port'\t\t\t=> ".$serverData['port'].",\n"
+			."\t\t\t'mapsbasepath'\t=> '".$serverData['mapsbasepath']."',\n"
 			."\t\t\t'matchsettings'\t=> '".$serverData['matchsettings']."',\n"
-			."\t\t\t'adminlevel'\t=> array('SuperAdmin' => ";
-			if( is_array($serverData['adminlevel']['SuperAdmin']) ){
-				$out .= "array('".implode("', '", str_replace(' ', '', $serverData['adminlevel']['SuperAdmin']))."')";
-			}else{
-				$out .= "'".$serverData['adminlevel']['SuperAdmin']."'";
-			}
-			$out .= ", 'Admin' => ";
-			if( is_array($serverData['adminlevel']['Admin']) ){
-				$out .= "array('".implode("', '",  str_replace(' ', '', $serverData['adminlevel']['Admin']))."')";
-			}else{
-				$out .= "'".$serverData['adminlevel']['Admin']."'";
-			}
-			$out .= ", 'User' => ";
-			if( is_array($serverData['adminlevel']['User']) ){
-				$out .= "array('".implode("', '",  str_replace(' ', '', $serverData['adminlevel']['User']))."')";
-			}else{
-				$out .= "'".$serverData['adminlevel']['User']."'";
+			."\t\t\t'adminlevel'\t=> array(";
+			$adminlevelId = 0;
+			$adminlevelCount = count($serverData['adminlevel']);
+			foreach($serverData['adminlevel'] as $admLvlId => $admLvlValue){
+				$out .= "'$admLvlId' => ";
+				if( is_array($serverData['adminlevel'][$admLvlId]) ){
+					$out .= "array('".implode("', '", str_replace(' ', '', $serverData['adminlevel'][$admLvlId]))."')";
+				}
+				else{
+					$out .= "'".$serverData['adminlevel'][$admLvlId]."'";
+				}
+				
+				if($adminlevelId < $adminlevelCount-1){
+					$out .= ', ';
+				}
+				$adminlevelId++;
 			}
 		$out .= ")\n\t\t),\n";
 		
@@ -3222,20 +3222,21 @@ abstract class AdminServServerConfig {
 				$fileTemplate .= self::getServerTemplate($serverData);
 			}
 			else{
-				// Liste des serveurs existant
-				$fileTemplate .= self::getServerTemplate(
-					array(
-						'name' => $serverName,
-						'address' => $serverValues['address'],
-						'port' => $serverValues['port'],
-						'matchsettings' => $serverValues['matchsettings'],
-						'adminlevel' => array(
-							'SuperAdmin' => $serverValues['adminlevel']['SuperAdmin'],
-							'Admin' => $serverValues['adminlevel']['Admin'],
-							'User' => $serverValues['adminlevel']['User']
-						)
-					)
+				// Récupération des données des serveurs existant
+				$getServerValues = array(
+					'name' => $serverName,
+					'address' => $serverValues['address'],
+					'port' => $serverValues['port'],
+					'mapsbasepath' => isset($serverValues['mapsbasepath']) ? $serverValues['mapsbasepath'] : '',
+					'matchsettings' => $serverValues['matchsettings'],
+					'adminlevel' => array()
 				);
+				foreach($serverValues['adminlevel'] as $admLvlId => $admLvlValue){
+					$getServerValues['adminlevel'][$admLvlId] = $admLvlValue;
+				}
+				
+				// Ajout des données au template
+				$fileTemplate .= self::getServerTemplate($getServerValues);
 			}
 			$i++;
 		}
@@ -3393,7 +3394,7 @@ abstract class AdminServPlugin {
 			$out = '<nav class="vertical-nav">'
 				.'<ul>';
 					foreach($pluginsList as $plugin => $infos){
-						$out .= '<li><a '; if(self::getCurrent() == $plugin){ $out .= 'class="active" '; } $out .= 'href="?p=plugins-'.$plugin.'" title="Version : '.$infos['version'].'">'.$infos['name'].'</a></li>';
+						$out .= '<li><a '; if(self::getCurrent() == $plugin){ $out .= 'class="active" '; } $out .= 'href="?p=plugins-'.$plugin.'" title="'.Utils::t('Version').' : '.$infos['version'].'">'.$infos['name'].'</a></li>';
 					}
 				$out .= '</ul>'
 			.'</nav>';
