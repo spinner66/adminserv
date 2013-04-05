@@ -354,5 +354,6 @@ $translate = array(
 	'Script parameters' => 'Paramètres',
 	'Value' => 'Valeur',
 	'The server already exist! Change the name.' => 'Le serveur existe déjà ! Changez le nom.',
+	'Version' => 'Version',
 );
 ?>

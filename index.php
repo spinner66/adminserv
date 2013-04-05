@@ -22,6 +22,7 @@
 		AdminServ::startTimer();
 	}
 	
+	
 	// ISSET
 	if( isset($_GET['p']) ){
 		define('USER_PAGE', htmlspecialchars($_GET['p']) );

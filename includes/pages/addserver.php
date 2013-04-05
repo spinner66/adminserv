@@ -25,25 +25,33 @@
 		$serverName = Str::replaceSpecialChars( htmlspecialchars(addslashes($_POST['addServerName'])), false);
 		$serverAddress = trim($_POST['addServerAddress']);
 		$serverPort = intval($_POST['addServerPort']);
+		$serverMapsBasePath = trim($_POST['addServerMapsBasePath']);
 		$serverMatchSet = trim($_POST['addServerMatchSet']);
-		$serverAdmLvl_SA = $_POST['addServerAdmLvlSA'];
-		$serverAdmLvl_ADM = $_POST['addServerAdmLvlADM'];
-		$serverAdmLvl_USR = $_POST['addServerAdmLvlUSR'];
+		$serverAdmLvl = array(
+			'SuperAdmin' => $_POST['addServerAdmLvlSA'],
+			'Admin' => $_POST['addServerAdmLvlADM'],
+			'User' => $_POST['addServerAdmLvlUSR']
+		);
 		$isNotAnArray = array('all', 'local', 'none');
-		if( !in_array($serverAdmLvl_SA, $isNotAnArray) ){ $serverAdmLvl_SA = explode(',', $serverAdmLvl_SA); }else{ $serverAdmLvl_SA = trim($serverAdmLvl_SA); }
-		if( !in_array($serverAdmLvl_ADM, $isNotAnArray) ){ $serverAdmLvl_ADM = explode(',', $serverAdmLvl_ADM); }else{ $serverAdmLvl_ADM = trim($serverAdmLvl_ADM); }
-		if( !in_array($serverAdmLvl_USR, $isNotAnArray) ){ $serverAdmLvl_USR = explode(',', $serverAdmLvl_USR); }else{ $serverAdmLvl_USR = trim($serverAdmLvl_USR); }
+		foreach($serverAdmLvl as $admLvlId => $admLvlValue){
+			if( !in_array($admLvlValue, $isNotAnArray) ){
+				$serverAdmLvl[$admLvlId] = explode(',', $admLvlValue);
+			}
+			else{
+				$serverAdmLvl[$admLvlId] = trim($admLvlValue);
+			}
+		}
 		$serverData = array(
 			'name' => $serverName,
 			'address' => $serverAddress,
 			'port' => $serverPort,
+			'mapsbasepath' => $serverMapsBasePath,
 			'matchsettings' => $serverMatchSet,
-			'adminlevel' => array(
-				'SuperAdmin' => $serverAdmLvl_SA,
-				'Admin' => $serverAdmLvl_ADM,
-				'User' => $serverAdmLvl_USR,
-			)
+			'adminlevel' => array()
 		);
+		foreach($serverAdmLvl as $admLvlId => $admLvlValue){
+			$serverData['adminlevel'][$admLvlId] = $admLvlValue;
+		}
 		
 		// Édition
 		if($id !== -1){
@@ -57,8 +65,8 @@
 				Utils::redirection(false, '?p=servers');
 			}
 		}
+		// Ajout
 		else{
-			// Ajout
 			if( ($result = AdminServServerConfig::saveServerConfig($serverData)) !== true ){
 				AdminServ::error( Utils::t('Unable to add the server.').' ('.$result.')');
 			}
@@ -76,10 +84,13 @@
 	$serverName = null;
 	$serverAddress = 'localhost';
 	$serverPort = 5000;
+	$serverMapsBasePath = null;
 	$serverMatchSet = 'MatchSettings/';
-	$serverAdmLvl_SA = 'all';
-	$serverAdmLvl_ADM = 'all';
-	$serverAdmLvl_USR = 'all';
+	$serverAdmLvl = array(
+		'SuperAdmin' => 'all',
+		'Admin' => 'all',
+		'User' => 'all'
+	);
 	if($id !== -1){
 		define('IS_SERVER_EDITION', true);
 		$serverName = AdminServServerConfig::getServerName($id);
@@ -87,13 +98,16 @@
 			$serverData = AdminServServerConfig::getServer($serverName);
 			$serverAddress = $serverData['address'];
 			$serverPort = $serverData['port'];
+			$serverMapsBasePath = isset($serverData['mapsbasepath']) ? $serverData['mapsbasepath'] : null;
 			$serverMatchSet = $serverData['matchsettings'];
-			$serverAdmLvl_SA = $serverData['adminlevel']['SuperAdmin'];
-			$serverAdmLvl_ADM = $serverData['adminlevel']['Admin'];
-			$serverAdmLvl_USR = $serverData['adminlevel']['User'];
-			if( is_array($serverAdmLvl_SA) ){ $serverAdmLvl_SA = implode(', ', $serverAdmLvl_SA); }
-			if( is_array($serverAdmLvl_ADM) ){ $serverAdmLvl_ADM = implode(', ', $serverAdmLvl_ADM); }
-			if( is_array($serverAdmLvl_USR) ){ $serverAdmLvl_USR = implode(', ', $serverAdmLvl_USR); }
+			foreach($serverData['adminlevel'] as $admLvlId => $admLvlValue){
+				if( is_array($admLvlValue) ){
+					$serverAdmLvl[$admLvlId] = implode(', ', $admLvlValue);
+				}
+				else{
+					$serverAdmLvl[$admLvlId] = $admLvlValue;
+				}
+			}
 		}
 	}
 	
@@ -142,6 +156,15 @@
 				<legend><?php echo Utils::t('Optionnal information'); ?></legend>
 				<table>
 					<tr>
+						<td class="key"><label for="addServerMapsBasePath"><?php echo Utils::t('Maps base path'); ?></label></td>
+						<td class="value">
+							<input class="text width3" type="text" name="addServerMapsBasePath" id="addServerMapsBasePath" value="<?php echo $serverMapsBasePath; ?>" />
+						</td>
+						<td class="info">
+							<?php echo Utils::t('Base path for list maps and matchsettings'); ?>
+						</td>
+					</tr>
+					<tr>
 						<td class="key"><label for="addServerMatchSet"><?php echo Utils::t('Server MatchSettings'); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerMatchSet" id="addServerMatchSet" value="<?php echo $serverMatchSet; ?>" />
@@ -153,7 +176,7 @@
 					<tr>
 						<td class="key"><label for="addServerAdmLvlSA"><?php echo Utils::t('SuperAdmin level'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAdmLvlSA" id="addServerAdmLvlSA" value="<?php echo $serverAdmLvl_SA; ?>" />
+							<input class="text width3" type="text" name="addServerAdmLvlSA" id="addServerAdmLvlSA" value="<?php echo $serverAdmLvl['SuperAdmin']; ?>" />
 						</td>
 						<td rowspan="3" class="info">
 							<?php echo Utils::t('Possible values for the admin level:'); ?><br />
@@ -166,13 +189,13 @@
 					<tr>
 						<td class="key"><label for="addServerAdmLvlADM"><?php echo Utils::t('Admin level'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAdmLvlADM" id="addServerAdmLvlADM" value="<?php echo $serverAdmLvl_ADM; ?>" />
+							<input class="text width3" type="text" name="addServerAdmLvlADM" id="addServerAdmLvlADM" value="<?php echo $serverAdmLvl['Admin']; ?>" />
 						</td>
 					</tr>
 					<tr>
 						<td class="key"><label for="addServerAdmLvlUSR"><?php echo Utils::t('User level'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAdmLvlUSR" id="addServerAdmLvlUSR" value="<?php echo $serverAdmLvl_USR; ?>" />
+							<input class="text width3" type="text" name="addServerAdmLvlUSR" id="addServerAdmLvlUSR" value="<?php echo $serverAdmLvl['User']; ?>" />
 						</td>
 					</tr>
 				</table>
