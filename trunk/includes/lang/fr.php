@@ -355,5 +355,6 @@ $translate = array(
 	'Value' => 'Valeur',
 	'The server already exist! Change the name.' => 'Le serveur existe déjà ! Changez le nom.',
 	'Version' => 'Version',
+	'Disable vote ratio' => 'Désactiver le ratio vote',
 );
 ?>

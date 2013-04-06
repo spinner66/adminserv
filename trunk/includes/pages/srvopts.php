@@ -1,48 +1,40 @@
 <?php
 	// ENREGISTREMENT
 	if( isset($_POST['savesrvopts']) ){
-		$ClientInputsMaxLatency = $_POST['ClientInputsMaxLatency'];
-		if($ClientInputsMaxLatency == 'more'){
-			$ClientInputsMaxLatency = $_POST['ClientInputsMaxLatencyValue'];
-		}
+		// Récupération des données
+		$struct = AdminServ::getServerOptionsStruct();
 		$ChangeAuthPassword = null;
 		if( isset($_POST['ChangeAuthPassword']) && $_POST['ChangeAuthPassword'] != null ){
 			$ChangeAuthLevel = $_POST['ChangeAuthLevel'];
 			$ChangeAuthPassword = trim($_POST['ChangeAuthPassword']);
 		}
-		$struct = AdminServ::getServerOptionsStructFromPOST();
+		$srvoptsImportExport = false;
+		if( array_key_exists('srvoptsImportExport', $_POST) ){
+			$srvoptsImportExport = $_POST['srvoptsImportExport'];
+		}
 		
-		// Requêtes
-		if( !$client->query('SetServerOptions', $struct) ){
-			AdminServ::error();
+		// Enregistrement
+		if($ChangeAuthPassword){
+			if(USER_ADMINLEVEL === $ChangeAuthLevel){
+				$_SESSION['adminserv']['password'] = $ChangeAuthPassword;
+			}
+			AdminServ::info( Utils::t('You changed the password "!authLevel", remember it at the next connection!', array('!authLevel' => $ChangeAuthLevel)) );
+			AdminServLogs::add('action', 'Change authentication password for '.$ChangeAuthLevel.' level');
 		}
-		else{
-			if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-				$client->addCall('SetClientInputsMaxLatency', array(intval($ClientInputsMaxLatency)) );
-				$client->addCall('DisableHorns', array(array_key_exists('DisableHorns', $_POST)) );
+		elseif($srvoptsImportExport){
+			// Import
+			if($srvoptsImportExport == 'Import'){
+				$struct = 'getServerOptionsStructFile';
 			}
-			$client->addCall('SetHideServer', array( (int)array_key_exists('HideServer', $_POST)) );
-			$client->addCall('SetBuddyNotification', array('', array_key_exists('BuddyNotification', $_POST)) );
-			if($ChangeAuthPassword){
-				$client->addCall('ChangeAuthPassword', array($ChangeAuthLevel, $ChangeAuthPassword) );
-			}
-			if( !$client->multiquery() ){
-				AdminServ::error();
-			}
+			// Export
 			else{
-				if($ChangeAuthPassword){
-					if(USER_ADMINLEVEL === $ChangeAuthLevel){
-						$_SESSION['adminserv']['password'] = $ChangeAuthPassword;
-					}
-					AdminServ::info( Utils::t('You changed the password "!authLevel", remember it at the next connection!', array('!authLevel' => $ChangeAuthLevel)) );
-					AdminServLogs::add('action', 'Change authentication password for '.$ChangeAuthLevel.' level');
-				}
-				else{
-					AdminServLogs::add('action', 'Save server options');
-				}
-				Utils::redirection(false, '?p='.USER_PAGE);
+				$srvoptsExportName = Str::replaceChars($_POST['srvoptsExportName']);
 			}
 		}
+		elseif( AdminServ::setServerOptions($struct) ){
+			AdminServLogs::add('action', 'Save server options');
+		}
+		Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	
 	
@@ -176,11 +168,11 @@
 						<td class="key"><label for="CallVoteRatio"><?php echo Utils::t('Vote ratio'); ?></label></td>
 						<td class="value" colspan="4">
 							<select name="callVoteRatioDisabled" id="callVoteRatioDisabled"<?php if($srvOpt['CallVoteRatio'] > -1){ echo ' hidden="hidden"'; } ?>>
-								<option value="-1"><?php echo Utils::t('Disable'); ?></option>
-								<option value="0"><?php echo Utils::t('Enable'); ?></option>
+								<option value="-1"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' selected="selected"'; } ?>><?php echo Utils::t('Disable'); ?></option>
+								<option value="0"<?php if($srvOpt['CallVoteRatio'] > -1){ echo ' selected="selected"'; } ?>><?php echo Utils::t('Enable'); ?></option>
 							</select>
 							<input class="text" type="number" min="0" max="1" step=".1" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $srvOpt['CallVoteRatio']; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?> />
-							<a class="returnDefaultValue" id="resetCallVoteRatio" href="?p=<?php echo USER_PAGE; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Return to the default value'); ?></a>
+							<a class="returnDefaultValue" id="resetCallVoteRatio" href="?p=<?php echo USER_PAGE; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Disable vote ratio'); ?></a>
 						</td>
 					</tr>
 					<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
@@ -249,6 +241,30 @@
 								</select>
 								<span class="changeauthpassword-arrow"> </span>
 								<input class="text" type="password" name="ChangeAuthPassword" id="ChangeAuthPassword" value="" />
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			<?php } ?>
+			
+			<?php if( AdminServ::isAdminLevel('Admin') ){ ?>
+				<fieldset class="srvopts_importexport">
+					<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/rt_team.png" alt="" /><?php echo Utils::t('Manage server options'); ?></legend>
+					<table>
+						<tr>
+							<td class="key"><label for="srvoptsImport"><?php echo Utils::t('Import'); ?></label></td>
+							<td class="value col2">
+								<input class="text" type="radio" name="srvoptsImportExport" id="srvoptsImport" value="Import" />
+								<select name="srvoptsImportName" id="srvoptsImportName" hidden="hidden">
+									<option value=""></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="key"><label for="srvoptsExport"><?php echo Utils::t('Export'); ?></label></td>
+							<td class="value col2">
+								<input class="text" type="radio" name="srvoptsImportExport" id="srvoptsExport" value="Export" />
+								<input class="text" hidden="hidden" type="text" name="srvoptsExportName" id="srvoptsExportName" value="<?php echo SERVER_LOGIN; ?>" />
 							</td>
 						</tr>
 					</table>

@@ -273,7 +273,7 @@ $(document).ready(function(){
 					}
 				}
 			});
-			// Revenir à la valeur par défaut
+			// Désactiver le ratio voto
 			$('#resetCallVoteRatio').click(function(event){
 				event.preventDefault();
 				$(this).fadeOut().attr('hidden', true);
@@ -296,6 +296,21 @@ $(document).ready(function(){
 				$('#ClientInputsMaxLatencyValue').hide().attr('hidden', true).val('');
 				$('#ClientInputsMaxLatency').fadeIn('fast').removeAttr('hidden').find('option').removeAttr('selected');
 				$('#ClientInputsMaxLatency option:first').select();
+			});
+			
+			
+			// Gestion des options serveur
+			$('.srvopts_importexport input[name="srvoptsImportExport"]').click(function(){
+				var type = $(this).val();
+				
+				if(type == 'Import'){
+					$('#srvoptsExportName').fadeOut().attr('hidden', true);
+				}
+				else{
+					$('#srvoptsImportName').fadeOut().attr('hidden', true);
+				}
+				
+				$('#srvopts'+type+'Name').fadeIn('fast').removeAttr('hidden');
 			});
 		}
 		/**

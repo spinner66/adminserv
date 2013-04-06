@@ -1699,7 +1699,7 @@ abstract class AdminServ {
 	*
 	* @return array
 	*/
-	public static function getServerOptionsStructFromPOST(){
+	public static function getServerOptionsStruct(){
 		if(SERVER_VERSION_NAME == 'TmForever'){
 			$keys = array(
 				'allowMapDownload' => 'AllowChallengeDownload'
@@ -1710,10 +1710,6 @@ abstract class AdminServ {
 				'allowMapDownload' => 'AllowMapDownload'
 			);
 		}
-		
-		if($_POST['CallVoteRatio'] == 0){ $CallVoteRatio = 0.0; }
-		else if($_POST['CallVoteRatio'] == 1){ $CallVoteRatio = 1.0; }
-		else{ $CallVoteRatio = $_POST['CallVoteRatio']; }
 		
 		$out = array(
 			'Name' => stripslashes($_POST['ServerName']),
@@ -1727,12 +1723,59 @@ abstract class AdminServ {
 			'NextLadderMode' => intval($_POST['NextLadderMode']),
 			'NextVehicleNetQuality' => intval($_POST['NextVehicleNetQuality']),
 			'NextCallVoteTimeOut' => TimeDate::secToMillisec( intval($_POST['NextCallVoteTimeOut']) ),
-			'CallVoteRatio' => floatval($CallVoteRatio),
+			'CallVoteRatio' => ($_POST['callVoteRatioDisabled'] == -1) ? (float)-1 : (float)$_POST['CallVoteRatio'],
 			$keys['allowMapDownload'] => array_key_exists('AllowMapDownload', $_POST),
-			'AutoSaveReplays' => array_key_exists('AutoSaveReplays', $_POST)
+			'AutoSaveReplays' => array_key_exists('AutoSaveReplays', $_POST),
+			'HideServer' => (int)array_key_exists('HideServer', $_POST),
+			'BuddyNotification' => array_key_exists('BuddyNotification', $_POST),
+			
 		);
+		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+			$out['ClientInputsMaxLatency'] = ($_POST['ClientInputsMaxLatency'] == 'more') ? $_POST['ClientInputsMaxLatencyValue'] : $_POST['ClientInputsMaxLatency'];
+			$out['DisableHorns'] = array_key_exists('DisableHorns', $_POST);
+		}
 		
 		return $out;
+	}
+	
+	
+	/**
+	* Enregistre les options du serveur
+	*
+	* @param array $struct -> Structure contenant les champs demandés par la méthode SetServerOptions()
+	*/
+	public static function setServerOptions($struct){
+		global $client;
+		$out = false;
+		
+		if( !$client->query('SetServerOptions', $struct) ){
+			self::error();
+		}
+		else{
+			$client->addCall('SetHideServer', array($struct['HideServer']) );
+			$client->addCall('SetBuddyNotification', array('', $struct['BuddyNotification']) );
+			if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+				$client->addCall('SetClientInputsMaxLatency', array($struct['ClientInputsMaxLatency']) );
+				$client->addCall('DisableHorns', array($struct['DisableHorns']) );
+			}
+			
+			if( !$client->multiquery() ){
+				self::error();
+			}
+			else{
+				$out = true;
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	*
+	*/
+	public static function exportServerOptions($exportName){
+		
 	}
 	
 	
