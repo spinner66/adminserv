@@ -812,17 +812,13 @@ $(document).ready(function(){
 			// CleanList
 			$('a.cleanList').click(function(){
 				var out = false;
-				var lines = $(this).parent('li').parent('ul').parent('div').parent('div').find('tbody tr');
+				var lines = $(this).parents('.title-detail').parent('div').find('tbody tr:not(.no-line)');
 				
-				if(lines.length > 0){
-					$.each(lines, function(id, line){
-						if(line.className == 'no-line'){
-							error( $('a.cleanList').data('empty'), true);
-						}
-						else{
-							out = true;
-						}
-					});
+				if(lines.length > 1){
+					out = true;
+				}
+				else{
+					error( $('a.cleanList').data('empty'), true);
 				}
 				
 				return out;

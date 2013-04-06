@@ -3260,6 +3260,65 @@ abstract class AdminServServerConfig {
 
 
 /**
+* Classe pour la gestion des niveaux admin
+*/
+abstract class AdminServAdminLevelConfig {
+	
+	/**
+	* Globales
+	*/
+	private static $DEFAULT_ADMINLEVEL = array(
+		'SuperAdmin',
+		'Admin',
+		'User'
+	);
+	private static $CONFIG_PATH = './config/';
+	private static $CONFIG_FILENAME = 'adminlevel.cfg.php';
+	private static $CONFIG_START_TEMPLATE = "<?php\nclass AdminLevelConfig {\n\tpublic static \$ADMINLEVELS = array(\n\t\t/********************* ADMINLEVEL CONFIGURATION *********************/\n\t\t\n";
+	private static $CONFIG_END_TEMPLATE =  "\t);\n}\n?>";
+	
+	
+	/**
+	* Détermine s'il y a au moins un niveau admin disponible
+	*
+	* @return bool
+	*/
+	public static function hasAdminLevel(){
+		$out = false;
+		
+		if( file_exists(self::$CONFIG_PATH.self::$CONFIG_FILENAME) && class_exists('AdminLevelConfig') ){
+			if( isset(AdminLevelConfig::$ADMINLEVELS) && count(AdminLevelConfig::$ADMINLEVELS) > 0 ){
+				$out = true;
+			}
+		}
+		
+		return $out;
+	}
+	
+	/**
+	* Récupère la liste des niveaux configurés
+	*
+	* @return array
+	*/
+	public static function getList(){
+		$out = array();
+		
+		if( self::hasAdminLevel() ){
+			foreach(AdminLevelConfig::$ADMINLEVELS as $admLvlId => $admLvlValue){
+				$out[] = $admLvlId;
+			}
+		}
+		else{
+			$out = self::$DEFAULT_ADMINLEVEL;
+		}
+		
+		return $out;
+	}
+}
+
+
+
+/**
 * Classe pour la gestion des plugins
 */
 abstract class AdminServPlugin {
