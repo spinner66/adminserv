@@ -1,4 +1,20 @@
 <?php
+	// GAMEDATA
+	if( AdminServ::isAdminLevel('Admin') ){
+		if( !$client->query('GameDataDirectory') ){
+			AdminServ::error();
+		}
+		else{
+			$srvoptsConfigDirectory = $client->getResponse().'Config/AdminServ/ServerOptions/';
+			if( !file_exists($srvoptsConfigDirectory) ){
+				if( $result = Folder::create($srvoptsConfigDirectory) !== true ){
+					AdminServ::error($result);
+				}
+			}
+			$srvoptsConfigFiles = Folder::read($srvoptsConfigDirectory, array(), array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
+		}
+	}
+	
 	// ENREGISTREMENT
 	if( isset($_POST['savesrvopts']) ){
 		// Récupération des données
@@ -24,17 +40,21 @@
 		elseif($srvoptsImportExport){
 			// Import
 			if($srvoptsImportExport == 'Import'){
-				$struct = 'getServerOptionsStructFile';
+				$struct = AdminServ::importServerOptions($srvoptsConfigDirectory.$srvoptsExportName);
+				if( AdminServ::setServerOptions($struct) ){
+					AdminServLogs::add('action', 'Import server options from').' '.$srvoptsConfigDirectory.$srvoptsExportName);
+				}
 			}
 			// Export
-			else{
+			elseif($srvoptsImportExport == 'Export'){
 				$srvoptsExportName = Str::replaceChars($_POST['srvoptsExportName']);
+				AdminServ::exportServerOptions($srvoptsConfigDirectory.$srvoptsExportName.'.txt', $struct);
 			}
 		}
 		elseif( AdminServ::setServerOptions($struct) ){
 			AdminServLogs::add('action', 'Save server options');
 		}
-		Utils::redirection(false, '?p='.USER_PAGE);
+		//Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	
 	
@@ -256,7 +276,16 @@
 							<td class="value col2">
 								<input class="text" type="radio" name="srvoptsImportExport" id="srvoptsImport" value="Import" />
 								<select name="srvoptsImportName" id="srvoptsImportName" hidden="hidden">
-									<option value=""></option>
+									<?php
+										if( isset($srvoptsConfigFiles['files']) && count($srvoptsConfigFiles['files']) > 0 ){
+											$srvoptsImportNameList = null;
+											foreach($srvoptsConfigFiles['files'] as $file){
+												$srvoptsImportNameList .= '<option value="'.$file['filename'].'">'.substr($file['filename'], 0, -4).'</option>';
+											}
+											
+											echo $srvoptsImportNameList;
+										}
+									?>
 								</select>
 							</td>
 						</tr>

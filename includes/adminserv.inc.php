@@ -116,7 +116,7 @@ abstract class AdminServUI {
 		
 		if( $countList > 0 ){
 			$out .= '<ul>';
-			// Si il y a un thème courant, on le place en 1er
+			// S'il y a un thème courant, on le place en 1er
 			if( count($currentTheme) > 0 ){
 				$currentThemeName = key($currentTheme);
 				$currentThemeColor = current($currentTheme);
@@ -1772,10 +1772,50 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Importe les options du serveur depuis un fichier
 	*
+	* @param  string $file -> Chemin du fichier à lire
+	* @return array
 	*/
-	public static function exportServerOptions($exportName){
+	public static function importServerOptions($file){
+		global $client;
+		$out = false;
 		
+		//to do
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Exporte les options du serveur dans un fichier
+	*
+	* @param  string $file -> Chemin du fichier à écrire
+	* @param  array  $data -> Structure des options du serveur à écrire
+	* @return bool
+	*/
+	public static function exportServerOptions($file, $data){
+		global $client;
+		$out = false;
+		
+		$dom = new DOMDocument('1.0', 'utf-8');
+		$dom->formatOutput = true;
+		$srvopts = $dom->createElement('ServerOptions');
+		$srvopts = $dom->appendChild($srvopts);
+		foreach($data as $dataField => $dataValue){
+			$srvoptsElement = $dom->createElement($dataField, $dataValue);
+			$srvoptsElement = $srvopts->appendChild($srvoptsElement);
+		}
+		
+		if( $result = $dom->save($file) > 0 ){
+			$out = true;
+			self::info( Utils::t('Server options are export in').' '.$file);
+		}
+		else{
+			self::error( Utils::t('Unable to export server options') );
+		}
+		
+		return $out;
 	}
 	
 	
