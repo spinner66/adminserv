@@ -1300,6 +1300,17 @@ footer {
 	margin: 1px 12px 0 0;
 	width: 20.4%;
 }
+.srvopts_importexport input,
+.srvopts_importexport select {
+	float: left;
+}
+.srvopts_importexport input[type="radio"] {
+	height: 21px;
+}
+.srvopts_importexport #srvoptsImportName,
+.srvopts_importexport #srvoptsExportName {
+	margin-left: 10px;
+}
 
 
 /* Page Game infos

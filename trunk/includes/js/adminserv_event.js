@@ -273,7 +273,7 @@ $(document).ready(function(){
 					}
 				}
 			});
-			// Désactiver le ratio voto
+			// Désactiver le ratio vote
 			$('#resetCallVoteRatio').click(function(event){
 				event.preventDefault();
 				$(this).fadeOut().attr('hidden', true);
