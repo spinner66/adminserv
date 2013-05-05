@@ -40,9 +40,10 @@
 		elseif($srvoptsImportExport){
 			// Import
 			if($srvoptsImportExport == 'Import'){
-				$struct = AdminServ::importServerOptions($srvoptsConfigDirectory.$srvoptsExportName);
+				$srvoptsImportName = $_POST['srvoptsImportName'];
+				$struct = AdminServ::importServerOptions($srvoptsConfigDirectory.$srvoptsImportName);
 				if( AdminServ::setServerOptions($struct) ){
-					AdminServLogs::add('action', 'Import server options from').' '.$srvoptsConfigDirectory.$srvoptsExportName);
+					AdminServLogs::add('action', 'Import server options from '.$srvoptsConfigDirectory.$srvoptsImportName);
 				}
 			}
 			// Export
@@ -77,28 +78,28 @@
 					<tr class="serverName">
 						<td class="key"><label for="ServerName"><?php echo Utils::t('Server name'); ?></label></td>
 						<td class="value" colspan="3">
-							<input class="text width3" type="text" name="ServerName" id="ServerName" maxlength="75" value="<?php echo $srvOpt['Name']; ?>" />
+							<input class="text width3" type="text" name="Name" id="ServerName" maxlength="75" value="<?php echo $srvOpt['Name']; ?>" />
 						</td>
 						<td class="preview">[<span id="serverNameHtml"><?php echo $srvOpt['NameHtml']; ?></span>]</td>
 					</tr>
 					<tr class="serverComment">
 						<td class="key"><label for="ServerComment"><?php echo Utils::t('Comment'); ?></label></td>
 						<td class="value" colspan="3">
-							<textarea class="width3" name="ServerComment" id="ServerComment" maxlength="255"><?php echo $srvOpt['Comment']; ?></textarea>
+							<textarea class="width3" name="Comment" id="ServerComment" maxlength="255"><?php echo $srvOpt['Comment']; ?></textarea>
 						</td>
 						<td class="preview">[<span id="serverCommentHtml"><?php echo $srvOpt['CommentHtml']; ?></span>]</td>
 					</tr>
 					<tr>
 						<td class="key"><label for="ServerPassword"><?php echo Utils::t('Player password'); ?></label></td>
 						<td class="value" colspan="3">
-							<input class="text width3" type="text" name="ServerPassword" id="ServerPassword" value="<?php echo $srvOpt['Password']; ?>" />
+							<input class="text width3" type="text" name="Password" id="ServerPassword" value="<?php echo $srvOpt['Password']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="SpectatorPassword"><?php echo Utils::t('Spectator password'); ?></label></td>
 						<td class="value" colspan="3">
-							<input class="text width3" type="text" name="SpectatorPassword" id="SpectatorPassword" value="<?php echo $srvOpt['PasswordForSpectator']; ?>" />
+							<input class="text width3" type="text" name="PasswordForSpectator" id="SpectatorPassword" value="<?php echo $srvOpt['PasswordForSpectator']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>

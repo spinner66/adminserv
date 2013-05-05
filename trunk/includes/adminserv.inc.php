@@ -1699,7 +1699,10 @@ abstract class AdminServ {
 	*
 	* @return array
 	*/
-	public static function getServerOptionsStruct(){
+	public static function getServerOptionsStruct($array = array() ){
+		if( empty($array) ){
+			$array = $_POST;
+		}
 		if(SERVER_VERSION_NAME == 'TmForever'){
 			$keys = array(
 				'allowMapDownload' => 'AllowChallengeDownload'
@@ -1712,27 +1715,27 @@ abstract class AdminServ {
 		}
 		
 		$out = array(
-			'Name' => stripslashes($_POST['ServerName']),
-			'Comment' => stripslashes($_POST['ServerComment']),
-			'Password' => trim($_POST['ServerPassword']),
-			'PasswordForSpectator' => trim($_POST['SpectatorPassword']),
-			'NextMaxPlayers' => intval($_POST['NextMaxPlayers']),
-			'NextMaxSpectators' => intval($_POST['NextMaxSpectators']),
-			'IsP2PUpload' => array_key_exists('IsP2PUpload', $_POST),
-			'IsP2PDownload' => array_key_exists('IsP2PDownload', $_POST),
-			'NextLadderMode' => intval($_POST['NextLadderMode']),
-			'NextVehicleNetQuality' => intval($_POST['NextVehicleNetQuality']),
-			'NextCallVoteTimeOut' => TimeDate::secToMillisec( intval($_POST['NextCallVoteTimeOut']) ),
-			'CallVoteRatio' => ($_POST['callVoteRatioDisabled'] == -1) ? (float)-1 : (float)$_POST['CallVoteRatio'],
-			$keys['allowMapDownload'] => array_key_exists('AllowMapDownload', $_POST),
-			'AutoSaveReplays' => array_key_exists('AutoSaveReplays', $_POST),
-			'HideServer' => (int)array_key_exists('HideServer', $_POST),
-			'BuddyNotification' => array_key_exists('BuddyNotification', $_POST),
+			'Name' => stripslashes($array['Name']),
+			'Comment' => stripslashes($array['Comment']),
+			'Password' => trim($array['Password']),
+			'PasswordForSpectator' => trim($array['PasswordForSpectator']),
+			'NextMaxPlayers' => intval($array['NextMaxPlayers']),
+			'NextMaxSpectators' => intval($array['NextMaxSpectators']),
+			'IsP2PUpload' => array_key_exists('IsP2PUpload', $array),
+			'IsP2PDownload' => array_key_exists('IsP2PDownload', $array),
+			'NextLadderMode' => intval($array['NextLadderMode']),
+			'NextVehicleNetQuality' => intval($array['NextVehicleNetQuality']),
+			'NextCallVoteTimeOut' => TimeDate::secToMillisec( intval($array['NextCallVoteTimeOut']) ),
+			'CallVoteRatio' => (float)$array['CallVoteRatio'],
+			$keys['allowMapDownload'] => array_key_exists('AllowMapDownload', $array),
+			'AutoSaveReplays' => array_key_exists('AutoSaveReplays', $array),
+			'HideServer' => (int)array_key_exists('HideServer', $array),
+			'BuddyNotification' => array_key_exists('BuddyNotification', $array),
 			
 		);
 		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-			$out['ClientInputsMaxLatency'] = ($_POST['ClientInputsMaxLatency'] == 'more') ? $_POST['ClientInputsMaxLatencyValue'] : $_POST['ClientInputsMaxLatency'];
-			$out['DisableHorns'] = array_key_exists('DisableHorns', $_POST);
+			$out['ClientInputsMaxLatency'] = ($array['ClientInputsMaxLatency'] == 'more') ? $array['ClientInputsMaxLatencyValue'] : $array['ClientInputsMaxLatency'];
+			$out['DisableHorns'] = array_key_exists('DisableHorns', $array);
 		}
 		
 		return $out;
@@ -1779,9 +1782,25 @@ abstract class AdminServ {
 	*/
 	public static function importServerOptions($file){
 		global $client;
-		$out = false;
+		$out = array();
 		
-		//to do
+		if( file_exists($file) ){
+			$dom = new DOMDocument();
+			$dom->load($file);
+			$srvopts = $dom->childNodes->item(0);
+			
+			for($i = 0; $i < $srvopts->childNodes->length; $i++){
+				$srvoptsElement = $srvopts->childNodes->item($i);
+				if($srvoptsElement->nodeName != '#text'){
+					$out[$srvoptsElement->nodeName] = $srvoptsElement->nodeValue;
+				}
+			}
+			
+			$out = self::getServerOptionsStruct($out);
+		}
+		else{
+			self::error('No file '.$file);
+		}
 		
 		return $out;
 	}
@@ -1795,7 +1814,6 @@ abstract class AdminServ {
 	* @return bool
 	*/
 	public static function exportServerOptions($file, $data){
-		global $client;
 		$out = false;
 		
 		$dom = new DOMDocument('1.0', 'utf-8');
