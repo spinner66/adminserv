@@ -277,7 +277,7 @@ $(document).ready(function(){
 			$('#resetCallVoteRatio').click(function(event){
 				event.preventDefault();
 				$(this).fadeOut().attr('hidden', true);
-				$('#CallVoteRatio').hide().attr('hidden', true);
+				$('#CallVoteRatio').val('-1').hide().attr('hidden', true);
 				$('#callVoteRatioDisabled').fadeIn('fast').removeAttr('hidden').find('option').removeAttr('selected');
 				$('#callVoteRatioDisabled option:first').select();
 			});
