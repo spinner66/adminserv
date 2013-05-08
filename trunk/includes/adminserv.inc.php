@@ -1699,10 +1699,7 @@ abstract class AdminServ {
 	*
 	* @return array
 	*/
-	public static function getServerOptionsStruct($array = array() ){
-		if( empty($array) ){
-			$array = $_POST;
-		}
+	public static function getServerOptionsStruct(){
 		if(SERVER_VERSION_NAME == 'TmForever'){
 			$keys = array(
 				'allowMapDownload' => 'AllowChallengeDownload'
@@ -1715,27 +1712,27 @@ abstract class AdminServ {
 		}
 		
 		$out = array(
-			'Name' => stripslashes($array['Name']),
-			'Comment' => stripslashes($array['Comment']),
-			'Password' => trim($array['Password']),
-			'PasswordForSpectator' => trim($array['PasswordForSpectator']),
-			'NextMaxPlayers' => intval($array['NextMaxPlayers']),
-			'NextMaxSpectators' => intval($array['NextMaxSpectators']),
-			'IsP2PUpload' => array_key_exists('IsP2PUpload', $array),
-			'IsP2PDownload' => array_key_exists('IsP2PDownload', $array),
-			'NextLadderMode' => intval($array['NextLadderMode']),
-			'NextVehicleNetQuality' => intval($array['NextVehicleNetQuality']),
-			'NextCallVoteTimeOut' => TimeDate::secToMillisec( intval($array['NextCallVoteTimeOut']) ),
-			'CallVoteRatio' => (float)$array['CallVoteRatio'],
-			$keys['allowMapDownload'] => array_key_exists('AllowMapDownload', $array),
-			'AutoSaveReplays' => array_key_exists('AutoSaveReplays', $array),
-			'HideServer' => (int)array_key_exists('HideServer', $array),
-			'BuddyNotification' => array_key_exists('BuddyNotification', $array),
+			'Name' => stripslashes($_POST['Name']),
+			'Comment' => stripslashes($_POST['Comment']),
+			'Password' => trim($_POST['Password']),
+			'PasswordForSpectator' => trim($_POST['PasswordForSpectator']),
+			'NextMaxPlayers' => intval($_POST['NextMaxPlayers']),
+			'NextMaxSpectators' => intval($_POST['NextMaxSpectators']),
+			'IsP2PUpload' => array_key_exists('IsP2PUpload', $_POST),
+			'IsP2PDownload' => array_key_exists('IsP2PDownload', $_POST),
+			'NextLadderMode' => intval($_POST['NextLadderMode']),
+			'NextVehicleNetQuality' => intval($_POST['NextVehicleNetQuality']),
+			'NextCallVoteTimeOut' => TimeDate::secToMillisec( intval($_POST['NextCallVoteTimeOut']) ),
+			'CallVoteRatio' => (double)$_POST['CallVoteRatio'],
+			$keys['allowMapDownload'] => array_key_exists('AllowMapDownload', $_POST),
+			'AutoSaveReplays' => array_key_exists('AutoSaveReplays', $_POST),
+			'HideServer' => (int)array_key_exists('HideServer', $_POST),
+			'BuddyNotification' => array_key_exists('BuddyNotification', $_POST),
 			
 		);
 		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-			$out['ClientInputsMaxLatency'] = ($array['ClientInputsMaxLatency'] == 'more') ? $array['ClientInputsMaxLatencyValue'] : $array['ClientInputsMaxLatency'];
-			$out['DisableHorns'] = array_key_exists('DisableHorns', $array);
+			$out['ClientInputsMaxLatency'] = ($_POST['ClientInputsMaxLatency'] == 'more') ? $_POST['ClientInputsMaxLatencyValue'] : $_POST['ClientInputsMaxLatency'];
+			$out['DisableHorns'] = array_key_exists('DisableHorns', $_POST);
 		}
 		
 		return $out;
@@ -1792,11 +1789,21 @@ abstract class AdminServ {
 			for($i = 0; $i < $srvopts->childNodes->length; $i++){
 				$srvoptsElement = $srvopts->childNodes->item($i);
 				if($srvoptsElement->nodeName != '#text'){
-					$out[$srvoptsElement->nodeName] = $srvoptsElement->nodeValue;
+					switch($srvoptsElement->getAttribute('type')){
+						case 'int':
+							$out[$srvoptsElement->nodeName] = (int)$srvoptsElement->nodeValue;
+							break;
+						case 'boolean':
+							$out[$srvoptsElement->nodeName] = (boolean)$srvoptsElement->nodeValue;
+							break;
+						case 'double':
+							$out[$srvoptsElement->nodeName] = (double)$srvoptsElement->nodeValue;
+							break;
+						default:
+							$out[$srvoptsElement->nodeName] = (string)$srvoptsElement->nodeValue;
+					}
 				}
 			}
-			
-			$out = self::getServerOptionsStruct($out);
 		}
 		else{
 			self::error('No file '.$file);
@@ -1821,7 +1828,11 @@ abstract class AdminServ {
 		$srvopts = $dom->createElement('ServerOptions');
 		$srvopts = $dom->appendChild($srvopts);
 		foreach($data as $dataField => $dataValue){
+			$IXR_Value = new IXR_Value($dataValue);
 			$srvoptsElement = $dom->createElement($dataField, $dataValue);
+			$srvoptsElementAttribute = $dom->createAttribute('type');
+			$srvoptsElementAttribute->value = $IXR_Value->calculateType();
+			$srvoptsElement->appendChild($srvoptsElementAttribute);
 			$srvoptsElement = $srvopts->appendChild($srvoptsElement);
 		}
 		

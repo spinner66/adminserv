@@ -252,6 +252,9 @@ $(document).ready(function(){
 					$('#serverNameHtml').getColorHtml( $(this).val() );
 				}
 			});
+			$('#ServerName').blur(function(){
+				$('#serverNameHtml').getColorHtml( $(this).val() );
+			});
 			
 			// ServerComment
 			$('#ServerComment').keyup(function(event){
