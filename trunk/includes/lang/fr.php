@@ -356,5 +356,12 @@ $translate = array(
 	'The server already exist! Change the name.' => 'Le serveur existe déjà ! Changez le nom.',
 	'Version' => 'Version',
 	'Disable vote ratio' => 'Désactiver le ratio vote',
+	'Manage server options' => 'Gérer les options du serveur',
+	'Import' => 'Importer',
+	'Export' => 'Exporter',
+	'No export available' => 'Pas d\'export disponible',
+	'No such file or file is not readable' => 'Le fichier n\'éxiste pas ou n\'est pas lisible',
+	'Server options are exported in' => 'Les options du serveur sont exportées dans',
+	'Unable to export server options' => 'Impossible d\'exporter les options du serveur',
 );
 ?>

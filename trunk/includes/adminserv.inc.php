@@ -1772,6 +1772,40 @@ abstract class AdminServ {
 	
 	
 	/**
+	* Exporte les options du serveur dans un fichier
+	*
+	* @param  string $file -> Chemin du fichier à écrire
+	* @param  array  $data -> Structure des options du serveur à écrire
+	* @return bool
+	*/
+	public static function exportServerOptions($file, $data){
+		$out = false;
+		
+		$dom = new DOMDocument('1.0', 'utf-8');
+		$dom->formatOutput = true;
+		$srvopts = $dom->createElement('ServerOptions');
+		$srvopts = $dom->appendChild($srvopts);
+		foreach($data as $dataField => $dataValue){
+			$srvoptsElement = $dom->createElement($dataField, $dataValue);
+			$srvoptsElementAttribute = $dom->createAttribute('type');
+			$srvoptsElementAttribute->value = Str::getValueType($dataValue);
+			$srvoptsElement->appendChild($srvoptsElementAttribute);
+			$srvoptsElement = $srvopts->appendChild($srvoptsElement);
+		}
+		
+		if( $result = $dom->save($file) > 0 ){
+			$out = true;
+			self::info( Utils::t('Server options are exported in').' '.$file);
+		}
+		else{
+			self::error( Utils::t('Unable to export server options') );
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Importe les options du serveur depuis un fichier
 	*
 	* @param  string $file -> Chemin du fichier à lire
@@ -1789,59 +1823,12 @@ abstract class AdminServ {
 			for($i = 0; $i < $srvopts->childNodes->length; $i++){
 				$srvoptsElement = $srvopts->childNodes->item($i);
 				if($srvoptsElement->nodeName != '#text'){
-					switch($srvoptsElement->getAttribute('type')){
-						case 'int':
-							$out[$srvoptsElement->nodeName] = (int)$srvoptsElement->nodeValue;
-							break;
-						case 'boolean':
-							$out[$srvoptsElement->nodeName] = (boolean)$srvoptsElement->nodeValue;
-							break;
-						case 'double':
-							$out[$srvoptsElement->nodeName] = (double)$srvoptsElement->nodeValue;
-							break;
-						default:
-							$out[$srvoptsElement->nodeName] = (string)$srvoptsElement->nodeValue;
-					}
+					$out[$srvoptsElement->nodeName] = Str::setValueType($srvoptsElement->nodeValue, $srvoptsElement->getAttribute('type') );
 				}
 			}
 		}
 		else{
-			self::error('No file '.$file);
-		}
-		
-		return $out;
-	}
-	
-	
-	/**
-	* Exporte les options du serveur dans un fichier
-	*
-	* @param  string $file -> Chemin du fichier à écrire
-	* @param  array  $data -> Structure des options du serveur à écrire
-	* @return bool
-	*/
-	public static function exportServerOptions($file, $data){
-		$out = false;
-		
-		$dom = new DOMDocument('1.0', 'utf-8');
-		$dom->formatOutput = true;
-		$srvopts = $dom->createElement('ServerOptions');
-		$srvopts = $dom->appendChild($srvopts);
-		foreach($data as $dataField => $dataValue){
-			$IXR_Value = new IXR_Value($dataValue);
-			$srvoptsElement = $dom->createElement($dataField, $dataValue);
-			$srvoptsElementAttribute = $dom->createAttribute('type');
-			$srvoptsElementAttribute->value = $IXR_Value->calculateType();
-			$srvoptsElement->appendChild($srvoptsElementAttribute);
-			$srvoptsElement = $srvopts->appendChild($srvoptsElement);
-		}
-		
-		if( $result = $dom->save($file) > 0 ){
-			$out = true;
-			self::info( Utils::t('Server options are export in').' '.$file);
-		}
-		else{
-			self::error( Utils::t('Unable to export server options') );
+			self::error( Utils::t('No such file or file is not readable').' : '.$file);
 		}
 		
 		return $out;

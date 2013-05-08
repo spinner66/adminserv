@@ -1,6 +1,7 @@
 <?php
 	// INCLUDES
 	session_start();
+	if( !isset($_SESSION['adminserv']['sid']) ){ exit; }
 	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }
 	else{ $adminservPath = null; }
 	$pathConfig = '../../'.$adminservPath.'config/';
@@ -22,23 +23,7 @@
 				$scriptSettings = array();
 				if( count($params) > 0 ){
 					foreach($params as $param){
-						switch($param['type']){
-							case 'boolean':
-								$value = (bool)$param['value'];
-								break;
-							case 'int':
-								$value = (int)$param['value'];
-								break;
-							case 'float':
-								$value = (float)$param['value'];
-								break;
-							case 'double':
-								$value = (double)$param['value'];
-								break;
-							default:
-								$value = (string)$param['value'];
-						}
-						$scriptSettings[$param['name']] = $value;
+						$scriptSettings[$param['name']] = Str::setValueType($param['value'], $param['type']);
 					}
 				}
 				

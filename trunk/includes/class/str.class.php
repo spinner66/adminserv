@@ -113,5 +113,71 @@ abstract class Str {
 	public static function replaceChars($str){
 		return self::replaceSpecialChars( self::replaceAccentChars($str) );
 	}
+	
+	
+	/**
+	* Récupère le type de valeur
+	*
+	* @param  mixed $val -> La valeur à analyser
+	* @return string
+	*/
+	public static function getValueType($val){
+		$out = null;
+		
+		if( is_string($val) ){
+			$out = 'string';
+		}
+		elseif( is_bool($val) ){
+			$out = 'bool';
+		}
+		elseif( is_float($val) ){
+			$out = 'float';
+		}
+		elseif( is_int($val) ){
+			$out = 'int';
+		}
+		elseif( is_array($val) ){
+			$out = 'array';
+		}
+		elseif( is_object($val) ){
+			$out = 'object';
+		}
+		elseif( is_resource($val) ){
+			$out = 'resource';
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Converti le type d'une valeur
+	*
+	* @param  mixed  $val  -> La valeur à convertir
+	* @param  string $type -> Le type à affecter
+	*/
+	public static function setValueType($val, $type){
+		switch($type){
+			case 'array':
+				$val = (array)$val;
+				break;
+			case 'bool':
+			case 'boolean':
+				$val = (bool)$val;
+				break;
+			case 'float':
+			case 'double':
+				$val = (float)$val;
+				break;
+			case 'int':
+			case 'integer':
+				$val = (int)$val;
+				break;
+			default:
+				$val = (string)$val;
+		}
+		
+		return $val;
+	}
 }
 ?>

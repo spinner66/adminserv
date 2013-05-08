@@ -74,6 +74,11 @@ $(document).ready(function(){
 					$('#error').attr('hidden', true).fadeOut('fast');
 				}
 			});
+			$('#as_adminlevel').click(function(){
+				if( $(this).html() == '' ){
+					getServerAdminLevel();
+				}
+			});
 			
 			// Connexion
 			$(document).keypress(function(event){
