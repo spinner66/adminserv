@@ -98,7 +98,7 @@
 			$serverData = AdminServServerConfig::getServer($serverName);
 			$serverAddress = $serverData['address'];
 			$serverPort = $serverData['port'];
-			$serverMapsBasePath = isset($serverData['mapsbasepath']) ? $serverData['mapsbasepath'] : null;
+			$serverMapsBasePath = (isset($serverData['mapsbasepath'])) ? $serverData['mapsbasepath'] : '';
 			$serverMatchSet = $serverData['matchsettings'];
 			foreach($serverData['adminlevel'] as $admLvlId => $admLvlValue){
 				if( is_array($admLvlValue) ){
@@ -156,12 +156,12 @@
 				<legend><?php echo Utils::t('Optionnal information'); ?></legend>
 				<table>
 					<tr>
-						<td class="key"><label for="addServerMapsBasePath"><?php echo Utils::t('Maps base path'); ?></label></td>
+						<td class="key"><label for="addServerMapsBasePath"><?php echo Utils::t('Maps base directory'); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerMapsBasePath" id="addServerMapsBasePath" value="<?php echo $serverMapsBasePath; ?>" />
 						</td>
 						<td class="info">
-							<?php echo Utils::t('Base path for list maps and matchsettings'); ?>
+							<?php echo Utils::t('Default path from maps directory for listing maps'); ?>
 						</td>
 					</tr>
 					<tr>

@@ -1470,25 +1470,30 @@ footer {
 .folders .folder-list {
 	margin-bottom: 16px;
 }
-.folders .folder-list ul li a {
+.folders .folder-list li a {
 	padding: 6px 10px;
 	border-bottom-color: #f4f398;
 }
-.folders .folder-list ul li a.active,
-.folders .folder-list ul li a:hover {
+.folders .folder-list li a.active,
+.folders .folder-list li a:hover {
 	background: #f7f6b6;
 }
-.folders .folder-list ul li a .dir-name {
+.folders .folder-list li a .dir-name {
 	font-size: .8em;
 	font-variant: normal;
 }
-.folders .folder-list ul li a .dir-info {
+.folders .folder-list li a .dir-info {
 	float: right;
 	font-size: .8em;
 	font-weight: normal;
 }
-.folders .folder-list ul li a img {
+.folders .folder-list li a img {
 	margin: 0 7px -3px 0;
+}
+.folders .folder-list .no-result {
+	padding: 8px 0;
+	font-style: italic;
+	text-align: center;
 }
 .path {
 	width: 400px;
