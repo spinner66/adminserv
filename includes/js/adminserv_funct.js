@@ -735,14 +735,12 @@ function setMapsOrderSort(sort, order){
 			var out = '';
 			if( typeof(data.lst) == 'object' ){
 				$.each(data.lst, function(id, map){
-					if(data.cid != id){
-						out += '<li class="ui-state-default">'
-							+ '<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
-							+ '<div class="order-map-name" title="'+map.FileName+'">'+map.Name+'</div>'
-							+ '<div class="order-map-env"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
-							+ '<div class="order-map-author"><img src="'+path_ressources+'images/16/mapauthor.png" alt="" />'+map.Author+'</div>'
-						+ '</li>';
-					}
+					out += '<li class="ui-state-default">'
+						+ '<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
+						+ '<div class="order-map-name" title="'+map.FileName+'">'+map.Name+'</div>'
+						+ '<div class="order-map-env"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
+						+ '<div class="order-map-author"><img src="'+path_ressources+'images/16/mapauthor.png" alt="" />'+map.Author+'</div>'
+					+ '</li>';
 				});
 			}
 			

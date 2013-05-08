@@ -850,14 +850,12 @@ abstract class AdminServUI {
 		
 		if( is_array($list) && count($list) > 0 ){
 			foreach($list['lst'] as $id => $map){
-				if($list['cid'] != $id){
-					$out .= '<li class="ui-state-default">'
-						.'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
-						.'<div class="order-map-name" title="'.$map['FileName'].'">'.$map['Name'].'</div>'
-						.'<div class="order-map-env"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</div>'
-						.'<div class="order-map-author"><img src="'.$pathRessources.'images/16/mapauthor.png" alt="" />'.$map['Author'].'</div>'
-					.'</li>';
-				}
+				$out .= '<li class="ui-state-default">'
+					.'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
+					.'<div class="order-map-name" title="'.$map['FileName'].'">'.$map['Name'].'</div>'
+					.'<div class="order-map-env"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</div>'
+					.'<div class="order-map-author"><img src="'.$pathRessources.'images/16/mapauthor.png" alt="" />'.$map['Author'].'</div>'
+				.'</li>';
 			}
 		}
 		
@@ -1897,6 +1895,8 @@ abstract class AdminServ {
 			$nextGamInf['ForceShowAllOpponents'] = $queriesData['GetForceShowAllOpponents']['NextValue'];
 			
 			// ScriptName
+			$currGamInf['ScriptName'] = null;
+			$nextGamInf['ScriptName'] = null;
 			if(SERVER_VERSION_NAME == 'ManiaPlanet'){
 				$currGamInf['ScriptName'] = $queriesData['GetScriptName']['CurrentValue'];
 				$nextGamInf['ScriptName'] = $queriesData['GetScriptName']['NextValue'];
