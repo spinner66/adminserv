@@ -116,7 +116,7 @@ abstract class Str {
 	
 	
 	/**
-	* Récupère le type de valeur
+	* Récupère le type d'une valeur
 	*
 	* @param  mixed $val -> La valeur à analyser
 	* @return string
@@ -153,8 +153,8 @@ abstract class Str {
 	/**
 	* Converti le type d'une valeur
 	*
-	* @param  mixed  $val  -> La valeur à convertir
-	* @param  string $type -> Le type à affecter
+	* @param mixed  $val  -> La valeur à convertir
+	* @param string $type -> Le type à affecter
 	*/
 	public static function setValueType($val, $type){
 		switch($type){

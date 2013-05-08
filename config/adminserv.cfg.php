@@ -27,7 +27,7 @@ class AdminServConfig {
 	const LOCAL_GET_MAPS_ON_SERVER = true; // if true, the current server maps list is loaded in local maps page for easy compare with icon change. But if you have a lot of maps in server, it is better to disable it
 	const RECENT_STATUS_PERIOD = 24; // Recent status period in hour for maps/matchsettings/guestban
 	const SERVER_CONNECTION_TIMEOUT = 3; // Dedicated server connection timeout in second
-	const COOKIE_EXPIRE = 30; // Expiration time for cookies, in days
+	const COOKIE_EXPIRE = 90; // Expiration time for cookies, in days
 	
 	/* FILES AND FOLDERS */
 	public static $FOLDERS_OPTIONS = array( // Actions for the folders in maps page. You can disable or limit authorization level
