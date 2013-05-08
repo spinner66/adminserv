@@ -7,6 +7,7 @@ class ServerConfig {
         'new server name' => array(
             'address'		=> 'localhost',
             'port'			=> 5000,
+            'mapsbasepath'	=> '',
             'matchsettings'	=> 'MatchSettings/',
             'adminlevel'	=> array('SuperAdmin' => 'all', 'Admin' => 'all', 'User' => 'all')
         ),
