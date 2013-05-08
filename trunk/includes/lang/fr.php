@@ -360,7 +360,7 @@ $translate = array(
 	'Import' => 'Importer',
 	'Export' => 'Exporter',
 	'No export available' => 'Pas d\'export disponible',
-	'No such file or file is not readable' => 'Le fichier n\'éxiste pas ou n\'est pas lisible',
+	'No such file or file is not readable' => 'Le fichier n\'existe pas ou n\'est pas lisible',
 	'Server options are exported in' => 'Les options du serveur sont exportées dans',
 	'Unable to export server options' => 'Impossible d\'exporter les options du serveur',
 );
