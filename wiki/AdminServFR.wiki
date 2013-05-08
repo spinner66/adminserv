@@ -8,7 +8,7 @@
 
 
 =Installation=
-Extraire le fichier "adminserv.zip" où bon vous semble sur un serveur web, et accédez au site via votre navigateur interne.
+Extraire le fichier "adminserv.zip" où bon vous semble sur un serveur web, et accédez au site via votre navigateur internet.
 
 
 =Configuration=
