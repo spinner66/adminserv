@@ -25,7 +25,7 @@ Une fois le mot de passe enregistré, vous pouvez ajouter votre serveur :
 
 
 Les informations suivantes sont optionnelles :
-
+  * *Dossier de base pour les maps* : Chemin par défaut à partir du dossier *Maps* ou *Tracks* pour lister les maps et les matchsettings (ajouté dans la 2.0.4).
   * *MatchSettings du serveur* : En général, on utilise un matchsettings spécifique pour le serveur contenant la liste des maps et les réglages du mode de jeu. Vous pouvez mettre le nom du matchsettings à partir du dossier *Maps* ou *Tracks* du serveur dédié pour l'enregistrer automatiquement par la suite. L'extension du fichier n'est pas utile. Si le matchsettings n'existe pas, il sera créé.
   * *Niveaux SuperAdmin, Admin et User* : Vous pouvez pour les 3 niveaux d'autorisations en limiter l'accès. Les valeurs possibles sont :
     * *all* : accès à tous
@@ -46,7 +46,8 @@ Quelques notions de PHP vous serons utiles. La configuration d'un serveur est la
 'Server name' => array(
     'address' => 'localhost',
     'port' => 5000,
-    'matchsettings' => 'matchsettings_name',
+    'mapsbasepath' => '',
+    'matchsettings' => 'MatchSettings/',
     'adminlevel' => array(
         'SuperAdmin' => 'all’,
         'Admin' => 'all',
@@ -89,7 +90,7 @@ La configuration d'AdminServ est optionnelle. Le fichier correspondant est : *co
   * *PLAYLIST_EXTENSION* : Extension pour lister les playlists (guestlist, blacklist, etc). Les deux playlists générées par le serveur dédié (guestlist et blacklist) sont déjà prises en compte.
   * *ALLOWED_EXTENSIONS* : Extensions autorisées pour l'upload de fichier.
   * *SIZE_LIMIT* : La taille limite par fichier envoyé. Si la valeur est `auto`, c'est la taille du serveur web qui est utilisée (configuration du `php.ini`).
-  * *UPLOAD_ONLINE_FOLDER* : Chemin vers le dossier où les maps seront envoyées en mode distant à partir du dossier "Maps" (ajouté dans la 2.0.3).
+  * *UPLOAD_ONLINE_FOLDER* : Chemin vers le dossier où les maps seront envoyées en mode distant à partir du dossier *Maps* ou *Tracks* (ajouté dans la 2.0.3).
   * *LOGS* : Logs d'AdminServ. Vous pouvez activer les logs pour chaque fichier. Accès aux pages (`access`), actions utilisées (`action`), erreurs rencontrées (`error`). Il est possible d'ajouter des fichiers de logs dans la configuration. Chaque fichier est crée s'il n'existe pas. Pour écrire un log, utilisez :
 {{{
 AdminServLogs ::add ('nom_du_fichier_log', 'texte à écrire');
