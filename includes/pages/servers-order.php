@@ -35,6 +35,7 @@
 			$newServerList[$listServerName] = array(
 				'address' => $serverList[$listServerName]['address'],
 				'port' => $serverList[$listServerName]['port'],
+				'mapsbasepath' => (isset($serverList[$listServerName]['mapsbasepath'])) ? $serverList[$listServerName]['mapsbasepath'] : '',
 				'matchsettings' => $serverList[$listServerName]['matchsettings'],
 				'adminlevel' => $serverList[$listServerName]['adminlevel']
 			);

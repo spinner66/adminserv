@@ -784,6 +784,9 @@ abstract class AdminServUI {
 							.'</li>';
 						}
 					}
+					else{
+						$out .= '<li class="no-result">'.Utils::t('No folder').'</li>';
+					}
 					$out .= '</ul>'
 					.'</div>';
 				}

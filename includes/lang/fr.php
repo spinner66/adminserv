@@ -363,5 +363,8 @@ $translate = array(
 	'No such file or file is not readable' => 'Le fichier n\'existe pas ou n\'est pas lisible',
 	'Server options are exported in' => 'Les options du serveur sont exportées dans',
 	'Unable to export server options' => 'Impossible d\'exporter les options du serveur',
+	'Maps base directory' => 'Dossier de base pour les maps',
+	'Default path from maps directory for listing maps' => 'Chemin par défaut à partir du dossier "Maps" pour lister les maps',
+	'No folder' => 'Aucun dossier',
 );
 ?>
