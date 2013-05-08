@@ -5,12 +5,12 @@
 		$struct = AdminServ::getGameInfosStructFromPOST();
 		
 		// Requêtes
-		if(!$client->query('SetGameInfos', $struct) && $client->getErrorMessage() != 'Script not allowed for this title.' ){
+		if(!$client->query('SetGameInfos', $struct) && $client->getErrorMessage() != 'Script not allowed for this title.'){
 			AdminServ::error();
 		}
 		else{
 			// Team info
-			if( isset($_POST['teamInfo1Name']) ){
+			if(SERVER_VERSION_NAME == 'ManiaPlanet' && isset($_POST['teamInfo1Name']) ){
 				$team1 = array(
 					'name' => $_POST['teamInfo1Name'],
 					'color' => $_POST['teamInfo1Color'],
@@ -81,7 +81,7 @@
 		<div class="content gameinfos">
 			<?php echo AdminServUI::getGameInfosGeneralForm($gameInfosData); ?>
 			
-			<?php if( AdminServ::checkDisplayTeamMode($gameInfos['next']['GameMode'], $gameInfos['next']['ScriptName']) ){ ?>
+			<?php if(SERVER_VERSION_NAME == 'ManiaPlanet' && AdminServ::checkDisplayTeamMode($gameInfos['next']['GameMode'], $gameInfos['next']['ScriptName']) ){ ?>
 				<fieldset class="gameinfos_teaminfos">
 					<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Team infos'); ?></legend>
 					<table>

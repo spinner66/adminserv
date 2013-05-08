@@ -47,8 +47,7 @@ abstract class Folder {
 								$out['files'][$entry]['size'] = Str::formatSize($out['files'][$entry]['size']);
 								$out['files'][$entry]['filename'] = $entry;
 								$out['files'][$entry]['extension'] = $extension;
-								if($out['files'][$entry]['mtime'] > ($midnight - $recentStatusPeriod)){ $recent = 1; }else{ $recent = 0; }
-								$out['files'][$entry]['recent'] = $recent;
+								$out['files'][$entry]['recent'] = (isset($out['files'][$entry]['mtime']) && ($out['files'][$entry]['mtime'] > ($midnight - $recentStatusPeriod))) ? 1 : 0;
 							}
 						}
 					}
@@ -236,7 +235,7 @@ abstract class Folder {
 						$out += self::getSize($pathToFile);
 					}
 					else{
-						$out += filesize($pathToFile);
+						$out += @filesize($pathToFile);
 					}
 				}
 			}

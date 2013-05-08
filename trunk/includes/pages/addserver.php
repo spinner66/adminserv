@@ -156,12 +156,12 @@
 				<legend><?php echo Utils::t('Optionnal information'); ?></legend>
 				<table>
 					<tr>
-						<td class="key"><label for="addServerMapsBasePath"><?php echo Utils::t('Maps base directory'); ?></label></td>
+						<td class="key"><label for="addServerMapsBasePath"><?php echo Utils::t('Maps base folder'); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerMapsBasePath" id="addServerMapsBasePath" value="<?php echo $serverMapsBasePath; ?>" />
 						</td>
 						<td class="info">
-							<?php echo Utils::t('Default path from maps directory for listing maps'); ?>
+							<?php echo Utils::t('Default path from maps folder for listing maps'); ?>
 						</td>
 					</tr>
 					<tr>

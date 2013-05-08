@@ -13,7 +13,6 @@
 	
 	// ACTIONS
 	if( isset($_POST['save']) && isset($_POST['list']) && $_POST['list'] != null ){
-		
 		$list = explode(',', $_POST['list']);
 		
 		if( !$client->query($queries['chooseNextMap'], $list) ){
@@ -28,6 +27,7 @@
 	
 	// MAPLIST
 	$mapsList = AdminServ::getMapList();
+	unset($mapsList['lst'][$mapsList['cid']]);
 	
 	
 	// HTML
