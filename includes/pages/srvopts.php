@@ -55,7 +55,7 @@
 		elseif( AdminServ::setServerOptions($struct) ){
 			AdminServLogs::add('action', 'Save server options');
 		}
-		//Utils::redirection(false, '?p='.USER_PAGE);
+		Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	
 	
@@ -285,6 +285,9 @@
 											}
 											
 											echo $srvoptsImportNameList;
+										}
+										else{
+											echo '<option value="0">'.Utils::t('No export available').'</option>';
 										}
 									?>
 								</select>
