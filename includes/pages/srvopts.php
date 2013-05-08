@@ -5,15 +5,28 @@
 			AdminServ::error();
 		}
 		else{
-			$srvoptsConfigDirectory = $client->getResponse().'Config/AdminServ/ServerOptions/';
-			if( !file_exists($srvoptsConfigDirectory) ){
-				if( $result = Folder::create($srvoptsConfigDirectory) !== true ){
-					AdminServ::error($result);
-				}
+			$gameDataDirectory = $client->getResponse();
+			if( file_exists($gameDataDirectory) ){
+				define('IS_LOCAL', true);
 			}
-			$srvoptsConfigFiles = Folder::read($srvoptsConfigDirectory, array(), array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
+			else{
+				define('IS_LOCAL', false);
+			}
+			
+			if(IS_LOCAL){
+				$srvoptsConfigDirectory = $gameDataDirectory.'Config/AdminServ/ServerOptions/';
+				
+				if( !file_exists($srvoptsConfigDirectory) ){
+					if( $result = Folder::create($srvoptsConfigDirectory) !== true ){
+						AdminServ::error($result);
+					}
+				}
+				
+				$srvoptsConfigFiles = Folder::read($srvoptsConfigDirectory, array(), array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
+			}
 		}
 	}
+	
 	
 	// ENREGISTREMENT
 	if( isset($_POST['savesrvopts']) ){
@@ -41,9 +54,11 @@
 			// Import
 			if($srvoptsImportExport == 'Import'){
 				$srvoptsImportName = $_POST['srvoptsImportName'];
-				$struct = AdminServ::importServerOptions($srvoptsConfigDirectory.$srvoptsImportName);
-				if( AdminServ::setServerOptions($struct) ){
-					AdminServLogs::add('action', 'Import server options from '.$srvoptsConfigDirectory.$srvoptsImportName);
+				if($srvoptsImportName != 'none'){
+					$struct = AdminServ::importServerOptions($srvoptsConfigDirectory.$srvoptsImportName);
+					if( AdminServ::setServerOptions($struct) ){
+						AdminServLogs::add('action', 'Import server options from '.$srvoptsConfigDirectory.$srvoptsImportName);
+					}
 				}
 			}
 			// Export
@@ -268,7 +283,7 @@
 				</fieldset>
 			<?php } ?>
 			
-			<?php if( AdminServ::isAdminLevel('Admin') ){ ?>
+			<?php if( IS_LOCAL && AdminServ::isAdminLevel('Admin') ){ ?>
 				<fieldset class="srvopts_importexport">
 					<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/rt_team.png" alt="" /><?php echo Utils::t('Manage server options'); ?></legend>
 					<table>
@@ -287,7 +302,7 @@
 											echo $srvoptsImportNameList;
 										}
 										else{
-											echo '<option value="0">'.Utils::t('No export available').'</option>';
+											echo '<option value="none">'.Utils::t('No export available').'</option>';
 										}
 									?>
 								</select>

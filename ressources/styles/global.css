@@ -989,8 +989,8 @@ td .detailModeTd {
 }
 .options-radio-inline li .name {
 	float: left;
-	margin-left: 16px;
-	width: 132px;
+	margin-left: 9%;
+	width: 70%;
 	font-size: .8em;
 }
 .options-radio-inline li .name span {

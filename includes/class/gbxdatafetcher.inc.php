@@ -10,6 +10,8 @@
  * http://www.tm-forum.com/viewtopic.php?p=192817#p192817
  * and http://en.tm-wiki.org/wiki/PAK#Header_versions_8.2B
  *
+ * v2.3: Add UTF-8 decoding of parsed XML chunk's elements; strip UTF-8 BOM
+ *       from various string fields
  * v2.2: Add class GBXPackFetcher; limit loadGBXdata() to first 256KB
  * v2.1: Add exception codes; add $thumbLen to GBXChallMapFetcher
  * v2.0: Complete rewrite
@@ -196,6 +198,12 @@ class GBXBaseFetcher
 		return $data;
 	}
 
+	// strip UTF-8 BOM from string
+	protected function stripBOM($str)
+	{
+		return str_replace("\xEF\xBB\xBF", '', $str);
+	}
+
 	// clear lookback strings
 	protected function clearLookbacks()
 	{
@@ -243,6 +251,8 @@ class GBXBaseFetcher
 	// XML parser functions
 	private function startTag($parser, $name, $attribs)
 	{
+		foreach ($attribs as $key => &$val)
+			$val = utf8_decode($val);
 		//echo 'startTag: ' . $name . "\n"; print_r($attribs);
 		array_push($this->_parsestack, $name);
 		if ($name == 'DEP') {
@@ -255,7 +265,6 @@ class GBXBaseFetcher
 
 	private function charData($parser, $data)
 	{
-		// nothing to do here
 		//echo 'charData: ' . $data . "\n";
 		if (count($this->_parsestack) == 3)
 			$this->xmlParsed[$this->_parsestack[1]][$this->_parsestack[2]] = $data;
@@ -265,7 +274,6 @@ class GBXBaseFetcher
 
 	private function endTag($parser, $name)
 	{
-		// nothing to do here
 		//echo 'endTag: ' . $name . "\n";
 		array_pop($this->_parsestack);
 	}
@@ -414,8 +422,8 @@ class GBXBaseFetcher
 	{
 		$this->authorVer   = $this->readInt32();
 		$this->authorLogin = $this->readString();
-		$this->authorNick  = $this->readString();
-		$this->authorZone  = $this->readString();
+		$this->authorNick  = $this->stripBOM($this->readString());
+		$this->authorZone  = $this->stripBOM($this->readString());
 		$this->authorEInfo = $this->readString();
 	}  // getAuthorFields
 
@@ -784,7 +792,7 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 		$this->envir  = $this->readLookbackString();
 		$this->author = $this->readLookbackString();
 
-		$this->name = $this->readString();
+		$this->name = $this->stripBOM($this->readString());
 
 		$this->kind = $this->readInt8();
 		switch ($this->kind) {
@@ -893,7 +901,7 @@ class GBXChallMapFetcher extends GBXBaseFetcher
 			$this->moveGBXptr(strlen('</Thumbnail.jpg>'));
 
 			$this->moveGBXptr(strlen('<Comments>'));
-			$this->comment = $this->readString();
+			$this->comment = $this->stripBOM($this->readString());
 			$this->moveGBXptr(strlen('</Comments>'));
 
 			// return extracted thumbnail image?
@@ -1143,7 +1151,7 @@ class GBXReplayFetcher extends GBXBaseFetcher
 
 			$this->replay = $this->readInt32();
 
-			$this->nickname = $this->readString();
+			$this->nickname = $this->stripBOM($this->readString());
 
 			if ($version >= 6) {
 				$this->login = $this->readString();
@@ -1343,7 +1351,7 @@ class GBXPackFetcher extends GBXBaseFetcher
 
 		$this->creatDate = $this->readFiletime();
 
-		$this->comment = $this->readString();
+		$this->comment = $this->stripBOM($this->readString());
 
 		if ($this->headerVersn >= 12) {
 			$this->xml = $this->readString();

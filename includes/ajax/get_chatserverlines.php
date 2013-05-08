@@ -1,6 +1,7 @@
 <?php
 	// INCLUDES
 	session_start();
+	if( !isset($_SESSION['adminserv']['sid']) ){ exit; }
 	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }
 	else{ $adminservPath = null; }
 	$pathConfig = '../../'.$adminservPath.'config/';
