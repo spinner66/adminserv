@@ -967,7 +967,7 @@ abstract class AdminServ {
 	public static function initialize($fullInit = true){
 		global $client;
 		
-		if( isset($_SESSION['adminserv']) ){
+		if( isset($_SESSION['adminserv']['sid']) ){
 			// CONSTANTS
 			define('USER_ADMINLEVEL', $_SESSION['adminserv']['adminlevel']);
 			define('SERVER_ID', $_SESSION['adminserv']['sid']);
@@ -975,7 +975,7 @@ abstract class AdminServ {
 			define('SERVER_ADDR', ServerConfig::$SERVERS[SERVER_NAME]['address']);
 			define('SERVER_XMLRPC_PORT', ServerConfig::$SERVERS[SERVER_NAME]['port']);
 			define('SERVER_MATCHSET', ServerConfig::$SERVERS[SERVER_NAME]['matchsettings']);
-			define('SERVER_MAPS_BASEPATH', isset(ServerConfig::$SERVERS[SERVER_NAME]['mapsbasepath']) ? ServerConfig::$SERVERS[SERVER_NAME]['mapsbasepath'] : '');
+			define('SERVER_MAPS_BASEPATH', (isset(ServerConfig::$SERVERS[SERVER_NAME]['mapsbasepath'])) ? ServerConfig::$SERVERS[SERVER_NAME]['mapsbasepath'] : '');
 			define('SERVER_ADMINLEVEL', serialize( ServerConfig::$SERVERS[SERVER_NAME]['adminlevel']) );
 			
 			// CONNEXION
@@ -1089,7 +1089,7 @@ abstract class AdminServ {
 			if($serverLevel === 'all'){
 				$out = true;
 			}
-			else if($serverLevel === 'none'){
+			elseif($serverLevel === 'none'){
 				$out = false;
 			}
 			else{
@@ -2857,6 +2857,59 @@ abstract class AdminServ {
 	}
 }
 
+
+/**
+* Classe pour la gestion des niveaux admins
+*/
+abstract class AdminServAdminLevel {
+	
+	
+	public static function hasLevel(){
+		$out = false;
+		
+		if( class_exists('AdminLevelConfig') ){
+			$adminLevelList = AdminLevelConfig::$ADMINLEVELS;
+			
+			if( isset($adminLevelList) && count($adminLevelList) > 0 ){
+				$out = true;
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	public static function hasPermission($permissionName){
+		$out = false;
+		$level = self::getUserLevelData('permission');
+		
+		if( !empty($level) && isset($level[$permissionName]) && $level[$permissionName] === true ){
+			$out = true;
+		}
+		
+		return $out;
+	}
+	
+	
+	public static function getUserLevelData($data = 'all'){
+		$out = array();
+		
+		if( self::hasLevel() ){
+			$userLevelData = AdminLevelConfig::$ADMINLEVELS[USER_ADMINLEVEL];
+			
+			if($data != 'all'){
+				if( isset($userLevelData[$data]) ){
+					$out = $userLevelData[$data];
+				}
+			}
+			else{
+				$out = $userLevelData;
+			}
+		}
+		
+		return $out;
+	}
+}
 
 
 /**

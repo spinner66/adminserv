@@ -11,6 +11,10 @@ class ExtensionConfig {
 	
 	// Themes color list
 	public static $THEMES = array(
+		'red' => array(
+			'#ea4f4f',
+			'#ffc0c0'
+		),
 		'blue' => array(
 			'#5e9cd5',
 			'#d9e8ff'
@@ -18,10 +22,6 @@ class ExtensionConfig {
 		'green' => array(
 			'#8aca1b',
 			'#d1e9a8'
-		),
-		'red' => array(
-			'#ea4f4f',
-			'#ffc0c0'
 		),
 		'orange' => array(
 			'#ffa600',

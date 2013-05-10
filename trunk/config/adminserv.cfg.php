@@ -15,7 +15,7 @@ class AdminServConfig {
 	const TITLE = 'Admin,Serv'; // The comma seperates the color
 	const SUBTITLE = 'For maniaplanet servers'; // if null it's hidden
 	const LOGO = 'logo.png'; // if null it's hidden
-	const DEFAULT_THEME = 'blue'; // The first theme to be loaded
+	const DEFAULT_THEME = 'red'; // The first theme to be loaded
 	const DEFAULT_LANGUAGE = 'auto'; // Can be fr, en, de, es or auto = automatic detection
 	const USE_DISPLAYSERV = true; // Show DisplayServ tool on connection page
 	const AUTOSAVE_MATCHSETTINGS = true; // Save the MatchSettings in the server config (possibility to disable online)
