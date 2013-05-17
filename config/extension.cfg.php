@@ -55,8 +55,8 @@ class ExtensionConfig {
 		2 => 'TimeAttack',
 		3 => 'Team',
 		4 => 'Laps',
-		5 => 'Stunts',
-		6 => 'Cup'
+		5 => 'Cup',
+		6 => 'Stunts'
 	);
 	public static $TEAMSCRIPTS = array(
 		'Elite',
