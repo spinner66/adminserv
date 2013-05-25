@@ -1,5 +1,5 @@
 <?php
-define('ADMINSERV_TIMER', false);
+define('ADMINSERV_TIMER', true);
 define('ADMINSERV_VERSION', '2.0.4');
 
 /**
@@ -717,7 +717,7 @@ abstract class AdminServUI {
 	* @param bool   $showOptions -> Afficher les options (nouveau, renommer, déplacer, supprimer)
 	* @return string
 	*/
-	public static function getMapsDirectoryList($path, $currentPath = null, $showOptions = true){
+	public static function getMapsDirectoryList($directory, $currentPath = null, $showOptions = true){
 		$out = null;
 		
 		if( class_exists('Folder') ){
@@ -737,65 +737,53 @@ abstract class AdminServUI {
 			$out .= '</form>';
 			
 			// Liste des dossiers
-			if( file_exists($path) ){
-				if( in_array(USER_PAGE, array('maps-matchset', 'maps-creatematchset')) ){
-					$directory = Folder::read($path.$currentPath, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
-				}
-				else{
-					$directory = Folder::read($path.$currentPath, AdminServConfig::$MAPS_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
+			if( is_array($directory) ){
+				$out .= '<div class="folder-list">'
+				.'<ul>';
+				
+				// Dossier parent
+				if($currentPath){
+					$params = null;
+					$parentPathEx = explode('/', $currentPath);
+					array_pop($parentPathEx);
+					array_pop($parentPathEx);
+					if( count($parentPathEx) > 0 ){
+						$parentPath = null;
+						foreach($parentPathEx as $part){
+							$parentPath .= $part.'/';
+						}
+						if($parentPath){
+							$params = '&amp;d='.$parentPath;
+						}
+					}
+					
+					$out .= '<li>'
+						.'<a href="./?p='. USER_PAGE . $params.'">'
+							.'<img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/back.png" alt="" />'
+							.'<span class="dir-name">'.Utils::t('Parent folder').'</span>'
+						.'</a>'
+					.'</li>';
 				}
 				
-				if( is_array($directory) ){
-					$out .= '<div class="folder-list">'
-					.'<ul>';
-					
-					// Dossier parent
-					if($currentPath){
-						$params = null;
-						$parentPathEx = explode('/', $currentPath);
-						array_pop($parentPathEx);
-						array_pop($parentPathEx);
-						if( count($parentPathEx) > 0 ){
-							$parentPath = null;
-							foreach($parentPathEx as $part){
-								$parentPath .= $part.'/';
-							}
-							if($parentPath){
-								$params = '&amp;d='.$parentPath;
-							}
-						}
-						
+				// Dossiers
+				if( count($directory['folders']) > 0 ){
+					foreach($directory['folders'] as $dir => $values){
 						$out .= '<li>'
-							.'<a href="./?p='. USER_PAGE . $params.'">'
-								.'<img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/back.png" alt="" />'
-								.'<span class="dir-name">'.Utils::t('Parent folder').'</span>'
+							.'<a href="./?p='. USER_PAGE .'&amp;d='.urlencode($currentPath.$dir).'/">'
+								.'<span class="dir-name">'.$dir.'</span>'
+								.'<span class="dir-info">'.$values['nb_file'].'</span>'
 							.'</a>'
 						.'</li>';
 					}
-					
-					// Dossiers
-					if( count($directory['folders']) > 0 ){
-						foreach($directory['folders'] as $dir => $values){
-							$out .= '<li>'
-								.'<a href="./?p='. USER_PAGE .'&amp;d='.urlencode($currentPath.$dir).'/">'
-									.'<span class="dir-name">'.$dir.'</span>'
-									.'<span class="dir-info">'.$values['nb_file'].'</span>'
-								.'</a>'
-							.'</li>';
-						}
-					}
-					else{
-						$out .= '<li class="no-result">'.Utils::t('No folder').'</li>';
-					}
-					$out .= '</ul>'
-					.'</div>';
 				}
 				else{
-					AdminServ::error($directory);
+					$out .= '<li class="no-result">'.Utils::t('No folder').'</li>';
 				}
+				$out .= '</ul>'
+				.'</div>';
 			}
 			else{
-				AdminServ::error('Path not exists');
+				AdminServ::error($directory);
 			}
 			
 			// Options de dossier
@@ -2382,75 +2370,106 @@ abstract class AdminServ {
 	* @param string $sortBy -> Le tri à faire sur la liste
 	* @return array
 	*/
-	public static function getLocalMapList($path, $sortBy = null){
+	public static function getLocalMapList($directory, $currentPath, $sortBy = null){
 		global $client;
 		$out = array();
-		$currentMapsListUId = null;
-		if(AdminServConfig::LOCAL_GET_MAPS_ON_SERVER){
-			$currentMapsListUId = self::getMapListField('UId');
-		}
-		$mapsDirectoryPath = self::getMapsDirectoryPath();
-		$pathFromMaps = str_replace($mapsDirectoryPath, '', $path);
 		
-		if( class_exists('Folder') && class_exists('GBXChallMapFetcher') ){
-			$directory = Folder::read($path, AdminServConfig::$MAPS_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
-			if( is_array($directory) ){
+		if( is_array($directory) ){
+			if( !empty($directory['files']) ){
+				// Récupération du cache existant
+				$cacheName = 'mapslist-'.Str::replaceChars($currentPath);
+				$cacheMaps = AdminServCache::get($cacheName);
 				
-				$countMapList = count($directory['files']);
-				if($countMapList > 0){
-					$i = 0;
-					foreach($directory['files'] as $file => $values){
-						$dbExt = File::getDoubleExtension($file);
-						if( in_array($dbExt, AdminServConfig::$MAP_EXTENSION) ){
-							// Données
-							if(SERVER_VERSION_NAME == 'TmForever'){
-								$Gbx = new GBXChallengeFetcher($path.$file);
-							}
-							else{
-								$Gbx = new GBXChallMapFetcher();
-								$Gbx->processFile($path.$file);
-							}
-							
-							// Name
-							$filename = $Gbx->name;
-							if($filename == 'read error'){
-								$filename = str_ireplace('.'.$dbExt, '', $file);
-							}
-							$name = htmlspecialchars($filename, ENT_QUOTES, 'UTF-8');
-							$out['lst'][$i]['Name'] = TmNick::toHtml($name, 10, true);
-							
-							// Environnement
-							$env = $Gbx->envir;
-							if($env == 'read error'){ $env = null; }
-							if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
-							$out['lst'][$i]['Environnement'] = $env;
-							
-							// Autres
-							$out['lst'][$i]['FileName'] = $pathFromMaps.$file;
-							$uid = $Gbx->uid;
-							if($uid == 'read error'){ $uid = null; }
-							$out['lst'][$i]['UId'] = $uid;
-							$author = $Gbx->author;
-							if($author == 'read error'){ $author = null; }
-							$out['lst'][$i]['Author'] = $author;
-							$out['lst'][$i]['Recent'] = $values['recent'];
-							
-							// MapType
-							$mapType = $Gbx->mapType;
-							if($mapType == null && $Gbx->typeName != null){
-								$mapType = $Gbx->typeName;
-							}
-							$out['lst'][$i]['Type']['Name'] = self::formatScriptName($mapType);
-							$out['lst'][$i]['Type']['FullName'] = $mapType;
-							
-							// On server
-							$out['lst'][$i]['OnServer'] = false;
-							if($currentMapsListUId){
-								if( in_array($out['lst'][$i]['UId'], $currentMapsListUId) ){
-									$out['lst'][$i]['OnServer'] = true;
-								}
-							}
-							$i++;
+				// Fichiers
+				$files = array();
+				foreach($directory['files'] as $fileName => $fileValues){
+					$dbExt = File::getDoubleExtension($fileName);
+					if( in_array($dbExt, AdminServConfig::$MAP_EXTENSION) ){
+						$files[$fileName] = $fileValues;
+					}
+				}
+				
+				// Suppression du cache en trop
+				$cacheOverFiles = array_diff_key($cacheMaps, $files);
+				if( !empty($cacheOverFiles) ){
+					foreach($cacheOverFiles as $fileName => $fileValues){
+						if( isset($cacheMaps[$fileName]) ){
+							unset($cacheMaps[$fileName]);
+						}
+					}
+					AdminServCache::set($cacheName, $cacheMaps);
+				}
+				
+				// Ajout des fichiers manquant dans le cache
+				$cacheMissingFiles = array_diff_key($files, $cacheMaps);
+				if( !empty($cacheMissingFiles) ){
+					// Path
+					$path = self::getMapsDirectoryPath().$currentPath;
+					
+					// Création du cache
+					foreach($cacheMissingFiles as $file => $values){
+						// Données
+						if(SERVER_VERSION_NAME == 'TmForever'){
+							$Gbx = new GBXChallengeFetcher($path.$file);
+						}
+						else{
+							$Gbx = new GBXChallMapFetcher();
+							$Gbx->processFile($path.$file);
+						}
+						
+						// Name
+						$filename = $Gbx->name;
+						if($filename == 'read error'){
+							$filename = str_ireplace('.'.$dbExt, '', $file);
+						}
+						$name = htmlspecialchars($filename, ENT_QUOTES, 'UTF-8');
+						$out['lst'][$file]['Name'] = TmNick::toHtml($name, 10, true);
+						
+						// Environnement
+						$env = $Gbx->envir;
+						if($env == 'read error'){ $env = null; }
+						if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
+						$out['lst'][$file]['Environnement'] = $env;
+						
+						// Autres
+						$out['lst'][$file]['FileName'] = $currentPath.$file;
+						$uid = $Gbx->uid;
+						if($uid == 'read error'){ $uid = null; }
+						$out['lst'][$file]['UId'] = $uid;
+						$author = $Gbx->author;
+						if($author == 'read error'){ $author = null; }
+						$out['lst'][$file]['Author'] = $author;
+						$out['lst'][$file]['Recent'] = $values['recent'];
+						
+						// MapType
+						$mapType = $Gbx->mapType;
+						if($mapType == null && $Gbx->typeName != null){
+							$mapType = $Gbx->typeName;
+						}
+						$out['lst'][$file]['Type']['Name'] = self::formatScriptName($mapType);
+						$out['lst'][$file]['Type']['FullName'] = $mapType;
+					}
+					
+					// Mise à jour du cache
+					if( !empty($cacheMaps) ){
+						$out['lst'] = array_merge($cacheMaps, $out['lst']);
+					}
+					AdminServCache::set($cacheName, $out['lst']);
+				}
+				else{
+					$out['lst'] = $cacheMaps;
+				}
+				
+				// Maps on server?
+				$currentMapsListUId = null;
+				if(AdminServConfig::LOCAL_GET_MAPS_ON_SERVER){
+					$currentMapsListUId = self::getMapListField('UId');
+				}
+				foreach($out['lst'] as &$file){
+					$file['OnServer'] = false;
+					if($currentMapsListUId){
+						if( in_array($file['UId'], $currentMapsListUId) ){
+							$file['OnServer'] = true;
 						}
 					}
 				}
@@ -2460,34 +2479,37 @@ abstract class AdminServ {
 				if($out['nbm']['count'] == 0){
 					$out['lst'] = Utils::t('No map');
 				}
-				
-				// TRIS
-				if($sortBy != null){
-					if( is_array($out['lst']) && count($out['lst']) > 0 ){
+				else{
+					// TRIS
+					if($sortBy != null){
 						switch($sortBy){
+							case 'filename':
+								uasort($mapList, 'AdminServSort::sortByFileName');
+								break;
 							case 'name':
-								uasort($out['lst'], 'AdminServSort::sortByName');
+								uasort($mapList, 'AdminServSort::sortByName');
 								break;
 							case 'env':
-								uasort($out['lst'], 'AdminServSort::sortByEnviro');
+								uasort($mapList, 'AdminServSort::sortByEnviro');
 								break;
 							case 'type':
-								uasort($out['lst'], 'AdminServSort::sortByType');
+								uasort($mapList, 'AdminServSort::sortByType');
 								break;
 							case 'author':
-								uasort($out['lst'], 'AdminServSort::sortByAuthor');
+								uasort($mapList, 'AdminServSort::sortByAuthor');
 								break;
 						}
 					}
 				}
 			}
 			else{
-				// Retour des erreurs de la méthode read
-				$out = $directory;
+				$out += self::getNbMaps($out);
+				$out['lst'] = Utils::t('No map');
 			}
 		}
+		// Retour des erreurs de la méthode read
 		else{
-			$out = 'Class "Folder" or "GBXChallMapFetcher" not found';
+			$out = $directory;
 		}
 		
 		return $out;
@@ -2859,55 +2881,109 @@ abstract class AdminServ {
 
 
 /**
-* Classe pour la gestion des niveaux admins
+* Classe pour la gestion du cache
 */
-abstract class AdminServAdminLevel {
+abstract class AdminServCache {
+	
+	/**
+	* Constantes
+	*/
+	const RESOURCES = AdminServConfig::PATH_INCLUDES;
+	const FOLDER = 'cache';
 	
 	
-	public static function hasLevel(){
+	/**
+	* Enregistre la valeur dans un fichier
+	*
+	* @param string $name  -> Nom du cache
+	* @param array  $value -> Valeur à enregistrer
+	* @return bool
+	*/
+	public static function set($name, $value){
 		$out = false;
+		$file = self::RESOURCES . self::FOLDER . '/' . $name . '.json';
+		$data = json_encode($value);
 		
-		if( class_exists('AdminLevelConfig') ){
-			$adminLevelList = AdminLevelConfig::$ADMINLEVELS;
-			
-			if( isset($adminLevelList) && count($adminLevelList) > 0 ){
+		$_SESSION['cache'][$name] = $data;
+		
+		/*
+		if( file_exists($file) ){
+			if( File::save($file, $data) ){
 				$out = true;
 			}
 		}
-		
-		return $out;
-	}
-	
-	
-	public static function hasPermission($permissionName){
-		$out = false;
-		$level = self::getUserLevelData('permission');
-		
-		if( !empty($level) && isset($level[$permissionName]) && $level[$permissionName] === true ){
-			$out = true;
+		else{
+			if( File::save($file) ){
+				self::set($name, $value);
+			}
 		}
+		*/
+		
+		self::getErrorMsg('set');
 		
 		return $out;
 	}
 	
 	
-	public static function getUserLevelData($data = 'all'){
+	/**
+	* Récupère la valeur depuis un fichier
+	*
+	* @param string $name -> Nom du cache à récupérer
+	* @return array()
+	*/
+	public static function get($name){
 		$out = array();
+		$file = self::RESOURCES . self::FOLDER . '/' . $name . '.json';
 		
-		if( self::hasLevel() ){
-			$userLevelData = AdminLevelConfig::$ADMINLEVELS[USER_ADMINLEVEL];
-			
-			if($data != 'all'){
-				if( isset($userLevelData[$data]) ){
-					$out = $userLevelData[$data];
-				}
-			}
-			else{
-				$out = $userLevelData;
+		/*
+		if( file_exists($file) ){
+			$data = file_get_contents($file);
+			$out = json_decode($data, true);
+			AdminServ::dsm($out);
+		}
+		else{
+			if( File::save($file) ){
+				self::get($name);
 			}
 		}
+		*/
+		if( isset($_SESSION['cache'][$name]) ){
+			$out = json_decode($_SESSION['cache'][$name], true);
+		}
+		
+		self::getErrorMsg('get');
 		
 		return $out;
+	}
+	
+	public static function reset($name){
+		if( isset($_SESSION['cache'][$name]) ){
+			unset($_SESSION['cache'][$name]);
+		}
+	}
+	
+	
+	/**
+	* Récupère le message d'erreur lors de l'encodage/décodage du JSON
+	*/
+	public static function getErrorMsg($type){
+		switch( json_last_error() ){
+			case JSON_ERROR_DEPTH:
+				AdminServ::error('JSON ('.$type.') - Profondeur maximale atteinte');
+				break;
+			case JSON_ERROR_STATE_MISMATCH:
+				AdminServ::error('JSON ('.$type.') - Inadéquation des modes ou underflow');
+				break;
+			case JSON_ERROR_CTRL_CHAR:
+				AdminServ::error('JSON ('.$type.') - Erreur lors du contrôle des caractères');
+				break;
+			case JSON_ERROR_SYNTAX:
+				AdminServ::error('JSON ('.$type.') - Erreur de syntaxe ; JSON malformé');
+				break;
+			case JSON_ERROR_UTF8:
+				AdminServ::error('JSON ('.$type.') - Caractères UTF-8 malformés, probablement une erreur d\'encodage');
+				break;
+		}
 	}
 }
 
@@ -2988,6 +3064,16 @@ abstract class AdminServSort {
 	}
 	
 	/* Maps-list */
+	public static function sortByFileName($a, $b){
+		if($a['FileName'] == $b['FileName']){
+			return 0;
+		}
+		if($a['FileName'] < $b['FileName']){
+			return -1;
+		}else{
+			return 1;
+		}
+	}
 	public static function sortByName($a, $b){
 		$a['Name'] = TmNick::toText($a['Name']);
 		$b['Name'] = TmNick::toText($b['Name']);
@@ -3412,6 +3498,59 @@ abstract class AdminServServerConfig {
 	}
 }
 
+
+/**
+* Classe pour la gestion des niveaux admins
+*/
+abstract class AdminServAdminLevel {
+	
+	
+	public static function hasLevel(){
+		$out = false;
+		
+		if( class_exists('AdminLevelConfig') ){
+			$adminLevelList = AdminLevelConfig::$ADMINLEVELS;
+			
+			if( isset($adminLevelList) && count($adminLevelList) > 0 ){
+				$out = true;
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	public static function hasPermission($permissionName){
+		$out = false;
+		$level = self::getUserLevelData('permission');
+		
+		if( !empty($level) && isset($level[$permissionName]) && $level[$permissionName] === true ){
+			$out = true;
+		}
+		
+		return $out;
+	}
+	
+	
+	public static function getUserLevelData($data = 'all'){
+		$out = array();
+		
+		if( self::hasLevel() ){
+			$userLevelData = AdminLevelConfig::$ADMINLEVELS[USER_ADMINLEVEL];
+			
+			if($data != 'all'){
+				if( isset($userLevelData[$data]) ){
+					$out = $userLevelData[$data];
+				}
+			}
+			else{
+				$out = $userLevelData;
+			}
+		}
+		
+		return $out;
+	}
+}
 
 
 /**

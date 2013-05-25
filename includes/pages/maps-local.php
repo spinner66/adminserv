@@ -13,13 +13,11 @@
 		);
 	}
 	
-	
 	// ACTIONS
 	if( isset($_POST['addMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
 			if( !$client->query($queries['add'], $mapsDirectoryPath.$map) ){
 				AdminServ::error();
-				break;
 			}
 			else{
 				AdminServLogs::add('action', 'Add map: '.$map);
@@ -30,7 +28,6 @@
 		foreach($_POST['map'] as $map){
 			if( !$client->query($queries['insert'], $mapsDirectoryPath.$map) ){
 				AdminServ::error();
-				break;
 			}
 			else{
 				AdminServLogs::add('action', 'Insert map: '.$map);
@@ -140,7 +137,7 @@
 	if( isset($_GET['sort']) && $_GET['sort'] != null){
 		$sort = addslashes($_GET['sort']);
 	}
-	$mapsList = AdminServ::getLocalMapList($mapsDirectoryPath.$directory, $sort);
+	$mapsList = AdminServ::getLocalMapList($currentDir, $directory, $sort);
 	
 	// HTML
 	$client->Terminate();
