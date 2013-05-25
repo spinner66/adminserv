@@ -2484,19 +2484,19 @@ abstract class AdminServ {
 					if($sortBy != null){
 						switch($sortBy){
 							case 'filename':
-								uasort($mapList, 'AdminServSort::sortByFileName');
+								uasort($out['lst'], 'AdminServSort::sortByFileName');
 								break;
 							case 'name':
-								uasort($mapList, 'AdminServSort::sortByName');
+								uasort($out['lst'], 'AdminServSort::sortByName');
 								break;
 							case 'env':
-								uasort($mapList, 'AdminServSort::sortByEnviro');
+								uasort($out['lst'], 'AdminServSort::sortByEnviro');
 								break;
 							case 'type':
-								uasort($mapList, 'AdminServSort::sortByType');
+								uasort($out['lst'], 'AdminServSort::sortByType');
 								break;
 							case 'author':
-								uasort($mapList, 'AdminServSort::sortByAuthor');
+								uasort($out['lst'], 'AdminServSort::sortByAuthor');
 								break;
 						}
 					}
@@ -2522,63 +2522,47 @@ abstract class AdminServ {
 	* @param string $path -> Le chemin du dossier à lister
 	* @return array
 	*/
-	public static function getLocalMatchSettingList($path){
+	public static function getLocalMatchSettingList($directory, $currentPath){
 		$out = array();
 		
-		if( class_exists('Folder') && class_exists('File') ){
-			$directory = Folder::read($path, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
-			if( is_array($directory) ){
-				if( count($directory['files']) > 0){
-					$i = 0;
-					foreach($directory['files'] as $file => $values){
-						if( in_array(File::getExtension($file), AdminServConfig::$MATCHSET_EXTENSION) ){
-							$matchsetData = self::getMatchSettingsData($path.$file, array('maps'));
-							$matchsetNbmCount = 0;
-							if( isset($matchsetData['maps']) ){
-								$matchsetNbmCount = count($matchsetData['maps']);
-							}
-							if($matchsetNbmCount > 1){
-								$matchsetNbm = $matchsetNbmCount.' '.Utils::t('maps');
-							}
-							else{
-								$matchsetNbm = $matchsetNbmCount.' '.Utils::t('map');
-							}
-							
-							$out['lst'][$i]['Name'] = substr($file, 0, -4);
-							$out['lst'][$i]['FileName'] = $file;
-							$out['lst'][$i]['Nbm'] = $matchsetNbm;
-							$out['lst'][$i]['Mtime'] = $values['mtime'];
-							$out['lst'][$i]['Recent'] = $values['recent'];
-							$i++;
-						}
-					}
-				}
+		if( is_array($directory) ){
+			if( !empty($directory['files']) ){
+				$mapsDirectoryPath = self::getMapsDirectoryPath();
 				
-				// Nombre de matchsettings
-				if( isset($out['lst']) && is_array($out['lst']) ){
-					$out['nbm']['count'] = count($out['lst']);
-					if($out['nbm']['count'] > 1){
-						$out['nbm']['title'] = Utils::t('matchsettings');
+				foreach($directory['files'] as $file => $values){
+					if( in_array(File::getExtension($file), AdminServConfig::$MATCHSET_EXTENSION) ){
+						$matchsetData = self::getMatchSettingsData($mapsDirectoryPath.$currentPath.$file, array('maps'));
+						$matchsetNbmCount = 0;
+						if( isset($matchsetData['maps']) ){
+							$matchsetNbmCount = count($matchsetData['maps']);
+						}
+						$matchsetNbmTitle = ($matchsetNbmCount > 1) ? Utils::t('maps') : Utils::t('map');
+						
+						$out['lst'][$file]['Name'] = substr($file, 0, -4);
+						$out['lst'][$file]['FileName'] = $currentPath.$file;
+						$out['lst'][$file]['Nbm'] = $matchsetNbmCount.' '.$matchsetNbmTitle;
+						$out['lst'][$file]['Mtime'] = $values['mtime'];
+						$out['lst'][$file]['Recent'] = $values['recent'];
 					}
-					else{
-						$out['nbm']['title'] = Utils::t('matchsetting');
-					}
-				}
-				else{
-					$out['nbm']['count'] = 0;
-					$out['nbm']['title'] = Utils::t('matchsetting');
-				}
-				if($out['nbm']['count'] == 0){
-					$out['lst'] = Utils::t('No matchsetting');
 				}
 			}
+			
+			// Nombre de matchsettings
+			if( isset($out['lst']) && is_array($out['lst']) ){
+				$out['nbm']['count'] = count($out['lst']);
+				$out['nbm']['title'] = ($out['nbm']['count'] > 1) ? Utils::t('matchsettings') : Utils::t('matchsetting');
+			}
 			else{
-				// Retour des erreurs de la méthode read
-				$out = $directory;
+				$out['nbm']['count'] = 0;
+				$out['nbm']['title'] = Utils::t('matchsetting');
+			}
+			if($out['nbm']['count'] == 0){
+				$out['lst'] = Utils::t('No matchsetting');
 			}
 		}
 		else{
-			$out = 'Class "Folder" or "File" not found';
+			// Retour des erreurs de la méthode read
+			$out = $directory;
 		}
 		
 		return $out;
