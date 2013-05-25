@@ -28,7 +28,7 @@
 		
 		<h2><?php echo Utils::t('Install a plugin'); ?></h2>
 		<div class="content">
-			<p><?php echo Utils::t('See all plugins:'); ?> <a href="http://www.zone-kev717.info/adminserv/plugins"><?php echo Utils::t('Click here'); ?></a></p>
+			<p><?php echo Utils::t('See all plugins:'); ?> <a href="http://dl.zone-kev717.info/adminserv/plugins"><?php echo Utils::t('Click here'); ?></a></p>
 			<p>- <?php echo Utils::t('Unzip the plugin and place its contents into the &laquo; plugins &raquo; folder of Adminserv.'); ?><br />
 			- <?php echo Utils::t('In the Configuration Extension, add the name of the plugin folder previously added.'); ?></p>
 			<p>

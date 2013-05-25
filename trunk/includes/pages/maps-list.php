@@ -20,6 +20,7 @@
 		}
 		else{
 			AdminServLogs::add('action', 'Remove map ('.count($_POST['map']).')');
+			Utils::redirection(false, '?p='.USER_PAGE);
 		}
 	}
 	else if( isset($_POST['chooseNextMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
@@ -28,6 +29,7 @@
 		}
 		else{
 			AdminServLogs::add('action', 'Choose next map ('.count($_POST['map']).')');
+			Utils::redirection(false, '?p='.USER_PAGE);
 		}
 	}
 	
