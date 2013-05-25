@@ -196,7 +196,7 @@ abstract class Folder {
 					else{
 						if($file != '.' && $file != '..'){
 							if( !in_array($file, $hiddenFiles) ){
-								if( !in_array( File::getExtension($file), $hiddenFiles) ){
+								if( !in_array(File::getExtension($file), $hiddenFiles) ){
 									$out++;
 								}
 							}

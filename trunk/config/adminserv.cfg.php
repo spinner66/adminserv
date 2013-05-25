@@ -38,7 +38,7 @@ class AdminServConfig {
 	);
 	public static $MAPS_HIDDEN_FOLDERS = array('MatchSettings', 'Replays'); // Folders to be hidden in maps page
 	public static $MATCHSET_HIDDEN_FOLDERS = array('Campaigns', 'Replays'); // Folders to be hidden in matchsettings page
-	public static $MAP_EXTENSION = array('map.gbx', 'challenge.gbx'); // Double extensions used in maps page
+	public static $MAP_EXTENSION = array('map.gbx', 'challenge.gbx', 'gbx'); // Double extensions used in maps page
 	public static $MATCHSET_EXTENSION = array('txt'); // MatchSettings extensions used in matchsettings page
 	public static $PLAYLIST_EXTENSION = array('playlist.txt'); // Playlist extensions used in guestban page
 	
