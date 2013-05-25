@@ -1,5 +1,5 @@
 <?php
-define('ADMINSERV_TIMER', true);
+define('ADMINSERV_TIMER', false);
 define('ADMINSERV_VERSION', '2.0.4');
 
 /**
