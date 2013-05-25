@@ -2888,9 +2888,6 @@ abstract class AdminServCache {
 		$file = self::RESOURCES . self::FOLDER . '/' . $name . '.json';
 		$data = json_encode($value);
 		
-		$_SESSION['cache'][$name] = $data;
-		
-		/*
 		if( file_exists($file) ){
 			if( File::save($file, $data) ){
 				$out = true;
@@ -2901,7 +2898,6 @@ abstract class AdminServCache {
 				self::set($name, $value);
 			}
 		}
-		*/
 		
 		self::getErrorMsg('set');
 		
@@ -2919,31 +2915,19 @@ abstract class AdminServCache {
 		$out = array();
 		$file = self::RESOURCES . self::FOLDER . '/' . $name . '.json';
 		
-		/*
 		if( file_exists($file) ){
 			$data = file_get_contents($file);
 			$out = json_decode($data, true);
-			AdminServ::dsm($out);
 		}
 		else{
 			if( File::save($file) ){
 				self::get($name);
 			}
 		}
-		*/
-		if( isset($_SESSION['cache'][$name]) ){
-			$out = json_decode($_SESSION['cache'][$name], true);
-		}
 		
 		self::getErrorMsg('get');
 		
 		return $out;
-	}
-	
-	public static function reset($name){
-		if( isset($_SESSION['cache'][$name]) ){
-			unset($_SESSION['cache'][$name]);
-		}
 	}
 	
 	
