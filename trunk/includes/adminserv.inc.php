@@ -411,7 +411,7 @@ abstract class AdminServUI {
 		if( isset($gameinfos[1]) ){ $nextGamInf = $gameinfos[1]; }else{ $nextGamInf = null; }
 		
 		$out = '<fieldset class="gameinfos_general">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/restartrace.png" alt="" />Général</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/restartrace.png" alt="" />'.Utils::t('General').'</legend>'
 			.'<table>'
 				.'<tr>'
 					.'<td class="key"><label for="NextGameMode">'.Utils::t('Game mode').'</label></td>';

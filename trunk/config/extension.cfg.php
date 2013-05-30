@@ -44,7 +44,8 @@ class ExtensionConfig {
 		'en' => 'English',
 		'de' => 'Deutsch',
 		'es' => 'Español',
-		'no' => 'Norsk'
+		'no' => 'Norsk',
+		'dk' => 'Danish'
 	);
 	
 	
