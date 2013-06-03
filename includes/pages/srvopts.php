@@ -17,8 +17,8 @@
 				$srvoptsConfigDirectory = $gameDataDirectory.'Config/AdminServ/ServerOptions/';
 				
 				if( !file_exists($srvoptsConfigDirectory) ){
-					if( $result = Folder::create($srvoptsConfigDirectory) !== true ){
-						AdminServ::error($result);
+					if( ($result = Folder::create($srvoptsConfigDirectory)) !== true ){
+						AdminServ::error(Utils::t('Unable to create the folder').' : '.$srvoptsConfigDirectory.' ('.$result.')');
 					}
 				}
 				
