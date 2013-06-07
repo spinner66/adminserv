@@ -14,7 +14,9 @@
 			}
 			
 			if(IS_LOCAL){
-				$srvoptsConfigDirectory = $gameDataDirectory.'Config/AdminServ/ServerOptions/';
+				$srvConfigDirectory = $gameDataDirectory.'Config/';
+				$srvoptsConfigDirectory = $srvConfigDirectory.'AdminServ/ServerOptions/';
+				AdminServ::checkRights(array($srvConfigDirectory => 777));
 				
 				if( !file_exists($srvoptsConfigDirectory) ){
 					if( ($result = Folder::create($srvoptsConfigDirectory)) !== true ){
