@@ -5,8 +5,7 @@
 		// Options
 		var settings = {
 			config: 'config/servers.cfg.php',
-			includes: 'includes/',
-			ressources: 'ressources/',
+			resources: 'resources/',
 			timeout: 3,
 			refresh: 30,
 			color: '',
@@ -38,7 +37,7 @@
 		var selector = $(this);
 		
 		// 1ère étape - Initialiser DisplayServ en créant le html
-		$.getJSON(settings.includes+'ajax/ds_initialize.php', {cfg: settings.config}, function(data){
+		$.getJSON(settings.resources+'ajax/ds_initialize.php', {cfg: settings.config}, function(data){
 			if(data != null){
 				var out = '<ul class="ds-servers-list loading">';
 					if(data.servers){
@@ -121,7 +120,7 @@
 				}
 				
 				// 2ème étape - Récupérer les données serveur
-				$.getJSON(settings.includes+'ajax/ds_getservers.php', {cfg: settings.config, rsc: settings.ressources}, function(data){
+				$.getJSON(settings.resources+'ajax/ds_getservers.php', {cfg: settings.config, rsc: settings.resources}, function(data){
 					if(data != null){
 						if(data.servers){
 							for(var i = 0; i < data.servers.length; i++){

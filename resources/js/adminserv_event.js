@@ -24,12 +24,12 @@ $(document).ready(function(){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
 						$('#serverList tr').removeClass('selected');
-						$(this).find('td.checkbox input').attr('checked', false);
+						$(this).find('td.checkbox input').prop('checked', false);
 					}
 					// Sinon, on l'ajoute
 					else{
 						$('#serverList tr').removeClass('selected');
-						$(this).addClass('selected').find('td.checkbox input').attr('checked', true);
+						$(this).addClass('selected').find('td.checkbox input').prop('checked', true);
 					}
 				}
 				
@@ -220,11 +220,11 @@ $(document).ready(function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
-						$(this).removeClass('selected').find('td.checkbox input').attr('checked', false);
+						$(this).removeClass('selected').find('td.checkbox input').prop('checked', false);
 					}
 					// Sinon, on l'ajoute
 					else{
-						$(this).addClass('selected').find('td.checkbox input').attr('checked', true);
+						$(this).addClass('selected').find('td.checkbox input').prop('checked', true);
 					}
 					
 					// Mise à jour du nb de lignes sélectionnées
@@ -451,11 +451,11 @@ $(document).ready(function(){
 				$('#mapImportSelectionDialog').on('click', 'tr', function(){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
-						$(this).removeClass('selected').find('td.checkbox input').attr('checked', false);
+						$(this).removeClass('selected').find('td.checkbox input').prop('checked', false);
 					}
 					// Sinon, on l'ajoute
 					else{
-						$(this).addClass('selected').find('td.checkbox input').attr('checked', true);
+						$(this).addClass('selected').find('td.checkbox input').prop('checked', true);
 					}
 					// Mise à jour du CheckAll
 					$('#mapImportSelectionDialog').updateCheckAll( $('#checkAllMapImport') );
@@ -570,7 +570,7 @@ $(document).ready(function(){
 			
 			// Checkbox
 			$('#checkAll').click(function(){
-				mapList.checkAll( $(this).attr('checked') );
+				mapList.checkAll( $(this).prop('checked') );
 				if( mapList.find('tr.current').hasClass('selected') ){
 					mapList.find('tr.current').removeClass('selected');
 				}
@@ -584,11 +584,11 @@ $(document).ready(function(){
 				if( !$(this).hasClass('current') && !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
-						$(this).removeClass('selected').find('td.checkbox input').attr('checked', false);
+						$(this).removeClass('selected').find('td.checkbox input').prop('checked', false);
 					}
 					// Sinon, on l'ajoute
 					else{
-						$(this).addClass('selected').find('td.checkbox input').attr('checked', true);
+						$(this).addClass('selected').find('td.checkbox input').prop('checked', true);
 					}
 					
 					// Mise à jour du nb de lignes sélectionnées
@@ -615,18 +615,18 @@ $(document).ready(function(){
 				$('.transferMode li').removeClass('selected');
 				$('.options-checkbox li')
 					.removeClass('disabled')
-					.find('input').attr('disabled', false);
-				$('#GotoListMaps').attr('checked', true);
+					.find('input').prop('disabled', false);
+				$('#GotoListMaps').prop('checked', true);
 				
 				$(this)
 					.addClass('selected')
-					.find('input').attr('checked', true);
+					.find('input').prop('checked', true);
 				
 				if( $(this).find('input').val() == 'local' ){
 					$('#SaveCurrentMatchSettings')
-						.attr('disabled', true)
+						.prop('disabled', true)
 						.parent().addClass('disabled');
-					$('#GotoListMaps').attr('checked', false);
+					$('#GotoListMaps').prop('checked', false);
 				}
 				uploader.setParams( getUploaderUserParams() );
 			});
@@ -642,7 +642,7 @@ $(document).ready(function(){
 		else if( $('body').hasClass('section-maps-local') ){
 			// Checkbox
 			$('#checkAll').click(function(){
-				$('#maplist').checkAll( $(this).attr('checked') );
+				$('#maplist').checkAll( $(this).prop('checked') );
 				
 				// Mise à jour du nb de lignes sélectionnées
 				$('.maps .local').updateNbSelectedLines();
@@ -653,11 +653,11 @@ $(document).ready(function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
-						$(this).removeClass('selected').find('td.checkbox input').attr('checked', false);
+						$(this).removeClass('selected').find('td.checkbox input').prop('checked', false);
 					}
 					// Sinon, on l'ajoute
 					else{
-						$(this).addClass('selected').find('td.checkbox input').attr('checked', true);
+						$(this).addClass('selected').find('td.checkbox input').prop('checked', true);
 					}
 					
 					// Mise à jour du nb de lignes sélectionnées
@@ -742,7 +742,7 @@ $(document).ready(function(){
 		else if( $('body').hasClass('section-maps-matchset') ){
 			// Checkbox
 			$('input#checkAll').click(function(){
-				$('#matchsetlist').checkAll( $(this).attr('checked') );
+				$('#matchsetlist').checkAll( $(this).prop('checked') );
 				
 				// Mise à jour du nb de lignes sélectionnées
 				$('.maps .matchset').updateNbSelectedLines();
@@ -753,11 +753,11 @@ $(document).ready(function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
-						$(this).removeClass('selected').find('td.checkbox input').attr('checked', false);
+						$(this).removeClass('selected').find('td.checkbox input').prop('checked', false);
 					}
 					// Sinon, on l'ajoute
 					else{
-						$(this).addClass('selected').find('td.checkbox input').attr('checked', true);
+						$(this).addClass('selected').find('td.checkbox input').prop('checked', true);
 					}
 					
 					// Mise à jour du nb de lignes sélectionnées
@@ -783,7 +783,7 @@ $(document).ready(function(){
 			// Tri automatique
 			$('.autoSortMode li').click(function(){
 				$('#sortableMapList').addClass('loading');
-				$(this).children('input').attr('checked', true);
+				$(this).children('input').prop('checked', true);
 				$('.autoSortMode li').removeClass('selected').find('span.ui-icon').removeClass('active');
 				$(this).addClass('ui-state-default selected').find('.icon .ui-icon-arrowthick-1-n').addClass('active');
 				
@@ -793,7 +793,7 @@ $(document).ready(function(){
 			$('.autoSortMode li span.ui-icon').click(function(){
 				$('#sortableMapList').addClass('loading');
 				$('.autoSortMode li').removeClass('selected').find('span.ui-icon').removeClass('active');
-				$(this).parents('li').addClass('selected').children('input').attr('checked', true);
+				$(this).parents('li').addClass('selected').children('input').prop('checked', true);
 				$(this).addClass('active');
 				
 				if( $(this).hasClass('ui-icon-arrowthick-1-n') ){
@@ -874,11 +874,11 @@ $(document).ready(function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
-						$(this).removeClass('selected').find('td.checkbox input').attr('checked', false);
+						$(this).removeClass('selected').find('td.checkbox input').prop('checked', false);
 					}
 					// Sinon, on l'ajoute
 					else{
-						$(this).addClass('selected').find('td.checkbox input').attr('checked', true);
+						$(this).addClass('selected').find('td.checkbox input').prop('checked', true);
 					}
 					
 					// Mise à jour du nb de lignes sélectionnées
@@ -890,11 +890,11 @@ $(document).ready(function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
 					// Si la ligne est déjà sélectionnée, on l'enlève
 					if( $(this).hasClass('selected') ){
-						$(this).removeClass('selected').find('td.checkbox input').attr('checked', false);
+						$(this).removeClass('selected').find('td.checkbox input').prop('checked', false);
 					}
 					// Sinon, on l'ajoute
 					else{
-						$(this).addClass('selected').find('td.checkbox input').attr('checked', true);
+						$(this).addClass('selected').find('td.checkbox input').prop('checked', true);
 					}
 					
 					// Mise à jour du nb de lignes sélectionnées

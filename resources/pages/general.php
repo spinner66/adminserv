@@ -172,7 +172,7 @@
 			</tr>
 			<tr>
 				<td class="key"><?php echo Utils::t('Environment'); ?></td>
-				<td class="value" id="map_enviro"><?php echo $serverInfo['map']['enviro']; ?><img src="<?php echo AdminServConfig::PATH_RESSOURCES .'images/env/'.strtolower($serverInfo['map']['enviro']); ?>.png" alt="" /></td>
+				<td class="value" id="map_enviro"><?php echo $serverInfo['map']['enviro']; ?><img src="<?php echo AdminServConfig::PATH_RESOURCES .'images/env/'.strtolower($serverInfo['map']['enviro']); ?>.png" alt="" /></td>
 			</tr>
 			<tr>
 				<td class="key"><?php echo Utils::t('Map UId'); ?></td>
@@ -341,9 +341,9 @@
 									$showPlayerList .= '<td class="detailModeTd imgleft"><span class="team_'.$player['TeamId'].'" title="'.$player['TeamName'].'">&nbsp;</span>'.$player['TeamName'].'</td>';
 								}
 								
-								$showPlayerList .= '<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>';
+								$showPlayerList .= '<td class="imgleft"><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['NickName'].'</td>';
 								if(!$displayTeamMode){
-									$showPlayerList .= '<td class="detailModeTd imgleft"'; if(USER_MODE_GENERAL == 'simple'){ $showPlayerList .= ' hidden="hidden"'; } $showPlayerList .= '><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/leagueladder.png" alt="" />'.$player['LadderRanking'].'</td>';
+									$showPlayerList .= '<td class="detailModeTd imgleft"'; if(USER_MODE_GENERAL == 'simple'){ $showPlayerList .= ' hidden="hidden"'; } $showPlayerList .= '><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/leagueladder.png" alt="" />'.$player['LadderRanking'].'</td>';
 								}
 								$showPlayerList .= '<td>'.$player['Login'].'</td>'
 								.'<td>'.$player['PlayerStatus'].'</td>'

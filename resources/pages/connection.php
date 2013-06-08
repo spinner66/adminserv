@@ -123,12 +123,12 @@
 				}
 			}
 	?>
-		<link rel="stylesheet" href="<?php echo AdminServConfig::PATH_RESSOURCES; ?>styles/displayserv.css" />
-		<script src="<?php echo AdminServConfig::PATH_INCLUDES; ?>js/displayserv.js"></script>
+		<link rel="stylesheet" href="<?php echo AdminServConfig::PATH_RESOURCES; ?>css/displayserv.css" />
+		<script src="<?php echo AdminServConfig::PATH_RESOURCES; ?>js/displayserv.js"></script>
 		<script>
 			$(document).ready(function(){
 				$('#displayserv').displayServ({
-					color: "<?php echo $themeColor; ?>"
+					color: '<?php echo $themeColor; ?>'
 				});
 			});
 		</script>
