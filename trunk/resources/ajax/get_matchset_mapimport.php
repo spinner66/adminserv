@@ -29,7 +29,11 @@
 			$mapsImport = AdminServ::getMapList();
 		}
 		else{
-			$mapsImport = AdminServ::getLocalMapList($path);
+			$mapsDirectoryPath = AdminServ::getMapsDirectoryPath();
+			$directory = str_replace($mapsDirectoryPath, '', $path);
+			$currentDir = Folder::read($path, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, AdminServConfig::$MATCHSET_EXTENSION, intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
+			AdminServCache::$RESOURCES = '../';
+			$mapsImport = AdminServ::getLocalMapList($currentDir, $directory);
 		}
 		
 		// Faire une sélection

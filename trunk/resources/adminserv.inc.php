@@ -2872,8 +2872,8 @@ abstract class AdminServCache {
 	/**
 	* Constantes
 	*/
-	const RESOURCES = AdminServConfig::PATH_INCLUDES;
-	const FOLDER = 'cache';
+	public static $RESOURCES = AdminServConfig::PATH_INCLUDES;
+	public static $FOLDER = 'cache';
 	
 	
 	/**
@@ -2885,7 +2885,7 @@ abstract class AdminServCache {
 	*/
 	public static function set($name, $value){
 		$out = false;
-		$file = self::RESOURCES . self::FOLDER . '/' . $name . '.json';
+		$file = self::$RESOURCES . self::$FOLDER . '/' . $name . '.json';
 		$data = json_encode($value);
 		
 		if( file_exists($file) ){
@@ -2913,7 +2913,7 @@ abstract class AdminServCache {
 	*/
 	public static function get($name){
 		$out = array();
-		$file = self::RESOURCES . self::FOLDER . '/' . $name . '.json';
+		$file = self::$RESOURCES . self::$FOLDER . '/' . $name . '.json';
 		
 		if( file_exists($file) ){
 			$data = file_get_contents($file);
