@@ -1,6 +1,6 @@
 <?php
-define('ADMINSERV_TIMER', false);
-define('ADMINSERV_VERSION', '2.0.4');
+define('ADMINSERV_TIMER', true);
+define('ADMINSERV_VERSION', '2.1.0');
 
 /**
 * Classe pour l'interface d'AdminServ
@@ -224,10 +224,10 @@ abstract class AdminServUI {
 				$currentLangCode = key($currentLang);
 				$currentLangName = current($currentLang);
 				unset($list[$currentLangCode]);
-				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$currentLangCode.'.png);" href="'.$param.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
+				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESOURCES .'images/lang/'.$currentLangCode.'.png);" href="'.$param.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
 			}
 			foreach($list as $code => $name){
-				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESSOURCES .'images/lang/'.$code.'.png);" href="'.$param.$code.'" title="'.$name.'"></a></li>';
+				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESOURCES .'images/lang/'.$code.'.png);" href="'.$param.$code.'" title="'.$name.'"></a></li>';
 			}
 			$out .= '</ul>';
 		}
@@ -240,16 +240,17 @@ abstract class AdminServUI {
 	* Récupère et inclue les classes PHP
 	*/
 	public static function getClass(){
-		require_once __DIR__ .'/class/GbxRemote.inc.php';
-		require_once __DIR__ .'/class/gbxdatafetcher.inc.php';
-		require_once __DIR__ .'/class/utils.class.php';
-		require_once __DIR__ .'/class/tmnick.class.php';
-		require_once __DIR__ .'/class/timedate.class.php';
-		require_once __DIR__ .'/class/file.class.php';
-		require_once __DIR__ .'/class/folder.class.php';
-		require_once __DIR__ .'/class/str.class.php';
-		require_once __DIR__ .'/class/upload.class.php';
-		require_once __DIR__ .'/class/zip.class.php';
+		$path = __DIR__ .'/class/';
+		require_once $path.'GbxRemote.inc.php';
+		require_once $path.'gbxdatafetcher.inc.php';
+		require_once $path.'utils.class.php';
+		require_once $path.'tmnick.class.php';
+		require_once $path.'timedate.class.php';
+		require_once $path.'file.class.php';
+		require_once $path.'folder.class.php';
+		require_once $path.'str.class.php';
+		require_once $path.'upload.class.php';
+		require_once $path.'zip.class.php';
 	}
 	
 	
@@ -287,25 +288,28 @@ abstract class AdminServUI {
 	/**
 	* Récupère le CSS/JS du site
 	*/
-	public static function getCss($path = AdminServConfig::PATH_RESSOURCES){
-		$out = '<link rel="stylesheet" href="'.$path.'styles/jquery-ui.css" />'."\n\t\t"
-		.'<link rel="stylesheet" href="'.$path.'styles/fileuploader.css" />'."\n\t\t"
-		.'<link rel="stylesheet" href="'.$path.'styles/global.css" />'."\n\t\t"
-		.'<!--[if IE]><link rel="stylesheet" href="'.$path.'styles/ie.css" /><![endif]-->'."\n\t\t";
+	public static function getCss(){
+		$path = AdminServConfig::PATH_RESOURCES .'css/';
+		$out = '<link rel="stylesheet" href="'.$path.'fileuploader.css" />'."\n\t\t"
+		.'<link rel="stylesheet" href="'.$path.'global.css" />'."\n\t\t"
+		.'<!--[if IE]><link rel="stylesheet" href="'.$path.'ie.css" /><![endif]-->'."\n\t\t";
 		if( defined('USER_THEME') && USER_THEME ){
-			$out .= '<link rel="stylesheet" href="'.$path.'styles/theme.php?th='. USER_THEME .'" />'."\n\t\t";
+			$out .= '<link rel="stylesheet" href="'.$path.'jqueryui/'. USER_THEME .'.css" />'."\n\t\t"
+			.'<link rel="stylesheet" href="'.$path.'theme.php?th='. USER_THEME .'" />'."\n\t\t";
 		}
-		$out .= '<link rel="stylesheet" media="screen and (max-width: 1000px) and (min-width: 335px)" href="'.$path.'styles/mobile.css" />'."\n";
+		$out .= '<link rel="stylesheet" media="screen and (max-width: 1000px) and (min-width: 335px)" href="'.$path.'mobile.css" />'."\n";
 		
 		return $out;
 	}
-	public static function getJS($path = AdminServConfig::PATH_INCLUDES){
-		$out = '<script src="'.$path.'js/jquery.js"></script>'."\n\t\t"
-		.'<script src="'.$path.'js/jquery-ui.js"></script>'."\n\t\t"
-		.'<script src="'.$path.'js/colorpicker.js"></script>'."\n\t\t"
-		.'<script src="'.$path.'js/fileuploader.js"></script>'."\n\t\t"
-		.'<script src="'.$path.'js/adminserv_funct.js"></script>'."\n\t\t"
-		.'<script src="'.$path.'js/adminserv_event.js"></script>'."\n";
+	public static function getJS(){
+		$path = AdminServConfig::PATH_RESOURCES .'js/';
+		$out = '<script src="'.$path.'jquery.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'jquery-ui.js"></script>'."\n\t\t"
+		//.'<script src="'.$path.'jquery.lint.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'colorpicker.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'fileuploader.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'adminserv_funct.js"></script>'."\n\t\t"
+		.'<script src="'.$path.'adminserv_event.js"></script>'."\n";
 		
 		return $out;
 	}
@@ -411,7 +415,7 @@ abstract class AdminServUI {
 		if( isset($gameinfos[1]) ){ $nextGamInf = $gameinfos[1]; }else{ $nextGamInf = null; }
 		
 		$out = '<fieldset class="gameinfos_general">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/restartrace.png" alt="" />'.Utils::t('General').'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/restartrace.png" alt="" />'.Utils::t('General').'</legend>'
 			.'<table>'
 				.'<tr>'
 					.'<td class="key"><label for="NextGameMode">'.Utils::t('Game mode').'</label></td>';
@@ -506,7 +510,7 @@ abstract class AdminServUI {
 		
 		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
 			$out .= '<fieldset id="gameMode-script" class="gameinfos_script" hidden="hidden">'
-				.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/options.png" alt="" />'.AdminServ::getGameModeName(0).'</legend>'
+				.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/options.png" alt="" />'.AdminServ::getGameModeName(0).'</legend>'
 				.'<table class="game_infos">'
 					.'<tr>'
 						.'<td class="key"><label for="NextScriptName">'.Utils::t('Script name').'</label></td>';
@@ -567,7 +571,7 @@ abstract class AdminServUI {
 		}
 		
 		$out .= '<fieldset id="gameMode-rounds" class="gameinfos_round" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_rounds.png" alt="" />'.AdminServ::getGameModeName(1, true).'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/rt_rounds.png" alt="" />'.AdminServ::getGameModeName(1, true).'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
 					.'<td class="key"><label for="NextRoundsUseNewRules">'.Utils::t('Use new rules').'</label></td>';
@@ -588,7 +592,7 @@ abstract class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-timeattack" class="gameinfos_timeattack" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_timeattack.png" alt="" />'.AdminServ::getGameModeName(2, true).'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/rt_timeattack.png" alt="" />'.AdminServ::getGameModeName(2, true).'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
 					.'<td class="key"><label for="NextTimeAttackLimit">'.Utils::t('Time limit').' <span>('.Utils::t('sec').')</span></label></td>';
@@ -607,7 +611,7 @@ abstract class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-team" class="gameinfos_team" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_team.png" alt="" />'.AdminServ::getGameModeName(3, true).'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/rt_team.png" alt="" />'.AdminServ::getGameModeName(3, true).'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
 					.'<td class="key"><label for="NextTeamUseNewRules">'.Utils::t('Use new rules').'</label></td>';
@@ -627,7 +631,7 @@ abstract class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-laps" class="gameinfos_laps" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_laps.png" alt="" />'.AdminServ::getGameModeName(4, true).'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/rt_laps.png" alt="" />'.AdminServ::getGameModeName(4, true).'</legend>'
 			.'<table class="game_infos">'
 				.self::getGameInfosField($gameinfos, 'Number of laps', 'LapsNbLaps')
 				.self::getGameInfosField($gameinfos, Utils::t('Time limit').' <span>('.Utils::t('sec').')</span>', 'LapsTimeLimit')
@@ -635,7 +639,7 @@ abstract class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-cup" class="gameinfos_cup" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/rt_cup.png" alt="" />'.AdminServ::getGameModeName(6, true).'</legend>'
+			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/rt_cup.png" alt="" />'.AdminServ::getGameModeName(5, true).'</legend>'
 			.'<table class="game_infos">'
 				.self::getGameInfosField($gameinfos, 'Points limit', 'CupPointsLimit')
 				.self::getGameInfosField($gameinfos, 'Rounds per map', 'CupRoundsPerMap')
@@ -759,7 +763,7 @@ abstract class AdminServUI {
 					
 					$out .= '<li>'
 						.'<a href="./?p='. USER_PAGE . $params.'">'
-							.'<img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/back.png" alt="" />'
+							.'<img src="'. AdminServConfig::PATH_RESOURCES .'images/16/back.png" alt="" />'
 							.'<span class="dir-name">'.Utils::t('Parent folder').'</span>'
 						.'</a>'
 					.'</li>';
@@ -834,7 +838,7 @@ abstract class AdminServUI {
 	*/
 	public static function getTemplateMapsOrderList($list){
 		$out = null;
-		$pathRessources = AdminServConfig::PATH_RESSOURCES;
+		$pathRessources = AdminServConfig::PATH_RESOURCES;
 		
 		if( is_array($list) && count($list) > 0 ){
 			foreach($list['lst'] as $id => $map){
@@ -2872,7 +2876,7 @@ abstract class AdminServCache {
 	/**
 	* Constantes
 	*/
-	public static $RESOURCES = AdminServConfig::PATH_INCLUDES;
+	public static $RESOURCES = AdminServConfig::PATH_RESOURCES;
 	public static $FOLDER = 'cache';
 	
 	
@@ -3233,7 +3237,7 @@ abstract class AdminServLogs {
 abstract class AdminServServerConfig {
 	
 	/**
-	* Globales
+	* Constantes
 	*/
 	private static $CONFIG_PATH = './config/';
 	private static $CONFIG_FILENAME = 'servers.cfg.php';

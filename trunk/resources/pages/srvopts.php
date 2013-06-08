@@ -16,7 +16,9 @@
 			if(IS_LOCAL){
 				$srvConfigDirectory = $gameDataDirectory.'Config/';
 				$srvoptsConfigDirectory = $srvConfigDirectory.'AdminServ/ServerOptions/';
-				AdminServ::checkRights(array($srvConfigDirectory => 777));
+				if( !Utils::isWinServer() ){
+					AdminServ::checkRights(array($srvConfigDirectory => 777));
+				}
 				
 				if( !file_exists($srvoptsConfigDirectory) ){
 					if( ($result = Folder::create($srvoptsConfigDirectory)) !== true ){
@@ -90,7 +92,7 @@
 	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 		<div class="content">
 			<fieldset class="srvopts_general">
-				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/servers.png" alt="" /><?php echo Utils::t('General'); ?></legend>
+				<legend><img src="<?php echo AdminServConfig::PATH_RESOURCES; ?>images/16/servers.png" alt="" /><?php echo Utils::t('General'); ?></legend>
 				<table>
 					<tr class="serverName">
 						<td class="key"><label for="ServerName"><?php echo Utils::t('Server name'); ?></label></td>
@@ -146,7 +148,7 @@
 			</fieldset>
 			
 			<fieldset class="srvopts_advanced">
-				<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/options.png" alt="" /><?php echo Utils::t('Advanced'); ?></legend>
+				<legend><img src="<?php echo AdminServConfig::PATH_RESOURCES; ?>images/16/options.png" alt="" /><?php echo Utils::t('Advanced'); ?></legend>
 				<table>
 					<tr>
 						<td class="key"><label for="IsP2PUpload"><?php echo Utils::t('P2P Upload'); ?></label></td>
@@ -265,7 +267,7 @@
 			
 			<?php if( AdminServ::isAdminLevel('SuperAdmin') ){ ?>
 				<fieldset class="srvopts_changeauthpassword">
-					<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Change authentication password'); ?></legend>
+					<legend><img src="<?php echo AdminServConfig::PATH_RESOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Change authentication password'); ?></legend>
 					<table>
 						<tr>
 							<td class="key"><label for="ChangeAuthLevel"><?php echo Utils::t('Admin level'); ?></label></td>
@@ -289,7 +291,7 @@
 			
 			<?php if( IS_LOCAL && AdminServ::isAdminLevel('Admin') ){ ?>
 				<fieldset class="srvopts_importexport">
-					<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/rt_team.png" alt="" /><?php echo Utils::t('Manage server options'); ?></legend>
+					<legend><img src="<?php echo AdminServConfig::PATH_RESOURCES; ?>images/16/rt_team.png" alt="" /><?php echo Utils::t('Manage server options'); ?></legend>
 					<table>
 						<tr>
 							<td class="key"><label for="srvoptsImport"><?php echo Utils::t('Import'); ?></label></td>

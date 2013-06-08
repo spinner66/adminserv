@@ -6,7 +6,7 @@
 		include_once 'config/servers.cfg.php';
 	}
 	require_once 'config/extension.cfg.php';
-	require_once AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
+	require_once AdminServConfig::PATH_RESOURCES .'adminserv.inc.php';
 	if( !AdminServ::checkPHPVersion() ){
 		echo '<b>This PHP version is not compatible with AdminServ.</b><br />Your PHP version: '. PHP_VERSION .'<br />PHP version required: 5.3.0';
 		exit;
@@ -71,7 +71,7 @@
 	}
 	else{
 		define('USER_LANG', $userLanguage);
-		$langFile = AdminServConfig::PATH_INCLUDES .'lang/'. USER_LANG .'.php';
+		$langFile = AdminServConfig::PATH_RESOURCES .'lang/'. USER_LANG .'.php';
 		if( file_exists($langFile) ){
 			require_once $langFile;
 		}
@@ -141,7 +141,7 @@
 		// PAGES GROUPES
 		if( strstr(USER_PAGE, '-') ){
 			$pageEx = explode('-', USER_PAGE);
-			$pageInc = AdminServConfig::PATH_INCLUDES .'pages/'.$pageEx[0].'.inc.php';
+			$pageInc = AdminServConfig::PATH_RESOURCES .'pages/'.$pageEx[0].'.inc.php';
 			if( file_exists($pageInc) ){
 				include_once $pageInc;
 			}
@@ -162,7 +162,7 @@
 			unset($pagesList[0]);
 			foreach($pagesList as $page){
 				if(USER_PAGE === $page){
-					$file = AdminServConfig::PATH_INCLUDES .'pages/'.$page.'.php';
+					$file = AdminServConfig::PATH_RESOURCES .'pages/'.$page.'.php';
 					if( file_exists($file) ){
 						include_once $file;
 						AdminServLogs::add('access', 'Control');
@@ -179,7 +179,7 @@
 			}
 			else{
 				if(!CURRENT_PLUGIN){
-					include_once AdminServConfig::PATH_INCLUDES .'pages/'.$pagesList[0].'.php';
+					include_once AdminServConfig::PATH_RESOURCES .'pages/'.$pagesList[0].'.php';
 					AdminServLogs::add('access', 'Control');
 				}
 			}
@@ -190,7 +190,7 @@
 		if( in_array(USER_PAGE, $configPagesList) ){
 			foreach($configPagesList as $page){
 				if(USER_PAGE === $page){
-					$file = AdminServConfig::PATH_INCLUDES .'pages/'.$page.'.php';
+					$file = AdminServConfig::PATH_RESOURCES .'pages/'.$page.'.php';
 					if( file_exists($file) ){
 						$GLOBALS['page_title'] = 'Configuration';
 						include_once $file;
@@ -203,7 +203,7 @@
 		// CONNEXION
 		else{
 			$GLOBALS['page_title'] = 'Connexion';
-			include_once AdminServConfig::PATH_INCLUDES .'pages/connection.php';
+			include_once AdminServConfig::PATH_RESOURCES .'pages/connection.php';
 			AdminServLogs::add('access', 'Connection');
 		}
 	}

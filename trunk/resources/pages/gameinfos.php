@@ -83,7 +83,7 @@
 			
 			<?php if(SERVER_VERSION_NAME == 'ManiaPlanet' && AdminServ::checkDisplayTeamMode($gameInfos['next']['GameMode'], $gameInfos['next']['ScriptName']) ){ ?>
 				<fieldset class="gameinfos_teaminfos">
-					<legend><img src="<?php echo AdminServConfig::PATH_RESSOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Team infos'); ?></legend>
+					<legend><img src="<?php echo AdminServConfig::PATH_RESOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Team infos'); ?></legend>
 					<table>
 						<tr>
 							<td class="key"><label for="teamInfo1Name"><?php echo Utils::t('Team 1'); ?></label></td>

@@ -56,9 +56,8 @@ class AdminServConfig {
 	
 	/* MULTI ADMINSERV */
 	const MULTI_ADMINSERV = false; // Use many instances of AdminServ
-	const PATH_INCLUDES = './includes/'; // You can change the folders location
+	const PATH_RESOURCES = './resources/'; // You can change the folders location
 	const PATH_PLUGINS = './plugins/';
-	const PATH_RESSOURCES = './ressources/';
 	
 	/* PLUGINS */
 	const PLUGINS_LIST = ''; // The filename for alternative plugin configuration. In the file: $PLUGINS = array('pluginfoldername', 'etc');
