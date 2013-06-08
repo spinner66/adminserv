@@ -210,7 +210,9 @@
 								<option value="0"<?php if($srvOpt['CallVoteRatio'] > -1){ echo ' selected="selected"'; } ?>><?php echo Utils::t('Enable'); ?></option>
 							</select>
 							<input class="text" type="number" min="0" max="1" step=".1" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $srvOpt['CallVoteRatio']; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?> />
-							<a class="returnDefaultValue" id="resetCallVoteRatio" href="?p=<?php echo USER_PAGE; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Disable vote ratio'); ?></a>
+							<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
+								<a class="returnDefaultValue" id="resetCallVoteRatio" href="?p=<?php echo USER_PAGE; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Disable vote ratio'); ?></a>
+							<?php } ?>
 						</td>
 					</tr>
 					<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
