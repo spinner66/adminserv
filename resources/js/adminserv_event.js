@@ -97,7 +97,7 @@ $(document).ready(function(){
 		*/
 		$('#newfolder').click(function(event){
 			event.preventDefault();
-			if( $('#form-new-folder').attr('hidden') ){
+			if( $('#form-new-folder').prop('hidden') ){
 				slideDownNewFolderForm();
 			}
 			else{

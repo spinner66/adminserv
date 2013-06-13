@@ -10,8 +10,8 @@ class AdminServ {
 	/**
 	* Inclue les classes PHP
 	*/
-	public static function getClass(){
-		$pathCore = AdminServConfig::PATH_RESOURCES . 'core/';
+	public static function getClass($resources = AdminServConfig::PATH_RESOURCES){
+		$pathCore = $resources.'core/';
 		require_once $pathCore.'adminlevel.php';
 		require_once $pathCore.'cache.php';
 		require_once $pathCore.'logs.php';
@@ -20,7 +20,7 @@ class AdminServ {
 		require_once $pathCore.'sort.php';
 		require_once $pathCore.'ui.php';
 		
-		$pathClass = AdminServConfig::PATH_RESOURCES . 'class/';
+		$pathClass = $resources.'class/';
 		require_once $pathClass.'GbxRemote.inc.php';
 		require_once $pathClass.'gbxdatafetcher.inc.php';
 		require_once $pathClass.'utils.class.php';

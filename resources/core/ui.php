@@ -285,7 +285,6 @@ class AdminServUI {
 		$path = AdminServConfig::PATH_RESOURCES .'js/';
 		$out = '<script src="'.$path.'jquery.js"></script>'."\n\t\t"
 		.'<script src="'.$path.'jquery-ui.js"></script>'."\n\t\t"
-		//.'<script src="'.$path.'jquery.lint.js"></script>'."\n\t\t"
 		.'<script src="'.$path.'colorpicker.js"></script>'."\n\t\t"
 		.'<script src="'.$path.'fileuploader.js"></script>'."\n\t\t"
 		.'<script src="'.$path.'adminserv_funct.js"></script>'."\n\t\t"
