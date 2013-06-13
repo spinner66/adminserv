@@ -6,16 +6,17 @@
 		include_once 'config/servers.cfg.php';
 	}
 	require_once 'config/extension.cfg.php';
-	require_once AdminServConfig::PATH_RESOURCES .'adminserv.inc.php';
+	require_once AdminServConfig::PATH_RESOURCES .'core/adminserv.php';
 	if( !AdminServ::checkPHPVersion() ){
 		echo '<b>This PHP version is not compatible with AdminServ.</b><br />Your PHP version: '. PHP_VERSION .'<br />PHP version required: 5.3.0';
 		exit;
 	}
+	define('PATH_ROOT', basename(__DIR__).'/');
 	$_SESSION['adminserv']['path'] = null;
 	if(AdminServConfig::MULTI_ADMINSERV){
-		$_SESSION['adminserv']['path'] = basename(__DIR__).'/';
+		$_SESSION['adminserv']['path'] = PATH_ROOT;
 	}
-	AdminServUI::getClass();
+	AdminServ::getClass();
 	
 	// LOAD TIMER
 	if(ADMINSERV_TIMER){
