@@ -5,13 +5,12 @@ class AdminLevelConfig {
 			'adminlevel' => array(
 				'password' => '',
 				'selected' => true,
-			)
+			),
 			'maniaconnect' => array(
 				'kev717' => 'monmotdepasse',
 				'autrelogin' => 'autremotdepasse',
 			),
 			'access' => array(
-				'general' => true,
 				'server_options' => true,
 				'game_infos' => true,
 				'chat' => true,
@@ -71,7 +70,7 @@ class AdminLevelConfig {
 		),
 		'Admin' => array(
 			
-		)
+		),
 		'User' => array(
 			
 		)

@@ -180,7 +180,7 @@
 						
 						// Liste des maps local
 						if( is_array($mapsList['lst']) && count($mapsList['lst']) > 0 ){
-							$pathRessources = AdminServConfig::PATH_RESOURCES;
+							$pathRessources = AdminServConfig::$PATH_RESOURCES;
 							$i = 0;
 							foreach($mapsList['lst'] as $id => $map){
 								// Map sur le serveur

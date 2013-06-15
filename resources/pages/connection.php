@@ -113,29 +113,19 @@
 	// Affichage de DisplayServ
 	else{
 ?>
-<section>
-	<?php
-		if(AdminServConfig::USE_DISPLAYSERV){
-			$themeColor = null;
-			if( AdminServUI::hasTheme() && ($theme = AdminServUI::getTheme()) ){
-				if( isset(ExtensionConfig::$THEMES[$theme]) && isset(ExtensionConfig::$THEMES[$theme][0]) ){
-					$themeColor = ExtensionConfig::$THEMES[$theme][0];
-				}
-			}
-	?>
-		<link rel="stylesheet" href="<?php echo AdminServConfig::PATH_RESOURCES; ?>css/displayserv.css" />
-		<script src="<?php echo AdminServConfig::PATH_RESOURCES; ?>js/displayserv.js"></script>
+<section class="displayserv">
+	<?php if(AdminServConfig::USE_DISPLAYSERV): ?>
+		<link rel="stylesheet" href="<?php echo AdminServConfig::$PATH_RESOURCES; ?>css/displayserv.css" />
+		<script src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>js/displayserv.js"></script>
 		<script>
 			$(document).ready(function(){
 				$('#displayserv').displayServ({
-					color: '<?php echo $themeColor; ?>'
+					color: '<?php echo AdminServUI::getThemeColor(); ?>'
 				});
 			});
 		</script>
 		<div id="displayserv"></div>
-	<?php
-		}
-	?>
+	<?php endif; ?>
 </section>
 <?php
 	}

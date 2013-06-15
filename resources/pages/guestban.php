@@ -312,7 +312,7 @@
 						foreach($banList as $player){
 							// Ligne
 							$showBanList .= '<tr class="'; if($i%2){ $showBanList .= 'even'; }else{ $showBanList .= 'odd'; } $showBanList .= '">'
-								.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
+								.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
 								.'<td>'.$player['IPAddress'].'</td>'
 								.'<td>'.$player['ClientName'].'</td>'
 								.'<td class="checkbox"><input type="checkbox" name="banlist[]" value="'.$player['Login'].'" /></td>'
@@ -357,7 +357,7 @@
 						foreach($blackList as $player){
 							// Ligne
 							$showBlackList .= '<tr class="'; if($i%2){ $showBlackList .= 'even'; }else{ $showBlackList .= 'odd'; } $showBlackList .= '">'
-								.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
+								.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
 								.'<td class="checkbox"><input type="checkbox" name="blacklist[]" value="'.$player['Login'].'" /></td>'
 							.'</tr>';
 							$i++;
@@ -400,7 +400,7 @@
 						foreach($guestList as $player){
 							// Ligne
 							$showGuestList .= '<tr class="'; if($i%2){ $showGuestList .= 'even'; }else{ $showGuestList .= 'odd'; } $showGuestList .= '">'
-								.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
+								.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
 								.'<td class="checkbox"><input type="checkbox" name="guestlist[]" value="'.$player['Login'].'" /></td>'
 							.'</tr>';
 							$i++;
@@ -443,7 +443,7 @@
 						foreach($ignoreList as $player){
 							// Ligne
 							$showIgnoreList .= '<tr class="'; if($i%2){ $showIgnoreList .= 'even'; }else{ $showIgnoreList .= 'odd'; } $showIgnoreList .= '">'
-								.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
+								.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
 								.'<td class="checkbox"><input type="checkbox" name="ignorelist[]" value="'.$player['Login'].'" /></td>'
 							.'</tr>';
 							$i++;
@@ -571,7 +571,7 @@
 									
 									// Line
 									$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
-										.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.$filename.'</span></td>'
+										.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.$filename.'</span></td>'
 										.'<td class="center">'.ucfirst($data['type']).'</td>'
 										.'<td class="center">'.$nbPlayers.'</td>'
 										.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'

@@ -3,8 +3,8 @@
 	AdminServPlugin::setPluginsList();
 	
 	// Chargement du plugin
-	if(CURRENT_PLUGIN){
-		if( AdminServPlugin::hasPlugin(CURRENT_PLUGIN) ){
+	if(USER_PLUGIN){
+		if( AdminServPlugin::hasPlugin(USER_PLUGIN) ){
 			AdminServPlugin::getPlugin();
 			AdminServLogs::add('access', 'Plugin');
 		}

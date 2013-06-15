@@ -96,9 +96,9 @@ class AdminServPlugin {
 	public static function getConfig($pluginName = null, $returnField = null){
 		$out = null;
 		if($pluginName === null){
-			$pluginName = CURRENT_PLUGIN;
+			$pluginName = USER_PLUGIN;
 		}
-		$path = AdminServConfig::PATH_PLUGINS .$pluginName.'/config.ini';
+		$path = AdminServConfig::$PATH_PLUGINS .$pluginName.'/config.ini';
 		
 		if( file_exists($path) ){
 			$ini = parse_ini_file($path);
@@ -183,10 +183,10 @@ class AdminServPlugin {
 	public static function getPlugin($pluginName = null){
 		global $client, $translate, $category, $view, $index, $id, $directory;
 		if($pluginName === null){
-			$pluginName = CURRENT_PLUGIN;
+			$pluginName = USER_PLUGIN;
 		}
 		
-		$pluginPath = AdminServConfig::PATH_PLUGINS .$pluginName.'/';
+		$pluginPath = AdminServConfig::$PATH_PLUGINS .$pluginName.'/';
 		$scriptFile = $pluginPath.'script.php';
 		$viewFile = $pluginPath.'view.php';
 		if( file_exists($scriptFile) && file_exists($viewFile) ){
@@ -221,9 +221,9 @@ class AdminServPlugin {
 	public static function getPluginPath($pluginName = null){
 		$out = null;
 		if($pluginName === null){
-			$pluginName = CURRENT_PLUGIN;
+			$pluginName = USER_PLUGIN;
 		}
-		$path = AdminServConfig::PATH_PLUGINS;
+		$path = AdminServConfig::$PATH_PLUGINS;
 		
 		if($path && $pluginName){
 			$out = $path.$pluginName.'/';

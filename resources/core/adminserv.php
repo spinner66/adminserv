@@ -10,17 +10,18 @@ class AdminServ {
 	/**
 	* Inclue les classes PHP
 	*/
-	public static function getClass($resources = AdminServConfig::PATH_RESOURCES){
-		$pathCore = $resources.'core/';
+	public static function getClass(){
+		$pathCore = AdminServConfig::$PATH_RESOURCES.'core/';
 		require_once $pathCore.'adminlevel.php';
 		require_once $pathCore.'cache.php';
+		require_once $pathCore.'event.php';
 		require_once $pathCore.'logs.php';
 		require_once $pathCore.'plugin.php';
 		require_once $pathCore.'server.php';
 		require_once $pathCore.'sort.php';
 		require_once $pathCore.'ui.php';
 		
-		$pathClass = $resources.'class/';
+		$pathClass = AdminServConfig::$PATH_RESOURCES.'class/';
 		require_once $pathClass.'GbxRemote.inc.php';
 		require_once $pathClass.'gbxdatafetcher.inc.php';
 		require_once $pathClass.'utils.class.php';
@@ -32,6 +33,7 @@ class AdminServ {
 		require_once $pathClass.'upload.class.php';
 		require_once $pathClass.'zip.class.php';
 	}
+	
 	
 	/**
 	* Méthodes de debug
@@ -89,8 +91,11 @@ class AdminServ {
 	/**
 	* Vérifie la version de PHP
 	*/
-	public static function checkPHPVersion(){
-		return version_compare(PHP_VERSION, '5.3.0', '>=');
+	public static function checkPHPVersion($version){
+		if( !version_compare(PHP_VERSION, $version, '>=') ){
+			echo '<b>This PHP version is not compatible with AdminServ.</b><br />Your PHP version: '. PHP_VERSION .'<br />PHP version required: '.$version;
+			exit;
+		}
 	}
 	
 	
@@ -1226,7 +1231,7 @@ class AdminServ {
 			$out = '['.$client->getErrorCode().'] '.$client->getErrorMessage();
 		}
 		else{
-			$langCode = AdminServUI::getLang();
+			$langCode = AdminServUI::lang();
 			$chatLines = $client->getResponse();
 			
 			foreach($chatLines as $line){

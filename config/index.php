@@ -4,13 +4,9 @@
 	if( file_exists('./servers.cfg.php') ){
 		require_once './servers.cfg.php';
 	}
-	require_once '../'. AdminServConfig::PATH_INCLUDES .'adminserv.inc.php';
-	AdminServUI::getClass();
-	$lang = AdminServUI::getLang();
-	$langFile = '../'. AdminServConfig::PATH_INCLUDES .'lang/'.$lang.'.php';
-	if( file_exists($langFile) ){
-		require_once  $langFile;
-	}
+	require_once '../'. AdminServConfig::$PATH_RESOURCES .'core/adminserv.php';
+	AdminServ::getClass();
+	AdminServUI::lang();
 	
 	// On vérifie qu'une configuration existe
 	if( class_exists('ServerConfig') ){
