@@ -6,13 +6,6 @@
 class AdminServCache {
 	
 	/**
-	* Constantes
-	*/
-	public static $RESOURCES = AdminServConfig::PATH_RESOURCES;
-	public static $FOLDER = 'cache';
-	
-	
-	/**
 	* Enregistre la valeur dans un fichier
 	*
 	* @param string $name  -> Nom du cache
@@ -21,7 +14,7 @@ class AdminServCache {
 	*/
 	public static function set($name, $value){
 		$out = false;
-		$file = self::$RESOURCES . self::$FOLDER . '/' . $name . '.json';
+		$file = AdminServConfig::$PATH_RESOURCES.'cache/' . $name . '.json';
 		$data = json_encode($value);
 		
 		if( file_exists($file) ){
@@ -49,7 +42,7 @@ class AdminServCache {
 	*/
 	public static function get($name){
 		$out = array();
-		$file = self::$RESOURCES . self::$FOLDER . '/' . $name . '.json';
+		$file = AdminServConfig::$PATH_RESOURCES.'cache/' . $name . '.json';
 		
 		if( file_exists($file) ){
 			$data = file_get_contents($file);

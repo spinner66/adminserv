@@ -1,11 +1,12 @@
 <?php
 	// INCLUDES
 	session_start();
-	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }
-	else{ $adminservPath = null; }
-	require_once '../../'.$adminservPath.'config/servers.cfg.php';
+	$configPath = '../../'.$_SESSION['adminserv']['path'].'config/';
+	require_once $configPath.'adminserv.cfg.php';
+	require_once $configPath.'servers.cfg.php';
 	require_once '../core/adminserv.php';
-	AdminServ::getClass('../');
+	AdminServConfig::$PATH_RESOURCES = '../';
+	AdminServ::getClass();
 	
 	// ISSET
 	if( isset($_GET['srv']) ){ $serverName = $_GET['srv']; }else{ $serverName = null; }

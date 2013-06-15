@@ -49,16 +49,16 @@ class AdminServUI {
 	
 	
 	/**
-	* Récupère le thème courant
+	* Récupère le thème courant ou
 	*
-	* @param string $forceTheme -> Forcer l'utilisation du thème
+	* @param string $setTheme -> Utiliser un autre thème
 	* @return $_SESSION['theme']
 	*/
-	public static function getTheme($forceTheme = null){
+	public static function theme($setTheme = null){
 		$saveCookie = false;
 		
-		if($forceTheme){
-			$_SESSION['theme'] = $forceTheme;
+		if($setTheme){
+			$_SESSION['theme'] = $setTheme;
 			$saveCookie = true;
 		}
 		else{
@@ -71,7 +71,7 @@ class AdminServUI {
 						$_SESSION['theme'] = AdminServConfig::DEFAULT_THEME;
 					}
 					else{
-						$_SESSION['theme'] = 'blue';
+						$_SESSION['theme'] = 'red';
 					}
 					$saveCookie = true;
 				}
@@ -89,7 +89,35 @@ class AdminServUI {
 			Utils::addCookieData('adminserv_user', $cookieData, AdminServConfig::COOKIE_EXPIRE);
 		}
 		
+		if($setTheme){
+			if(USER_PAGE == 'index'){
+				Utils::redirection();
+			}
+			else{
+				Utils::redirection(false, '?p='.USER_PAGE);
+			}
+		}
+		
 		return strtolower($_SESSION['theme']);
+	}
+	
+	
+	/**
+	* Récupère la couleur définie dans le thème
+	*
+	* @param int $indexColor -> Index de la couleur à récupérer
+	* @return string code hexa
+	*/
+	public static function getThemeColor($indexColor = 0){
+		$out = null;
+		
+		if( self::hasTheme() && ($theme = self::theme()) ){
+			if( isset(ExtensionConfig::$THEMES[$theme]) && isset(ExtensionConfig::$THEMES[$theme][$indexColor]) ){
+				$out = ExtensionConfig::$THEMES[$theme][$indexColor];
+			}
+		}
+		
+		return $out;
 	}
 	
 	
@@ -148,14 +176,15 @@ class AdminServUI {
 	/**
 	* Récupère la langue courante
 	*
-	* @param string $forceLang -> Forcer l'utilisation de la langue
+	* @param string $setLang -> Forcer l'utilisation de la langue
 	* @return $_SESSION['lang']
 	*/
-	public static function getLang($forceLang = null){
+	public static function lang($setLang = null){
+		global $translate;
 		$saveCookie = false;
 		
-		if($forceLang){
-			$_SESSION['lang'] = $forceLang;
+		if($setLang){
+			$_SESSION['lang'] = $setLang;
 			$saveCookie = true;
 		}
 		else{
@@ -165,7 +194,13 @@ class AdminServUI {
 				}
 				else{
 					if( AdminServConfig::DEFAULT_LANGUAGE == 'auto' ){
-						$_SESSION['lang'] = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+						$_SESSION['lang'] = 'en';
+						$autoLangCode = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+						if( self::hasLang() ){
+							if( in_array($autoLangCode, ExtensionConfig::$LANG) ){
+								$_SESSION['lang'] = $autoLangCode;
+							}
+						}
 					}
 					else{
 						if(AdminServConfig::DEFAULT_LANGUAGE){
@@ -182,7 +217,7 @@ class AdminServUI {
 		
 		if($saveCookie){
 			$cookieData = array(
-				self::getTheme(),
+				self::theme(),
 				$_SESSION['lang'],
 				Utils::readCookieData('adminserv_user', 2),
 				Utils::readCookieData('adminserv_user', 3)
@@ -191,7 +226,22 @@ class AdminServUI {
 			Utils::addCookieData('adminserv_user', $cookieData, AdminServConfig::COOKIE_EXPIRE);
 		}
 		
-		return strtolower($_SESSION['lang']);
+		if($setLang){
+			if(USER_PAGE == 'index'){
+				Utils::redirection();
+			}
+			else{
+				Utils::redirection(false, '?p='.USER_PAGE);
+			}
+		}
+		
+		$langCode = strtolower($_SESSION['lang']);
+		$langFile = AdminServConfig::$PATH_RESOURCES .'lang/'.$langCode.'.php';
+		if( file_exists($langFile) ){
+			require_once $langFile;
+		}
+		
+		return $langCode;
 	}
 	
 	
@@ -222,10 +272,10 @@ class AdminServUI {
 				$currentLangCode = key($currentLang);
 				$currentLangName = current($currentLang);
 				unset($list[$currentLangCode]);
-				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESOURCES .'images/lang/'.$currentLangCode.'.png);" href="'.$param.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
+				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::$PATH_RESOURCES .'images/lang/'.$currentLangCode.'.png);" href="'.$param.$currentLangCode.'" title="'.$currentLangName.'"></a></li>';
 			}
 			foreach($list as $code => $name){
-				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::PATH_RESOURCES .'images/lang/'.$code.'.png);" href="'.$param.$code.'" title="'.$name.'"></a></li>';
+				$out .= '<li><a tabindex="-1" class="lang-flag" style="background-image: url('. AdminServConfig::$PATH_RESOURCES .'images/lang/'.$code.'.png);" href="'.$param.$code.'" title="'.$name.'"></a></li>';
 			}
 			$out .= '</ul>';
 		}
@@ -258,10 +308,10 @@ class AdminServUI {
 		}
 		$GLOBALS['body_class'] = trim($GLOBALS['body_class']);
 		
-		require_once AdminServConfig::PATH_RESOURCES . 'templates/header.tpl.php';
+		require_once AdminServConfig::$PATH_RESOURCES . 'templates/header.tpl.php';
 	}
 	public static function getFooter(){
-		require_once AdminServConfig::PATH_RESOURCES . 'templates/footer.tpl.php';
+		require_once AdminServConfig::$PATH_RESOURCES . 'templates/footer.tpl.php';
 	}
 	
 	
@@ -269,7 +319,7 @@ class AdminServUI {
 	* Récupère le CSS/JS du site
 	*/
 	public static function getCss(){
-		$path = AdminServConfig::PATH_RESOURCES .'css/';
+		$path = AdminServConfig::$PATH_RESOURCES .'css/';
 		$out = '<link rel="stylesheet" href="'.$path.'fileuploader.css" />'."\n\t\t"
 		.'<link rel="stylesheet" href="'.$path.'global.css" />'."\n\t\t"
 		.'<!--[if IE]><link rel="stylesheet" href="'.$path.'ie.css" /><![endif]-->'."\n\t\t";
@@ -282,7 +332,7 @@ class AdminServUI {
 		return $out;
 	}
 	public static function getJS(){
-		$path = AdminServConfig::PATH_RESOURCES .'js/';
+		$path = AdminServConfig::$PATH_RESOURCES .'js/';
 		$out = '<script src="'.$path.'jquery.js"></script>'."\n\t\t"
 		.'<script src="'.$path.'jquery-ui.js"></script>'."\n\t\t"
 		.'<script src="'.$path.'colorpicker.js"></script>'."\n\t\t"
@@ -394,7 +444,7 @@ class AdminServUI {
 		if( isset($gameinfos[1]) ){ $nextGamInf = $gameinfos[1]; }else{ $nextGamInf = null; }
 		
 		$out = '<fieldset class="gameinfos_general">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/restartrace.png" alt="" />'.Utils::t('General').'</legend>'
+			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/restartrace.png" alt="" />'.Utils::t('General').'</legend>'
 			.'<table>'
 				.'<tr>'
 					.'<td class="key"><label for="NextGameMode">'.Utils::t('Game mode').'</label></td>';
@@ -489,7 +539,7 @@ class AdminServUI {
 		
 		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
 			$out .= '<fieldset id="gameMode-script" class="gameinfos_script" hidden="hidden">'
-				.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/options.png" alt="" />'.AdminServ::getGameModeName(0).'</legend>'
+				.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/options.png" alt="" />'.AdminServ::getGameModeName(0).'</legend>'
 				.'<table class="game_infos">'
 					.'<tr>'
 						.'<td class="key"><label for="NextScriptName">'.Utils::t('Script name').'</label></td>';
@@ -550,7 +600,7 @@ class AdminServUI {
 		}
 		
 		$out .= '<fieldset id="gameMode-rounds" class="gameinfos_round" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/rt_rounds.png" alt="" />'.AdminServ::getGameModeName(1, true).'</legend>'
+			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/rt_rounds.png" alt="" />'.AdminServ::getGameModeName(1, true).'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
 					.'<td class="key"><label for="NextRoundsUseNewRules">'.Utils::t('Use new rules').'</label></td>';
@@ -571,7 +621,7 @@ class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-timeattack" class="gameinfos_timeattack" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/rt_timeattack.png" alt="" />'.AdminServ::getGameModeName(2, true).'</legend>'
+			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/rt_timeattack.png" alt="" />'.AdminServ::getGameModeName(2, true).'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
 					.'<td class="key"><label for="NextTimeAttackLimit">'.Utils::t('Time limit').' <span>('.Utils::t('sec').')</span></label></td>';
@@ -590,7 +640,7 @@ class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-team" class="gameinfos_team" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/rt_team.png" alt="" />'.AdminServ::getGameModeName(3, true).'</legend>'
+			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/rt_team.png" alt="" />'.AdminServ::getGameModeName(3, true).'</legend>'
 			.'<table class="game_infos">'
 				.'<tr>'
 					.'<td class="key"><label for="NextTeamUseNewRules">'.Utils::t('Use new rules').'</label></td>';
@@ -610,7 +660,7 @@ class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-laps" class="gameinfos_laps" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/rt_laps.png" alt="" />'.AdminServ::getGameModeName(4, true).'</legend>'
+			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/rt_laps.png" alt="" />'.AdminServ::getGameModeName(4, true).'</legend>'
 			.'<table class="game_infos">'
 				.self::getGameInfosField($gameinfos, 'Number of laps', 'LapsNbLaps')
 				.self::getGameInfosField($gameinfos, Utils::t('Time limit').' <span>('.Utils::t('sec').')</span>', 'LapsTimeLimit')
@@ -618,7 +668,7 @@ class AdminServUI {
 		.'</fieldset>'
 		
 		.'<fieldset id="gameMode-cup" class="gameinfos_cup" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::PATH_RESOURCES .'images/16/rt_cup.png" alt="" />'.AdminServ::getGameModeName(5, true).'</legend>'
+			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/rt_cup.png" alt="" />'.AdminServ::getGameModeName(5, true).'</legend>'
 			.'<table class="game_infos">'
 				.self::getGameInfosField($gameinfos, 'Points limit', 'CupPointsLimit')
 				.self::getGameInfosField($gameinfos, 'Rounds per map', 'CupRoundsPerMap')
@@ -742,7 +792,7 @@ class AdminServUI {
 					
 					$out .= '<li>'
 						.'<a href="./?p='. USER_PAGE . $params.'">'
-							.'<img src="'. AdminServConfig::PATH_RESOURCES .'images/16/back.png" alt="" />'
+							.'<img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/back.png" alt="" />'
 							.'<span class="dir-name">'.Utils::t('Parent folder').'</span>'
 						.'</a>'
 					.'</li>';
@@ -817,7 +867,7 @@ class AdminServUI {
 	*/
 	public static function getTemplateMapsOrderList($list){
 		$out = null;
-		$pathRessources = AdminServConfig::PATH_RESOURCES;
+		$pathRessources = AdminServConfig::$PATH_RESOURCES;
 		
 		if( is_array($list) && count($list) > 0 ){
 			foreach($list['lst'] as $id => $map){

@@ -2,15 +2,18 @@
 	// INCLUDES
 	session_start();
 	require_once 'config/adminserv.cfg.php';
-	if( file_exists('config/servers.cfg.php') ){
-		include_once 'config/servers.cfg.php';
-	}
+	require_once 'config/servers.cfg.php';
 	require_once 'config/extension.cfg.php';
-	require_once AdminServConfig::PATH_RESOURCES .'core/adminserv.php';
-	if( !AdminServ::checkPHPVersion() ){
-		echo '<b>This PHP version is not compatible with AdminServ.</b><br />Your PHP version: '. PHP_VERSION .'<br />PHP version required: 5.3.0';
-		exit;
+	require_once 'config/adminlevel.cfg.php';
+	require_once AdminServConfig::$PATH_RESOURCES .'core/adminserv.php';
+	
+	// LOAD TIMER
+	if(ADMINSERV_TIMER){
+		AdminServ::startTimer();
 	}
+	
+	// INITIALIZE
+	AdminServ::checkPHPVersion('5.3.0');
 	define('PATH_ROOT', basename(__DIR__).'/');
 	$_SESSION['adminserv']['path'] = null;
 	if(AdminServConfig::MULTI_ADMINSERV){
@@ -18,66 +21,16 @@
 	}
 	AdminServ::getClass();
 	
-	// LOAD TIMER
-	if(ADMINSERV_TIMER){
-		AdminServ::startTimer();
-	}
-	
-	
-	// ISSET
-	if( isset($_GET['p']) ){
-		define('USER_PAGE', htmlspecialchars($_GET['p']) );
-	}
-	else{
-		if( isset($_SESSION['adminserv']['check_password']) || isset($_SESSION['adminserv']['get_password']) ){
-			define('USER_PAGE', 'config-servers');
-		}
-		else{
-			define('USER_PAGE', 'index');
-		}
-	}
-	if( isset($_GET['c']) ){ $category = addslashes( htmlspecialchars($_GET['c']) ); }else{ $category = null; }
-	if( isset($_GET['view']) ){ $view = addslashes( htmlspecialchars($_GET['view']) ); }else{ $view = null; }
-	if( isset($_GET['i']) ){ $index = intval($_GET['i']); }else{ $index = -1; }
-	if( isset($_GET['id']) ){ $id = intval($_GET['id']); }else{ $id = -1; }
-	if( isset($_GET['d']) ){ $directory = addslashes( urldecode($_GET['d']) ); }else{ $directory = null; }
-	if( isset($_GET['th']) ){ $forceTheme = addslashes($_GET['th']); }else{ $forceTheme = null; }
-	if( isset($_GET['lg']) ){ $forceLang = addslashes($_GET['lg']); }else{ $forceLang = null; }
-	
+	// GLOBALS
+	AdminServEvent::getGlobals();
 	
 	// THEME
-	$userTheme = AdminServUI::getTheme($forceTheme);
-	if($forceTheme){
-		if(USER_PAGE == 'index'){
-			Utils::redirection();
-		}
-		else{
-			Utils::redirection(false, '?p='.USER_PAGE);
-		}
-	}
-	else{
-		define('USER_THEME', $userTheme);
-	}
-	
+	$userTheme = AdminServUI::theme($setTheme);
+	define('USER_THEME', $userTheme);
 	
 	// LANG
-	$userLanguage = AdminServUI::getLang($forceLang);
-	if($forceLang){
-		if(USER_PAGE == 'index'){
-			Utils::redirection();
-		}
-		else{
-			Utils::redirection(false, '?p='.USER_PAGE);
-		}
-	}
-	else{
-		define('USER_LANG', $userLanguage);
-		$langFile = AdminServConfig::PATH_RESOURCES .'lang/'. USER_LANG .'.php';
-		if( file_exists($langFile) ){
-			require_once $langFile;
-		}
-	}
-	
+	$userLang = AdminServUI::lang($setLang);
+	define('USER_LANG', $userLang);
 	
 	// VÉRIFICATION DES DROITS
 	$checkRightsList = array(
@@ -90,23 +43,15 @@
 	}
 	AdminServ::checkRights($checkRightsList);
 	
-	
-	// DÉCONNEXION
-	if( isset($_GET['error']) || isset($_GET['logout']) ){
-		session_unset();
-		session_destroy();
-		if( isset($_GET['logout']) ){
-			Utils::redirection(false);
-		}
-	}
-	
+	// LOGOUT
+	AdminServEvent::logout();
 	
 	// LOGS
 	AdminServLogs::initialize();
 	
-	
 	// PLUGINS
-	define('CURRENT_PLUGIN', AdminServPlugin::getCurrent() );
+	$userPlugin = AdminServPlugin::getCurrent();
+	define('USER_PLUGIN', $userPlugin);
 	
 	
 	// CONFIG PAGES LIST
@@ -119,30 +64,19 @@
 	
 	
 	// INDEX
-	unset($forceTheme, $userTheme, $forceLang, $userLanguage, $langFile);
-	if( isset($_SESSION['adminserv']['sid']) && isset($_SESSION['adminserv']['password']) && isset($_SESSION['adminserv']['adminlevel']) && !isset($_GET['error']) ){
+	unset($setTheme, $userTheme, $setLang, $userLang);
+	if( AdminServEvent::isLoggedIn() ){
 		
-		// SWITCHS
-		if( isset($_GET['switch']) && $_GET['switch'] != null ){
-			$_SESSION['adminserv']['sid'] = AdminServServerConfig::getServerId($_GET['switch']);
-			$_SESSION['adminserv']['name'] = $_GET['switch'];
-			unset($_SESSION['adminserv']['teaminfo']);
-			Utils::addCookieData('adminserv', array($_SESSION['adminserv']['sid'], Utils::readCookieData('adminserv', 1)), AdminServConfig::COOKIE_EXPIRE);
-			if(USER_PAGE && USER_PAGE != 'index'){
-				Utils::redirection(false, '?p='.USER_PAGE);
-			}else{
-				Utils::redirection();
-			}
-		}
+		// SWITCH SERVER
+		AdminServEvent::switchServer();
 		
-		// CONNEXION
+		// SERVER CONNECTION
 		AdminServ::initialize();
-		
 		
 		// PAGES GROUPES
 		if( strstr(USER_PAGE, '-') ){
 			$pageEx = explode('-', USER_PAGE);
-			$pageInc = AdminServConfig::PATH_RESOURCES .'pages/'.$pageEx[0].'.inc.php';
+			$pageInc = AdminServConfig::$PATH_RESOURCES .'pages/'.$pageEx[0].'.inc.php';
 			if( file_exists($pageInc) ){
 				include_once $pageInc;
 			}
@@ -163,7 +97,7 @@
 			unset($pagesList[0]);
 			foreach($pagesList as $page){
 				if(USER_PAGE === $page){
-					$file = AdminServConfig::PATH_RESOURCES .'pages/'.$page.'.php';
+					$file = AdminServConfig::$PATH_RESOURCES .'pages/'.$page.'.php';
 					if( file_exists($file) ){
 						include_once $file;
 						AdminServLogs::add('access', 'Control');
@@ -179,8 +113,8 @@
 				Utils::redirection(false, './config/');
 			}
 			else{
-				if(!CURRENT_PLUGIN){
-					include_once AdminServConfig::PATH_RESOURCES .'pages/'.$pagesList[0].'.php';
+				if(!USER_PLUGIN){
+					include_once AdminServConfig::$PATH_RESOURCES .'pages/'.$pagesList[0].'.php';
 					AdminServLogs::add('access', 'Control');
 				}
 			}
@@ -191,7 +125,7 @@
 		if( in_array(USER_PAGE, $configPagesList) ){
 			foreach($configPagesList as $page){
 				if(USER_PAGE === $page){
-					$file = AdminServConfig::PATH_RESOURCES .'pages/'.$page.'.php';
+					$file = AdminServConfig::$PATH_RESOURCES .'pages/'.$page.'.php';
 					if( file_exists($file) ){
 						$GLOBALS['page_title'] = 'Configuration';
 						include_once $file;
@@ -204,7 +138,7 @@
 		// CONNEXION
 		else{
 			$GLOBALS['page_title'] = 'Connexion';
-			include_once AdminServConfig::PATH_RESOURCES .'pages/connection.php';
+			include_once AdminServConfig::$PATH_RESOURCES .'pages/connection.php';
 			AdminServLogs::add('access', 'Connection');
 		}
 	}
