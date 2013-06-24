@@ -1,4 +1,10 @@
 <?php
+/**
+* French translation
+*
+* @author   Kev717
+* @version  1.3
+*/
 $translate = array(
 	'Access server' => 'Accéder au serveur',
 	'Access relay' => 'Accéder au relai',

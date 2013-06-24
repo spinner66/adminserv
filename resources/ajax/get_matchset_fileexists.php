@@ -1,7 +1,11 @@
 <?php
 	// INCLUDES
-	require_once '../adminserv.inc.php';
-	AdminServUI::getClass();
+	session_start();
+	$configPath = '../../'.$_SESSION['adminserv']['path'].'config/';
+	require_once $configPath.'adminserv.cfg.php';
+	require_once '../core/adminserv.php';
+	AdminServConfig::$PATH_RESOURCES = '../';
+	AdminServ::getClass();
 	
 	// ISSET
 	if( isset($_GET['path']) ){ $path = $_GET['path']; }else{ $path = null; }

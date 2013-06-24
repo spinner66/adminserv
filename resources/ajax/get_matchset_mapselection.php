@@ -1,16 +1,12 @@
 <?php
 	// INCLUDES
 	session_start();
-	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }
-	else{ $adminservPath = null; }
-	require_once '../../'.$adminservPath.'config/adminserv.cfg.php';
-	require_once '../adminserv.inc.php';
-	require_once '../class/utils.class.php';
-	$langCode = AdminServUI::getLang();
-	$langFile = '../lang/'.$langCode.'.php';
-	if( file_exists($langFile) ){
-		require_once $langFile;
-	}
+	$configPath = '../../'.$_SESSION['adminserv']['path'].'config/';
+	require_once $configPath.'adminserv.cfg.php';
+	require_once '../core/adminserv.php';
+	AdminServConfig::$PATH_RESOURCES = '../';
+	AdminServ::getClass();
+	AdminServUI::lang();
 	
 	// DATA
 	if( !isset($_SESSION['adminserv']['matchset_maps_selected']) ){

@@ -1,4 +1,11 @@
 <?php
+/**
+* Español translation
+*
+* @author   Revo
+* @author   Kev717
+* @version  1.1
+*/
 $translate = array(
 	'Access server' => 'Acceder al servidor',
 	'Access relay' => 'Acceder al repetidor',

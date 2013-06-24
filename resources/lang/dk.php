@@ -1,4 +1,10 @@
 ﻿<?php
+/**
+* Danish translation
+*
+* @author   Steppie
+* @version  1.0
+*/
 $translate = array(
 	'Access server' => 'Tilslut server',
 	'Access relay' => 'Tilslut reply',
