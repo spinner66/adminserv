@@ -1,4 +1,10 @@
 <?php
+/**
+* Polish translation
+*
+* @author   Djhubertus 
+* @version  1.0
+*/
 $translate = array(
 	'Access server' => 'Dostęp do serwera',
 	'Access relay' => 'Dostęp do transmisji',

@@ -2,19 +2,14 @@
 	// INCLUDES
 	session_start();
 	if( !isset($_SESSION['adminserv']['sid']) ){ exit; }
-	if( isset($_SESSION['adminserv']['path']) ){ $adminservPath = $_SESSION['adminserv']['path']; }
-	else{ $adminservPath = null; }
-	$pathConfig = '../../'.$adminservPath.'config/';
-	require_once $pathConfig.'adminserv.cfg.php';
-	require_once $pathConfig.'extension.cfg.php';
-	require_once $pathConfig.'servers.cfg.php';
-	require_once '../adminserv.inc.php';
-	AdminServUI::getClass();
-	$langCode = AdminServUI::getLang();
-	$langFile = '../lang/'.$langCode.'.php';
-	if( file_exists($langFile) ){
-		require_once $langFile;
-	}
+	$configPath = '../../'.$_SESSION['adminserv']['path'].'config/';
+	require_once $configPath.'adminserv.cfg.php';
+	require_once $configPath.'extension.cfg.php';
+	require_once $configPath.'servers.cfg.php';
+	require_once '../core/adminserv.php';
+	AdminServConfig::$PATH_RESOURCES = '../';
+	AdminServ::getClass();
+	AdminServUI::lang();
 	
 	// ISSET
 	if( isset($_GET['s']) ){ $hideServerLines = $_GET['s']; }else{ $hideServerLines = false; }

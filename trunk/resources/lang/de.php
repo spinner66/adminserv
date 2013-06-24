@@ -1,4 +1,11 @@
 ﻿<?php
+/**
+* Deutsch translation
+*
+* @author   Revo
+* @author   Nero51282
+* @version  1.1
+*/
 $translate = array(
 	'Access server' => 'Auf Server zugreifen',
 	'Access relay' => 'Auf Relay zugreifen',

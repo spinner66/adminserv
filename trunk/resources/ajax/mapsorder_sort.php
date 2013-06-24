@@ -1,7 +1,11 @@
 <?php
 	// INCLUDES
-	require_once '../adminserv.inc.php';
-	require_once '../class/tmnick.class.php';
+	session_start();
+	$configPath = '../../'.$_SESSION['adminserv']['path'].'config/';
+	require_once $configPath.'adminserv.cfg.php';
+	require_once '../core/adminserv.php';
+	AdminServConfig::$PATH_RESOURCES = '../';
+	AdminServ::getClass();
 	
 	// ISSET
  	if( isset($_POST['srt']) ){ $sort = $_POST['srt']; }else{ $sort = null; }

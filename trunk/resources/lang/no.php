@@ -1,4 +1,10 @@
 ﻿<?php
+/**
+* Norsk translation
+*
+* @author   W00p 
+* @version  1.0
+*/
 $translate = array(
 	'Access server' => 'Tilgang server',
 	'Access relay' => 'Tilgang relay',

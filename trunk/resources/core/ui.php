@@ -81,7 +81,7 @@ class AdminServUI {
 		if($saveCookie){
 			$cookieData = array(
 				$_SESSION['theme'],
-				self::getLang(),
+				self::lang(),
 				Utils::readCookieData('adminserv_user', 2),
 				Utils::readCookieData('adminserv_user', 3)
 			);
