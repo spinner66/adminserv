@@ -889,7 +889,9 @@ function matchset_getFileExists(filename){
 */
 function matchset_mapImport(){
 	var path = $('#mapsDirectoryList').val();
-	$.getJSON(getResourcesPath()+'ajax/get_matchset_mapimport.php', {path: path}, function(data){
+	var directory = getUrlParams('d');
+	
+	$.getJSON(getResourcesPath()+'ajax/get_matchset_mapimport.php', {path: path, d: directory}, function(data){
 		if(data != null){
 			matchset_setNbMapSelection(data.nbm.count);
 			$('.creatematchset .maps').removeClass('loading');
@@ -898,9 +900,10 @@ function matchset_mapImport(){
 }
 function matchset_mapImportSelection(){
 	var path = $('#mapsDirectoryList').val();
-	var path_includes = getResourcesPath();
-	var path_ressources = getResourcesPath();
-	$.getJSON(path_includes+'ajax/get_matchset_mapimport.php', {path: path, op: 'getSelection'}, function(data){
+	var directory = getUrlParams('d');
+	var resourcesPath = getResourcesPath();
+	
+	$.getJSON(resourcesPath+'ajax/get_matchset_mapimport.php', {path: path, d: directory, op: 'getSelection'}, function(data){
 		if(data != null){
 			var out = '';
 			
@@ -909,10 +912,10 @@ function matchset_mapImportSelection(){
 			if( typeof(data.lst) == 'object' ){
 				$.each(data.lst, function(i, map){
 					out += '<tr class="'; if(i%2){ out += 'even'; }else{ out += 'odd'; } out += '">'
-						+'<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
+						+'<td class="imgleft"><img src="'+resourcesPath+'images/16/map.png" alt="" />'
 							+'<span title="'+map.FileName+'">'+map.Name+'</span>'
 						out += '</td>'
-						+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>';
+						+'<td class="imgcenter"><img src="'+resourcesPath+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>';
 						if(map.Type){
 							out += '<td><span title="'+map.Type.FullName+'">'+map.Type.Name+'</span></td>';
 						}
@@ -955,7 +958,7 @@ function matchset_mapImportSelection(){
 								}
 							});
 						}
-						$.getJSON(path_includes+'ajax/get_matchset_mapimport.php', {path: path, op: 'setSelection', select: listSelectionId}, function(data){
+						$.getJSON(resourcesPath+'ajax/get_matchset_mapimport.php', {path: path, op: 'setSelection', select: listSelectionId}, function(data){
 							if(data != null){
 								matchset_setNbMapSelection(data.nbm.count);
 								$('#mapImportSelectionDialog').dialog('close');

@@ -65,7 +65,7 @@ $(document).ready(function(){
 				}
 			});
 		}
-		else if( $('body').hasClass('section-index') ){
+		else{
 			// Adminlevel
 			getServerAdminLevel();
 			$('#as_server').change(function(){

@@ -99,11 +99,11 @@ header {
 	color: #ddd;
 	font-size: 3.7em;
 	letter-spacing: -2px;
-	-webkit-transition: color .2s;
-	-moz-transition: color .2s;
-	-ms-transition: color .2s;
-	-o-transition: color .2s;
-	transition: color .2s;
+	-webkit-transition: color .2s ease-in-out;
+	-moz-transition: color .2s ease-in-out;
+	-ms-transition: color .2s ease-in-out;
+	-o-transition: color .2s ease-in-out;
+	transition: color .2s ease-in-out;
 }
 #title .title-color {
 	color: #5e9cd5;
