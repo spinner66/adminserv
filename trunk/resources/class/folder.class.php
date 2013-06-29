@@ -10,8 +10,8 @@ abstract class Folder {
 	* Liste les dossiers et fichiers d'un répertoire
 	*
 	* @param  string $path                 -> Le chemin du répertoire à lister
-	* @param  array  $hidden_folders       -> Les dossiers à masquer : array('dossier1', 'dossier2);
-	* @param  array  $hidden_files         -> Les fichiers ou extension à masquer : array('Thumbs.db', 'index.php', 'exe');
+	* @param  mixed  $hidden_folders       -> Les dossiers à masquer : array('dossier1', 'dossier2); ou 'all' pour ne pas charger les dossiers
+	* @param  mixed  $hidden_files         -> Les fichiers ou extension à masquer : array('Thumbs.db', 'index.php', 'exe');  ou 'all' pour ne pas charger les fichiers
 	* @param  int    $recent_status_period -> Période pour afficher le statut "récent"
 	* @return array ['folders'], ['files']
 	*/
@@ -33,13 +33,13 @@ abstract class Folder {
 					if($entry != '.' && $entry != '..'){
 						$pathToEntry = $path.'/'.$entry;
 						
-						if( is_dir($pathToEntry) ){
+						if($hiddenFolders !== 'all' && is_dir($pathToEntry) ){
 							if( !in_array($entry, $hiddenFolders) ){
 								$out['folders'][$entry]['size'] = Str::formatSize(self::getSize($pathToEntry));
 								$out['folders'][$entry]['nb_file'] = self::countFiles($pathToEntry, $hiddenFiles);
 							}
 						}
-						else if( !in_array($entry, $hiddenFiles) ){
+						else if($hiddenFiles !== 'all' && !in_array($entry, $hiddenFiles) ){
 							$extension = File::getExtension($entry);
 							
 							if( !in_array($extension, $hiddenFiles) ){

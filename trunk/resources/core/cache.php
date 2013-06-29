@@ -4,17 +4,30 @@
 * Classe pour la gestion du cache
 */
 class AdminServCache {
+	private $folder;
+	
+	/**
+	* Initialisation du cache
+	*/
+	function __construct(){
+		$this->folder = AdminServConfig::$PATH_RESOURCES.'cache/';
+		
+		if( !file_exists($this->folder) ){
+			Folder::create($this->folder);
+		}
+	}
+	
 	
 	/**
 	* Enregistre la valeur dans un fichier
 	*
-	* @param string $name  -> Nom du cache
+	* @param string $key   -> Clef du cache
 	* @param array  $value -> Valeur à enregistrer
 	* @return bool
 	*/
-	public static function set($name, $value){
+	public function set($key, $value){
 		$out = false;
-		$file = AdminServConfig::$PATH_RESOURCES.'cache/' . $name . '.json';
+		$file = $this->folder . $key . '.json';
 		$data = json_encode($value);
 		
 		if( file_exists($file) ){
@@ -24,7 +37,7 @@ class AdminServCache {
 		}
 		else{
 			if( File::save($file) ){
-				self::set($name, $value);
+				self::set($key, $value);
 			}
 		}
 		
@@ -37,21 +50,16 @@ class AdminServCache {
 	/**
 	* Récupère la valeur depuis un fichier
 	*
-	* @param string $name -> Nom du cache à récupérer
+	* @param string $key -> Clef du cache à récupérer
 	* @return array()
 	*/
-	public static function get($name){
+	public function get($key){
 		$out = array();
-		$file = AdminServConfig::$PATH_RESOURCES.'cache/' . $name . '.json';
+		$file = $this->folder . $key . '.json';
 		
 		if( file_exists($file) ){
 			$data = file_get_contents($file);
 			$out = json_decode($data, true);
-		}
-		else{
-			if( File::save($file) ){
-				self::get($name);
-			}
 		}
 		
 		self::getErrorMsg('get');

@@ -1555,8 +1555,10 @@ class AdminServ {
 		if( is_array($directory) ){
 			if( !empty($directory['files']) ){
 				// Récupération du cache existant
-				$cacheName = 'mapslist-'.Str::replaceChars($currentPath);
-				$cacheMaps = AdminServCache::get($cacheName);
+				$mapsDirectoryPath = self::getMapsDirectoryPath();
+				$cache = new AdminServCache();
+				$cacheKey = 'mapslist-'.Str::replaceChars($mapsDirectoryPath.$currentPath);
+				$cacheMaps = $cache->get($cacheKey);
 				
 				// Fichiers
 				$files = array();
@@ -1575,14 +1577,14 @@ class AdminServ {
 							unset($cacheMaps[$fileName]);
 						}
 					}
-					AdminServCache::set($cacheName, $cacheMaps);
+					$cache->set($cacheKey, $cacheMaps);
 				}
 				
 				// Ajout des fichiers manquant dans le cache
 				$cacheMissingFiles = array_diff_key($files, $cacheMaps);
 				if( !empty($cacheMissingFiles) ){
 					// Path
-					$path = self::getMapsDirectoryPath().$currentPath;
+					$path = $mapsDirectoryPath.$currentPath;
 					
 					// Création du cache
 					foreach($cacheMissingFiles as $file => $values){
@@ -1632,7 +1634,7 @@ class AdminServ {
 					if( !empty($cacheMaps) ){
 						$out['lst'] = array_merge($cacheMaps, $out['lst']);
 					}
-					AdminServCache::set($cacheName, $out['lst']);
+					$cache->set($cacheKey, $out['lst']);
 				}
 				else{
 					$out['lst'] = $cacheMaps;

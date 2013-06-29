@@ -13,6 +13,7 @@
 	
 	// ISSET
 	if( isset($_GET['path']) ){ $path = addslashes($_GET['path']); }else{ $path = null; }
+	if( isset($_GET['d']) ){ $directory = addslashes($_GET['d']); }else{ $directory = null; }
 	if( isset($_GET['op']) ){ $operation = addslashes($_GET['op']); }else{ $operation = null; }
 	if( isset($_GET['select']) ){ $selection = $_GET['select']; }else{ $selection = null; }
 	
@@ -24,10 +25,7 @@
 			$mapsImport = AdminServ::getMapList();
 		}
 		else{
-			$mapsDirectoryPath = AdminServ::getMapsDirectoryPath();
-			$directory = str_replace($mapsDirectoryPath, '', $path);
 			$currentDir = Folder::read($path, AdminServConfig::$MATCHSET_HIDDEN_FOLDERS, AdminServConfig::$MATCHSET_EXTENSION, intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
-			AdminServCache::$RESOURCES = '../';
 			$mapsImport = AdminServ::getLocalMapList($currentDir, $directory);
 		}
 		
