@@ -724,7 +724,7 @@ function slideUpNewFolderForm(){
 * Fait un tri sur la liste des maps pour la page "maps-order"
 */
 function setMapsOrderSort(sort, order){
-	var path_ressources = getResourcesPath();
+	var resourcesPath = getResourcesPath();
 	var list = $('#jsonlist').val();
 	
 	$.post(getResourcesPath()+'ajax/mapsorder_sort.php', {srt: sort, ord: order, lst: list}, function(data){
@@ -735,8 +735,8 @@ function setMapsOrderSort(sort, order){
 					out += '<li class="ui-state-default">'
 						+ '<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
 						+ '<div class="order-map-name" title="'+map.FileName+'">'+map.Name+'</div>'
-						+ '<div class="order-map-env"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
-						+ '<div class="order-map-author"><img src="'+path_ressources+'images/16/mapauthor.png" alt="" />'+map.Author+'</div>'
+						+ '<div class="order-map-env"><img src="'+resourcesPath+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
+						+ '<div class="order-map-author"><img src="'+resourcesPath+'images/16/mapauthor.png" alt="" />'+map.Author+'</div>'
 					+ '</li>';
 				});
 			}
