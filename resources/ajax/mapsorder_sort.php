@@ -32,7 +32,7 @@
 				break;
 		}
 		if($order == 'desc'){
-			rsort($list['lst']);
+			$list['lst'] = array_reverse($list['lst']);
 		}
 		$out = array(
 			'cid' => $list['cid'],

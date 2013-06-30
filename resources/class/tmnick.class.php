@@ -79,7 +79,7 @@ class TmNick {
 	
 	
 	/**
-	* Convertie une chaine TM en HTML & CSS
+	* Convertie une chaine TM en HTML
 	*
 	* @param string $nick                   -> La chaine TM pas de limite de longueur, et peut être multiligne
 	* @param int    $fontSize               -> Taille de la police
@@ -526,7 +526,7 @@ class TmNick {
 	* @return string texte sans codes $s, $o, etc ...
 	*/
 	public static function stripNadeoCode($str, $select = array() ){
-		if( count($select) > 0 ){
+		if( !empty($select) ){
 			$stripNadeoCode = $select;
 		}
 		else{

@@ -802,6 +802,7 @@ $(document).ready(function(){
 				else{
 					var order = 'desc';
 				}
+				
 				// Tri
 				setMapsOrderSort($(this).parent('.icon').parent('li').children('input').val(), order);
 				
