@@ -30,6 +30,7 @@ abstract class Folder {
 			else{
 				$dir = scandir($path);
 				foreach($dir as $entry){
+					$entry = utf8_encode($entry);
 					if($entry != '.' && $entry != '..'){
 						$pathToEntry = $path.'/'.$entry;
 						

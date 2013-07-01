@@ -31,7 +31,7 @@ class AdminServCache {
 		$data = json_encode($value);
 		
 		if( file_exists($file) ){
-			if( File::save($file, $data) ){
+			if( File::save($file, $data, false) ){
 				$out = true;
 			}
 		}
@@ -41,7 +41,11 @@ class AdminServCache {
 			}
 		}
 		
-		self::getErrorMsg('set');
+		$error = self::getErrorMsg('set');
+		if($error){
+			$out = false;
+			AdminServ::error($error);
+		}
 		
 		return $out;
 	}
@@ -62,7 +66,34 @@ class AdminServCache {
 			$out = json_decode($data, true);
 		}
 		
-		self::getErrorMsg('get');
+		$error = self::getErrorMsg('get');
+		if($error){
+			$out = array();
+			AdminServ::error($error);
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Supprime un fichier de cache
+	*
+	* @param string $key -> Clef du cache à supprimer
+	* @return bool
+	*/
+	public function delete($key){
+		$out = false;
+		$file = $this->folder . $key . '.json';
+		
+		if( file_exists($file) ){
+			if( ($result = File::delete($file)) !== true ){
+				AdminServ::error($result);
+			}
+			else{
+				$out = true;
+			}
+		}
 		
 		return $out;
 	}
@@ -74,19 +105,19 @@ class AdminServCache {
 	public static function getErrorMsg($type){
 		switch( json_last_error() ){
 			case JSON_ERROR_DEPTH:
-				AdminServ::error('JSON ('.$type.') - Profondeur maximale atteinte');
+				return 'CACHE ('.$type.') - Profondeur maximale atteinte';
 				break;
 			case JSON_ERROR_STATE_MISMATCH:
-				AdminServ::error('JSON ('.$type.') - Inadéquation des modes ou underflow');
+				return 'CACHE ('.$type.') - Inadéquation des modes ou underflow';
 				break;
 			case JSON_ERROR_CTRL_CHAR:
-				AdminServ::error('JSON ('.$type.') - Erreur lors du contrôle des caractères');
+				return 'CACHE ('.$type.') - Erreur lors du contrôle des caractères';
 				break;
 			case JSON_ERROR_SYNTAX:
-				AdminServ::error('JSON ('.$type.') - Erreur de syntaxe ; JSON malformé');
+				return 'CACHE ('.$type.') - Erreur de syntaxe ; JSON malformé';
 				break;
 			case JSON_ERROR_UTF8:
-				AdminServ::error('JSON ('.$type.') - Caractères UTF-8 malformés, probablement une erreur d\'encodage');
+				return 'CACHE ('.$type.') - Caractères UTF-8 malformés, probablement une erreur d\'encodage';
 				break;
 		}
 	}
