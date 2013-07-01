@@ -74,6 +74,8 @@
 			}
 			$i++;
 		}
+		
+		Utils::redirection(false, '?p='. USER_PAGE .$hasDirectory);
 	}
 	else if( isset($_POST['renameAutoValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
 		$i = 0;
@@ -88,6 +90,8 @@
 			}
 			$i++;
 		}
+		
+		Utils::redirection(false, '?p='. USER_PAGE .$hasDirectory);
 	}
 	else if( isset($_POST['moveMapValid']) && isset($_POST['moveDirectoryList']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		// Chemin
@@ -109,6 +113,8 @@
 				AdminServLogs::add('action', 'Move map: '.$map.' to '.$newPath.basename($map) );
 			}
 		}
+		
+		Utils::redirection(false, '?p='. USER_PAGE .$hasDirectory);
 	}
 	else if( isset($_POST['deleteMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
@@ -121,6 +127,8 @@
 				AdminServLogs::add('action', 'Delete map: '.$map);
 			}
 		}
+		
+		Utils::redirection(false, '?p='. USER_PAGE .$hasDirectory);
 	}
 	// Save MatchSettings
 	if( (isset($_POST['addMap']) || isset($_POST['insertMap'])) && SERVER_MATCHSET ){

@@ -55,12 +55,7 @@ abstract class File {
 		$out = null;
 		
 		if( file_exists($filename) ){
-			if($appendData){
-				$append = FILE_APPEND;
-			}
-			else{
-				$append = 0;
-			}
+			$append = ($appendData) ? FILE_APPEND : 0;
 			
 			if( file_put_contents($filename, $data, $append) ){
 				$out = true;

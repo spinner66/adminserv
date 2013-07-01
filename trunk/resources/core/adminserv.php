@@ -1580,6 +1580,8 @@ class AdminServ {
 					$cache->set($cacheKey, $cacheMaps);
 				}
 				
+				
+				
 				// Ajout des fichiers manquant dans le cache
 				$cacheMissingFiles = array_diff_key($files, $cacheMaps);
 				if( !empty($cacheMissingFiles) ){
@@ -1589,12 +1591,13 @@ class AdminServ {
 					// Création du cache
 					foreach($cacheMissingFiles as $file => $values){
 						// Données
+						$processFile = utf8_decode($file);
 						if(SERVER_VERSION_NAME == 'TmForever'){
-							$Gbx = new GBXChallengeFetcher($path.$file);
+							$Gbx = new GBXChallengeFetcher($path.$processFile);
 						}
 						else{
 							$Gbx = new GBXChallMapFetcher();
-							$Gbx->processFile($path.$file);
+							$Gbx->processFile($path.$processFile);
 						}
 						
 						// Name
