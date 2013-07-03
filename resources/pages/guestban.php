@@ -166,9 +166,13 @@
 	else if( isset($_POST['savePlaylist']) && isset($_POST['playlist']) && count($_POST['playlist'] > 0) ){
 		$i = 0;
 		foreach($_POST['playlist'] as $playlist){
+			$playlistEx = explode('|', $playlist);
+			$type = $playlistEx[0];
+			$filename = $playlistEx[1];
+			
 			// Guestlist
-			if($_POST['playlistType'][$i] == 'guestlist'){
-				if( !$client->query('SaveGuestList', $playlist) ){
+			if($type == 'guestlist'){
+				if( !$client->query('SaveGuestList', $filename) ){
 					AdminServ::error();
 					break;
 				}
@@ -177,8 +181,8 @@
 				}
 			}
 			// BlackList
-			else{
-				if( !$client->query('SaveBlackList', $playlist) ){
+			elseif($type == 'blacklist'){
+				if( !$client->query('SaveBlackList', $filename) ){
 					AdminServ::error();
 					break;
 				}
@@ -188,13 +192,19 @@
 			}
 			$i++;
 		}
+		
+		Utils::redirection(false, '?p='. USER_PAGE);
 	}
 	else if( isset($_POST['loadPlaylist']) && isset($_POST['playlist']) && count($_POST['playlist'] > 0) ){
 		$i = 0;
 		foreach($_POST['playlist'] as $playlist){
+			$playlistEx = explode('|', $playlist);
+			$type = $playlistEx[0];
+			$filename = $playlistEx[1];
+			
 			// Guestlist
-			if($_POST['playlistType'][$i] == 'guestlist'){
-				if( !$client->query('LoadGuestList', $playlist) ){
+			if($type == 'guestlist'){
+				if( !$client->query('LoadGuestList', $filename) ){
 					AdminServ::error();
 					break;
 				}
@@ -203,8 +213,8 @@
 				}
 			}
 			// BlackList
-			else{
-				if( !$client->query('LoadBlackList', $playlist) ){
+			elseif($type == 'blacklist'){
+				if( !$client->query('LoadBlackList', $filename) ){
 					AdminServ::error();
 					break;
 				}
@@ -214,15 +224,20 @@
 			}
 			$i++;
 		}
+		
+		Utils::redirection(false, '?p='. USER_PAGE);
 	}
 	else if( isset($_POST['deletePlaylist']) && isset($_POST['playlist']) && count($_POST['playlist'] > 0) ){
 		foreach($_POST['playlist'] as $playlist){
-			if( !File::delete($gameDataDirectory.'Config/'.$playlist) ){
-				AdminServ::error(Utils::t('Unable to delete the playlist').' : '.$playlist);
+			$playlistEx = explode('|', $playlist);
+			$filename = $playlistEx[1];
+			
+			if( !File::delete($gameDataDirectory.'Config/'.$filename) ){
+				AdminServ::error(Utils::t('Unable to delete the playlist').' : '.$filename);
 				break;
 			}
 			else{
-				AdminServLogs::add('action', 'Delete playlist: '.$playlist);
+				AdminServLogs::add('action', 'Delete playlist: '.$filename);
 			}
 		}
 		
@@ -233,21 +248,23 @@
 		$filename = Str::replaceChars($_POST['createPlaylistName']);
 		
 		// Guestlist
-		if($_POST['createPlaylistType'] == 'guestlist'){
-			if( !$client->query('SaveGuestList', $filename) ){
-				AdminServ::error();
+		if( $filename != Str::replaceChars(Utils::t('Playlist name')) ){
+			if($_POST['createPlaylistType'] == 'guestlist'){
+				if( !$client->query('SaveGuestList', $filename) ){
+					AdminServ::error();
+				}
+				else{
+					AdminServLogs::add('action', 'Create playlist (guestlist): '.$filename);
+				}
 			}
-			else{
-				AdminServLogs::add('action', 'Create playlist (guestlist): '.$filename);
-			}
-		}
-		// Blacklist
-		else{
-			if( !$client->query('SaveBlackList', $filename) ){
-				AdminServ::error();
-			}
-			else{
-				AdminServLogs::add('action', 'Create playlist (blacklist): '.$filename);
+			// Blacklist
+			elseif($_POST['createPlaylistType'] == 'blacklist'){
+				if( !$client->query('SaveBlackList', $filename) ){
+					AdminServ::error();
+				}
+				else{
+					AdminServLogs::add('action', 'Create playlist (blacklist): '.$filename);
+				}
 			}
 		}
 		
@@ -550,24 +567,15 @@
 									$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
 									if( isset($data['logins']) ){
 										$countDataLogins = count($data['logins']);
-										if($countDataLogins > 1){
-											$nbPlayers = $countDataLogins.' '.Utils::t('players');
-										}
-										else{
-											$nbPlayers = '1 '.Utils::t('player');
-										}
+										$nbPlayers = ($countDataLogins > 1) ? $countDataLogins.' '.Utils::t('players') : '1 '.Utils::t('player');
 									}
 									else{
 										$nbPlayers = '0 '.Utils::t('player');
 									}
 									
 									// Filename
-									if($isDoubleExt){
-										$filename = substr($file['filename'], 0, -13);
-									}
-									else{
-										$filename = substr($file['filename'], 0, -4);
-									}
+									$parseExtIndex = ($isDoubleExt) ? -13 : -4;
+									$filename = substr($file['filename'], 0, $parseExtIndex);
 									
 									// Line
 									$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
@@ -576,8 +584,7 @@
 										.'<td class="center">'.$nbPlayers.'</td>'
 										.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'
 										.'<td class="checkbox">'
-											.'<input type="checkbox" name="playlist[]" value="'.$file['filename'].'" />'
-											.'<input type="hidden" name="playlistType[]" value="'.$data['type'].'" />'
+											.'<input type="checkbox" name="playlist[]" value="'.$data['type'].'|'.$file['filename'].'" />'
 										.'</td>'
 									.'</tr>';
 									$i++;
