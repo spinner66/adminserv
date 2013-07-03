@@ -948,19 +948,19 @@ class AdminServ {
 	public static function exportServerOptions($file, $data){
 		$out = false;
 		
-		$dom = new DOMDocument('1.0', 'utf-8');
-		$dom->formatOutput = true;
-		$srvopts = $dom->createElement('ServerOptions');
-		$srvopts = $dom->appendChild($srvopts);
+		$xml = new DOMDocument('1.0', 'utf-8');
+		$xml->formatOutput = true;
+		$srvopts = $xml->createElement('ServerOptions');
+		$srvopts = $xml->appendChild($srvopts);
 		foreach($data as $dataField => $dataValue){
-			$srvoptsElement = $dom->createElement($dataField, $dataValue);
-			$srvoptsElementAttribute = $dom->createAttribute('type');
+			$srvoptsElement = $xml->createElement($dataField, $dataValue);
+			$srvoptsElementAttribute = $xml->createAttribute('type');
 			$srvoptsElementAttribute->value = Str::getValueType($dataValue);
 			$srvoptsElement->appendChild($srvoptsElementAttribute);
 			$srvoptsElement = $srvopts->appendChild($srvoptsElement);
 		}
 		
-		if( $result = $dom->save($file) > 0 ){
+		if( $result = $xml->save($file) > 0 ){
 			$out = true;
 			self::info( Utils::t('Server options are exported in').' '.$file);
 		}
@@ -1580,8 +1580,6 @@ class AdminServ {
 					$cache->set($cacheKey, $cacheMaps);
 				}
 				
-				
-				
 				// Ajout des fichiers manquant dans le cache
 				$cacheMissingFiles = array_diff_key($files, $cacheMaps);
 				if( !empty($cacheMissingFiles) ){
@@ -2020,7 +2018,7 @@ class AdminServ {
 	
 	
 	/**
-	* Extrait les données d'une playlist (blacklist ou guestlist) et renvoi un tableau
+	* Extrait les données d'une playlist (blacklist ou guestlist)
 	*
 	* @param string $filename -> L'url de la playlist
 	* @return array
@@ -2029,16 +2027,20 @@ class AdminServ {
 		$out = array();
 		
 		$xml = null;
-		if( @file_exists($filename) ){
-			if( !($xml = @simplexml_load_file($filename)) ){
-				$out = 'simplexml_load_file error';
-			}
+		if( file_exists($filename) ){
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->load($filename);
 		}
 		
 		if($xml){
-			$out['type'] = @$xml->getName();
-			foreach($xml->player as $player){
-				$out['logins'][] = (string)$player->login;
+			$root = $xml->documentElement;
+			$out['type'] = $root->nodeName;
+			$players = $xml->getElementsByTagName($root->nodeName);
+			foreach($players as $player){
+				$login = $player->getElementsByTagName('login');
+				if($login->length > 0){
+					$out['logins'][] = $login->item(0)->nodeValue;
+				}
 			}
 		}
 		

@@ -850,23 +850,23 @@ $(document).ready(function(){
 			
 			// Checkbox
 			$('#checkAllBanlist').click(function(){
-				$('#banlist').checkAll( $(this).attr('checked') );
+				$('#banlist').checkAll( $(this).prop('checked') );
 				$('.cadre.left').updateNbSelectedLines();
 			});
 			$('#checkAllBlacklist').click(function(){
-				$('#blacklist').checkAll( $(this).attr('checked') );
+				$('#blacklist').checkAll( $(this).prop('checked') );
 				$('.cadre.left').updateNbSelectedLines();
 			});
 			$('#checkAllGuestlist').click(function(){
-				$('#guestlist').checkAll( $(this).attr('checked') );
+				$('#guestlist').checkAll( $(this).prop('checked') );
 				$('.cadre.left').updateNbSelectedLines();
 			});
 			$('#checkAllIgnorelist').click(function(){
-				$('#ignorelist').checkAll( $(this).attr('checked') );
+				$('#ignorelist').checkAll( $(this).prop('checked') );
 				$('.cadre.left').updateNbSelectedLines();
 			});
 			$('#playlists #checkAllPlaylists').click(function(){
-				$('#playlists').checkAll( $(this).attr('checked') );
+				$('#playlists').checkAll( $(this).prop('checked') );
 				$('#playlists').updateNbSelectedLines();
 			});
 			
