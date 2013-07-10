@@ -1819,46 +1819,66 @@ class AdminServ {
 			$mapField = 'map';
 		}
 		
-		$out = '<?xml version="1.0" encoding="utf-8" ?>'."\n"
-		."<playlist>\n";
-			// GameInfos, Hotseat, Filter
-			$structFields = array(
-				'gameinfos',
-				'hotseat',
-				'filter'
-			);
-			foreach($structFields as $strucField){
-				if( isset($struct[$strucField]) && count($struct[$strucField]) > 0 ){
-					$out .= "\t<$strucField>\n";
-						foreach($struct[$strucField] as $field => $value){
-							$out .= "\t\t<$field>$value</$field>\n";
-						}
-					$out .= "\t</$strucField>\n\n";
-				}
-			}
-			
-			// Maps
-			$out .= "\t<startindex>".$struct['startindex']."</startindex>\n";
-			if( isset($struct[$mapField]) && count($struct[$mapField]) > 0 ){
-				foreach($struct[$mapField] as $ident => $file){
-					$out .= "\t<$mapField>\n"
-						."\t\t<file>$file</file>\n"
-						."\t\t<ident>$ident</ident>\n"
-					."\t</$mapField>\n";
-				}
-			}
-		$out .= "</playlist>\n";
+		$xml = new DOMDocument('1.0', 'utf-8');
+		$xml->formatOutput = true;
+		$playlist = $xml->createElement('playlist');
+		$playlist = $xml->appendChild($playlist);
 		
-		if( ! @$newXMLObject = simplexml_load_string($out) ){
-			$out = Utils::t('text->XML conversion error');
+		// GameInfos, Hotseat, Filter
+		$structFields = array(
+			'gameinfos',
+			'hotseat',
+			'filter'
+		);
+		foreach($structFields as $strucField){
+			if( isset($struct[$strucField]) && !empty($struct[$strucField]) ){
+				$node = $xml->createElement($strucField);
+				$node = $playlist->appendChild($node);
+				foreach($struct[$strucField] as $field => $value){
+					$childNode = $xml->createElement($field, $value);
+					$childNode = $node->appendChild($childNode);
+				}
+			}
+		}
+		
+		// Script settings
+		if( isset($struct['scriptsettings']) && !empty($struct['scriptsettings']) ){
+			$scriptsettings = $xml->createElement('mode_script_settings');
+			$scriptsettings = $playlist->appendChild($scriptsettings);
+			foreach($struct['scriptsettings'] as $settingParams){
+				$setting = $xml->createElement('setting');
+				$setting = $scriptsettings->appendChild($setting);
+				if( !empty($settingParams) ){
+					foreach($settingParams as $paramKey => $paramValue){
+						$param = $xml->createAttribute($paramKey);
+						$param->value = $paramValue;
+						$setting->appendChild($param);
+					}
+				}
+			}
+		}
+		
+		// Maps
+		$startindex = $xml->createElement('startindex', $struct['startindex']);
+		$startindex = $playlist->appendChild($startindex);
+		if( isset($struct[$mapField]) && !empty($struct[$mapField]) ){
+			foreach($struct[$mapField] as $dataIdent => $dataFile){
+				$map = $xml->createElement($mapField);
+				$map = $playlist->appendChild($map);
+				$file = $xml->createElement('file', $dataFile);
+				$file = $map->appendChild($file);
+				if(SERVER_VERSION_NAME == 'TmForever'){
+					$ident = $xml->createElement('ident', $dataIdent);
+					$ident = $map->appendChild($ident);
+				}
+			}
+		}
+		
+		if( !$xml->save($filename) ){
+			$out = Utils::t('Saving XML file error');
 		}
 		else{
-			if( !$newXMLObject->asXML($filename) ){
-				$out = Utils::t('Saving XML file error');
-			}
-			else{
-				$out = true;
-			}
+			$out = true;
 		}
 		
 		return $out;
@@ -1872,88 +1892,130 @@ class AdminServ {
 	* @param array  $list     -> Liste des champs à retourner
 	* @return array
 	*/
-	public static function getMatchSettingsData($filename, $list = array('gameinfos', 'hotseat', 'filter', 'maps') ){
+	public static function getMatchSettingsData($filename, $list = array('gameinfos', 'hotseat', 'filter', 'scriptsettings', 'maps') ){
 		$out = array();
 		$xml = null;
 		
-		if( @file_exists($filename) ){
-			if( !($xml = @simplexml_load_file($filename)) ){
-				$out = 'simplexml_load_file error';
-			}
+		if( file_exists($filename) ){
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->load($filename);
 		}
 		
 		if($xml){
-			// Jeu
-			if(SERVER_VERSION_NAME == 'TmForever'){
-				$mapsField = 'challenge';
-			}
-			else{
-				$mapsField = 'map';
-			}
-			
 			// Gameinfos
 			if( in_array('gameinfos', $list) ){
-				if( isset($xml->gameinfos) && count($xml->gameinfos) > 0 ){
-					$gameinfos = $xml->gameinfos;
-					$out['gameinfos']['GameMode'] = (string)$gameinfos->game_mode;
-					$out['gameinfos']['ChatTime'] = (string)$gameinfos->chat_time;
-					$out['gameinfos']['FinishTimeout'] = (string)$gameinfos->finishtimeout;
-					$out['gameinfos']['AllWarmUpDuration'] = (string)$gameinfos->allwarmupduration;
-					$out['gameinfos']['DisableRespawn'] = (string)$gameinfos->disablerespawn;
-					$out['gameinfos']['ForceShowAllOpponents'] = (string)$gameinfos->forceshowallopponents;
-					$out['gameinfos']['RoundsPointsLimit'] = (string)$gameinfos->rounds_pointslimit;
-					$out['gameinfos']['RoundsUseNewRules'] = (string)$gameinfos->rounds_usenewrules;
-					$out['gameinfos']['RoundsForcedLaps'] = (string)$gameinfos->rounds_forcedlaps;
-					if(SERVER_VERSION_NAME == 'TmForever'){
-						$out['gameinfos']['rounds_pointslimitnewrules'] = (string)$gameinfos->rounds_pointslimitnewrules;
+				$fields = array(
+					'game_mode' => 'GameMode',
+					'chat_time' => 'ChatTime',
+					'finishtimeout' => 'FinishTimeout',
+					'allwarmupduration' => 'AllWarmUpDuration',
+					'disablerespawn' => 'DisableRespawn',
+					'forceshowallopponents' => 'ForceShowAllOpponents',
+					'rounds_pointslimit' => 'RoundsPointsLimit',
+					'rounds_usenewrules' => 'RoundsUseNewRules',
+					'rounds_forcedlaps' => 'RoundsForcedLaps',
+					'rounds_pointslimitnewrules' => 'rounds_pointslimitnewrules',
+					'team_pointslimit' => 'TeamPointsLimit',
+					'team_maxpoints' => 'TeamMaxPoints',
+					'team_usenewrules' => 'TeamUseNewRules',
+					'team_pointslimitnewrules' => 'team_pointslimitnewrules',
+					'timeattack_limit' => 'TimeAttackLimit',
+					'timeattack_synchstartperiod' => 'TimeAttackSynchStartPeriod',
+					'laps_nblaps' => 'LapsNbLaps',
+					'laps_timelimit' => 'LapsTimeLimit',
+					'cup_pointslimit' => 'CupPointsLimit',
+					'cup_roundsperchallenge' => 'CupRoundsPerMap',
+					'cup_nbwinners' => 'CupNbWinners',
+					'cup_warmupduration' => 'CupWarmUpDuration',
+				);
+				
+				foreach($fields as $fieldXML => $fieldName){
+					$fieldList = $xml->getElementsByTagName($fieldXML);
+					if($fieldList->length > 0){
+						$out['gameinfos'][$fieldName] = $fieldList->item(0)->nodeValue;
 					}
-					$out['gameinfos']['TeamPointsLimit'] = (string)$gameinfos->team_pointslimit;
-					$out['gameinfos']['TeamMaxPoints'] = (string)$gameinfos->team_maxpoints;
-					$out['gameinfos']['TeamUseNewRules'] = (string)$gameinfos->team_usenewrules;
-					if(SERVER_VERSION_NAME == 'TmForever'){
-						$out['gameinfos']['team_pointslimitnewrules'] = (string)$gameinfos->team_pointslimitnewrules;
-					}
-					$out['gameinfos']['TimeAttackLimit'] = (string)$gameinfos->timeattack_limit;
-					$out['gameinfos']['TimeAttackSynchStartPeriod'] = (string)$gameinfos->timeattack_synchstartperiod;
-					$out['gameinfos']['LapsNbLaps'] = (string)$gameinfos->laps_nblaps;
-					$out['gameinfos']['LapsTimeLimit'] = (string)$gameinfos->laps_timelimit;
-					$out['gameinfos']['CupPointsLimit'] = (string)$gameinfos->cup_pointslimit;
-					$out['gameinfos']['CupRoundsPerMap'] = (string)$gameinfos->cup_roundsperchallenge;
-					$out['gameinfos']['CupNbWinners'] = (string)$gameinfos->cup_nbwinners;
-					$out['gameinfos']['CupWarmUpDuration'] = (string)$gameinfos->cup_warmupduration;
 				}
 			}
 			
 			// Hotseat
 			if( in_array('hotseat', $list) ){
-				if( isset($xml->hotseat) && count($xml->hotseat) > 0 ){
-					$hotseat = $xml->hotseat;
-					$out['hotseat']['GameMode'] = (string)$hotseat->game_mode;
-					$out['hotseat']['TimeLimit'] = (string)$hotseat->time_limit;
-					$out['hotseat']['RoundsCount'] = (string)$hotseat->rounds_count;
+				$fields = array(
+					'game_mode' => 'GameMode',
+					'time_limit' => 'TimeLimit',
+					'rounds_count' => 'RoundsCount',
+				);
+				
+				foreach($fields as $fieldXML => $fieldName){
+					$fieldList = $xml->getElementsByTagName($fieldXML);
+					if($fieldList->length > 0){
+						$out['hotseat'][$fieldName] = $fieldList->item(0)->nodeValue;
+					}
 				}
 			}
 			
 			// Filter
 			if( in_array('filter', $list) ){
-				if( isset($xml->filter) && count($xml->filter) > 0 ){
-					$filter = $xml->filter;
-					$out['filter']['IsLan'] = (string)$filter->is_lan;
-					$out['filter']['IsInternet'] = (string)$filter->is_internet;
-					$out['filter']['IsSolo'] = (string)$filter->is_solo;
-					$out['filter']['IsHotseat'] = (string)$filter->is_hotseat;
-					$out['filter']['SortIndex'] = (string)$filter->sort_index;
-					$out['filter']['RandomMapOrder'] = (string)$filter->random_map_order;
-					$out['filter']['ForceDefaultGameMode'] = (string)$filter->force_default_gamemode;
+				$fields = array(
+					'is_lan' => 'IsLan',
+					'is_internet' => 'IsInternet',
+					'is_solo' => 'IsSolo',
+					'is_hotseat' => 'IsHotseat',
+					'sort_index' => 'SortIndex',
+					'random_map_order' => 'RandomMapOrder',
+					'force_default_gamemode' => 'ForceDefaultGameMode',
+				);
+				
+				foreach($fields as $fieldXML => $fieldName){
+					$fieldList = $xml->getElementsByTagName($fieldXML);
+					if($fieldList->length > 0){
+						$out['filter'][$fieldName] = $fieldList->item(0)->nodeValue;
+					}
+				}
+			}
+			
+			// Script Settings
+			if( in_array('scriptsettings', $list) ){
+				$scriptsettings = $xml->getElementsByTagName('setting');
+				if($scriptsettings->length > 0){
+					$i = 0;
+					foreach($scriptsettings as $setting){
+						if( $setting->hasAttributes() ){
+							foreach($setting->attributes as $attName => $dom_attribute) {
+								$out['scriptsettings'][$i][$attName] = $dom_attribute->value;
+							}
+						}
+						$i++;
+					}
 				}
 			}
 			
 			// Maps
 			if( in_array('maps', $list) ){
-				$out['StartIndex'] = (string)$xml->startindex;
-				if( isset($xml->$mapsField) && count($xml->$mapsField) > 0 ){
-					foreach($xml->$mapsField as $map){
-						$out['maps'][(string)$map->ident] = (string)$map->file;
+				$fieldStartIndex = $xml->getElementsByTagName('startindex');
+				if($fieldStartIndex->length > 0){
+					$out['StartIndex'] = $fieldStartIndex->item(0)->nodeValue;
+				}
+				
+				$mapsField = (SERVER_VERSION_NAME == 'TmForever') ? 'challenge' : 'map';
+				$fieldMaps = $xml->getElementsByTagName($mapsField);
+				
+				foreach($fieldMaps as $map){
+					$ident = null;
+					$fieldIdent = $map->getElementsByTagName('ident');
+					if($fieldIdent->length > 0){
+						$ident = $fieldIdent->item(0)->nodeValue;
+					}
+					$file = null;
+					$fieldFile = $map->getElementsByTagName('file');
+					if($fieldFile->length > 0){
+						$file = $fieldFile->item(0)->nodeValue;
+					}
+					
+					if($ident){
+						$out['maps'][$ident] = $file;
+					}
+					else{
+						$out['maps'][] = $file;
 					}
 				}
 			}

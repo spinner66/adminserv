@@ -42,23 +42,11 @@
 	
 	// ENREGISTREMENT
 	if( isset($_POST['savematchsetting']) && isset($_SESSION['adminserv']['matchset_maps_selected']) ){
-		// Jeu
-		if(SERVER_VERSION_NAME == 'TmForever'){
-			$CupRoundsPerMap = 'cup_roundsperchallenge';
-			$StructMap = 'challenge';
-		}
-		else{
-			$CupRoundsPerMap = 'CupRoundsPerMap';
-			$StructMap = 'map';
-		}
-		
 		// Filename
 		$matchSettingName = Str::replaceChars($_POST['matchSettingName']);
-		if(File::getExtension($matchSettingName) == 'txt'){
-			$filename = $mapsDirectoryPath.$directory.$matchSettingName;
-		}
-		else{
-			$filename = $mapsDirectoryPath.$directory.$matchSettingName.'.txt';
+		$filename = $mapsDirectoryPath.$directory.$matchSettingName;
+		if(File::getExtension($matchSettingName) != 'txt'){
+			$filename .= '.txt';
 		}
 		
 		$struct = array();
@@ -85,7 +73,7 @@
 			'laps_nblaps' => $gameinfos['LapsNbLaps'],
 			'laps_timelimit' => $gameinfos['LapsTimeLimit'],
 			'cup_pointslimit' => $gameinfos['CupPointsLimit'],
-			$CupRoundsPerMap => $gameinfos['CupRoundsPerMap'],
+			'cup_roundsperchallenge' => $gameinfos['CupRoundsPerMap'],
 			'cup_nbwinners' => $gameinfos['CupNbWinners'],
 			'cup_warmupduration' => $gameinfos['CupWarmUpDuration']
 		);
@@ -111,12 +99,32 @@
 			'force_default_gamemode' => intval($_POST['filterDefaultGameMode']),
 		);
 		
+		// ScriptSettings
+		if( !$client->query('GetModeScriptInfo') ){
+			AdminServ::error();
+		}
+		else{
+			$scriptsettings = $client->getResponse();
+			$client->Terminate();
+			
+			if( !empty($scriptsettings['ParamDescs']) ){
+				foreach($scriptsettings['ParamDescs'] as $param){
+					$struct['scriptsettings'][] = array(
+						'name' => $param['Name'],
+						'type' => $param['Type'],
+						'value' => $param['Default']
+					);
+				}
+			}
+		}
+		
 		// Maps
 		$struct['startindex'] = 1;
 		$maps = $_SESSION['adminserv']['matchset_maps_selected']['lst'];
-		if( isset($maps) && is_array($maps) && count($maps) > 0 ){
+		if( isset($maps) && is_array($maps) && !empty($maps) ){
+			$mapsField = (SERVER_VERSION_NAME == 'TmForever') ? 'challenge' : 'map';
 			foreach($maps as $id => $values){
-				$struct[$StructMap][$values['UId']] = $values['FileName'];
+				$struct[$mapsField][$values['UId']] = $values['FileName'];
 			}
 		}
 		
