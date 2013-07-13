@@ -1115,27 +1115,28 @@ class AdminServ {
 			'GameMode' => intval($_POST['NextGameMode']),
 			'ChatTime' => TimeDate::secToMillisec( intval($_POST['NextChatTime'] - 8) ),
 			'RoundsPointsLimit' => intval($_POST['NextRoundsPointsLimit']),
+			'RoundCustomPoints' => intval($_POST['NextRoundCustomPoints']),
 			'RoundsUseNewRules' => array_key_exists('NextRoundsUseNewRules', $_POST),
 			'RoundsForcedLaps' => intval($_POST['NextRoundsForcedLaps']),
+			'RoundsPointsLimitNewRules' => intval($_POST['NextRoundsPointsLimit']),
 			'TimeAttackLimit' => TimeDate::secToMillisec( intval($_POST['NextTimeAttackLimit']) ),
 			'TimeAttackSynchStartPeriod' => TimeDate::secToMillisec( intval($_POST['NextTimeAttackSynchStartPeriod']) ),
 			'TeamPointsLimit' => intval($_POST['NextTeamPointsLimit']),
 			'TeamMaxPoints' => intval($_POST['NextTeamMaxPoints']),
 			'TeamUseNewRules' => array_key_exists('NextTeamUseNewRules', $_POST),
+			'TeamPointsLimitNewRules' => $_POST['NextTeamPointsLimit'],
 			'LapsNbLaps' => intval($_POST['NextLapsNbLaps']),
 			'LapsTimeLimit' => TimeDate::secToMillisec( intval($_POST['NextLapsTimeLimit']) ),
 			'FinishTimeout' => $FinishTimeout,
 			'AllWarmUpDuration' => intval($_POST['NextAllWarmUpDuration']),
 			'DisableRespawn' => $DisableRespawn,
 			'ForceShowAllOpponents' => $NextForceShowAllOpponents,
-			'RoundsPointsLimitNewRules' => intval($_POST['NextRoundsPointsLimit']),
-			'TeamPointsLimitNewRules' => $_POST['NextTeamPointsLimit'],
 			'CupPointsLimit' => intval($_POST['NextCupPointsLimit']),
 			'CupRoundsPerMap' => intval($_POST['NextCupRoundsPerMap']),
 			'CupNbWinners' => intval($_POST['NextCupNbWinners']),
 			'CupWarmUpDuration' => intval($_POST['NextCupWarmUpDuration'])
 		);
-		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
+		if(SERVER_VERSION_NAME != 'TmForever'){
 			$out += array('ScriptName' => $_POST['NextScriptName']);
 		}
 		
@@ -1912,13 +1913,14 @@ class AdminServ {
 					'disablerespawn' => 'DisableRespawn',
 					'forceshowallopponents' => 'ForceShowAllOpponents',
 					'rounds_pointslimit' => 'RoundsPointsLimit',
+					'rounds_custom_points' => 'RoundCustomPoints',
 					'rounds_usenewrules' => 'RoundsUseNewRules',
 					'rounds_forcedlaps' => 'RoundsForcedLaps',
-					'rounds_pointslimitnewrules' => 'rounds_pointslimitnewrules',
+					'rounds_pointslimitnewrules' => 'RoundsPointsLimitNewRules',
 					'team_pointslimit' => 'TeamPointsLimit',
 					'team_maxpoints' => 'TeamMaxPoints',
 					'team_usenewrules' => 'TeamUseNewRules',
-					'team_pointslimitnewrules' => 'team_pointslimitnewrules',
+					'team_pointslimitnewrules' => 'TeamPointsLimitNewRules',
 					'timeattack_limit' => 'TimeAttackLimit',
 					'timeattack_synchstartperiod' => 'TimeAttackSynchStartPeriod',
 					'laps_nblaps' => 'LapsNbLaps',
@@ -1928,6 +1930,9 @@ class AdminServ {
 					'cup_nbwinners' => 'CupNbWinners',
 					'cup_warmupduration' => 'CupWarmUpDuration',
 				);
+				if(SERVER_VERSION_NAME != 'TmForever'){
+					$fields['script_name'] = 'ScriptName';
+				}
 				
 				foreach($fields as $fieldXML => $fieldName){
 					$fieldList = $xml->getElementsByTagName($fieldXML);
@@ -1980,8 +1985,8 @@ class AdminServ {
 					$i = 0;
 					foreach($scriptsettings as $setting){
 						if( $setting->hasAttributes() ){
-							foreach($setting->attributes as $attName => $dom_attribute) {
-								$out['scriptsettings'][$i][$attName] = $dom_attribute->value;
+							foreach($setting->attributes as $attName => $attrNode) {
+								$out['scriptsettings'][$i][$attName] = $attrNode->value;
 							}
 						}
 						$i++;

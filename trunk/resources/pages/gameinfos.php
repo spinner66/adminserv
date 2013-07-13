@@ -59,7 +59,10 @@
 	
 	// LECTURE
 	$gameInfos = AdminServ::getGameInfos();
-	$gameInfosData = array($gameInfos['curr'], $gameInfos['next']);
+	$gameInfosData = array(
+		'curr' => $gameInfos['curr'],
+		'next' => $gameInfos['next']
+	);
 	$getTeamInfo = array();
 	$hasTeamInfo = false;
 	if( isset($_SESSION['adminserv']['teaminfo']) && count($_SESSION['adminserv']['teaminfo']) > 0 ){

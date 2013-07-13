@@ -293,12 +293,18 @@ class AdminServUI {
 		if( !isset($GLOBALS['body_class']) ){
 			$GLOBALS['body_class'] = null;
 		}
-		if( defined('SERVER_NAME') ){
-			$GLOBALS['page_title'] = SERVER_NAME;
-			$GLOBALS['body_class'] .= ' not-front';
-		}
-		else{
-			$GLOBALS['body_class'] .= ' front';
+		$configPages = array(
+			'config-servers',
+			'serversconfigpassword',
+		);
+		if( !in_array(USER_PAGE, $configPages) ){
+			if( defined('SERVER_NAME') ){
+				$GLOBALS['page_title'] = SERVER_NAME;
+				$GLOBALS['body_class'] .= ' not-front';
+			}
+			else{
+				$GLOBALS['body_class'] .= ' front';
+			}
 		}
 		if( defined('USER_PAGE') && USER_PAGE ){
 			$GLOBALS['body_class'] .= ' section-'.USER_PAGE;
@@ -413,18 +419,18 @@ class AdminServUI {
 	* @return string HTML
 	*/
 	public static function getGameInfosField($gameinfos, $name, $id){
-		if( isset($gameinfos[0]) ){ $currGamInf = $gameinfos[0]; }else{ $currGamInf = null; }
-		if( isset($gameinfos[1]) ){ $nextGamInf = $gameinfos[1]; }else{ $nextGamInf = null; }
+		$currGamInf = (isset($gameinfos['curr'])) ? $gameinfos['curr'] : null;
+		$nextGamInf = (isset($gameinfos['next'])) ? $gameinfos['next'] : null;
 		
 		$out = '<tr>'
 			.'<td class="key"><label for="Next'.$id.'">'.Utils::t($name).'</label></td>';
 			if($currGamInf != null){
 				$out .= '<td class="value">'
-					.'<input class="text width2" type="text" name="Curr'.$id.'" id="Curr'.$id.'" readonly="readonly" value="'.$currGamInf[$id].'" />'
+					.'<input class="text width2" type="text" name="Curr'.$id.'" id="Curr'.$id.'" readonly="readonly" value="'; if( isset($currGamInf[$id]) ){ $out .= $currGamInf[$id]; } $out .= '" />'
 				.'</td>';
 			}
 			$out .= '<td class="value">'
-				.'<input class="text width2" type="'; if( is_numeric($nextGamInf[$id]) ){ $out .= 'number" min="0"'; }else{ $out .= 'text'; } $out .= '" name="Next'.$id.'" id="Next'.$id.'" value="'.$nextGamInf[$id].'" />'
+				.'<input class="text width2" type="'; if( isset($nextGamInf[$id]) && is_numeric($nextGamInf[$id]) ){ $out .= 'number" min="0"'; }else{ $out .= 'text'; } $out .= '" name="Next'.$id.'" id="Next'.$id.'" value="'; if( isset($nextGamInf[$id]) ){ $out .= $nextGamInf[$id]; } $out .= '" />'
 			.'</td>'
 			.'<td class="preview"></td>'
 		.'</tr>';
@@ -440,8 +446,8 @@ class AdminServUI {
 	* @return string HTML
 	*/
 	public static function getGameInfosGeneralForm($gameinfos){
-		if( isset($gameinfos[0]) ){ $currGamInf = $gameinfos[0]; }else{ $currGamInf = null; }
-		if( isset($gameinfos[1]) ){ $nextGamInf = $gameinfos[1]; }else{ $nextGamInf = null; }
+		$currGamInf = (isset($gameinfos['curr'])) ? $gameinfos['curr'] : null;
+		$nextGamInf = (isset($gameinfos['next'])) ? $gameinfos['next'] : null;
 		
 		$out = '<fieldset class="gameinfos_general">'
 			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/restartrace.png" alt="" />'.Utils::t('General').'</legend>'
@@ -533,8 +539,8 @@ class AdminServUI {
 	* @return string HTML
 	*/
 	public static function getGameInfosGameModeForm($gameinfos){
-		if( isset($gameinfos[0]) ){ $currGamInf = $gameinfos[0]; }else{ $currGamInf = null; }
-		if( isset($gameinfos[1]) ){ $nextGamInf = $gameinfos[1]; }else{ $nextGamInf = null; }
+		$currGamInf = (isset($gameinfos['curr'])) ? $gameinfos['curr'] : null;
+		$nextGamInf = (isset($gameinfos['next'])) ? $gameinfos['next'] : null;
 		$out = null;
 		
 		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
@@ -548,15 +554,17 @@ class AdminServUI {
 								.'<input class="text width2" type="text" name="CurrScriptName" id="CurrScriptName" readonly="readonly" value="'.$currGamInf['ScriptName'].'" />'
 							.'</td>';
 						}
-						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="NextScriptName" id="NextScriptName" value="'.$nextGamInf['ScriptName'].'" />'
-						.'</td>'
-						.'<td class="preview">';
+						if($nextGamInf != null){
+							$out .= '<td class="value">'
+								.'<input class="text width2" type="text" name="NextScriptName" id="NextScriptName" value="'.$nextGamInf['ScriptName'].'" />'
+							.'</td>'
+							.'<td class="preview">';
 							if($nextGamInf['GameMode'] == 0){
 								$out .= '<a id="getScriptSettings" href="" data-infotext="'.Utils::t('Script settings updated.').'">'.Utils::t('Script settings').'</a>';
 							}
-						$out .= '</td>'
-					.'</tr>'
+							$out .= '</td>';
+						}
+					$out .= '</tr>'
 				.'</table>'
 			.'</fieldset>';
 			if($nextGamInf['GameMode'] == 0){
