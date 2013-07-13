@@ -142,7 +142,7 @@
 						
 						// Ligne
 						$showServerList .= '<tr class="'; if($i%2){ $showServerList .= 'even'; }else{ $showServerList .= 'odd'; } $showServerList .= '">'
-							.'<td class="imgleft"><img src="'. AdminServConfig::PATH_RESSOURCES .'images/16/servers.png" alt="" />'.$serverName.'</td>'
+							.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/servers.png" alt="" />'.$serverName.'</td>'
 							.'<td>'.$serverData['address'].'</td>'
 							.'<td>'.$serverData['port'].'</td>'
 							.'<td>'.$matchSettings.'</td>'

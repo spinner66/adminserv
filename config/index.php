@@ -4,7 +4,8 @@
 	if( file_exists('./servers.cfg.php') ){
 		require_once './servers.cfg.php';
 	}
-	require_once '../'. AdminServConfig::$PATH_RESOURCES .'core/adminserv.php';
+	AdminServConfig::$PATH_RESOURCES = '../'.AdminServConfig::$PATH_RESOURCES;
+	require_once AdminServConfig::$PATH_RESOURCES .'core/adminserv.php';
 	AdminServ::getClass();
 	AdminServUI::lang();
 	

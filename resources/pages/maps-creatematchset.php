@@ -6,7 +6,13 @@
 	if( isset($_GET['f']) && $_GET['f'] != null ){
 		$pageTitle = Utils::t('Edit');
 		$matchSetting['name'] = $_GET['f'];
-		$matchSetting += AdminServ::getMatchSettingsData($mapsDirectoryPath.$directory.$matchSetting['name']);
+		$matchSettingsData = AdminServ::getMatchSettingsData($mapsDirectoryPath.$directory.$matchSetting['name']);
+		$matchSetting['gameinfos'] = array(
+			'curr' => null,
+			'next' => $matchSettingsData['gameinfos']
+		);
+		unset($matchSettingsData['gameinfos']);
+		$matchSetting += $matchSettingsData;
 		if( isset($matchSetting['maps']) ){
 			$maps = AdminServ::getMapListFromMatchSetting($matchSetting['maps']);
 			$matchSetting['nbm'] = $maps['nbm']['count'];
@@ -20,7 +26,10 @@
 		$pageTitle = Utils::t('Create');
 		$matchSetting['name'] = 'match_settings';
 		$gameInfos = AdminServ::getGameInfos();
-		$matchSetting['gameinfos'] = array(null, $gameInfos['next']);
+		$matchSetting['gameinfos'] = array(
+			'curr' => null,
+			'next' => $gameInfos['next']
+		);
 		$matchSetting['hotseat'] = array(
 			'GameMode' => 1,
 			'TimeLimit' => 300000,
@@ -61,6 +70,7 @@
 			'disablerespawn' => $gameinfos['DisableRespawn'],
 			'forceshowallopponents' => $gameinfos['ForceShowAllOpponents'],
 			'rounds_pointslimit' => $gameinfos['RoundsPointsLimit'],
+			'rounds_custom_points' => $gameinfos['RoundCustomPoints'],
 			'rounds_usenewrules' => $gameinfos['RoundsUseNewRules'],
 			'rounds_forcedlaps' => $gameinfos['RoundsForcedLaps'],
 			'rounds_pointslimitnewrules' => $gameinfos['RoundsPointsLimitNewRules'],
