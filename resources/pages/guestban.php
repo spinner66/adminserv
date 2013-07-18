@@ -193,7 +193,7 @@
 			$i++;
 		}
 		
-		Utils::redirection(false, '?p='. USER_PAGE);
+		Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	else if( isset($_POST['loadPlaylist']) && isset($_POST['playlist']) && count($_POST['playlist'] > 0) ){
 		$i = 0;
@@ -225,7 +225,7 @@
 			$i++;
 		}
 		
-		Utils::redirection(false, '?p='. USER_PAGE);
+		Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	else if( isset($_POST['deletePlaylist']) && isset($_POST['playlist']) && count($_POST['playlist'] > 0) ){
 		foreach($_POST['playlist'] as $playlist){
@@ -241,7 +241,7 @@
 			}
 		}
 		
-		Utils::redirection(false, '?p='. USER_PAGE);
+		Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	else if( isset($_POST['createPlaylistValid']) && isset($_POST['createPlaylistName']) && $_POST['createPlaylistName'] != null ){
 		// Fichier
@@ -268,7 +268,7 @@
 			}
 		}
 		
-		Utils::redirection(false, '?p='. USER_PAGE);
+		Utils::redirection(false, '?p='.USER_PAGE);
 	}
 	
 	// LECTURE
