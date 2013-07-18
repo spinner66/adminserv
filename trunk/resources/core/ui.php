@@ -134,7 +134,7 @@ class AdminServUI {
 		
 		// Page courante
 		if(USER_PAGE && USER_PAGE != 'index'){
-			$param = '?p='. USER_PAGE .'&amp;th=';
+			$param = '?p='.USER_PAGE .'&amp;th=';
 		}
 		else{
 			$param = '?th=';
@@ -258,7 +258,7 @@ class AdminServUI {
 		
 		// Page courante
 		if(USER_PAGE && USER_PAGE != 'index'){
-			$param = '?p='. USER_PAGE .'&amp;lg=';
+			$param = '?p='.USER_PAGE .'&amp;lg=';
 		}
 		else{
 			$param = '?lg=';
@@ -763,7 +763,7 @@ class AdminServUI {
 		
 		if( class_exists('Folder') ){
 			// Titre + nouveau dossier
-			$out .= '<form id="createFolderForm" method="post" action="?p='. USER_PAGE .'&amp;d='.$currentPath.'">'
+			$out .= '<form id="createFolderForm" method="post" action="'. USER_PAGE .'&amp;d='.$currentPath.'">'
 				.'<h1>Dossiers';
 					if($showOptions && isset(AdminServConfig::$FOLDERS_OPTIONS) && isset(AdminServConfig::$FOLDERS_OPTIONS['new']) && AdminServConfig::$FOLDERS_OPTIONS['new'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['new'][1]) ){
 						$out .='<span id="form-new-folder" hidden="hidden">'
@@ -810,7 +810,7 @@ class AdminServUI {
 				if( count($directory['folders']) > 0 ){
 					foreach($directory['folders'] as $dir => $values){
 						$out .= '<li>'
-							.'<a href="./?p='. USER_PAGE .'&amp;d='.urlencode($currentPath.$dir).'/">'
+							.'<a href="./?p='.  .'&amp;d='.urlencode($currentPath.$dir).'/">'
 								.'<span class="dir-name">'.$dir.'</span>'
 								.'<span class="dir-info">'.$values['nb_file'].'</span>'
 							.'</a>'

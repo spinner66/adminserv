@@ -213,7 +213,7 @@
 							</select>
 							<input class="text" type="number" min="0" max="1" step=".1" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $srvOpt['CallVoteRatio']; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?> />
 							<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
-								<a class="returnDefaultValue" id="resetCallVoteRatio" href="?p=<?php echo USER_PAGE; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Disable vote ratio'); ?></a>
+								<a class="returnDefaultValue" id="resetCallVoteRatio" href="<?php echo USER_PAGE; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Disable vote ratio'); ?></a>
 							<?php } ?>
 						</td>
 					</tr>
@@ -226,7 +226,7 @@
 									<option value="more"><?php echo Utils::t('Choose number'); ?></option>
 								</select>
 								<input class="text" type="number" min="0" name="ClientInputsMaxLatencyValue" id="ClientInputsMaxLatencyValue" value="<?php echo $srvOpt['ClientInputsMaxLatency']; ?>"<?php if($srvOpt['ClientInputsMaxLatency'] == 0){ echo ' hidden="hidden"'; } ?> />
-								<a class="returnDefaultValue" id="resetClientInputsMaxLarency" href="?p=<?php echo USER_PAGE; ?>"<?php if($srvOpt['ClientInputsMaxLatency'] == 0){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Return to the default value'); ?></a>
+								<a class="returnDefaultValue" id="resetClientInputsMaxLarency" href="<?php echo USER_PAGE; ?>"<?php if($srvOpt['ClientInputsMaxLatency'] == 0){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Return to the default value'); ?></a>
 							</td>
 						</tr>
 					<?php } ?>

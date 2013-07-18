@@ -20,7 +20,7 @@
 		}
 		else{
 			AdminServLogs::add('action', 'Remove map ('.count($_POST['map']).')');
-			Utils::redirection(false, '?p='.USER_PAGE);
+			Utils::redirection(false, USER_PAGE);
 		}
 	}
 	else if( isset($_POST['chooseNextMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
@@ -29,7 +29,7 @@
 		}
 		else{
 			AdminServLogs::add('action', 'Choose next map ('.count($_POST['map']).')');
-			Utils::redirection(false, '?p='.USER_PAGE);
+			Utils::redirection(false, USER_PAGE);
 		}
 	}
 	
@@ -57,7 +57,7 @@
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
+		<form method="post" action="<?php echo USER_PAGE; ?>">
 		<div id="maplist">
 			<table>
 				<thead>

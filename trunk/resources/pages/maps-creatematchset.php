@@ -147,7 +147,7 @@
 			$action = Utils::t('The MatchSettings "!matchSettingName" was successfully created in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$mapsDirectoryPath.$directory;
 			AdminServ::info($action);
 			AdminServLogs::add('action', $action);
-			Utils::redirection(false, '?p='.USER_PAGE .$hasDirectory);
+			Utils::redirection(false, USER_PAGE .$hasDirectory);
 		}
 	}
 	else{
@@ -169,7 +169,7 @@
 		<?php echo $mapsDirectoryList; ?>
 	</section>
 	
-	<form method="post" action="?p=<?php echo USER_PAGE . $hasDirectory; ?>">
+	<form method="post" action="<?php echo USER_PAGE . $hasDirectory; ?>">
 	<section class="cadre right creatematchset">
 		<h1><?php echo $pageTitle.' '.Utils::t('a MatchSettings'); ?></h1>
 		<div class="title-detail">

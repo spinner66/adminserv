@@ -1124,7 +1124,7 @@ class AdminServ {
 			'TeamPointsLimit' => intval($_POST['NextTeamPointsLimit']),
 			'TeamMaxPoints' => intval($_POST['NextTeamMaxPoints']),
 			'TeamUseNewRules' => array_key_exists('NextTeamUseNewRules', $_POST),
-			'TeamPointsLimitNewRules' => $_POST['NextTeamPointsLimit'],
+			'TeamPointsLimitNewRules' => intval($_POST['NextTeamPointsLimit']),
 			'LapsNbLaps' => intval($_POST['NextLapsNbLaps']),
 			'LapsTimeLimit' => TimeDate::secToMillisec( intval($_POST['NextLapsTimeLimit']) ),
 			'FinishTimeout' => $FinishTimeout,
