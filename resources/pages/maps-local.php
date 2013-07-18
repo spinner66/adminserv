@@ -75,7 +75,7 @@
 			$i++;
 		}
 		
-		Utils::redirection(false, USER_PAGE .$hasDirectory);
+		Utils::redirection(false, '?p='.USER_PAGE .$hasDirectory);
 	}
 	else if( isset($_POST['renameAutoValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
 		$i = 0;
@@ -91,7 +91,7 @@
 			$i++;
 		}
 		
-		Utils::redirection(false, USER_PAGE .$hasDirectory);
+		Utils::redirection(false, '?p='.USER_PAGE .$hasDirectory);
 	}
 	else if( isset($_POST['moveMapValid']) && isset($_POST['moveDirectoryList']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		// Chemin
@@ -114,7 +114,7 @@
 			}
 		}
 		
-		Utils::redirection(false, USER_PAGE .$hasDirectory);
+		Utils::redirection(false, '?p='.USER_PAGE .$hasDirectory);
 	}
 	else if( isset($_POST['deleteMap']) && isset($_POST['map']) && count($_POST['map']) > 0 ){
 		foreach($_POST['map'] as $map){
@@ -128,7 +128,7 @@
 			}
 		}
 		
-		Utils::redirection(false, USER_PAGE .$hasDirectory);
+		Utils::redirection(false, '?p='.USER_PAGE .$hasDirectory);
 	}
 	// Save MatchSettings
 	if( (isset($_POST['addMap']) || isset($_POST['insertMap'])) && SERVER_MATCHSET ){
@@ -169,15 +169,15 @@
 			</ul>
 		</div>
 		
-		<form method="post" action="<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>">
+		<form method="post" action="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>">
 		<div id="maplist">
 			<table>
 				<thead>
 					<tr>
-						<th class="thleft"><a href="<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=name"><?php echo Utils::t('Map'); ?></a></th>
-						<th><a href="<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=env"><?php echo Utils::t('Environment'); ?></a></th>
-						<th><a href="<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=type"><?php echo Utils::t('Type'); ?></a></th>
-						<th><a href="<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
+						<th class="thleft"><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=name"><?php echo Utils::t('Map'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=env"><?php echo Utils::t('Environment'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=type"><?php echo Utils::t('Type'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
 				</thead>
