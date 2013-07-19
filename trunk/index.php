@@ -54,15 +54,6 @@
 	define('USER_PLUGIN', $userPlugin);
 	
 	
-	// CONFIG PAGES LIST
-	$configPagesList = array(
-		'servers',
-		'addserver',
-		'servers-order',
-		'serversconfigpassword',
-	);
-	
-	
 	// INDEX
 	unset($setTheme, $userTheme, $setLang, $userLang);
 	if( AdminServEvent::isLoggedIn() ){
@@ -73,73 +64,11 @@
 		// SERVER CONNECTION
 		AdminServ::initialize();
 		
-		// PAGES GROUPES
-		if( strstr(USER_PAGE, '-') ){
-			$pageEx = explode('-', USER_PAGE);
-			$pageInc = AdminServConfig::$PATH_RESOURCES .'pages/'.$pageEx[0].'.inc.php';
-			if( file_exists($pageInc) ){
-				include_once $pageInc;
-			}
-		}
-		// PAGES UNIQUES
-		$pagesList = array(
-			'general',
-			'srvopts',
-			'gameinfos',
-			'chat',
-			'plugins-list',
-			'guestban',
-		);
-		$pagesList = array_merge($pagesList, array_keys(ExtensionConfig::$MAPSMENU) );
-		
-		// INCLUDES DES PAGES
-		if( in_array(USER_PAGE, $pagesList) ){
-			unset($pagesList[0]);
-			foreach($pagesList as $page){
-				if(USER_PAGE === $page){
-					$file = AdminServConfig::$PATH_RESOURCES .'pages/'.$page.'.php';
-					if( file_exists($file) ){
-						include_once $file;
-						AdminServLogs::add('access', 'Control');
-					}
-					break;
-				}
-			}
-		}
-		else{
-			if( in_array(USER_PAGE, $configPagesList) ){
-				session_unset();
-				session_destroy();
-				Utils::redirection(false, './config/');
-			}
-			else{
-				if(!USER_PLUGIN){
-					include_once AdminServConfig::$PATH_RESOURCES .'pages/'.$pagesList[0].'.php';
-					AdminServLogs::add('access', 'Control');
-				}
-			}
-		}
+		// PAGES BACKOFFICE
+		AdminServUI::initBackPage();
 	}
 	else{
-		// CONFIG
-		if( in_array(USER_PAGE, $configPagesList) ){
-			foreach($configPagesList as $page){
-				if(USER_PAGE === $page){
-					$file = AdminServConfig::$PATH_RESOURCES .'pages/'.$page.'.php';
-					if( file_exists($file) ){
-						$GLOBALS['page_title'] = 'Configuration';
-						include_once $file;
-						AdminServLogs::add('access', 'Configuration');
-					}
-					break;
-				}
-			}
-		}
-		// CONNEXION
-		else{
-			$GLOBALS['page_title'] = 'Connexion';
-			include_once AdminServConfig::$PATH_RESOURCES .'pages/connection.php';
-			AdminServLogs::add('access', 'Connection');
-		}
+		// PAGES FRONTOFFICE
+		AdminServUI::initFrontPage();
 	}
 ?>
