@@ -175,12 +175,12 @@ class AdminServPlugin {
 	
 	
 	/**
-	* Inclue tous les fichiers necessaire au fonctionnement du plugin
+	* Inclue les fichiers pour le rendu d'un plugin
 	*
 	* @param string $pluginName -> Le nom du dossier plugin
 	* @return html
 	*/
-	public static function getPlugin($pluginName = null){
+	public static function renderPlugin($pluginName = null){
 		global $client, $translate, $category, $view, $index, $id, $directory;
 		if($pluginName === null){
 			$pluginName = USER_PLUGIN;
