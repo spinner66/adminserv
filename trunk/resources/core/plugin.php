@@ -180,18 +180,32 @@ class AdminServPlugin {
 	* @param string $pluginName -> Le nom du dossier plugin
 	* @return html
 	*/
-	public static function renderPlugin($pluginName = null){
+	public static function renderPlugin($pluginName = null) {
 		global $client, $translate, $category, $view, $index, $id, $directory;
 		if($pluginName === null){
 			$pluginName = USER_PLUGIN;
 		}
 		
+		// Tente de récupérer les plugins d'une autre config
+		self::setPluginsList();
+		
+		// Création du rendu du plugin
 		$pluginPath = AdminServConfig::$PATH_PLUGINS .$pluginName.'/';
 		$scriptFile = $pluginPath.'script.php';
 		$viewFile = $pluginPath.'view.php';
-		if( file_exists($scriptFile) && file_exists($viewFile) ){
+		if (file_exists($scriptFile) && file_exists($viewFile)) {
+			// Process
 			require_once $scriptFile;
+			
+			// Terminate client
+			if ($client->socket != null) {
+				$client->Terminate();
+			}
+			
+			// Header
 			AdminServUI::getHeader();
+			
+			// Content
 			echo '<section class="plugins hasMenu">'
 				.'<section class="cadre left menu">'
 					.self::getMenuList()
@@ -202,9 +216,13 @@ class AdminServPlugin {
 					require_once $viewFile;
 				echo '</section>'
 			.'</section>';
+			
+			// Footer
 			AdminServUI::getFooter();
+			
+			AdminServLogs::add('access', 'Plugin: '.$pluginName);
 		}
-		else{
+		else {
 			AdminServ::error( Utils::t('Plugin error: script.php or view.php file is missing.') );
 			AdminServUI::getHeader();
 			AdminServUI::getFooter();

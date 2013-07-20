@@ -895,16 +895,14 @@ class AdminServUI {
 	/**
 	* Ititialise une page en back office
 	*/
-	public static function initBackPage(){
-		// Config pages list
+	public static function initBackPage() {
+		// Pages list
 		$configPagesList = array(
 			'servers',
 			'addserver',
 			'servers-order',
 			'serversconfigpassword',
 		);
-		
-		// PAGES UNIQUES
 		$pagesList = array(
 			'general',
 			'srvopts',
@@ -916,21 +914,21 @@ class AdminServUI {
 		$pagesList = array_merge($pagesList, array_keys(ExtensionConfig::$MAPSMENU) );
 		$firstPage = array_shift($pagesList);;
 		
-		// INCLUDES DES PAGES
-		if( in_array(USER_PAGE, $pagesList) ){
+		// Render page
+		if (in_array(USER_PAGE, $pagesList)) {
 			$pageKey = array_search(USER_PAGE, $pagesList);
 			self::renderPage($pagesList[$pageKey]);
 		}
-		else{
-			if( in_array(USER_PAGE, $configPagesList) ){
+		else {
+			if (in_array(USER_PAGE, $configPagesList)) {
 				session_unset();
 				session_destroy();
 				Utils::redirection(false, './config/');
 			}
-			elseif(USER_PLUGIN){
+			elseif (USER_PLUGIN) {
 				AdminServPlugin::renderPlugin();
 			}
-			else{
+			else {
 				self::renderPage($firstPage);
 			}
 		}
@@ -940,8 +938,8 @@ class AdminServUI {
 	/**
 	* Ititialise une page en front office
 	*/
-	public static function initFrontPage(){
-		// Config pages list
+	public static function initFrontPage() {
+		// Pages list
 		$configPagesList = array(
 			'servers',
 			'addserver',
@@ -949,15 +947,14 @@ class AdminServUI {
 			'serversconfigpassword',
 		);
 		
-		// Config
-		if( in_array(USER_PAGE, $configPagesList) ){
+		// Render page
+		if (in_array(USER_PAGE, $configPagesList)) {
 			$pageKey = array_search(USER_PAGE, $configPagesList);
-			$GLOBALS['page_title'] = 'Configuration';
+			$GLOBALS['page_title'] = Utils::t('Configuration');
 			self::renderPage($configPagesList[$pageKey]);
 		}
-		// Connexion
-		else{
-			$GLOBALS['page_title'] = 'Connexion';
+		else {
+			$GLOBALS['page_title'] = Utils::t('Connection');
 			self::renderPage('connection');
 		}
 	}
@@ -966,23 +963,37 @@ class AdminServUI {
 	/**
 	* Inclue les fichiers pour le rendu d'une page
 	*/
-	public static function renderPage($pageName){
+	public static function renderPage($pageName) {
 		global $client, $category, $view, $index, $id, $directory;
 		
 		// Preprocess
-		if( strstr($pageName, '-') ){
+		if (strstr($pageName, '-')) {
 			$pageNameEx = explode('-', $pageName);
 			$pageIncludePath = AdminServConfig::$PATH_RESOURCES.'process/'.$pageNameEx[0].'.preprocess.php';
-			if( file_exists($pageIncludePath) ){
+			if (file_exists($pageIncludePath)) {
 				require_once $pageIncludePath;
 			}
 		}
 		
 		// Process
-		require_once AdminServConfig::$PATH_RESOURCES.'process/'.$pageName.'.process.php';
+		$pageProcess = AdminServConfig::$PATH_RESOURCES.'process/'.$pageName.'.process.php';
+		if (file_exists($pageProcess)) {
+			require_once $pageProcess;
+		}
+		
+		// Terminate client
+		if ($client->socket != null) {
+			$client->Terminate();
+		}
+		
+		// Header
+		self::getHeader();
 		
 		// Template
-		//require_once AdminServConfig::$PATH_RESOURCES.'templates/'.$pageName.'.tpl.php';
+		require_once AdminServConfig::$PATH_RESOURCES.'templates/'.$pageName.'.tpl.php';
+		
+		// Footer
+		self::getFooter();
 		
 		AdminServLogs::add('access', (isset($GLOBALS['page_title'])) ? $GLOBALS['page_title'] : $pageName);
 	}

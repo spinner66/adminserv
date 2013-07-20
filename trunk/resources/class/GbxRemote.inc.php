@@ -853,20 +853,20 @@ class IXR_ClientMulticall_Gbx extends IXR_Client_Gbx {
 		return $result;
 	}
 
-	function getMultiqueryResponse(){
+	function getMultiqueryResponse() {
 		$out = array();
 		
-		if( count($this->calls) > 0 ){
+		if (!empty($this->calls)) {
 			$result = $this->getResponse();
-			foreach($this->calls as $i => $method){
-				if( isset($result[$i]['faultCode']) ){
+			foreach ($this->calls as $i => $method) {
+				if (isset($result[$i]['faultCode'])) {
 					$out[$method['methodName']] = array();
 				}
-				else{
-					if( count($result[$i]) == 1 && isset($result[$i][0]) ){
+				else {
+					if (count($result[$i]) == 1 && isset($result[$i][0])) {
 						$out[$method['methodName']] = $result[$i][0];
 					}
-					else{
+					else {
 						$out[$method['methodName']] = $result[$i];
 					}
 				}

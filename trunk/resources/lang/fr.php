@@ -373,5 +373,6 @@ $translate = array(
 	'Default path from maps folder for listing maps' => 'Chemin par défaut à partir du dossier "Maps" pour lister les maps',
 	'No folder' => 'Aucun dossier',
 	'Server selection' => 'Sélection du serveur',
+	'Configuration' => 'Configuration',
 );
 ?>
