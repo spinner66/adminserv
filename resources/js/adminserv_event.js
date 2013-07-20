@@ -17,7 +17,7 @@ $(document).ready(function(){
 		/**
 		* Serveurs
 		*/
-		if( $('body').hasClass('section-servers') ){
+		if( $('body').hasClass('section-config-servers') ){
 			// Clic sur les lignes
 			$('#serverList').on('click', 'tr', function(){
 				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
@@ -37,14 +37,14 @@ $(document).ready(function(){
 				$('.cadre').updateNbSelectedLines();
 			});
 		}
-		else if( $('body').hasClass('section-addserver') ){
+		else if( $('body').hasClass('section-config-addserver') ){
 			$('#addServerAdmLvlSA, #addServerAdmLvlADM, #addServerAdmLvlUSR').blur(function(){
 				if( $(this).val() == '' ){
 					$(this).val('all');
 				}
 			});
 		}
-		else if( $('body').hasClass('section-servers-order') ){
+		else if( $('body').hasClass('section-config-serversorder') ){
 			// Tri manuel
 			$('#sortableServersList').sortable({
 				placeholder: 'ui-state-highlight',
@@ -52,7 +52,7 @@ $(document).ready(function(){
 				zIndex: 9999
 			});
 			$('#reset').click(function(){
-				location.href = $('.section-servers-order .cadre form').attr('action');
+				location.href = $('.section-config-serversorder .cadre form').attr('action');
 			});
 			$('#save').click(function(){
 				var listStr = '';

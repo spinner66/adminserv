@@ -293,11 +293,11 @@ class AdminServUI {
 		if( !isset($GLOBALS['body_class']) ){
 			$GLOBALS['body_class'] = null;
 		}
-		$configPages = array(
-			'config-servers',
-			'serversconfigpassword',
+		$passwordPages = array(
+			'servers-online-config',
+			'config-password',
 		);
-		if( !in_array(USER_PAGE, $configPages) ){
+		if( !in_array(USER_PAGE, $passwordPages) ){
 			if( defined('SERVER_NAME') ){
 				$GLOBALS['page_title'] = SERVER_NAME;
 				$GLOBALS['body_class'] .= ' not-front';
@@ -897,12 +897,6 @@ class AdminServUI {
 	*/
 	public static function initBackPage() {
 		// Pages list
-		$configPagesList = array(
-			'servers',
-			'addserver',
-			'servers-order',
-			'serversconfigpassword',
-		);
 		$pagesList = array(
 			'general',
 			'srvopts',
@@ -920,7 +914,15 @@ class AdminServUI {
 			self::renderPage($pagesList[$pageKey]);
 		}
 		else {
-			if (in_array(USER_PAGE, $configPagesList)) {
+			$isConfigPage = false;
+			if (strstr(USER_PAGE, '-')) {
+				$pageNameEx = explode('-', USER_PAGE);
+				if ($pageNameEx[0] === 'config') {
+					$isConfigPage = true;
+				}
+			}
+			
+			if ($isConfigPage) {
 				session_unset();
 				session_destroy();
 				Utils::redirection(false, './config/');
@@ -939,24 +941,25 @@ class AdminServUI {
 	* Ititialise une page en front office
 	*/
 	public static function initFrontPage() {
-		// Pages list
-		$configPagesList = array(
-			'servers',
-			'addserver',
-			'servers-order',
-			'serversconfigpassword',
-		);
+		$isConfigPage = false;
+		if (strstr(USER_PAGE, '-')) {
+			$pageNameEx = explode('-', USER_PAGE);
+			if ($pageNameEx[0] === 'config') {
+				$isConfigPage = true;
+			}
+		}
 		
 		// Render page
-		if (in_array(USER_PAGE, $configPagesList)) {
-			$pageKey = array_search(USER_PAGE, $configPagesList);
-			$GLOBALS['page_title'] = Utils::t('Configuration');
-			self::renderPage($configPagesList[$pageKey]);
+		if ($isConfigPage) {
+			$pageTitle = 'Configuration';
+			$pageName = USER_PAGE;
 		}
 		else {
-			$GLOBALS['page_title'] = Utils::t('Connection');
-			self::renderPage('connection');
+			$pageTitle = 'Connection';
+			$pageName = 'connection';
 		}
+		$GLOBALS['page_title'] = Utils::t($pageTitle);
+		self::renderPage($pageName);
 	}
 	
 	
@@ -976,13 +979,13 @@ class AdminServUI {
 		}
 		
 		// Process
-		$pageProcess = AdminServConfig::$PATH_RESOURCES.'process/'.$pageName.'.process.php';
+		$pageProcess = AdminServConfig::$PATH_RESOURCES.'process/'.$pageName.'.php';
 		if (file_exists($pageProcess)) {
 			require_once $pageProcess;
 		}
 		
 		// Terminate client
-		if ($client->socket != null) {
+		if (isset($client) && $client->socket != null) {
 			$client->Terminate();
 		}
 		

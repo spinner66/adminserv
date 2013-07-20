@@ -1,6 +1,6 @@
 <section class="cadre">
-	<h1><?php if( defined('IS_SERVER_EDITION') ){ echo Utils::t('Edit server'); }else{ echo Utils::t('Add server'); } ?></h1>
-	<form method="post" action="?p=<?php echo USER_PAGE; if($id !== -1){ echo '&id='.$id; } ?>">
+	<h1><?php echo (defined('IS_SERVER_EDITION')) ? Utils::t('Edit server') : Utils::t('Add server'); ?></h1>
+	<form method="post" action="?p=<?php echo USER_PAGE; if ($id !== -1): echo '&id='.$id; endif; ?>">
 		<div class="content">
 			<fieldset>
 				<legend><?php echo Utils::t('Connection information'); ?></legend>
@@ -8,7 +8,7 @@
 					<tr>
 						<td class="key"><label for="addServerName"><?php echo Utils::t('Server name'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerName" id="addServerName" value="<?php echo $serverName; ?>" />
+							<input class="text width3" type="text" name="addServerName" id="addServerName" value="<?php echo $data['name']; ?>" />
 						</td>
 						<td class="info">
 							<?php echo Utils::t('Server name without color'); ?>
@@ -17,7 +17,7 @@
 					<tr>
 						<td class="key"><label for="addServerAddress"><?php echo Utils::t('Address'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAddress" id="addServerAddress" value="<?php echo $serverAddress; ?>" />
+							<input class="text width3" type="text" name="addServerAddress" id="addServerAddress" value="<?php echo $data['address']; ?>" />
 						</td>
 						<td class="info">
 							<?php echo Utils::t('IP address or domain name'); ?>
@@ -26,7 +26,7 @@
 					<tr>
 						<td class="key"><label for="addServerPort"><?php echo Utils::t('XMLRPC port'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="number" name="addServerPort" id="addServerPort" value="<?php echo $serverPort; ?>" />
+							<input class="text width3" type="number" name="addServerPort" id="addServerPort" value="<?php echo $data['port']; ?>" />
 						</td>
 						<td class="info">
 							<?php echo Utils::t('Port for remote control'); ?>
@@ -41,7 +41,7 @@
 					<tr>
 						<td class="key"><label for="addServerMapsBasePath"><?php echo Utils::t('Maps base folder'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerMapsBasePath" id="addServerMapsBasePath" value="<?php echo $serverMapsBasePath; ?>" />
+							<input class="text width3" type="text" name="addServerMapsBasePath" id="addServerMapsBasePath" value="<?php echo $data['mapsbasepath']; ?>" />
 						</td>
 						<td class="info">
 							<?php echo Utils::t('Default path from maps folder for listing maps'); ?>
@@ -50,7 +50,7 @@
 					<tr>
 						<td class="key"><label for="addServerMatchSet"><?php echo Utils::t('Server MatchSettings'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerMatchSet" id="addServerMatchSet" value="<?php echo $serverMatchSet; ?>" />
+							<input class="text width3" type="text" name="addServerMatchSet" id="addServerMatchSet" value="<?php echo $data['matchsettings']; ?>" />
 						</td>
 						<td class="info">
 							<?php echo Utils::t('Current server MatchSettings name'); ?>
@@ -59,7 +59,7 @@
 					<tr>
 						<td class="key"><label for="addServerAdmLvlSA"><?php echo Utils::t('SuperAdmin level'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAdmLvlSA" id="addServerAdmLvlSA" value="<?php echo $serverAdmLvl['SuperAdmin']; ?>" />
+							<input class="text width3" type="text" name="addServerAdmLvlSA" id="addServerAdmLvlSA" value="<?php echo $data['adminlevel']['SuperAdmin']; ?>" />
 						</td>
 						<td rowspan="3" class="info">
 							<?php echo Utils::t('Possible values for the admin level:'); ?><br />
@@ -72,13 +72,13 @@
 					<tr>
 						<td class="key"><label for="addServerAdmLvlADM"><?php echo Utils::t('Admin level'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAdmLvlADM" id="addServerAdmLvlADM" value="<?php echo $serverAdmLvl['Admin']; ?>" />
+							<input class="text width3" type="text" name="addServerAdmLvlADM" id="addServerAdmLvlADM" value="<?php echo $data['adminlevel']['Admin']; ?>" />
 						</td>
 					</tr>
 					<tr>
 						<td class="key"><label for="addServerAdmLvlUSR"><?php echo Utils::t('User level'); ?></label></td>
 						<td class="value">
-							<input class="text width3" type="text" name="addServerAdmLvlUSR" id="addServerAdmLvlUSR" value="<?php echo $serverAdmLvl['User']; ?>" />
+							<input class="text width3" type="text" name="addServerAdmLvlUSR" id="addServerAdmLvlUSR" value="<?php echo $data['adminlevel']['User']; ?>" />
 						</td>
 					</tr>
 				</table>

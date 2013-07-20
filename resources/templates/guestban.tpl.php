@@ -1,11 +1,11 @@
 <section class="cadre left">
 	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 	<div id="banlist">
-		<h1>Banlist<?php if($countBanList > 0){ echo ' ('.$countBanList.')'; } ?></h1>
+		<h1>Banlist<?php if ($data['banlist']['count'] > 0): ' ('.$data['banlist']['count'].')'; endif; ?></h1>
 		<div class="title-detail">
 			<ul>
 				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=banlist" data-empty="<?php echo Utils::t('The list is already empty.'); ?>"><?php echo Utils::t('Clean the list'); ?></a></li>
-				<li class="last"><input type="checkbox" name="checkAllBanlist" id="checkAllBanlist" value=""<?php if($countBanList == 0){ echo ' disabled="disabled"'; } ?> /></li>
+				<li class="last"><input type="checkbox" name="checkAllBanlist" id="checkAllBanlist" value=""<?php if ($data['banlist']['count'] == 0): echo ' disabled="disabled"'; endif; ?> /></li>
 			</ul>
 		</div>
 		<table>
@@ -19,40 +19,32 @@
 			</thead>
 			<tbody>
 				<tr class="table-separation"><td colspan="4"></td></tr>
-				<?php
-					$showBanList = null;
-					
-					// Liste des joueurs
-					if( $countBanList > 0 ){
-						$i = 0;
-						foreach($banList as $player){
-							// Ligne
-							$showBanList .= '<tr class="'; if($i%2){ $showBanList .= 'even'; }else{ $showBanList .= 'odd'; } $showBanList .= '">'
-								.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
-								.'<td>'.$player['IPAddress'].'</td>'
-								.'<td>'.$player['ClientName'].'</td>'
-								.'<td class="checkbox"><input type="checkbox" name="banlist[]" value="'.$player['Login'].'" /></td>'
-							.'</tr>';
-							$i++;
-						}
-					}
-					else{
-						$showBanList .= '<tr class="no-line"><td class="center" colspan="4">'.Utils::t('No player').'</td></tr>';
-					}
-					
-					// Affichage
-					echo $showBanList;
-				?>
+				<?php if ($data['banlist']['count'] > 0): ?>
+					<?php $i = 0; ?>
+					<?php foreach ($data['banlist']['list'] as $player): ?>
+						<tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+							<td class="imgleft"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/solo.png" alt="" /><?php echo $player['Login']; ?></td>
+							<td><?php echo $player['IPAddress']; ?></td>
+							<td><?php echo $player['ClientName']; ?></td>
+							<td class="checkbox"><input type="checkbox" name="banlist[]" value="<?php echo $player['Login']; ?>" /></td>
+						</tr>
+						<?php $i++; ?>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<tr class="no-line">
+						<td class="center" colspan="4"><?php echo Utils::t('No player'); ?></td>
+					</tr>
+				<?php endif; ?>
 			</tbody>
 		</table>
 	</div>
 	
 	<div id="blacklist">
-		<h1>Blacklist<?php if($countBlackList > 0){ echo ' ('.$countBlackList.')'; } ?></h1>
+		<h1>Blacklist<?php if ($data['blacklist']['count'] > 0): echo ' ('.$data['blacklist']['count'].')'; endif; ?></h1>
 		<div class="title-detail">
 			<ul>
 				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=blacklist" data-empty="<?php echo Utils::t('The list is already empty.'); ?>"><?php echo Utils::t('Clean the list'); ?></a></li>
-				<li class="last"><input type="checkbox" name="checkAllBlacklist" id="checkAllBlacklist" value=""<?php if($countBlackList == 0){ echo ' disabled="disabled"'; } ?> /></li>
+				<li class="last"><input type="checkbox" name="checkAllBlacklist" id="checkAllBlacklist" value=""<?php if ($data['blacklist']['count'] == 0): echo ' disabled="disabled"'; endif; ?> /></li>
 			</ul>
 		</div>
 		<table>
@@ -64,38 +56,30 @@
 			</thead>
 			<tbody>
 				<tr class="table-separation"><td colspan="2"></td></tr>
-				<?php
-					$showBlackList = null;
-					
-					// Liste des joueurs
-					if( $countBlackList > 0 ){
-						$i = 0;
-						foreach($blackList as $player){
-							// Ligne
-							$showBlackList .= '<tr class="'; if($i%2){ $showBlackList .= 'even'; }else{ $showBlackList .= 'odd'; } $showBlackList .= '">'
-								.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
-								.'<td class="checkbox"><input type="checkbox" name="blacklist[]" value="'.$player['Login'].'" /></td>'
-							.'</tr>';
-							$i++;
-						}
-					}
-					else{
-						$showBlackList .= '<tr class="no-line"><td class="center" colspan="2">'.Utils::t('No player').'</td></tr>';
-					}
-					
-					// Affichage
-					echo $showBlackList;
-				?>
+				<?php if ($data['blacklist']['count'] > 0): ?>
+					<?php $i = 0; ?>
+					<?php foreach ($data['blacklist']['list'] as $player): ?>
+						<tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+							<td class="imgleft"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/solo.png" alt="" /><?php echo $player['Login']; ?></td>
+							<td class="checkbox"><input type="checkbox" name="blacklist[]" value="<?php echo $player['Login']; ?>" /></td>
+						</tr>
+						<?php $i++; ?>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<tr class="no-line">
+						<td class="center" colspan="2"><?php echo Utils::t('No player'); ?></td>
+					</tr>
+				<?php endif; ?>
 			</tbody>
 		</table>
 	</div>
 	
 	<div id="guestlist">
-		<h1>Guestlist<?php if($countGuestList > 0){ echo ' ('.$countGuestList.')'; } ?></h1>
+		<h1>Guestlist<?php if ($data['guestlist']['count'] > 0): echo ' ('.$data['guestlist']['count'].')'; endif; ?></h1>
 		<div class="title-detail">
 			<ul>
 				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=guestlist" data-empty="<?php echo Utils::t('The list is already empty.'); ?>"><?php echo Utils::t('Clean the list'); ?></a></li>
-				<li class="last"><input type="checkbox" name="checkAllGuestlist" id="checkAllGuestlist" value=""<?php if($countGuestList == 0){ echo ' disabled="disabled"'; } ?> /></li>
+				<li class="last"><input type="checkbox" name="checkAllGuestlist" id="checkAllGuestlist" value=""<?php if ($data['guestlist']['count'] == 0): echo ' disabled="disabled"'; endif; ?> /></li>
 			</ul>
 		</div>
 		<table>
@@ -107,38 +91,30 @@
 			</thead>
 			<tbody>
 				<tr class="table-separation"><td colspan="2"></td></tr>
-				<?php
-					$showGuestList = null;
-					
-					// Liste des joueurs
-					if( $countGuestList > 0 ){
-						$i = 0;
-						foreach($guestList as $player){
-							// Ligne
-							$showGuestList .= '<tr class="'; if($i%2){ $showGuestList .= 'even'; }else{ $showGuestList .= 'odd'; } $showGuestList .= '">'
-								.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
-								.'<td class="checkbox"><input type="checkbox" name="guestlist[]" value="'.$player['Login'].'" /></td>'
-							.'</tr>';
-							$i++;
-						}
-					}
-					else{
-						$showGuestList .= '<tr class="no-line"><td class="center" colspan="2">'.Utils::t('No player').'</td></tr>';
-					}
-					
-					// Affichage
-					echo $showGuestList;
-				?>
+				<?php if ($data['guestlist']['count'] > 0): ?>
+					<?php $i = 0; ?>
+					<?php foreach ($data['guestlist']['list'] as $player): ?>
+						<tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+							<td class="imgleft"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/solo.png" alt="" /><?php echo $player['Login']; ?></td>
+							<td class="checkbox"><input type="checkbox" name="guestlist[]" value="<?php echo $player['Login']; ?>" /></td>
+						</tr>
+						<?php $i++; ?>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<tr class="no-line">
+						<td class="center" colspan="2"><?php echo Utils::t('No player'); ?></td>
+					</tr>
+				<?php endif; ?>
 			</tbody>
 		</table>
 	</div>
 	
 	<div id="ignorelist">
-		<h1>Ignorelist<?php if($countIgnoreList > 0){ echo ' ('.$countIgnoreList.')'; } ?></h1>
+		<h1>Ignorelist<?php if ($data['ignorelist']['count'] > 0): echo ' ('.$data['ignorelist']['count'].')'; endif; ?></h1>
 		<div class="title-detail">
 			<ul>
 				<li><a class="cleanList" href="?p=<?php echo USER_PAGE; ?>&amp;clean=ignorelist" data-empty="<?php echo Utils::t('The list is already empty.'); ?>"><?php echo Utils::t('Clean the list'); ?></a></li>
-				<li class="last"><input type="checkbox" name="checkAllIgnorelist" id="checkAllIgnorelist" value=""<?php if($countIgnoreList == 0){ echo ' disabled="disabled"'; } ?> /></li>
+				<li class="last"><input type="checkbox" name="checkAllIgnorelist" id="checkAllIgnorelist" value=""<?php if ($data['ignorelist']['count'] == 0): echo ' disabled="disabled"'; endif; ?> /></li>
 			</ul>
 		</div>
 		<table>
@@ -150,28 +126,20 @@
 			</thead>
 			<tbody>
 				<tr class="table-separation"><td colspan="2"></td></tr>
-				<?php
-					$showIgnoreList = null;
-					
-					// Liste des joueurs
-					if( $countIgnoreList > 0 ){
-						$i = 0;
-						foreach($ignoreList as $player){
-							// Ligne
-							$showIgnoreList .= '<tr class="'; if($i%2){ $showIgnoreList .= 'even'; }else{ $showIgnoreList .= 'odd'; } $showIgnoreList .= '">'
-								.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/solo.png" alt="" />'.$player['Login'].'</td>'
-								.'<td class="checkbox"><input type="checkbox" name="ignorelist[]" value="'.$player['Login'].'" /></td>'
-							.'</tr>';
-							$i++;
-						}
-					}
-					else{
-						$showIgnoreList .= '<tr class="no-line"><td class="center" colspan="2">'.Utils::t('No player').'</td></tr>';
-					}
-					
-					// Affichage
-					echo $showIgnoreList;
-				?>
+				<?php if ($data['ignorelist']['count'] > 0): ?>
+					<?php $i = 0; ?>
+					<?php foreach ($data['ignorelist']['list'] as $player): ?>
+						<tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+							<td class="imgleft"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/solo.png" alt="" /><?php echo $player['Login']; ?></td>
+							<td class="checkbox"><input type="checkbox" name="ignorelist[]" value="<?php echo $player['Login']; ?>" /></td>
+						</tr>
+						<?php $i++; ?>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<tr class="no-line">
+						<td class="center" colspan="2"><?php echo Utils::t('No player'); ?></td>
+					</tr>
+				<?php endif; ?>
 			</tbody>
 		</table>
 	</div>
@@ -196,12 +164,12 @@
 	<div class="content last addPlayer">
 		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 			<div>
-				<select class="width2" name="addPlayerList" id="addPlayerList"<?php if($playerCount == 0){ echo ' hidden="hidden"'; } ?>>
+				<select class="width2" name="addPlayerList" id="addPlayerList"<?php if ($data['players']['count'] == 0): echo ' hidden="hidden"'; endif; ?>>
 					<option value="none"><?php echo Utils::t('Select a player'); ?></option>
-					<?php echo $playerListOptions; ?>
+					<?php echo $data['players']['listOptions']; ?>
 					<option value="more"><?php echo Utils::t('Enter another login'); ?></option>
 				</select>
-				<input class="text width2" type="text" name="addPlayerLogin" id="addPlayerLogin" data-default-value="<?php echo Utils::t('Player login'); ?>" value="<?php echo Utils::t('Player login'); ?>"<?php if($playerCount != 0){ echo ' hidden="hidden"'; } ?> />
+				<input class="text width2" type="text" name="addPlayerLogin" id="addPlayerLogin" data-default-value="<?php echo Utils::t('Player login'); ?>" value="<?php echo Utils::t('Player login'); ?>"<?php if ($data['players']['count'] != 0): echo ' hidden="hidden"'; endif; ?> />
 				<select class="addPlayerTypeList" name="addPlayerTypeList" id="addPlayerTypeList">
 					<option value="none"><?php echo Utils::t('Add in the'); ?></option>
 					<option value="guestlist">Guestlist</option>
@@ -212,7 +180,7 @@
 		</form>
 	</div>
 	
-	<?php if( isset($playlistDirectory) && $playlistDirectory != 'Not directory'){ ?>
+	<?php if (isset($data['playlistDirectory']) && $data['playlistDirectory'] != 'Not directory'): ?>
 		<div id="playlists">
 			<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 				<h1><?php echo Utils::t('Playlists'); ?>
@@ -247,11 +215,8 @@
 				</thead>
 				<tbody>
 					<tr class="table-separation"><td colspan="5"></td></tr>
-					<?php
-						$showPlaylists = null;
-						
-						// Liste des playlists
-						if( isset($playlistDirectory['files']) && count($playlistDirectory['files']) > 0 ){
+					<?php if (isset($data['playlistDirectory']['files']) && !empty($data['playlistDirectory']['files'])): ?>
+						<?php
 							$i = 0;
 							$defaultFilename = array(
 								'guestlist.txt',
@@ -259,13 +224,14 @@
 								'guestlist.xml',
 								'blacklist.xml',
 							);
-							foreach($playlistDirectory['files'] as $file){
-								$ext = File::getDoubleExtension($file['filename']);
-								if( in_array($file['filename'], $defaultFilename) || ($isDoubleExt = in_array($ext, AdminServConfig::$PLAYLIST_EXTENSION)) ){
+						?>
+						<?php foreach ($data['playlistDirectory']['files'] as $file): ?>
+							<?php if (in_array($file['filename'], $defaultFilename) || ($isDoubleExt = in_array(File::getDoubleExtension($file['filename']), AdminServConfig::$PLAYLIST_EXTENSION))): ?>
+								<?php
 									// Playlist data
-									$data = AdminServ::getPlaylistData($gameDataDirectory.'Config/'.$file['filename']);
-									if( isset($data['logins']) ){
-										$countDataLogins = count($data['logins']);
+									$playlistData = AdminServ::getPlaylistData($data['gameDataDirectory'].'Config/'.$file['filename']);
+									if( isset($playlistData['logins']) ){
+										$countDataLogins = count($playlistData['logins']);
 										$nbPlayers = ($countDataLogins > 1) ? $countDataLogins.' '.Utils::t('players') : '1 '.Utils::t('player');
 									}
 									else{
@@ -275,28 +241,24 @@
 									// Filename
 									$parseExtIndex = ($isDoubleExt) ? -13 : -4;
 									$filename = substr($file['filename'], 0, $parseExtIndex);
-									
-									// Line
-									$showPlaylists .= '<tr class="'; if($i%2){ $showPlaylists .= 'even'; }else{ $showPlaylists .= 'odd'; } $showPlaylists .= '">'
-										.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$file['filename'].'">'.$filename.'</span></td>'
-										.'<td class="center">'.ucfirst($data['type']).'</td>'
-										.'<td class="center">'.$nbPlayers.'</td>'
-										.'<td class="center">'.date('d-m-Y', $file['mtime']).'</td>'
-										.'<td class="checkbox">'
-											.'<input type="checkbox" name="playlist[]" value="'.$data['type'].'|'.$file['filename'].'" />'
-										.'</td>'
-									.'</tr>';
-									$i++;
-								}
-							}
-						}
-						else{
-							$showPlaylists .= '<tr class="no-line"><td class="center" colspan="5">'.Utils::t('No playlist').'</td></tr>';
-						}
-						
-						// Affichage
-						echo $showPlaylists;
-					?>
+								?>
+								<tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+									<td class="imgleft"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/finishgrey.png" alt="" /><span title="<?php echo $file['filename']; ?>"><?php echo $filename; ?></span></td>
+									<td class="center"><?php echo ucfirst($playlistData['type']); ?></td>
+									<td class="center"><?php echo $nbPlayers; ?></td>
+									<td class="center"><?php echo date('d-m-Y', $file['mtime']); ?></td>
+									<td class="checkbox">
+										<input type="checkbox" name="playlist[]" value="<?php echo $playlistData['type'].'|'.$file['filename']; ?>" />
+									</td>
+								</tr>
+								<?php $i++; ?>
+							<?php endif; ?>
+						<?php endforeach; ?>
+					<?php else: ?>
+						<tr class="no-line">
+							<td class="center" colspan="5"><?php echo Utils::t('No playlist'); ?></td>
+						</tr>
+					<?php endif; ?>
 				</tbody>
 			</table>
 			
@@ -315,5 +277,5 @@
 			</div>
 			</form>
 		</div>
-	<?php } ?>
+	<?php endif; ?>
 </section>

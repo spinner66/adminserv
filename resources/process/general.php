@@ -141,14 +141,14 @@
 	
 	
 	// Info serveur
-	$serverInfo = AdminServ::getCurrentServerInfo();
-	$displayTeamMode = AdminServ::checkDisplayTeamMode($serverInfo['srv']['gameModeId'], $serverInfo['srv']['gameModeScriptName']);
+	$data['serverInfo'] = AdminServ::getCurrentServerInfo();
+	$data['isTeamGameMode'] = AdminServ::checkDisplayTeamMode($data['serverInfo']['srv']['gameModeId'], $data['serverInfo']['srv']['gameModeScriptName']);
 	// Si on est en mode équipe, on force l'affichage en mode détail
-	if($displayTeamMode){
+	if($data['isTeamGameMode']){
 		$_SESSION['adminserv']['mode']['general'] = 'detail';
 	}
 	if( defined('IS_RELAY') && IS_RELAY ){
 		// @deprecated $mainServerLogin = AdminServ::getMainServerLoginFromRelay();
-		$mainServerLogin = null;
+		$data['mainServerLogin'] = null;
 	}
 ?>

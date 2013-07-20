@@ -1,24 +1,4 @@
 <?php
-	// SESSION
-	if( !isset($_SESSION['adminserv']['allow_config_servers']) ){
-		AdminServ::error( Utils::t('You are not allowed to configure the servers') );
-		Utils::redirection();
-	}
-	
-	// VERIFICATION
-	if( class_exists('ServerConfig') ){
-		// Si on n'autorise pas la configuration en ligne
-		if( OnlineConfig::ACTIVATE !== true ){
-			AdminServ::info( Utils::t('No server available. To add one, configure "config/servers.cfg.php" file.') );
-			Utils::redirection();
-		}
-	}
-	else{
-		AdminServ::error( Utils::t('The servers configuration file isn\'t recognized by AdminServ.') );
-		Utils::redirection();
-	}
-	
-	
 	// ENREGISTREMENT
 	if( isset($_POST['saveserver']) ){
 		// Variables
@@ -62,7 +42,7 @@
 				$action = Utils::t('This server has been modified.');
 				AdminServ::info($action);
 				AdminServLogs::add('action', $action);
-				Utils::redirection(false, '?p=servers');
+				Utils::redirection(false, '?p=config-servers');
 			}
 		}
 		// Ajout
@@ -81,31 +61,33 @@
 	
 	
 	// LECTURE
-	$serverName = null;
-	$serverAddress = 'localhost';
-	$serverPort = 5000;
-	$serverMapsBasePath = null;
-	$serverMatchSet = 'MatchSettings/';
-	$serverAdmLvl = array(
-		'SuperAdmin' => 'all',
-		'Admin' => 'all',
-		'User' => 'all'
+	$data = array(
+		'name' => null,
+		'address' => 'localhost',
+		'port' => 5000,
+		'mapsbasepath' => null,
+		'matchsettings' => 'MatchSettings/',
+		'adminlevel' => array(
+			'SuperAdmin' => 'all',
+			'Admin' => 'all',
+			'User' => 'all'
+		)
 	);
 	if($id !== -1){
 		define('IS_SERVER_EDITION', true);
-		$serverName = AdminServServerConfig::getServerName($id);
-		if($serverName){
-			$serverData = AdminServServerConfig::getServer($serverName);
-			$serverAddress = $serverData['address'];
-			$serverPort = $serverData['port'];
-			$serverMapsBasePath = (isset($serverData['mapsbasepath'])) ? $serverData['mapsbasepath'] : '';
-			$serverMatchSet = $serverData['matchsettings'];
+		$data['name'] = AdminServServerConfig::getServerName($id);
+		if($data['name']){
+			$serverData = AdminServServerConfig::getServer($data['name']);
+			$data['address'] = $serverData['address'];
+			$data['port'] = $serverData['port'];
+			$data['mapsbasepath'] = (isset($serverData['mapsbasepath'])) ? $serverData['mapsbasepath'] : '';
+			$data['matchsettings'] = $serverData['matchsettings'];
 			foreach($serverData['adminlevel'] as $admLvlId => $admLvlValue){
 				if( is_array($admLvlValue) ){
-					$serverAdmLvl[$admLvlId] = implode(', ', $admLvlValue);
+					$data['adminlevel'][$admLvlId] = implode(', ', $admLvlValue);
 				}
 				else{
-					$serverAdmLvl[$admLvlId] = $admLvlValue;
+					$data['adminlevel'][$admLvlId] = $admLvlValue;
 				}
 			}
 		}

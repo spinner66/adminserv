@@ -16,7 +16,7 @@ class AdminServEvent {
 		}
 		else{
 			if( isset($_SESSION['adminserv']['check_password']) || isset($_SESSION['adminserv']['get_password']) ){
-				define('USER_PAGE', 'config-servers');
+				define('USER_PAGE', 'servers-online-config');
 			}
 			else{
 				define('USER_PAGE', 'index');
