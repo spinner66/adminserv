@@ -1,4 +1,4 @@
-<?php if( isset($_SESSION['adminserv']['check_password']) ): // Demande de password ?>
+<?php if (isset($_SESSION['adminserv']['check_password']) && $_SESSION['adminserv']['check_password'] === true): // Demande de password ?>
 <section class="config-servers">
 	<form method="post" action="./config/">
 		<fieldset>
@@ -16,7 +16,7 @@
 		</fieldset>
 	</form>
 </section>
-<?php elseif(isset($_SESSION['adminserv']['get_password']) ): // Demande de création password ?>
+<?php elseif (isset($_SESSION['adminserv']['get_password']) && $_SESSION['adminserv']['get_password'] === true): // Demande de création password ?>
 <section class="config-servers no-server">
 	<form method="post" action="./config/">
 		<fieldset>
@@ -33,7 +33,7 @@
 </section>
 <?php else: // Affichage de DisplayServ ?>
 <section class="displayserv">
-	<?php if(AdminServConfig::USE_DISPLAYSERV): ?>
+	<?php if (AdminServConfig::USE_DISPLAYSERV): ?>
 		<link rel="stylesheet" href="<?php echo AdminServConfig::$PATH_RESOURCES; ?>css/displayserv.css" />
 		<script src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>js/displayserv.js"></script>
 		<script>

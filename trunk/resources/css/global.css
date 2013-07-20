@@ -290,7 +290,7 @@ header {
 	padding: 0 5px;
 }
 #connection-inner .connection-label,
-.section-config-servers fieldset .connection-label {
+.section-servers-online-config fieldset .connection-label {
 	float: left;
 	padding: 5px 0;
 	width: 89%;
@@ -311,36 +311,36 @@ header {
 	margin: 1px 0 0;
 }
 #connection-inner .connection-login,
-.section-config-servers fieldset .connection-login {
+.section-servers-online-config fieldset .connection-login {
 	float: right;
 	padding: 0 5px 0 10px;
 	height: 38px;
 	border-left: 1px solid #f5f5f5;
 }
 #connection-inner .connection-login input,
-.section-config-servers fieldset .connection-login input {
+.section-servers-online-config fieldset .connection-login input {
 	margin-top: 5px;
 }
-.section-config-servers fieldset {
+.section-servers-online-config fieldset {
 	margin: 30px 5px;
 	width: 513px;
 }
-.section-config-servers .no-server fieldset {
+.section-servers-online-config .no-server fieldset {
 	width: 450px;
 }
-.section-config-servers fieldset legend {
+.section-servers-online-config fieldset legend {
 	margin-bottom: 5px;
 }
-.section-config-servers fieldset .connection-label {
+.section-servers-online-config fieldset .connection-label {
 	width: auto;
 }
-.section-config-servers  fieldset .connection-cancel {
+.section-servers-online-config  fieldset .connection-cancel {
 	float: right;
 	margin-top: 4px;
 	padding: 5px 10px 5px 0;
 }
-.section-config-servers #checkPassword,
-.section-config-servers #savePassword {
+.section-servers-online-config #checkPassword,
+.section-servers-online-config #savePassword {
 	width: 200px;
 	height: 20px;
 }
@@ -1134,22 +1134,22 @@ footer {
 
 /* Page Config
 ---------------------- */
-.section-addserver table .key {
+.section-config-addserver table .key {
 	width: 200px;
 }
-.section-addserver table .value {
+.section-config-addserver table .value {
 	width: 340px;
 }
-.section-addserver input.width3 {
+.section-config-addserver input.width3 {
 	width: 90%;
 }
-.section-serversconfigpassword input.width3 {
+.section-config-password input.width3 {
 	width: 30%;
 }
-.section-servers table tbody tr {
+.section-config-servers table tbody tr {
 	height: 22px;
 }
-.section-servers table tbody tr input {
+.section-config-servers table tbody tr input {
 	margin-bottom: 4px;
 }
 

@@ -16,13 +16,10 @@
 		</thead>
 		<tbody>
 			<tr class="table-separation"><td colspan="8"></td></tr>
-			<?php
-				$showServerList = null;
-				
-				// Liste des serveurs
-				if( is_array($serverList) && count($serverList) > 0 ){
-					$i = 0;
-					foreach($serverList as $serverName => $serverData){
+			<?php if($data['count'] > 0): ?>
+				<?php $i = 0; ?>
+				<?php foreach ($data['servers'] as $serverName => $serverData): ?>
+					<?php
 						// MatchSettings
 						if($serverData['matchsettings']){
 							$matchSettings = $serverData['matchsettings'];
@@ -55,45 +52,31 @@
 								$adminLevelsStatus[] = Utils::t('Missing');
 							}
 						}
-						
-						// Ligne
-						$showServerList .= '<tr class="'; if($i%2){ $showServerList .= 'even'; }else{ $showServerList .= 'odd'; } $showServerList .= '">'
-							.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/servers.png" alt="" />'.$serverName.'</td>'
-							.'<td>'.$serverData['address'].'</td>'
-							.'<td>'.$serverData['port'].'</td>'
-							.'<td>'.$matchSettings.'</td>'
-							.'<td>'.$adminLevelsStatus[0].'</td>'
-							.'<td>'.$adminLevelsStatus[1].'</td>'
-							.'<td>'.$adminLevelsStatus[2].'</td>'
-							.'<td class="checkbox"><input type="radio" name="server[]" value="'.$serverName.'" /></td>'
-						.'</tr>';
-						$i++;
-					}
-				}
-				else{
-					$showServerList .= '<tr class="no-line"><td class="center" colspan="8">'.Utils::t('No server').'</td></tr>';
-				}
-				
-				// Affichage
-				echo $showServerList;
-			?>
+					?>
+					<tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+						<td class="imgleft"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/servers.png" alt="" /><?php echo $serverName; ?></td>
+						<td><?php echo $serverData['address']; ?></td>
+						<td><?php echo $serverData['port']; ?></td>
+						<td><?php echo $matchSettings; ?></td>
+						<td><?php echo $adminLevelsStatus[0]; ?></td>
+						<td><?php echo $adminLevelsStatus[1]; ?></td>
+						<td><?php echo $adminLevelsStatus[2]; ?></td>
+						<td class="checkbox"><input type="radio" name="server[]" value="<?php echo $serverName; ?>" /></td>
+					</tr>
+					<?php $i++; ?>
+				<?php endforeach; ?>
+			<?php else: ?>
+				<tr class="no-line">
+					<td class="center" colspan="8"><?php echo Utils::t('No server'); ?></td>
+				</tr>
+			<?php endif; ?>
 		</tbody>
 	</table>
 	
 	<div class="options">
 		<div class="fleft">
 			<span class="nb-line">
-				<?php
-					if( is_array($serverList) && count($serverList) > 0 ){
-						$countServerList = count($serverList);
-						if($countServerList > 1 ){
-							echo $countServerList.' '.Utils::t('servers');
-						}
-						else{
-							echo $countServerList.' '.Utils::t('server');
-						}
-					}
-				?>
+				<?php echo $data['count'].' '.(($data['count'] > 1) ? Utils::t('servers') : Utils::t('server')); ?>
 			</span>
 		</div>
 		<div class="fright">

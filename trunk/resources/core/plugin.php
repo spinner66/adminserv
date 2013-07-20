@@ -198,7 +198,7 @@ class AdminServPlugin {
 			require_once $scriptFile;
 			
 			// Terminate client
-			if ($client->socket != null) {
+			if (isset($client) && $client->socket != null) {
 				$client->Terminate();
 			}
 			

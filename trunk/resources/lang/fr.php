@@ -374,5 +374,6 @@ $translate = array(
 	'No folder' => 'Aucun dossier',
 	'Server selection' => 'Sélection du serveur',
 	'Configuration' => 'Configuration',
+	'Force the scores' => 'Forcer les scores',
 );
 ?>

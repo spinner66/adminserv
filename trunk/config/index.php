@@ -70,10 +70,10 @@
 					$_SESSION['adminserv']['allow_config_servers'] = true;
 					
 					if( OnlineConfig::ADD_ONLY === true || AdminServServerConfig::hasServer() === false ){
-						Utils::redirection(false, '../?p=addserver');
+						Utils::redirection(false, '../?p=config-addserver');
 					}
 					else{
-						Utils::redirection(false, '../?p=servers');
+						Utils::redirection(false, '../?p=config-servers');
 					}
 				}
 				else{
@@ -94,7 +94,7 @@
 						session_destroy();
 						session_start();
 						$_SESSION['adminserv']['allow_config_servers'] = true;
-						Utils::redirection(false, '../?p=addserver');
+						Utils::redirection(false, '../?p=config-addserver');
 					}
 				}
 				else{

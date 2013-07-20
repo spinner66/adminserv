@@ -5,8 +5,8 @@
 			AdminServ::error();
 		}
 		else{
-			$gameDataDirectory = $client->getResponse();
-			$playlistDirectory = Folder::read($gameDataDirectory.'Config', array(), array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
+			$data['gameDataDirectory'] = $client->getResponse();
+			$data['playlistDirectory'] = Folder::read($data['gameDataDirectory'].'Config', array(), array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
 		}
 	}
 	
@@ -232,7 +232,7 @@
 			$playlistEx = explode('|', $playlist);
 			$filename = $playlistEx[1];
 			
-			if( !File::delete($gameDataDirectory.'Config/'.$filename) ){
+			if( !File::delete($data['gameDataDirectory'].'Config/'.$filename) ){
 				AdminServ::error(Utils::t('Unable to delete the playlist').' : '.$filename);
 				break;
 			}
@@ -281,17 +281,17 @@
 	}
 	else{
 		$queriesData = $client->getMultiqueryResponse();
-		$banList = $queriesData['GetBanList'];
-		$blackList = $queriesData['GetBlackList'];
-		$guestList = $queriesData['GetGuestList'];
-		$ignoreList = $queriesData['GetIgnoreList'];
-		$countBanList = count($banList);
-		$countBlackList = count($blackList);
-		$countGuestList = count($guestList);
-		$countIgnoreList = count($ignoreList);
+		$data['banlist']['list'] = $queriesData['GetBanList'];
+		$data['blacklist']['list'] = $queriesData['GetBlackList'];
+		$data['guestlist']['list'] = $queriesData['GetGuestList'];
+		$data['ignorelist']['list'] = $queriesData['GetIgnoreList'];
+		$data['banlist']['count'] = count($data['banlist']['list']);
+		$data['blacklist']['count'] = count($data['blacklist']['list']);
+		$data['guestlist']['count'] = count($data['guestlist']['list']);
+		$data['ignorelist']['count'] = count($data['ignorelist']['list']);
 	}
 	
 	// Liste des joueurs présent sur le serveur
-	$playerListOptions = AdminServUI::getPlayerList();
-	$playerCount = AdminServ::getNbPlayers();
+	$data['players']['listOptions'] = AdminServUI::getPlayerList();
+	$data['players']['count'] = AdminServ::getNbPlayers();
 ?>
