@@ -293,11 +293,7 @@ class AdminServUI {
 		if( !isset($GLOBALS['body_class']) ){
 			$GLOBALS['body_class'] = null;
 		}
-		$passwordPages = array(
-			'servers-online-config',
-			'config-password',
-		);
-		if( !in_array(USER_PAGE, $passwordPages) ){
+		if(USER_PAGE != 'servers-online-config' && !self::isPageType('config') ){
 			if( defined('SERVER_NAME') ){
 				$GLOBALS['page_title'] = SERVER_NAME;
 				$GLOBALS['body_class'] .= ' not-front';
@@ -305,6 +301,9 @@ class AdminServUI {
 			else{
 				$GLOBALS['body_class'] .= ' front';
 			}
+		}
+		else{
+			$GLOBALS['body_class'] .= ' config';
 		}
 		if( defined('USER_PAGE') && USER_PAGE ){
 			$GLOBALS['body_class'] .= ' section-'.USER_PAGE;
@@ -434,256 +433,6 @@ class AdminServUI {
 			.'</td>'
 			.'<td class="preview"></td>'
 		.'</tr>';
-		
-		return $out;
-	}
-	
-	
-	/**
-	* Récupère le formulaire général aux informations de jeu
-	*
-	* @param array $gameinfos -> Informations de jeu courantes et suivantes
-	* @return string HTML
-	*/
-	public static function getGameInfosGeneralForm($gameinfos){
-		$currGamInf = (isset($gameinfos['curr'])) ? $gameinfos['curr'] : null;
-		$nextGamInf = (isset($gameinfos['next'])) ? $gameinfos['next'] : null;
-		
-		$out = '<fieldset class="gameinfos_general">'
-			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/restartrace.png" alt="" />'.Utils::t('General').'</legend>'
-			.'<table>'
-				.'<tr>'
-					.'<td class="key"><label for="NextGameMode">'.Utils::t('Game mode').'</label></td>';
-					if($currGamInf != null){
-						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrGameMode" id="CurrGameMode" readonly="readonly" value="'.AdminServ::getGameModeName($currGamInf['GameMode']).'" />'
-						.'</td>';
-					}
-					$out .= '<td class="value">'
-						.'<select class="width2" name="NextGameMode" id="NextGameMode">'
-							.self::getGameModeList($nextGamInf['GameMode'])
-						.'</select>'
-					.'</td>'
-					.'<td class="preview"></td>'
-				.'</tr>'
-				.'<tr>'
-					.'<td class="key"><label for="NextChatTime">'.Utils::t('Map end time').' <span>('.Utils::t('sec').')</span></label></td>';
-					if($currGamInf != null){
-						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrChatTime" id="CurrChatTime" readonly="readonly" value="'.TimeDate::millisecToSec($currGamInf['ChatTime'] + 8000).'" />'
-						.'</td>';
-					}
-					$out .= '<td class="value">'
-						.'<input class="text width2" type="number" min="0" name="NextChatTime" id="NextChatTime" value="'.TimeDate::millisecToSec($nextGamInf['ChatTime'] + 8000).'" />'
-					.'</td>'
-					.'<td class="preview"></td>'
-				.'</tr>'
-				.'<tr>'
-					.'<td class="key"><label for="NextFinishTimeout">'.Utils::t('Round/lap end time').' <span>('.Utils::t('sec').')</span></label></td>';
-					if($currGamInf != null){
-						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrFinishTimeout" id="CurrFinishTimeout" readonly="readonly" value="'; if($currGamInf['FinishTimeout'] == 0){ $out .= Utils::t('Default').' (15'.Utils::t('sec'); }else if($currGamInf['FinishTimeout'] == 1){ $out .= Utils::t('Auto (based on map)'); }else{ $out .= TimeDate::millisecToSec($currGamInf['FinishTimeout']); } $out .= '" />'
-						.'</td>';
-					}
-					$out .= '<td class="value next">'
-						.'<select class="width2" name="NextFinishTimeout" id="NextFinishTimeout"'; if($nextGamInf['FinishTimeout'] > 1){ $out .= ' hidden="hidden"'; } $out .= '>'
-							.'<option value="0"'; if($nextGamInf['FinishTimeout'] == 0){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('Default').' (15'.Utils::t('sec').')</option>'
-							.'<option value="1"'; if($nextGamInf['FinishTimeout'] == 1){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('Auto (based on map)').'</option>'
-							.'<option value="more">'.Utils::t('Choose time').'</option>'
-						.'</select>'
-						.'<input class="text width2" type="number" min="0" name="NextFinishTimeoutValue" id="NextFinishTimeoutValue" value="'; if($nextGamInf['FinishTimeout'] > 1){ $out .= TimeDate::millisecToSec($nextGamInf['FinishTimeout']); } $out .= '"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= ' />'
-					.'</td>'
-					.'<td class="preview"'; if($nextGamInf['FinishTimeout'] < 2){ $out .= ' hidden="hidden"'; } $out .= '><a class="returnDefaultValue" href="?p='. USER_PAGE .'">'.Utils::t('Return to the default value').'</a></td>'
-				.'</tr>'
-				.self::getGameInfosField($gameinfos, 'All WarmUp duration', 'AllWarmUpDuration')
-				.'<tr>'
-					.'<td class="key"><label for="NextDisableRespawn">'.Utils::t('Respawn').'</label></td>';
-					if($currGamInf != null){
-						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrDisableRespawn" id="CurrDisableRespawn" readonly="readonly" value="'; if($currGamInf['DisableRespawn'] === false){ $out .= Utils::t('Enable'); }else{ $out .= Utils::t('Disable'); } $out .= '" />'
-						.'</td>';
-					}
-					$out .= '<td class="value">'
-						.'<input class="text" type="checkbox" name="NextDisableRespawn" id="NextDisableRespawn"'; if($nextGamInf['DisableRespawn'] === false){ $out .= ' checked="checked"'; } $out .= ' value="" />'
-					.'</td>'
-					.'<td class="preview"></td>'
-				.'</tr>'
-				.'<tr>'
-					.'<td class="key"><label for="NextForceShowAllOpponents">'.Utils::t('Force show of all opponents').'</label></td>';
-					if($currGamInf != null){
-						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrForceShowAllOpponents" id="CurrForceShowAllOpponents" readonly="readonly" value="'; if($currGamInf['ForceShowAllOpponents'] == 0){ $out .= Utils::t('Let player choose'); }else if($currGamInf['ForceShowAllOpponents'] == 1){ $out .= Utils::t('All opponents'); }else{ $out .= $currGamInf['ForceShowAllOpponents'].' '.Utils::t('minimal opponents'); } $out .= '" />'
-						.'</td>';
-					}
-					$out .= '<td class="value next">'
-						.'<select class="width2" name="NextForceShowAllOpponents" id="NextForceShowAllOpponents"'; if($nextGamInf['ForceShowAllOpponents'] > 1){ $out .= ' hidden="hidden"'; } $out .= '>'
-							.'<option value="0"'; if($nextGamInf['ForceShowAllOpponents'] == 0){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('Let player choose').'</option>'
-							.'<option value="1"'; if($nextGamInf['ForceShowAllOpponents'] == 1){ $out .= ' selected="selected"'; } $out .= '>'.Utils::t('All opponents').'</option>'
-							.'<option value="more">'.Utils::t('Choose opponents number').'</option>'
-						.'</select>'
-						.'<input class="text width2" type="text" name="NextForceShowAllOpponentsValue" id="NextForceShowAllOpponentsValue" value="'; if($nextGamInf['ForceShowAllOpponents'] > 1){ $out .= $nextGamInf['ForceShowAllOpponents']; } $out .= '"'; if($nextGamInf['ForceShowAllOpponents'] < 2){ $out .= ' hidden="hidden"'; } $out .= ' />'
-					.'</td>'
-					.'<td class="preview"'; if($nextGamInf['ForceShowAllOpponents'] < 2){ $out .= ' hidden="hidden"'; } $out .= '><a class="returnDefaultValue" href="?p='. USER_PAGE .'">'.Utils::t('Return to the default value').'</a></td>'
-				.'</tr>'
-			.'</table>'
-		.'</fieldset>';
-		
-		return $out;
-	}
-	
-	
-	/**
-	* Récupère les formulaires des modes de jeux
-	*
-	* @param array $gameinfos -> Informations de jeu courantes et suivantes
-	* @return string HTML
-	*/
-	public static function getGameInfosGameModeForm($gameinfos){
-		$currGamInf = (isset($gameinfos['curr'])) ? $gameinfos['curr'] : null;
-		$nextGamInf = (isset($gameinfos['next'])) ? $gameinfos['next'] : null;
-		$out = null;
-		
-		if(SERVER_VERSION_NAME == 'ManiaPlanet'){
-			$out .= '<fieldset id="gameMode-script" class="gameinfos_script" hidden="hidden">'
-				.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/options.png" alt="" />'.AdminServ::getGameModeName(0).'</legend>'
-				.'<table class="game_infos">'
-					.'<tr>'
-						.'<td class="key"><label for="NextScriptName">'.Utils::t('Script name').'</label></td>';
-						if($currGamInf != null){
-							$out .= '<td class="value">'
-								.'<input class="text width2" type="text" name="CurrScriptName" id="CurrScriptName" readonly="readonly" value="'.$currGamInf['ScriptName'].'" />'
-							.'</td>';
-						}
-						if($nextGamInf != null){
-							$out .= '<td class="value">'
-								.'<input class="text width2" type="text" name="NextScriptName" id="NextScriptName" value="'.$nextGamInf['ScriptName'].'" />'
-							.'</td>'
-							.'<td class="preview">';
-							if($nextGamInf['GameMode'] == 0){
-								$out .= '<a id="getScriptSettings" href="" data-infotext="'.Utils::t('Script settings updated.').'">'.Utils::t('Script settings').'</a>';
-							}
-							$out .= '</td>';
-						}
-					$out .= '</tr>'
-				.'</table>'
-			.'</fieldset>';
-			if($nextGamInf['GameMode'] == 0){
-				$out .= '<div id="getScriptSettingsDialog" data-title="'.Utils::t('Script settings').'" data-cancel="'.Utils::t('Cancel').'" data-save="'.Utils::t('Save').'" hidden="hidden">
-					<div id="dialogScriptInfo">
-						<h2>'.Utils::t('Script info').'</h2>
-						<div class="content">
-							<table>
-								<tbody>
-									<tr>
-										<td class="key">'.Utils::t('Name').'</td>
-										<td class="value" id="dialogScriptInfoName"></td>
-									</tr>
-									<tr>
-										<td class="key">'.Utils::t('Compatible map types').'</td>
-										<td class="value" id="dialogScriptInfoCompatibleMapTypes"></td>
-									</tr>
-									<tr class="dialogScriptInfoDesc" hidden="hidden">
-										<td class="key">'.Utils::t('Description').'</td>
-										<td class="value" id="dialogScriptInfoDesc"></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-					<div id="dialogScriptSettings">
-						<h2>'.Utils::t('Script parameters').'</h2>
-						<table>
-							<thead>
-								<tr>
-									<th class="thleft">'.Utils::t('Name').'</th>
-									<th>'.Utils::t('Value').'</th>
-									<th class="thright">'.Utils::t('Description').'</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
-					</div>
-				</div>';
-			}
-		}
-		
-		$out .= '<fieldset id="gameMode-rounds" class="gameinfos_round" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/rt_rounds.png" alt="" />'.AdminServ::getGameModeName(1, true).'</legend>'
-			.'<table class="game_infos">'
-				.'<tr>'
-					.'<td class="key"><label for="NextRoundsUseNewRules">'.Utils::t('Use new rules').'</label></td>';
-					if($currGamInf != null){
-						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrRoundsUseNewRules" id="CurrRoundsUseNewRules" readonly="readonly" value="'; if($currGamInf['RoundsUseNewRules'] != null){ $out .= Utils::t('Enable'); }else{ $out .= Utils::t('Disable'); } $out .= '" />'
-						.'</td>';
-					}
-					$out .= '<td class="value">'
-						.'<input class="text" type="checkbox" name="NextRoundsUseNewRules" id="NextRoundsUseNewRules"'; if($nextGamInf['RoundsUseNewRules'] != null){ $out .= ' checked="checked"'; } $out .= ' value="" />'
-					.'</td>'
-					.'<td class="preview"></td>'
-				.'</tr>'
-				.self::getGameInfosField($gameinfos, 'Points limit', 'RoundsPointsLimit')
-				.self::getGameInfosField($gameinfos, 'Custom points limit', 'RoundCustomPoints')
-				.self::getGameInfosField($gameinfos, 'Force laps', 'RoundsForcedLaps')
-			.'</table>'
-		.'</fieldset>'
-		
-		.'<fieldset id="gameMode-timeattack" class="gameinfos_timeattack" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/rt_timeattack.png" alt="" />'.AdminServ::getGameModeName(2, true).'</legend>'
-			.'<table class="game_infos">'
-				.'<tr>'
-					.'<td class="key"><label for="NextTimeAttackLimit">'.Utils::t('Time limit').' <span>('.Utils::t('sec').')</span></label></td>';
-					if($currGamInf != null){
-						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrTimeAttackLimit" id="CurrTimeAttackLimit" readonly="readonly" value="'.TimeDate::millisecToSec($currGamInf['TimeAttackLimit']).'" />'
-						.'</td>';
-					}
-					$out .= '<td class="value">'
-						.'<input class="text width2" type="number" min="0" name="NextTimeAttackLimit" id="NextTimeAttackLimit" value="'.TimeDate::millisecToSec($nextGamInf['TimeAttackLimit']).'" />'
-					.'</td>'
-					.'<td class="preview"></td>'
-				.'</tr>'
-				.self::getGameInfosField($gameinfos, 'Start synchronization period', 'TimeAttackSynchStartPeriod')
-			.'</table>'
-		.'</fieldset>'
-		
-		.'<fieldset id="gameMode-team" class="gameinfos_team" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/rt_team.png" alt="" />'.AdminServ::getGameModeName(3, true).'</legend>'
-			.'<table class="game_infos">'
-				.'<tr>'
-					.'<td class="key"><label for="NextTeamUseNewRules">'.Utils::t('Use new rules').'</label></td>';
-					if($currGamInf != null){
-						$out .= '<td class="value">'
-							.'<input class="text width2" type="text" name="CurrTeamUseNewRules" id="CurrTeamUseNewRules" readonly="readonly" value="'; if($currGamInf['TeamUseNewRules'] != null){ $out .= Utils::t('Enable'); }else{ $out .= Utils::t('Disable'); } $out .= '" />'
-						.'</td>';
-					}
-					$out .= '<td class="value">'
-						.'<input class="text" type="checkbox" name="NextTeamUseNewRules" id="NextTeamUseNewRules"'; if($nextGamInf['TeamUseNewRules'] != null){ $out .= ' checked="checked"'; } $out .= ' value="" />'
-					.'</td>'
-					.'<td class="preview"></td>'
-				.'</tr>'
-				.self::getGameInfosField($gameinfos, 'Points limit', 'TeamPointsLimit')
-				.self::getGameInfosField($gameinfos, 'Maximal points', 'TeamMaxPoints')
-			.'</table>'
-		.'</fieldset>'
-		
-		.'<fieldset id="gameMode-laps" class="gameinfos_laps" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/rt_laps.png" alt="" />'.AdminServ::getGameModeName(4, true).'</legend>'
-			.'<table class="game_infos">'
-				.self::getGameInfosField($gameinfos, 'Number of laps', 'LapsNbLaps')
-				.self::getGameInfosField($gameinfos, Utils::t('Time limit').' <span>('.Utils::t('sec').')</span>', 'LapsTimeLimit')
-			.'</table>'
-		.'</fieldset>'
-		
-		.'<fieldset id="gameMode-cup" class="gameinfos_cup" hidden="hidden">'
-			.'<legend><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/rt_cup.png" alt="" />'.AdminServ::getGameModeName(5, true).'</legend>'
-			.'<table class="game_infos">'
-				.self::getGameInfosField($gameinfos, 'Points limit', 'CupPointsLimit')
-				.self::getGameInfosField($gameinfos, 'Rounds per map', 'CupRoundsPerMap')
-				.self::getGameInfosField($gameinfos, 'Number of winner', 'CupNbWinners')
-				.self::getGameInfosField($gameinfos, 'All WarmUp duration', 'CupWarmUpDuration')
-			.'</table>'
-		.'</fieldset>';
 		
 		return $out;
 	}
@@ -871,28 +620,6 @@ class AdminServUI {
 	
 	
 	/**
-	* Récupère le template de liste pour la page Maps-order
-	*/
-	public static function getTemplateMapsOrderList($list){
-		$out = null;
-		$pathRessources = AdminServConfig::$PATH_RESOURCES;
-		
-		if( is_array($list) && count($list) > 0 ){
-			foreach($list['lst'] as $id => $map){
-				$out .= '<li class="ui-state-default">'
-					.'<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
-					.'<div class="order-map-name" title="'.$map['FileName'].'">'.$map['Name'].'</div>'
-					.'<div class="order-map-env"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</div>'
-					.'<div class="order-map-author"><img src="'.$pathRessources.'images/16/mapauthor.png" alt="" />'.$map['Author'].'</div>'
-				.'</li>';
-			}
-		}
-		
-		return $out;
-	}
-	
-	
-	/**
 	* Ititialise une page en back office
 	*/
 	public static function initBackPage() {
@@ -914,15 +641,7 @@ class AdminServUI {
 			self::renderPage($pagesList[$pageKey]);
 		}
 		else {
-			$isConfigPage = false;
-			if (strstr(USER_PAGE, '-')) {
-				$pageNameEx = explode('-', USER_PAGE);
-				if ($pageNameEx[0] === 'config') {
-					$isConfigPage = true;
-				}
-			}
-			
-			if ($isConfigPage) {
+			if (self::isPageType('config')) {
 				session_unset();
 				session_destroy();
 				Utils::redirection(false, './config/');
@@ -941,16 +660,8 @@ class AdminServUI {
 	* Ititialise une page en front office
 	*/
 	public static function initFrontPage() {
-		$isConfigPage = false;
-		if (strstr(USER_PAGE, '-')) {
-			$pageNameEx = explode('-', USER_PAGE);
-			if ($pageNameEx[0] === 'config') {
-				$isConfigPage = true;
-			}
-		}
-		
 		// Render page
-		if ($isConfigPage) {
+		if (self::isPageType('config')) {
 			$pageTitle = 'Configuration';
 			$pageName = USER_PAGE;
 		}
@@ -967,7 +678,7 @@ class AdminServUI {
 	* Inclue les fichiers pour le rendu d'une page
 	*/
 	public static function renderPage($pageName) {
-		global $client, $category, $view, $index, $id, $directory;
+		global $client, $data, $arg, $category, $view, $index, $id, $directory;
 		
 		// Preprocess
 		if (strstr($pageName, '-')) {
@@ -993,12 +704,51 @@ class AdminServUI {
 		self::getHeader();
 		
 		// Template
-		require_once AdminServConfig::$PATH_RESOURCES.'templates/'.$pageName.'.tpl.php';
+		self::getTemplate($pageName);
 		
 		// Footer
 		self::getFooter();
 		
 		AdminServLogs::add('access', (isset($GLOBALS['page_title'])) ? $GLOBALS['page_title'] : $pageName);
+	}
+	
+	
+	/**
+	* Vérifie si la page est du type demandé
+	*
+	* @param string $pageType -> Type de page à tester (config, plugin)
+	* @return bool
+	*/
+	public static function isPageType($pageType, $pageName = USER_PAGE){
+		$out = false;
+		
+		if (strstr($pageName, '-')) {
+			$pageNameEx = explode('-', $pageName);
+			if ($pageNameEx[0] === $pageType) {
+				$out = true;
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Inclue un fichier template
+	*
+	* @param string $templateName -> Nom du fichier template sans les extensions
+	* @return template HTML ou null si le template n'existe pas
+	*/
+	public static function getTemplate($templateName){
+		global $data, $arg, $category, $view, $index, $id, $directory;
+		$out = null;
+		
+		$tplFile = AdminServConfig::$PATH_RESOURCES.'templates/'.$templateName.'.tpl.php';
+		if (file_exists($tplFile)) {
+			require_once $tplFile;
+		}
+		
+		return $out;
 	}
 }
 ?>

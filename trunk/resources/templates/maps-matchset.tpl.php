@@ -4,19 +4,19 @@
 	</section>
 	
 	<section class="cadre middle folders">
-		<?php echo $mapsDirectoryList; ?>
+		<?php echo $data['mapsDirectoryList']; ?>
 	</section>
 	
 	<section class="cadre right matchset">
 		<h1><?php echo Utils::t('MatchSettings'); ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li class="path"><?php echo $mapsDirectoryPath.$directory; ?></li>
+				<li class="path"><?php echo $data['mapsDirectoryPath'].$directory; ?></li>
 				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value="" /></li>
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>">
+		<form method="post" action="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>">
 		<div id="matchsetlist">
 			<table>
 				<thead>
@@ -29,37 +29,29 @@
 				</thead>
 				<tbody>
 					<tr class="table-separation"><td colspan="4"></td></tr>
-					<?php
-						$showMatchsetList = null;
-						
-						// Liste des matchsettings
-						if( is_array($matchsetList['lst']) && count($matchsetList['lst']) > 0 ){
-							$i = 0;
-							foreach($matchsetList['lst'] as $id => $matchset){
-								// Ligne
-								$showMatchsetList .= '<tr class="'; if($i%2){ $showMatchsetList .= 'even'; }else{ $showMatchsetList .= 'odd'; } if($matchset['Recent']){ $showMatchsetList .= ' recent'; } $showMatchsetList .= '">'
-									.'<td class="imgleft"><img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/finishgrey.png" alt="" /><span title="'.$matchset['FileName'].'">'.$matchset['Name'].'</span></td>'
-									.'<td>'.$matchset['Nbm'].'</td>'
-									.'<td>'.date('d/m/Y', $matchset['Mtime']).'</td>'
-									.'<td class="checkbox"><input type="checkbox" name="matchset[]" value="'.$matchset['FileName'].'" /></td>'
-								.'</tr>';
-								$i++;
-							}
-						}
-						else{
-							$showMatchsetList .= '<tr class="no-line"><td class="center" colspan="4">'.$matchsetList['lst'].'</td></tr>';
-						}
-						
-						// Affichage
-						echo $showMatchsetList;
-					?>
+					<?php if ($data['matchsettingsList']['nbm']['count'] > 0): ?>
+						<?php $i = 0; ?>
+						<?php foreach ($data['matchsettingsList']['lst'] as $id => $matchset): ?>
+							<tr class="<?php echo ($i%2) ? 'even' : 'odd'; if ($matchset['Recent']): echo ' recent'; endif; ?>">
+								<td class="imgleft"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/finishgrey.png" alt="" /><span title="<?php echo $matchset['FileName']; ?>"><?php echo $matchset['Name']; ?></span></td>
+								<td><?php echo $matchset['Nbm']; ?></td>
+								<td><?php echo date('d/m/Y', $matchset['Mtime']); ?></td>
+								<td class="checkbox"><input type="checkbox" name="matchset[]" value="<?php echo $matchset['FileName']; ?>" /></td>
+							</tr>
+							<?php $i++; ?>
+						<?php endforeach; ?>
+					<?php else: ?>
+						<tr class="no-line">
+							<td class="center" colspan="4"><?php echo $data['matchsettingsList']['lst']; ?></td>
+						</tr>
+					<?php endif; ?>
 				</tbody>
 			</table>
 		</div>
 		
 		<div class="options">
 			<div class="fleft">
-				<span class="nb-line"><?php if( is_array($matchsetList['nbm']) ){ echo $matchsetList['nbm']['count'].' '.$matchsetList['nbm']['title']; } ?></span>
+				<span class="nb-line"><?php if (is_array($data['matchsettingsList']['nbm'])): echo $data['matchsettingsList']['nbm']['count'].' '.$data['matchsettingsList']['nbm']['title']; endif; ?></span>
 			</div>
 			<div class="fright">
 				<div class="selected-files-label locked">

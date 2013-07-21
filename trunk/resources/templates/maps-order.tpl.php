@@ -43,19 +43,29 @@
 			<h2><?php echo Utils::t('Manual sort'); ?></h2>
 			<div class="content">
 				<ul id="sortableMapList">
-					<?php echo AdminServUI::getTemplateMapsOrderList($mapsList); ?>
+					<?php if (!empty($data['maps'])): ?>
+						<?php foreach ($data['maps']['lst'] as $id => $map): ?>
+							<li class="ui-state-default">
+								<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>
+								<div class="order-map-name" title="<?php echo $map['FileName']; ?>"><?php echo $map['Name']; ?></div>
+								<div class="order-map-env"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/env/<?php echo strtolower($map['Environnement']); ?>.png" alt="" /><?php echo $map['Environnement']; ?></div>
+								<div class="order-map-author"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/mapauthor.png" alt="" /><?php echo $map['Author']; ?></div>
+							</li>
+						<?php endforeach; ?>
+					<?php endif; ?>
 				</ul>
 			</div>
-			<?php if(SERVER_MATCHSET){ ?>
+			
+			<?php if (SERVER_MATCHSET): ?>
 				<div class="fleft options-checkbox">
-					<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if(AdminServConfig::AUTOSAVE_MATCHSETTINGS === true){ echo ' checked="checked"'; } ?> value="" /><label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>"><?php echo Utils::t('Save the current MatchSettings'); ?></label>
+					<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if (AdminServConfig::AUTOSAVE_MATCHSETTINGS === true): echo ' checked="checked"'; endif; ?> value="" /><label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>"><?php echo Utils::t('Save the current MatchSettings'); ?></label>
 				</div>
-			<?php } ?>
+			<?php endif; ?>
 			<div class="fright save">
 				<input class="button light" type="button" id="reset" name="reset" value="<?php echo Utils::t('Reset'); ?>" />
 				<input class="button light" type="submit" id="save" name="save" value="<?php echo Utils::t('Save'); ?>" />
 				<input type="hidden" id="list" name="list" value="" />
-				<input type="hidden" id="jsonlist" name="jsonlist" value="<?php echo htmlspecialchars( json_encode($mapsList) ); ?>" />
+				<input type="hidden" id="jsonlist" name="jsonlist" value="<?php echo htmlspecialchars( json_encode($data['maps']) ); ?>" />
 			</div>
 		</form>
 	</section>

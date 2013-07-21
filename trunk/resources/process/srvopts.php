@@ -6,12 +6,7 @@
 		}
 		else{
 			$gameDataDirectory = $client->getResponse();
-			if( file_exists($gameDataDirectory) ){
-				define('IS_LOCAL', true);
-			}
-			else{
-				define('IS_LOCAL', false);
-			}
+			define('IS_LOCAL', file_exists($gameDataDirectory));
 			
 			if(IS_LOCAL){
 				$srvConfigDirectory = $gameDataDirectory.'Config/';
@@ -26,7 +21,7 @@
 					}
 				}
 				
-				$srvoptsConfigFiles = Folder::read($srvoptsConfigDirectory, array(), array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
+				$data['srvoptsConfigFiles'] = Folder::read($srvoptsConfigDirectory, array(), array(), intval(AdminServConfig::RECENT_STATUS_PERIOD * 3600) );
 			}
 		}
 	}
@@ -79,6 +74,6 @@
 	
 	
 	// LECTURE
-	$srvOpt = AdminServ::getServerOptions();
-	$adminLevels = AdminServ::getServerAdminLevel();
+	$data['srvOpt'] = AdminServ::getServerOptions();
+	$data['adminLevels'] = AdminServ::getServerAdminLevel();
 ?>

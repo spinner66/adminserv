@@ -4,40 +4,36 @@
 	</section>
 	
 	<section class="cadre middle folders">
-		<?php echo $mapsDirectoryList; ?>
+		<?php echo $data['mapsDirectoryList']; ?>
 	</section>
 	
 	<section class="cadre right local">
 		<h1><?php echo Utils::t('Local'); ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li><div class="path"><?php echo $mapsDirectoryPath.$directory; ?></div></li>
-				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($mapsList['lst']) ){ echo ' disabled="disabled"'; } ?> /></li>
+				<li><div class="path"><?php echo $data['mapsDirectoryPath'].$directory; ?></div></li>
+				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if (!is_array($data['maps']['lst'])): echo ' disabled="disabled"'; endif; ?> /></li>
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>">
+		<form method="post" action="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>">
 		<div id="maplist">
 			<table>
 				<thead>
 					<tr>
-						<th class="thleft"><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=name"><?php echo Utils::t('Map'); ?></a></th>
-						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=env"><?php echo Utils::t('Environment'); ?></a></th>
-						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=type"><?php echo Utils::t('Type'); ?></a></th>
-						<th><a href="?p=<?php echo USER_PAGE; if($directory){ echo '&amp;d='.$directory; } ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
+						<th class="thleft"><a href="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>&amp;sort=name"><?php echo Utils::t('Map'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>&amp;sort=env"><?php echo Utils::t('Environment'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>&amp;sort=type"><?php echo Utils::t('Type'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr class="table-separation"><td colspan="4"></td></tr>
-					<?php
-						$showMapList = null;
-						
-						// Liste des maps local
-						if( is_array($mapsList['lst']) && count($mapsList['lst']) > 0 ){
-							$pathRessources = AdminServConfig::$PATH_RESOURCES;
-							$i = 0;
-							foreach($mapsList['lst'] as $id => $map){
+					<?php if ($data['maps']['nbm']['count'] > 0): ?>
+						<?php $i = 0; ?>
+						<?php foreach ($data['maps']['lst'] as $id => $map): ?>
+							<?php
 								// Map sur le serveur
 								if($map['OnServer']){
 									$mapImg = 'loadmap';
@@ -47,33 +43,38 @@
 									$mapImg = 'map';
 									$mapClass = null;
 								}
-								
-								// Lignes
-								$showMapList .= '<tr class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($map['Recent']){ $showMapList .= ' recent'; } $showMapList .= $mapClass.'">'
-									.'<td class="imgleft"><img src="'.$pathRessources.'images/16/'.$mapImg.'.png" alt="" /><span title="'.$map['FileName'].'">'.$map['Name'].'</span></td>'
-									.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
-									.'<td><span title="'.$map['Type']['FullName'].'">'.$map['Type']['Name'].'</span></td>'
-									.'<td>'.$map['Author'].'</td>'
-									.'<td class="checkbox"><input type="checkbox" name="map[]" value="'.$map['FileName'].'" /></td>'
-								.'</tr>';
-								$i++;
-							}
-						}
-						else{
-							$showMapList .= '<tr class="no-line"><td class="center" colspan="4">'; if( is_array($mapsList) ){ $showMapList .= $mapsList['lst']; }else{ $showMapList .= $mapsList; } $showMapList .= '</td></tr>';
-						}
-						
-						
-						// Affichage
-						echo $showMapList;
-					?>
+								// Map récente
+								if($map['Recent']){
+									$mapClass .= ' recent';
+								}
+							?>
+							<tr class="<?php echo ($i%2) ? 'even' : 'odd'; echo $mapClass; ?>">
+								<td class="imgleft"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/<?php echo $mapImg; ?>.png" alt="" /><span title="<?php echo $map['FileName']; ?>"><?php echo $map['Name']; ?></span></td>
+								<td class="imgcenter"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/env/<?php echo strtolower($map['Environnement']); ?>.png" alt="" /><?php echo $map['Environnement']; ?></td>
+								<td><span title="<?php echo $map['Type']['FullName']; ?>"><?php echo $map['Type']['Name']; ?></span></td>
+								<td><?php echo $map['Author']; ?></td>
+								<td class="checkbox"><input type="checkbox" name="map[]" value="<?php echo $map['FileName']; ?>" /></td>
+							</tr>
+							<?php $i++; ?>
+						<?php endforeach; ?>
+					<?php else: ?>
+						<tr class="no-line">
+							<td class="center" colspan="4">
+								<?php if (is_array($data['maps'])): ?>
+									<?php echo $data['maps']['lst']; ?>
+								<?php else: ?>
+									<?php echo $data['maps']; ?>
+								<?php endif; ?>
+							</td>
+						</tr>
+					<?php endif; ?>
 				</tbody>
 			</table>
 		</div>
 		
 		<div class="options" data-mapisused="<?php echo Utils::t('The map,is currently used by the server.'); ?>">
 			<div class="fleft">
-				<span class="nb-line"><?php if( is_array($mapsList) ){ echo $mapsList['nbm']['count'].' '.$mapsList['nbm']['title']; } ?></span>
+				<span class="nb-line"><?php if (is_array($data['maps'])): echo $data['maps']['nbm']['count'].' '.$data['maps']['nbm']['title']; endif; ?></span>
 			</div>
 			<div class="fright">
 				<div class="selected-files-label locked">
@@ -92,11 +93,11 @@
 			<div id="form-rename-map" class="option-form" hidden="hidden" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-rename="<?php echo Utils::t('Rename'); ?>" data-autorename="<?php echo Utils::t('Replace the special characters'); ?>"></div>
 			<div id="form-move-map" class="option-form" hidden="hidden" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-move="<?php echo Utils::t('Move'); ?>" data-inthefolder="<?php echo Utils::t('in the folder:'); ?>" data-root="<?php echo Utils::t('Root'); ?>"></div>
 		</div>
-		<?php if(SERVER_MATCHSET){ ?>
+		<?php if (SERVER_MATCHSET): ?>
 			<div class="fleft options-checkbox">
-				<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if(AdminServConfig::AUTOSAVE_MATCHSETTINGS === true){ echo ' checked="checked"'; } ?> value="" /><label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>"><?php echo Utils::t('Save the current MatchSettings'); ?></label>
+				<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if (AdminServConfig::AUTOSAVE_MATCHSETTINGS === true): echo ' checked="checked"'; endif; ?> value="" /><label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>"><?php echo Utils::t('Save the current MatchSettings'); ?></label>
 			</div>
-		<?php } ?>
+		<?php endif; ?>
 		</form>
 	</section>
 </section>

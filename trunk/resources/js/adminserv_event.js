@@ -11,9 +11,9 @@ $(document).ready(function(){
 	
 	
 	/**
-	* Front
+	* Config
 	*/
-	if( $('body').hasClass('front') ){
+	if( $('body').hasClass('config') ){
 		/**
 		* Serveurs
 		*/
@@ -65,28 +65,31 @@ $(document).ready(function(){
 				}
 			});
 		}
-		else{
-			// Adminlevel
+	}
+	/**
+	* Front
+	*/
+	else if( $('body').hasClass('front') ){
+		// Adminlevel
+		getServerAdminLevel();
+		$('#as_server').change(function(){
 			getServerAdminLevel();
-			$('#as_server').change(function(){
+			if( $('#error').css('display') == 'block' ){
+				$('#error').attr('hidden', true).fadeOut('fast');
+			}
+		});
+		$('#as_adminlevel').click(function(){
+			if( $(this).html() == '' ){
 				getServerAdminLevel();
-				if( $('#error').css('display') == 'block' ){
-					$('#error').attr('hidden', true).fadeOut('fast');
-				}
-			});
-			$('#as_adminlevel').click(function(){
-				if( $(this).html() == '' ){
-					getServerAdminLevel();
-				}
-			});
-			
-			// Connexion
-			$(document).keypress(function(event){
-				if(event.keyCode == 13){
-					$('#connection form').submit();
-				}
-			});
-		}
+			}
+		});
+		
+		// Connexion
+		$(document).keypress(function(event){
+			if(event.keyCode == 13){
+				$('#connection form').submit();
+			}
+		});
 	}
 	/**
 	* Not front

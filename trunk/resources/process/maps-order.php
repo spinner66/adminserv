@@ -1,5 +1,5 @@
 <?php
-	// GAME
+	// GAME VERSION
 	if(SERVER_VERSION_NAME == 'TmForever'){
 		$queries = array(
 			'chooseNextMap' => 'ChooseNextChallengeList'
@@ -26,6 +26,6 @@
 	
 	
 	// MAPLIST
-	$mapsList = AdminServ::getMapList();
-	unset($mapsList['lst'][$mapsList['cid']]);
+	$data['maps'] = AdminServ::getMapList();
+	unset($data['maps']['lst'][$data['maps']['cid']]);
 ?>
