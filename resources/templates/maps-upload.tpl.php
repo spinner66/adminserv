@@ -1,19 +1,17 @@
-<section class="maps hasMenu<?php if( defined('IS_LOCAL') && IS_LOCAL ){ echo ' hasFolders'; } ?>">
+<section class="maps hasMenu<?php if (defined('IS_LOCAL') && IS_LOCAL): echo ' hasFolders'; endif; ?>">
 	<section class="cadre left menu">
 		<?php echo AdminServUI::getMapsMenuList(); ?>
 	</section>
 	
 	<?php if( defined('IS_LOCAL') && IS_LOCAL ){ ?>
 		<section class="cadre middle folders">
-			<?php echo $mapsDirectoryList; ?>
+			<?php echo $data['mapsDirectoryList']; ?>
 		</section>
 	<?php } ?>
 	
 	<section class="cadre right upload">
 		<h1><?php echo Utils::t('Send'); ?></h1>
-		<div class="title-detail path">
-			<?php echo $mapsDirectoryPath.$directory; ?>
-		</div>
+		<div class="title-detail path"><?php echo $data['mapsDirectoryPath'].$directory; ?></div>
 		
 		<h2><?php echo Utils::t('Transfer mode'); ?></h2>
 		<div class="transferMode options-radio-inline">
@@ -36,12 +34,12 @@
 		<h2><?php echo Utils::t('Options'); ?></h2>
 		<div class="options-checkbox">
 			<ul>
-			<?php if(SERVER_MATCHSET){ ?>
-				<li>
-					<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if(AdminServConfig::AUTOSAVE_MATCHSETTINGS === true){ echo ' checked="checked"'; } ?> value="" />
-					<label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>"><?php echo Utils::t('Save the current MatchSettings'); ?></label>
-				</li>
-			<?php } ?>
+				<?php if (SERVER_MATCHSET): ?>
+					<li>
+						<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if (AdminServConfig::AUTOSAVE_MATCHSETTINGS === true): echo ' checked="checked"'; endif; ?> value="" />
+						<label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>"><?php echo Utils::t('Save the current MatchSettings'); ?></label>
+					</li>
+				<?php endif; ?>
 				<li>
 					<input class="text inline" type="checkbox" name="GotoListMaps" id="GotoListMaps" value="maps" checked="checked" />
 					<label for="GotoListMaps"><?php echo Utils::t('Go to the maps list when upload is complete'); ?></label>

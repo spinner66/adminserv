@@ -59,17 +59,30 @@
 	
 	// LECTURE
 	$gameInfos = AdminServ::getGameInfos();
-	$gameInfosData = array(
+	$data['gameInfos'] = array(
 		'curr' => $gameInfos['curr'],
 		'next' => $gameInfos['next']
 	);
-	$getTeamInfo = array();
-	$hasTeamInfo = false;
+	$data['teamInfo'] = array(
+		'team1' => array(
+			'name' => Utils::t('Blue'),
+			'color' => '0.667',
+			'colorhex' => '#0000ff',
+			'country' => 'World|France'
+		),
+		'team2' => array(
+			'name' => Utils::t('Red'),
+			'color' => '0',
+			'colorhex' => '#ff0000',
+			'country' => 'World|France'
+		)
+	);
 	if( isset($_SESSION['adminserv']['teaminfo']) && count($_SESSION['adminserv']['teaminfo']) > 0 ){
-		$getTeamInfo = array(
+		$data['teamInfo'] = array(
 			'team1' => $_SESSION['adminserv']['teaminfo']['team1'],
 			'team2' => $_SESSION['adminserv']['teaminfo']['team2']
 		);
-		$hasTeamInfo = true;
 	}
+	
+	unset($gameInfos);
 ?>

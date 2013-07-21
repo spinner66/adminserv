@@ -1,7 +1,7 @@
 <?php
 	// Nombre de plugins
-	$nbPlugins = AdminServPlugin::countPlugins();
-	if($nbPlugins['count'] === 0){
+	$data['nbplugins'] = AdminServPlugin::countPlugins();
+	if($data['nbplugins']['count'] === 0){
 		Utils::redirection();
 	}
 ?>

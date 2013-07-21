@@ -8,7 +8,7 @@
 		<div class="title-detail">
 			<ul>
 				<li class="last">
-					<?php echo $nbPlugins['count'].' '.$nbPlugins['title']; ?>
+					<?php echo $data['nbplugins']['count'].' '.$data['nbplugins']['title']; ?>
 				</li>
 			</ul>
 		</div>

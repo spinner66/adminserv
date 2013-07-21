@@ -34,5 +34,5 @@
 	}
 	
 	// MAPLIST
-	$mapsList = AdminServ::getMapList();
+	$data['maps'] = AdminServ::getMapList();
 ?>

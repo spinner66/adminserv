@@ -7,11 +7,11 @@
 		<h1><?php echo Utils::t('List'); ?></h1>
 		<div class="title-detail">
 			<ul>
-				<?php if(is_array($mapsList) && count($mapsList) > 0 && count($mapsList['lst']) > 25){ ?>
+				<?php if ($data['maps']['nbm']['count'] > 25): ?>
 					<li><a id="scrollToCurrentMap" href="#currentMap"><?php echo Utils::t('Go to the current map'); ?></a></li>
-				<?php } ?>
-				<li><a id="detailMode" href="." data-statusmode="<?php echo USER_MODE_MAPS; ?>" data-textdetail="<?php echo Utils::t('Detailed mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php if(USER_MODE_MAPS == 'detail'){ echo Utils::t('Simple mode'); }else{ echo Utils::t('Detailed mode'); } ?></a></li>
-				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if( !is_array($mapsList['lst']) ){ echo ' disabled="disabled"'; } ?> /></li>
+				<?php endif; ?>
+				<li><a id="detailMode" href="." data-statusmode="<?php echo USER_MODE_MAPS; ?>" data-textdetail="<?php echo Utils::t('Detailed mode'); ?>" data-textsimple="<?php echo Utils::t('Simple mode'); ?>"><?php echo (USER_MODE_MAPS == 'detail') ? Utils::t('Simple mode') : Utils::t('Detailed mode'); ?></a></li>
+				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if (!is_array($data['maps']['lst'])): echo ' disabled="disabled"'; endif; ?> /></li>
 			</ul>
 		</div>
 		
@@ -23,52 +23,48 @@
 						<th class="thleft"><?php echo Utils::t('Map'); ?></th>
 						<th><?php echo Utils::t('Environment'); ?></th>
 						<th><?php echo Utils::t('Author'); ?></th>
-						<th class="detailModeTh"<?php if(USER_MODE_MAPS == 'simple'){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Gold time'); ?></th>
-						<th class="detailModeTh"<?php if(USER_MODE_MAPS == 'simple'){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Cost'); ?></th>
+						<th class="detailModeTh"<?php if (USER_MODE_MAPS == 'simple'): echo ' hidden="hidden"'; endif; ?>><?php echo Utils::t('Gold time'); ?></th>
+						<th class="detailModeTh"<?php if (USER_MODE_MAPS == 'simple'): echo ' hidden="hidden"'; endif; ?>><?php echo Utils::t('Cost'); ?></th>
 						<th class="thright"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr class="table-separation"><td colspan="6"></td></tr>
-					<?php
-						$showMapList = null;
-						
-						// Liste des joueurs
-						if( is_array($mapsList['lst']) && count($mapsList['lst']) > 0 ){
-							$pathRessources = AdminServConfig::$PATH_RESOURCES;
-							$i = 0;
-							foreach($mapsList['lst'] as $id => $map){
-								// Ligne
-								$showMapList .= '<tr'; if($id == $mapsList['cid']){ $showMapList .= ' id="currentMap"'; } $showMapList .= ' class="'; if($i%2){ $showMapList .= 'even'; }else{ $showMapList .= 'odd'; } if($id == $mapsList['cid']){ $showMapList .= ' current'; } $showMapList .= '">'
-									.'<td class="imgleft"><img src="'.$pathRessources.'images/16/map.png" alt="" />'
-										.'<span title="'.$map['FileName'].'">'.$map['Name'].'</span>';
-										if(USER_MODE_MAPS == 'detail'){
-											$showMapList .= '<span class="detailModeTd">'.$map['UId'].'</span>';
-										}
-									$showMapList .= '</td>'
-									.'<td class="imgcenter"><img src="'.$pathRessources.'images/env/'.strtolower($map['Environnement']).'.png" alt="" />'.$map['Environnement'].'</td>'
-									.'<td>'.$map['Author'].'</td>'
-									.'<td'; if(USER_MODE_MAPS == 'simple'){ $showMapList .= ' hidden="hidden"'; } $showMapList .= '>'.$map['GoldTime'].'</td>'
-									.'<td'; if(USER_MODE_MAPS == 'simple'){ $showMapList .= ' hidden="hidden"'; } $showMapList .= '>'.$map['CopperPrice'].'</td>'
-									.'<td class="checkbox">'; if($id != $mapsList['cid']){ $showMapList .= '<input type="checkbox" name="map[]" value="'.$map['FileName'].'" />'; } $showMapList .= '</td>'
-								.'</tr>';
-								$i++;
-							}
-						}
-						else{
-							$showMapList .= '<tr class="no-line"><td class="center" colspan="6">'.$mapsList['lst'].'</td></tr>';
-						}
-						
-						// Affichage
-						echo $showMapList;
-					?>
+					<?php if ($data['maps']['nbm']['count'] > 0 ): ?>
+						<?php $i = 0;  ?>
+						<?php foreach ($data['maps']['lst'] as $id => $map): ?>
+							<tr<?php if ($id == $data['maps']['cid']): echo ' id="currentMap"'; endif; ?> class="<?php echo ($i%2) ? 'even' : 'odd'; if ($id == $data['maps']['cid']): echo ' current'; endif; ?>">
+								<td class="imgleft">
+									<img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/map.png" alt="" />
+									<span title="<?php echo $map['FileName']; ?>"><?php echo $map['Name']; ?></span>
+									<?php if (USER_MODE_MAPS == 'detail'): ?>
+										<span class="detailModeTd"><?php echo $map['UId']; ?></span>
+									<?php endif; ?>
+								</td>
+								<td class="imgcenter"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/env/<?php echo strtolower($map['Environnement']); ?>.png" alt="" /><?php echo $map['Environnement']; ?></td>
+								<td><?php echo $map['Author']; ?></td>
+								<td<?php if (USER_MODE_MAPS == 'simple'): echo ' hidden="hidden"'; endif; ?>><?php echo $map['GoldTime']; ?></td>
+								<td<?php if (USER_MODE_MAPS == 'simple'): echo ' hidden="hidden"'; endif; ?>><?php echo $map['CopperPrice']; ?></td>
+								<td class="checkbox">
+									<?php if ($id != $data['maps']['cid']): ?>
+										<input type="checkbox" name="map[]" value="<?php echo $map['FileName']; ?>" />
+									<?php endif; ?>
+								</td>
+							</tr>
+							<?php $i++; ?>
+						<?php endforeach; ?>
+					<?php else: ?>
+						<tr class="no-line">
+							<td class="center" colspan="6"><?php echo $data['maps']['lst']; ?></td>
+						</tr>
+					<?php endif; ?>
 				</tbody>
 			</table>
 		</div>
 		
 		<div class="options">
 			<div class="fleft">
-				<span class="nb-line"><?php echo $mapsList['nbm']['count'].' '.$mapsList['nbm']['title']; ?></span>
+				<span class="nb-line"><?php echo $data['maps']['nbm']['count'].' '.$data['maps']['nbm']['title']; ?></span>
 			</div>
 			<div class="fright">
 				<div class="selected-files-label locked">

@@ -8,50 +8,50 @@
 					<tr class="serverName">
 						<td class="key"><label for="ServerName"><?php echo Utils::t('Server name'); ?></label></td>
 						<td class="value" colspan="3">
-							<input class="text width3" type="text" name="Name" id="ServerName" maxlength="75" value="<?php echo $srvOpt['Name']; ?>" />
+							<input class="text width3" type="text" name="Name" id="ServerName" maxlength="75" value="<?php echo $data['srvOpt']['Name']; ?>" />
 						</td>
-						<td class="preview">[<span id="serverNameHtml"><?php echo $srvOpt['NameHtml']; ?></span>]</td>
+						<td class="preview">[<span id="serverNameHtml"><?php echo $data['srvOpt']['NameHtml']; ?></span>]</td>
 					</tr>
 					<tr class="serverComment">
 						<td class="key"><label for="ServerComment"><?php echo Utils::t('Comment'); ?></label></td>
 						<td class="value" colspan="3">
-							<textarea class="width3" name="Comment" id="ServerComment" maxlength="255"><?php echo $srvOpt['Comment']; ?></textarea>
+							<textarea class="width3" name="Comment" id="ServerComment" maxlength="255"><?php echo $data['srvOpt']['Comment']; ?></textarea>
 						</td>
-						<td class="preview">[<span id="serverCommentHtml"><?php echo $srvOpt['CommentHtml']; ?></span>]</td>
+						<td class="preview">[<span id="serverCommentHtml"><?php echo $data['srvOpt']['CommentHtml']; ?></span>]</td>
 					</tr>
 					<tr>
 						<td class="key"><label for="ServerPassword"><?php echo Utils::t('Player password'); ?></label></td>
 						<td class="value" colspan="3">
-							<input class="text width3" type="text" name="Password" id="ServerPassword" value="<?php echo $srvOpt['Password']; ?>" />
+							<input class="text width3" type="text" name="Password" id="ServerPassword" value="<?php echo $data['srvOpt']['Password']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="SpectatorPassword"><?php echo Utils::t('Spectator password'); ?></label></td>
 						<td class="value" colspan="3">
-							<input class="text width3" type="text" name="PasswordForSpectator" id="SpectatorPassword" value="<?php echo $srvOpt['PasswordForSpectator']; ?>" />
+							<input class="text width3" type="text" name="PasswordForSpectator" id="SpectatorPassword" value="<?php echo $data['srvOpt']['PasswordForSpectator']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="NextMaxPlayers"><?php echo Utils::t('Nb max of players'); ?></label></td>
 						<td class="value col2">
-							<input class="text width1" type="text" name="CurrentMaxPlayers" id="CurrentMaxPlayers" readonly="readonly" value="<?php echo $srvOpt['CurrentMaxPlayers']; ?>" />
+							<input class="text width1" type="text" name="CurrentMaxPlayers" id="CurrentMaxPlayers" readonly="readonly" value="<?php echo $data['srvOpt']['CurrentMaxPlayers']; ?>" />
 						</td>
 						<td class="key col3"><label for="NextMaxPlayers"><?php echo Utils::t('Next value'); ?></label></td>
 						<td class="value">
-							<input class="text width1" type="number" min="0" name="NextMaxPlayers" id="NextMaxPlayers" value="<?php echo $srvOpt['NextMaxPlayers']; ?>" />
+							<input class="text width1" type="number" min="0" name="NextMaxPlayers" id="NextMaxPlayers" value="<?php echo $data['srvOpt']['NextMaxPlayers']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="NextMaxSpectators"><?php echo Utils::t('Nb max of spectators'); ?></label></td>
 						<td class="value col2">
-							<input class="text width1" type="text" name="CurrentMaxSpectators" id="CurrentMaxSpectators" readonly="readonly" value="<?php echo $srvOpt['CurrentMaxSpectators']; ?>" />
+							<input class="text width1" type="text" name="CurrentMaxSpectators" id="CurrentMaxSpectators" readonly="readonly" value="<?php echo $data['srvOpt']['CurrentMaxSpectators']; ?>" />
 						</td>
 						<td class="key col3"><label for="NextMaxSpectators"><?php echo Utils::t('Next value'); ?></label></td>
 						<td class="value">
-							<input class="text width1" type="number" min="0" name="NextMaxSpectators" id="NextMaxSpectators" value="<?php echo $srvOpt['NextMaxSpectators']; ?>" />
+							<input class="text width1" type="number" min="0" name="NextMaxSpectators" id="NextMaxSpectators" value="<?php echo $data['srvOpt']['NextMaxSpectators']; ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
@@ -64,26 +64,24 @@
 					<tr>
 						<td class="key"><label for="IsP2PUpload"><?php echo Utils::t('P2P Upload'); ?></label></td>
 						<td class="value col2">
-							<input class="text" type="checkbox" name="IsP2PUpload" id="IsP2PUpload"<?php if($srvOpt['IsP2PUpload'] != 0){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="IsP2PUpload" id="IsP2PUpload"<?php if ($data['srvOpt']['IsP2PUpload'] != 0): echo ' checked="checked"'; endif; ?> value="" />
 						</td>
 						<td class="key col3"><label for="IsP2PDownload"><?php echo Utils::t('P2P Download'); ?></label></td>
 						<td class="value">
-							<input class="text" type="checkbox" name="IsP2PDownload" id="IsP2PDownload"<?php if($srvOpt['IsP2PDownload'] != 0){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="IsP2PDownload" id="IsP2PDownload"<?php if ($data['srvOpt']['IsP2PDownload'] != 0): echo ' checked="checked"'; endif; ?> value="" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="NextLadderMode"><?php echo Utils::t('Ladder mode'); ?></label></td>
 						<td class="value col2">
-							<input class="text width1" type="text" name="CurrentLadderMode" id="CurrentLadderMode" readonly="readonly" value="<?php echo $srvOpt['CurrentLadderModeName']; ?>" />
+							<input class="text width1" type="text" name="CurrentLadderMode" id="CurrentLadderMode" readonly="readonly" value="<?php echo $data['srvOpt']['CurrentLadderModeName']; ?>" />
 						</td>
 						<td class="key col3"><label for="NextLadderMode"><?php echo Utils::t('Next value'); ?></label></td>
 						<td class="value">
 							<select class="width1" name="NextLadderMode" id="NextLadderMode">
-								<?php
-									echo '<option value="0"'; if($srvOpt['NextLadderMode'] == 0){ echo ' selected="selected"'; } echo '>'.Utils::t('Inactive').'</option>';
-									echo '<option value="1"'; if($srvOpt['NextLadderMode'] == 1){ echo ' selected="selected"'; } echo '>'.Utils::t('Forced').'</option>';
-								?>
+								<option value="0"<?php if ($data['srvOpt']['NextLadderMode'] == 0): echo ' selected="selected"'; endif; ?>><?php echo Utils::t('Inactive'); ?></option>
+								<option value="1"<?php if ($data['srvOpt']['NextLadderMode'] == 1): echo ' selected="selected"'; endif; ?>><?php echo Utils::t('Forced'); ?></option>
 							</select>
 						</td>
 						<td class="preview"></td>
@@ -91,15 +89,13 @@
 					<tr>
 						<td class="key"><label for="NextVehicleNetQuality"><?php echo Utils::t('Vehicles quality'); ?></label></td>
 						<td class="value col2">
-							<input class="text width1" type="text" name="CurrentVehicleNetQuality" id="CurrentVehicleNetQuality" readonly="readonly" value="<?php echo $srvOpt['CurrentVehicleNetQualityName']; ?>" />
+							<input class="text width1" type="text" name="CurrentVehicleNetQuality" id="CurrentVehicleNetQuality" readonly="readonly" value="<?php echo $data['srvOpt']['CurrentVehicleNetQualityName']; ?>" />
 						</td>
 						<td class="key col3"><label for="NextVehicleNetQuality"><?php echo Utils::t('Next value'); ?></label></td>
 						<td class="value">
 							<select class="width1" name="NextVehicleNetQuality" id="NextVehicleNetQuality">
-								<?php
-									echo '<option value="0"'; if($srvOpt['NextVehicleNetQuality'] == 0){ echo ' selected="selected"'; } echo '>'.Utils::t('Fast').'</option>';
-									echo '<option value="1"'; if($srvOpt['NextVehicleNetQuality'] == 1){ echo ' selected="selected"'; } echo '>'.Utils::t('High').'</option>';
-								?>
+								<option value="0"<?php if ($data['srvOpt']['NextVehicleNetQuality'] == 0): echo ' selected="selected"'; endif; ?>><?php echo Utils::t('Fast'); ?></option>
+								<option value="1"<?php if ($data['srvOpt']['NextVehicleNetQuality'] == 1): echo ' selected="selected"'; endif; ?>><?php echo Utils::t('High'); ?></option>
 							</select>
 						</td>
 						<td class="preview"></td>
@@ -107,76 +103,74 @@
 					<tr>
 						<td class="key"><label for="NextCallVoteTimeOut"><?php echo Utils::t('Vote expiration'); ?> <span>(<?php echo Utils::t('sec'); ?>)</span></label></td>
 						<td class="value col2">
-							<input class="text width1" type="text" name="CurrentCallVoteTimeOut" id="CurrentCallVoteTimeOut" readonly="readonly" value="<?php echo TimeDate::millisecToSec($srvOpt['CurrentCallVoteTimeOut']); ?>" />
+							<input class="text width1" type="text" name="CurrentCallVoteTimeOut" id="CurrentCallVoteTimeOut" readonly="readonly" value="<?php echo TimeDate::millisecToSec($data['srvOpt']['CurrentCallVoteTimeOut']); ?>" />
 						</td>
 						<td class="key col3"><label for="NextCallVoteTimeOut"><?php echo Utils::t('Next value'); ?></label></td>
 						<td class="value">
-							<input class="text width1" type="number" min="0" name="NextCallVoteTimeOut" id="NextCallVoteTimeOut" value="<?php echo TimeDate::millisecToSec($srvOpt['NextCallVoteTimeOut']); ?>" />
+							<input class="text width1" type="number" min="0" name="NextCallVoteTimeOut" id="NextCallVoteTimeOut" value="<?php echo TimeDate::millisecToSec($data['srvOpt']['NextCallVoteTimeOut']); ?>" />
 						</td>
 						<td class="preview"></td>
 					</tr>
 					<tr>
 						<td class="key"><label for="CallVoteRatio"><?php echo Utils::t('Vote ratio'); ?></label></td>
 						<td class="value" colspan="4">
-							<select name="callVoteRatioDisabled" id="callVoteRatioDisabled"<?php if($srvOpt['CallVoteRatio'] > -1){ echo ' hidden="hidden"'; } ?>>
-								<option value="-1"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' selected="selected"'; } ?>><?php echo Utils::t('Disable'); ?></option>
-								<option value="0"<?php if($srvOpt['CallVoteRatio'] > -1){ echo ' selected="selected"'; } ?>><?php echo Utils::t('Enable'); ?></option>
+							<select name="callVoteRatioDisabled" id="callVoteRatioDisabled"<?php if ($data['srvOpt']['CallVoteRatio'] > -1): echo ' hidden="hidden"'; endif; ?>>
+								<option value="-1"<?php if ($data['srvOpt']['CallVoteRatio'] == -1): echo ' selected="selected"'; endif; ?>><?php echo Utils::t('Disable'); ?></option>
+								<option value="0"<?php if ($data['srvOpt']['CallVoteRatio'] > -1): echo ' selected="selected"'; endif; ?>><?php echo Utils::t('Enable'); ?></option>
 							</select>
-							<input class="text" type="number" min="0" max="1" step=".1" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $srvOpt['CallVoteRatio']; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?> />
-							<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
-								<a class="returnDefaultValue" id="resetCallVoteRatio" href="?p=<?php echo USER_PAGE; ?>"<?php if($srvOpt['CallVoteRatio'] == -1){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Disable vote ratio'); ?></a>
-							<?php } ?>
+							<input class="text" type="number" min="0" max="1" step=".1" name="CallVoteRatio" id="CallVoteRatio" value="<?php echo $data['srvOpt']['CallVoteRatio']; ?>"<?php if ($data['srvOpt']['CallVoteRatio'] == -1): echo ' hidden="hidden"'; endif; ?> />
+							<a class="returnDefaultValue" id="resetCallVoteRatio" href="?p=<?php echo USER_PAGE; ?>"<?php if ($data['srvOpt']['CallVoteRatio'] == -1): echo ' hidden="hidden"'; endif; ?>><?php echo Utils::t('Disable vote ratio'); ?></a>
 						</td>
 					</tr>
-					<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
+					<?php if (SERVER_VERSION_NAME == 'ManiaPlanet'): ?>
 						<tr>
 							<td class="key"><label for="ClientInputsMaxLatency"><?php echo Utils::t('Client inputs max latency'); ?></label></td>
 							<td class="value" colspan="4">
-								<select name="ClientInputsMaxLatency" id="ClientInputsMaxLatency"<?php if($srvOpt['ClientInputsMaxLatency'] > 0){ echo ' hidden="hidden"'; } ?>>
+								<select name="ClientInputsMaxLatency" id="ClientInputsMaxLatency"<?php if ($data['srvOpt']['ClientInputsMaxLatency'] > 0): echo ' hidden="hidden"'; endif; ?>>
 									<option value="0"><?php echo Utils::t('Automatic'); ?></option>
 									<option value="more"><?php echo Utils::t('Choose number'); ?></option>
 								</select>
-								<input class="text" type="number" min="0" name="ClientInputsMaxLatencyValue" id="ClientInputsMaxLatencyValue" value="<?php echo $srvOpt['ClientInputsMaxLatency']; ?>"<?php if($srvOpt['ClientInputsMaxLatency'] == 0){ echo ' hidden="hidden"'; } ?> />
-								<a class="returnDefaultValue" id="resetClientInputsMaxLarency" href="?p=<?php echo USER_PAGE; ?>"<?php if($srvOpt['ClientInputsMaxLatency'] == 0){ echo ' hidden="hidden"'; } ?>><?php echo Utils::t('Return to the default value'); ?></a>
+								<input class="text" type="number" min="0" name="ClientInputsMaxLatencyValue" id="ClientInputsMaxLatencyValue" value="<?php echo $data['srvOpt']['ClientInputsMaxLatency']; ?>"<?php if ($data['srvOpt']['ClientInputsMaxLatency'] == 0): echo ' hidden="hidden"'; endif; ?> />
+								<a class="returnDefaultValue" id="resetClientInputsMaxLarency" href="?p=<?php echo USER_PAGE; ?>"<?php if ($data['srvOpt']['ClientInputsMaxLatency'] == 0): echo ' hidden="hidden"'; endif; ?>><?php echo Utils::t('Return to the default value'); ?></a>
 							</td>
 						</tr>
-					<?php } ?>
+					<?php endif; ?>
 					<tr>
 						<td class="key"><label for="HideServer"><?php echo Utils::t('Hidden server'); ?></label></td>
 						<td class="value" colspan="4">
-							<input class="text" type="checkbox" name="HideServer" id="HideServer"<?php if($srvOpt['HideServer'] != 0){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="HideServer" id="HideServer"<?php if ($data['srvOpt']['HideServer'] != 0): echo ' checked="checked"'; endif; ?> value="" />
 						</td>
 					</tr>
 					<tr>
 						<td class="key"><label for="AllowMapDownload"><?php echo Utils::t('Map download'); ?></label></td>
 						<td class="value" colspan="4">
-							<input class="text" type="checkbox" name="AllowMapDownload" id="AllowMapDownload"<?php if(SERVER_VERSION_NAME == 'TmForever' && $srvOpt['AllowChallengeDownload'] != 0){ echo ' checked="checked"'; }else if(SERVER_VERSION_NAME == 'ManiaPlanet' && $srvOpt['AllowMapDownload'] != 0){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="AllowMapDownload" id="AllowMapDownload"<?php if (SERVER_VERSION_NAME == 'TmForever' && $data['srvOpt']['AllowChallengeDownload'] != 0): echo ' checked="checked"'; elseif (SERVER_VERSION_NAME == 'ManiaPlanet' && $data['srvOpt']['AllowMapDownload'] != 0): echo ' checked="checked"'; endif; ?> value="" />
 						</td>
 					</tr>
-					<tr<?php if( AdminServ::isAdminLevel('Admin') && !AdminServ::isAdminLevel('SuperAdmin') ){ echo ' hidden="hidden"'; } ?>>
+					<tr<?php if (AdminServ::isAdminLevel('Admin') && !AdminServ::isAdminLevel('SuperAdmin')): echo ' hidden="hidden"'; endif; ?>>
 						<td class="key"><label for="AutoSaveReplays"><?php echo Utils::t('Replays auto save'); ?></label></td>
 						<td class="value" colspan="4">
-							<input class="text" type="checkbox" name="AutoSaveReplays" id="AutoSaveReplays"<?php if($srvOpt['AutoSaveReplays'] != 0){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="AutoSaveReplays" id="AutoSaveReplays"<?php if ($data['srvOpt']['AutoSaveReplays'] != 0): echo ' checked="checked"'; endif; ?> value="" />
 						</td>
 					</tr>
 					<tr>
 						<td class="key"><label for="BuddyNotification"><?php echo Utils::t('Buddy notification'); ?></label></td>
 						<td class="value" colspan="4">
-							<input class="text" type="checkbox" name="BuddyNotification" id="BuddyNotification"<?php if($srvOpt['BuddyNotification'] != 0){ echo ' checked="checked"'; } ?> value="" />
+							<input class="text" type="checkbox" name="BuddyNotification" id="BuddyNotification"<?php if ($data['srvOpt']['BuddyNotification'] != 0): echo ' checked="checked"'; endif; ?> value="" />
 						</td>
 					</tr>
-					<?php if(SERVER_VERSION_NAME == 'ManiaPlanet'){ ?>
+					<?php if (SERVER_VERSION_NAME == 'ManiaPlanet'): ?>
 						<tr>
 							<td class="key"><label for="DisableHorns"><?php echo Utils::t('Disable horns'); ?></label></td>
 							<td class="value" colspan="4">
-								<input class="text" type="checkbox" name="DisableHorns" id="DisableHorns"<?php if($srvOpt['DisableHorns'] != 0){ echo ' checked="checked"'; } ?> value="" />
+								<input class="text" type="checkbox" name="DisableHorns" id="DisableHorns"<?php if ($data['srvOpt']['DisableHorns'] != 0): echo ' checked="checked"'; endif; ?> value="" />
 							</td>
 						</tr>
-					<?php } ?>
+					<?php endif; ?>
 				</table>
 			</fieldset>
 			
-			<?php if( AdminServ::isAdminLevel('SuperAdmin') ){ ?>
+			<?php if (AdminServ::isAdminLevel('SuperAdmin')): ?>
 				<fieldset class="srvopts_changeauthpassword">
 					<legend><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Change authentication password'); ?></legend>
 					<table>
@@ -184,13 +178,11 @@
 							<td class="key"><label for="ChangeAuthLevel"><?php echo Utils::t('Admin level'); ?></label></td>
 							<td class="value col2">
 								<select name="ChangeAuthLevel" id="ChangeAuthLevel">
-									<?php
-										if( isset($adminLevels['levels']) && count($adminLevels['levels']) > 0 ){
-											foreach($adminLevels['levels'] as $levelId => $levelName){
-												echo '<option value="'.$levelName.'">'.$levelName.'</option>';
-											}
-										}
-									?>
+									<?php if (isset($data['adminLevels']['levels']) && !empty($data['adminLevels']['levels'])): ?>
+										<?php foreach ($data['adminLevels']['levels'] as $levelId => $levelName): ?>
+											<option value="<?php echo $levelName; ?>"><?php echo $levelName; ?></option>
+										<?php endforeach; ?>
+									<?php endif; ?>
 								</select>
 								<span class="changeauthpassword-arrow"> </span>
 								<input class="text" type="password" name="ChangeAuthPassword" id="ChangeAuthPassword" value="" />
@@ -198,9 +190,9 @@
 						</tr>
 					</table>
 				</fieldset>
-			<?php } ?>
+			<?php endif; ?>
 			
-			<?php if( IS_LOCAL && AdminServ::isAdminLevel('Admin') ){ ?>
+			<?php if (IS_LOCAL && AdminServ::isAdminLevel('Admin')): ?>
 				<fieldset class="srvopts_importexport">
 					<legend><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/rt_team.png" alt="" /><?php echo Utils::t('Manage server options'); ?></legend>
 					<table>
@@ -209,19 +201,13 @@
 							<td class="value col2">
 								<input class="text" type="radio" name="srvoptsImportExport" id="srvoptsImport" value="Import" />
 								<select name="srvoptsImportName" id="srvoptsImportName" hidden="hidden">
-									<?php
-										if( isset($srvoptsConfigFiles['files']) && count($srvoptsConfigFiles['files']) > 0 ){
-											$srvoptsImportNameList = null;
-											foreach($srvoptsConfigFiles['files'] as $file){
-												$srvoptsImportNameList .= '<option value="'.$file['filename'].'">'.substr($file['filename'], 0, -4).'</option>';
-											}
-											
-											echo $srvoptsImportNameList;
-										}
-										else{
-											echo '<option value="none">'.Utils::t('No export available').'</option>';
-										}
-									?>
+									<?php if (isset($data['srvoptsConfigFiles']['files']) && !empty($data['srvoptsConfigFiles']['files'])): ?>
+										<?php foreach ($data['srvoptsConfigFiles']['files'] as $file): ?>
+											<option value="<?php echo $file['filename']; ?>"><?php echo substr($file['filename'], 0, -4); ?></option>
+										<?php endforeach; ?>
+									<?php else: ?>
+										<option value="none"><?php echo Utils::t('No export available'); ?></option>
+									<?php endif; ?>
 								</select>
 							</td>
 						</tr>
@@ -234,7 +220,7 @@
 						</tr>
 					</table>
 				</fieldset>
-			<?php } ?>
+			<?php endif; ?>
 		</div>
 		<div class="fright save">
 			<input class="button light" type="submit" name="savesrvopts" id="savesrvopts" value="<?php echo Utils::t('Save'); ?>" />
