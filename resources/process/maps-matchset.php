@@ -63,5 +63,5 @@
 	
 	
 	// MATCH SETTINGS LIST
-	$data['matchsettingsList'] = AdminServ::getLocalMatchSettingList($currentDir, $directory);
+	$data['matchsettingsList'] = AdminServ::getLocalMatchSettingList($currentDir, $args['directory']);
 ?>

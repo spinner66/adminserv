@@ -11,12 +11,12 @@
 		<h1><?php echo Utils::t('MatchSettings'); ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li class="path"><?php echo $data['mapsDirectoryPath'].$directory; ?></li>
+				<li class="path"><?php echo $data['mapsDirectoryPath'].$args['directory']; ?></li>
 				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value="" /></li>
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>">
+		<form method="post" action="?p=<?php echo USER_PAGE; if ($args['directory']): echo '&amp;d='.$args['directory']; endif; ?>">
 		<div id="matchsetlist">
 			<table>
 				<thead>

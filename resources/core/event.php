@@ -6,10 +6,10 @@
 class AdminServEvent {
 	
 	/**
-	* Retourne les variables globales d'AdminServ
+	* Retourne les arguments d'AdminServ
 	*/
-	public static function getGlobals(){
-		global $category, $view, $index, $id, $directory, $setTheme, $setLang;
+	public static function getArgs(){
+		global $args;
 		
 		if( isset($_GET['p']) ){
 			define('USER_PAGE', htmlspecialchars($_GET['p']) );
@@ -23,13 +23,13 @@ class AdminServEvent {
 			}
 		}
 		
-		if( isset($_GET['c']) ){ $category = addslashes( htmlspecialchars($_GET['c']) ); }else{ $category = null; }
-		if( isset($_GET['view']) ){ $view = addslashes( htmlspecialchars($_GET['view']) ); }else{ $view = null; }
-		if( isset($_GET['i']) ){ $index = intval($_GET['i']); }else{ $index = -1; }
-		if( isset($_GET['id']) ){ $id = intval($_GET['id']); }else{ $id = -1; }
-		if( isset($_GET['d']) ){ $directory = addslashes( urldecode($_GET['d']) ); }else{ $directory = null; }
-		if( isset($_GET['th']) ){ $setTheme = addslashes($_GET['th']); }else{ $setTheme = null; }
-		if( isset($_GET['lg']) ){ $setLang = addslashes($_GET['lg']); }else{ $setLang = null; }
+		if( isset($_GET['c']) ){ $args['category'] = addslashes( htmlspecialchars($_GET['c']) ); }else{ $args['category'] = null; }
+		if( isset($_GET['view']) ){ $args['view'] = addslashes( htmlspecialchars($_GET['view']) ); }else{ $args['view'] = null; }
+		if( isset($_GET['i']) ){ $args['index'] = intval($_GET['i']); }else{ $args['index'] = -1; }
+		if( isset($_GET['id']) ){ $args['id'] = intval($_GET['id']); }else{ $args['id'] = -1; }
+		if( isset($_GET['d']) ){ $args['directory'] = addslashes( urldecode($_GET['d']) ); }else{ $args['directory'] = null; }
+		if( isset($_GET['th']) ){ $args['theme'] = addslashes($_GET['th']); }else{ $args['theme'] = null; }
+		if( isset($_GET['lg']) ){ $args['lang'] = addslashes($_GET['lg']); }else{ $args['lang'] = null; }
 	}
 	
 	

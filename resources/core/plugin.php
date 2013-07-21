@@ -181,7 +181,7 @@ class AdminServPlugin {
 	* @return html
 	*/
 	public static function renderPlugin($pluginName = null) {
-		global $client, $translate, $category, $view, $index, $id, $directory;
+		global $client, $translate, $args;
 		if($pluginName === null){
 			$pluginName = USER_PLUGIN;
 		}

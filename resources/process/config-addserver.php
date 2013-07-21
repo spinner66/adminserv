@@ -34,8 +34,8 @@
 		}
 		
 		// Édition
-		if($id !== -1){
-			if( ($result = AdminServServerConfig::saveServerConfig($serverData, $id)) !== true ){
+		if($args['id'] !== -1){
+			if( ($result = AdminServServerConfig::saveServerConfig($serverData, $args['id'])) !== true ){
 				AdminServ::error( Utils::t('Unable to modify the server.').' ('.$result.')');
 			}
 			else{
@@ -73,9 +73,9 @@
 			'User' => 'all'
 		)
 	);
-	if($id !== -1){
+	if($args['id'] !== -1){
 		define('IS_SERVER_EDITION', true);
-		$data['name'] = AdminServServerConfig::getServerName($id);
+		$data['name'] = AdminServServerConfig::getServerName($args['id']);
 		if($data['name']){
 			$serverData = AdminServServerConfig::getServer($data['name']);
 			$data['address'] = $serverData['address'];

@@ -15,22 +15,17 @@
 	// INITIALIZE
 	AdminServ::checkPHPVersion('5.3.0');
 	define('PATH_ROOT', basename(__DIR__).'/');
-	$_SESSION['adminserv']['path'] = null;
-	if(AdminServConfig::MULTI_ADMINSERV){
-		$_SESSION['adminserv']['path'] = PATH_ROOT;
-	}
+	$_SESSION['adminserv']['path'] = (AdminServConfig::MULTI_ADMINSERV) ? PATH_ROOT : null;
 	AdminServ::getClass();
 	
 	// GLOBALS
-	AdminServEvent::getGlobals();
+	AdminServEvent::getArgs();
 	
 	// THEME
-	$userTheme = AdminServUI::theme($setTheme);
-	define('USER_THEME', $userTheme);
+	define('USER_THEME', AdminServUI::theme($args['theme']));
 	
 	// LANG
-	$userLang = AdminServUI::lang($setLang);
-	define('USER_LANG', $userLang);
+	define('USER_LANG', AdminServUI::lang($args['lang']));
 	
 	// VÉRIFICATION DES DROITS
 	$checkRightsList = array(
@@ -50,12 +45,10 @@
 	AdminServLogs::initialize();
 	
 	// PLUGINS
-	$userPlugin = AdminServPlugin::getCurrent();
-	define('USER_PLUGIN', $userPlugin);
-	
+	define('USER_PLUGIN', AdminServPlugin::getCurrent());
 	
 	// INDEX
-	unset($setTheme, $userTheme, $setLang, $userLang);
+	unset($args['theme'], $args['lang']);
 	if( AdminServEvent::isLoggedIn() ){
 		
 		// SWITCH SERVER
