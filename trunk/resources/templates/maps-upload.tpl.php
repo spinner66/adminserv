@@ -11,7 +11,7 @@
 	
 	<section class="cadre right upload">
 		<h1><?php echo Utils::t('Send'); ?></h1>
-		<div class="title-detail path"><?php echo $data['mapsDirectoryPath'].$directory; ?></div>
+		<div class="title-detail path"><?php echo $data['mapsDirectoryPath'].$args['directory']; ?></div>
 		
 		<h2><?php echo Utils::t('Transfer mode'); ?></h2>
 		<div class="transferMode options-radio-inline">

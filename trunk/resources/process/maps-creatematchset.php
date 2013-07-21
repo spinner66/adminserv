@@ -3,7 +3,7 @@
 	if( isset($_POST['savematchsetting']) && isset($_SESSION['adminserv']['matchset_maps_selected']) ){
 		// Filename
 		$matchSettingName = Str::replaceChars($_POST['matchSettingName']);
-		$filename = $data['mapsDirectoryPath'].$directory.$matchSettingName;
+		$filename = $data['mapsDirectoryPath'].$args['directory'].$matchSettingName;
 		if(File::getExtension($matchSettingName) != 'txt'){
 			$filename .= '.txt';
 		}
@@ -93,7 +93,7 @@
 			AdminServ::error(Utils::t('Unable to save the MatchSettings').' : '.$matchSettingName.' ('.$result.')');
 		}
 		else{
-			$action = Utils::t('The MatchSettings "!matchSettingName" was successfully created in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$mapsDirectoryPath.$directory;
+			$action = Utils::t('The MatchSettings "!matchSettingName" was successfully created in the folder', array('!matchSettingName' => $matchSettingName)).' : '.$data['mapsDirectoryPath'].$args['directory'];
 			AdminServ::info($action);
 			AdminServLogs::add('action', $action);
 			Utils::redirection(false, '?p='.USER_PAGE .$hasDirectory);
@@ -113,7 +113,7 @@
 	if( isset($_GET['f']) && $_GET['f'] != null ){
 		$data['pageTitle'] = Utils::t('Edit');
 		$data['matchSettings']['name'] = $_GET['f'];
-		$matchSettingsData = AdminServ::getMatchSettingsData($data['mapsDirectoryPath'].$directory.$data['matchSettings']['name']);
+		$matchSettingsData = AdminServ::getMatchSettingsData($data['mapsDirectoryPath'].$args['directory'].$data['matchSettings']['name']);
 		$data['gameInfos'] = array(
 			'curr' => null,
 			'next' => $matchSettingsData['gameinfos']

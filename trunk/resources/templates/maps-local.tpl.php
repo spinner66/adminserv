@@ -11,20 +11,20 @@
 		<h1><?php echo Utils::t('Local'); ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li><div class="path"><?php echo $data['mapsDirectoryPath'].$directory; ?></div></li>
+				<li><div class="path"><?php echo $data['mapsDirectoryPath'].$args['directory']; ?></div></li>
 				<li class="last"><input type="checkbox" name="checkAll" id="checkAll" value=""<?php if (!is_array($data['maps']['lst'])): echo ' disabled="disabled"'; endif; ?> /></li>
 			</ul>
 		</div>
 		
-		<form method="post" action="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>">
+		<form method="post" action="?p=<?php echo USER_PAGE; if ($args['directory']): echo '&amp;d='.$args['directory']; endif; ?>">
 		<div id="maplist">
 			<table>
 				<thead>
 					<tr>
-						<th class="thleft"><a href="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>&amp;sort=name"><?php echo Utils::t('Map'); ?></a></th>
-						<th><a href="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>&amp;sort=env"><?php echo Utils::t('Environment'); ?></a></th>
-						<th><a href="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>&amp;sort=type"><?php echo Utils::t('Type'); ?></a></th>
-						<th><a href="?p=<?php echo USER_PAGE; if ($directory): echo '&amp;d='.$directory; endif; ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
+						<th class="thleft"><a href="?p=<?php echo USER_PAGE; if ($args['directory']): echo '&amp;d='.$args['directory']; endif; ?>&amp;sort=name"><?php echo Utils::t('Map'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if ($args['directory']): echo '&amp;d='.$args['directory']; endif; ?>&amp;sort=env"><?php echo Utils::t('Environment'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if ($args['directory']): echo '&amp;d='.$args['directory']; endif; ?>&amp;sort=type"><?php echo Utils::t('Type'); ?></a></th>
+						<th><a href="?p=<?php echo USER_PAGE; if ($args['directory']): echo '&amp;d='.$args['directory']; endif; ?>&amp;sort=author"><?php echo Utils::t('Author'); ?></a></th>
 						<th class="thright"></th>
 					</tr>
 				</thead>

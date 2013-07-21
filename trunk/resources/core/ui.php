@@ -366,11 +366,7 @@ class AdminServUI {
 			}
 			
 			foreach(ServerConfig::$SERVERS as $server => $values){
-				if( AdminServServerConfig::getServerId($server) == $currentServerId ){
-					$selected = ' selected="selected"';
-				}else{
-					$selected = null;
-				}
+				$selected = (AdminServServerConfig::getServerId($server) == $currentServerId) ? ' selected="selected"' : null;
 				$out .= '<option value="'.$server.'"'.$selected.'>'.$server.'</option>';
 			}
 		}
@@ -393,11 +389,7 @@ class AdminServUI {
 		
 		if( class_exists('ExtensionConfig') && isset(ExtensionConfig::$GAMEMODES) && count(ExtensionConfig::$GAMEMODES) > 0 ){
 			foreach(ExtensionConfig::$GAMEMODES as $gameModeId => $gameModeName){
-				if($gameModeId == $currentGameMode){
-					$selected = ' selected="selected"';
-				}else{
-					$selected = null;
-				}
+				$selected = ($gameModeId == $currentGameMode) ? ' selected="selected"' : null;
 				$out .= '<option value="'.$gameModeId.'"'.$selected.'>'.$gameModeName.'</option>';
 			}
 		}
@@ -418,23 +410,14 @@ class AdminServUI {
 	* @return string HTML
 	*/
 	public static function getGameInfosField($gameinfos, $name, $id){
-		$currGamInf = (isset($gameinfos['curr'])) ? $gameinfos['curr'] : null;
-		$nextGamInf = (isset($gameinfos['next'])) ? $gameinfos['next'] : null;
+		global $data;
+		$data = array(
+			'gameInfos' => $gameinfos,
+			'name' => $name,
+			'id' => $id
+		);
 		
-		$out = '<tr>'
-			.'<td class="key"><label for="Next'.$id.'">'.Utils::t($name).'</label></td>';
-			if($currGamInf != null){
-				$out .= '<td class="value">'
-					.'<input class="text width2" type="text" name="Curr'.$id.'" id="Curr'.$id.'" readonly="readonly" value="'; if( isset($currGamInf[$id]) ){ $out .= $currGamInf[$id]; } $out .= '" />'
-				.'</td>';
-			}
-			$out .= '<td class="value">'
-				.'<input class="text width2" type="'; if( isset($nextGamInf[$id]) && is_numeric($nextGamInf[$id]) ){ $out .= 'number" min="0"'; }else{ $out .= 'text'; } $out .= '" name="Next'.$id.'" id="Next'.$id.'" value="'; if( isset($nextGamInf[$id]) ){ $out .= $nextGamInf[$id]; } $out .= '" />'
-			.'</td>'
-			.'<td class="preview"></td>'
-		.'</tr>';
-		
-		return $out;
+		self::getTemplate('gameinfos-field');
 	}
 	
 	
@@ -678,7 +661,7 @@ class AdminServUI {
 	* Inclue les fichiers pour le rendu d'une page
 	*/
 	public static function renderPage($pageName) {
-		global $client, $data, $arg, $category, $view, $index, $id, $directory;
+		global $client, $data, $args;
 		
 		// Preprocess
 		if (strstr($pageName, '-')) {
@@ -740,7 +723,7 @@ class AdminServUI {
 	* @return template HTML ou null si le template n'existe pas
 	*/
 	public static function getTemplate($templateName){
-		global $data, $arg, $category, $view, $index, $id, $directory;
+		global $data, $args;
 		$out = null;
 		
 		$tplFile = AdminServConfig::$PATH_RESOURCES.'templates/'.$templateName.'.tpl.php';

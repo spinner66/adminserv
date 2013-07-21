@@ -12,7 +12,7 @@
 		<h1><?php echo $data['pageTitle'].' '.Utils::t('a MatchSettings'); ?></h1>
 		<div class="title-detail">
 			<ul>
-				<li class="last path"><?php echo $data['mapsDirectoryPath'].$directory; ?></li>
+				<li class="last path"><?php echo $data['mapsDirectoryPath'].$args['directory']; ?></li>
 			</ul>
 		</div>
 		

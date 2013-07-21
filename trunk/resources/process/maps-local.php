@@ -64,7 +64,7 @@
 	else if( isset($_POST['renameMapValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
 		$i = 0;
 		foreach($_POST['renameMapList'] as $newMapName){
-			$result = File::rename($data['mapsDirectoryPath'].$_POST['map'][$i], $data['mapsDirectoryPath'].$directory.$newMapName);
+			$result = File::rename($data['mapsDirectoryPath'].$_POST['map'][$i], $data['mapsDirectoryPath'].$args['directory'].$newMapName);
 			if($result !== true ){
 				AdminServ::error(Utils::t('Unable to rename the map').' : '.$newMapName.' ('.$result.')');
 				break;
@@ -80,7 +80,7 @@
 	else if( isset($_POST['renameAutoValid']) && isset($_POST['map']) && count($_POST['map']) > 0 && isset($_POST['renameMapList']) && count($_POST['renameMapList']) > 0 ){
 		$i = 0;
 		foreach($_POST['renameMapList'] as $newMapName){
-			$result = File::rename($data['mapsDirectoryPath'].$_POST['map'][$i], $data['mapsDirectoryPath'].$directory.Str::replaceChars($newMapName));
+			$result = File::rename($data['mapsDirectoryPath'].$_POST['map'][$i], $data['mapsDirectoryPath'].$args['directory'].Str::replaceChars($newMapName));
 			if($result !== true){
 				AdminServ::error(Utils::t('Unable to rename the map').' : '.$newMapName.' ('.$result.')');
 				break;
@@ -145,5 +145,5 @@
 	if( isset($_GET['sort']) && $_GET['sort'] != null){
 		$sort = addslashes($_GET['sort']);
 	}
-	$data['maps'] = AdminServ::getLocalMapList($currentDir, $directory, $sort);
+	$data['maps'] = AdminServ::getLocalMapList($currentDir, $args['directory'], $sort);
 ?>

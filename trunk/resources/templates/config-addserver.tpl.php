@@ -1,6 +1,6 @@
 <section class="cadre">
 	<h1><?php echo (defined('IS_SERVER_EDITION')) ? Utils::t('Edit server') : Utils::t('Add server'); ?></h1>
-	<form method="post" action="?p=<?php echo USER_PAGE; if ($id !== -1): echo '&id='.$id; endif; ?>">
+	<form method="post" action="?p=<?php echo USER_PAGE; if ($args['id'] !== -1): echo '&id='.$args['id']; endif; ?>">
 		<div class="content">
 			<fieldset>
 				<legend><?php echo Utils::t('Connection information'); ?></legend>
