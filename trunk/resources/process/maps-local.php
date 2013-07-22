@@ -145,5 +145,5 @@
 	if( isset($_GET['sort']) && $_GET['sort'] != null){
 		$sort = addslashes($_GET['sort']);
 	}
-	$data['maps'] = AdminServ::getLocalMapList($currentDir, $args['directory'], $sort);
+	$data['maps'] = AdminServ::getLocalMapList($data['currentDir'], $args['directory'], $sort);
 ?>

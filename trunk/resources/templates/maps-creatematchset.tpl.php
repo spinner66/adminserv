@@ -4,7 +4,7 @@
 	</section>
 	
 	<section class="cadre middle folders">
-		<?php echo $data['mapsDirectoryList']; ?>
+		<?php echo AdminServUI::getMapsDirectoryList($data['currentDir'], $args['directory']); ?>
 	</section>
 	
 	<form method="post" action="?p=<?php echo USER_PAGE.$data['hasDirectory']; ?>">
