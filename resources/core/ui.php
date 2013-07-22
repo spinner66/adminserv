@@ -488,117 +488,51 @@ class AdminServUI {
 	* @param string $path        -> Le chemin du dossier "Maps"
 	* @param string $currentPath -> Le chemin à partir de "Maps"
 	* @param bool   $showOptions -> Afficher les options (nouveau, renommer, déplacer, supprimer)
-	* @return string
+	* @return template maps-directorylist
 	*/
 	public static function getMapsDirectoryList($directory, $currentPath = null, $showOptions = true){
-		$out = null;
+		global $data;
 		
-		if( class_exists('Folder') ){
-			// Titre + nouveau dossier
-			$out .= '<form id="createFolderForm" method="post" action="?p='. USER_PAGE .'&amp;d='.$currentPath.'">'
-				.'<h1>Dossiers';
-					if($showOptions && isset(AdminServConfig::$FOLDERS_OPTIONS) && isset(AdminServConfig::$FOLDERS_OPTIONS['new']) && AdminServConfig::$FOLDERS_OPTIONS['new'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['new'][1]) ){
-						$out .='<span id="form-new-folder" hidden="hidden">'
-							.'<input class="text" type="text" name="newFolderName" id="newFolderName" value="" />'
-							.'<input class="button light" type="submit" name="newFolderValid" id="newFolderValid" value="ok" />'
-						.'</span>';
-					}
-				$out .= '</h1>';
-				if($showOptions && isset(AdminServConfig::$FOLDERS_OPTIONS) && isset(AdminServConfig::$FOLDERS_OPTIONS['new']) && AdminServConfig::$FOLDERS_OPTIONS['new'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['new'][1]) ){
-					$out .= '<div class="title-detail"><a href="." id="newfolder" data-cancel="'.Utils::t('Cancel').'" data-new="'.Utils::t('New').'">'.Utils::t('New').'</a></div>';
-				}
-			$out .= '</form>';
+		if (class_exists('Folder')) {
+			$data += array(
+				'folders' => array(),
+				'currentPath' => $currentPath,
+				'parentPath' => null,
+				'showOptions' => $showOptions,
+			);
 			
 			// Liste des dossiers
-			if( is_array($directory) ){
-				$out .= '<div class="folder-list">'
-				.'<ul>';
-				
+			if (is_array($directory)) {
 				// Dossier parent
-				if($currentPath){
+				if ($currentPath) {
 					$params = null;
 					$parentPathEx = explode('/', $currentPath);
 					array_pop($parentPathEx);
 					array_pop($parentPathEx);
-					if( count($parentPathEx) > 0 ){
+					if (!empty($parentPathEx)) {
 						$parentPath = null;
-						foreach($parentPathEx as $part){
+						foreach ($parentPathEx as $part) {
 							$parentPath .= $part.'/';
 						}
-						if($parentPath){
-							$params = '&amp;d='.$parentPath;
-						}
+						$data['parentPath'] = $parentPath;
 					}
-					
-					$out .= '<li>'
-						.'<a href="./?p='. USER_PAGE . $params.'">'
-							.'<img src="'. AdminServConfig::$PATH_RESOURCES .'images/16/back.png" alt="" />'
-							.'<span class="dir-name">'.Utils::t('Parent folder').'</span>'
-						.'</a>'
-					.'</li>';
 				}
 				
 				// Dossiers
-				if( count($directory['folders']) > 0 ){
-					foreach($directory['folders'] as $dir => $values){
-						$out .= '<li>'
-							.'<a href="./?p='. USER_PAGE .'&amp;d='.urlencode($currentPath.$dir).'/">'
-								.'<span class="dir-name">'.$dir.'</span>'
-								.'<span class="dir-info">'.$values['nb_file'].'</span>'
-							.'</a>'
-						.'</li>';
-					}
+				if (!empty($directory['folders'])) {
+					$data['folders'] = $directory['folders'];
 				}
-				else{
-					$out .= '<li class="no-result">'.Utils::t('No folder').'</li>';
-				}
-				$out .= '</ul>'
-				.'</div>';
+				
+				// Template
+				self::getTemplate('maps-directorylist');
 			}
 			else{
 				AdminServ::error($directory);
-			}
-			
-			// Options de dossier
-			if($showOptions && $currentPath && isset(AdminServConfig::$FOLDERS_OPTIONS) ){
-				if( (isset(AdminServConfig::$FOLDERS_OPTIONS['rename']) && AdminServConfig::$FOLDERS_OPTIONS['rename'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['rename'][1])) || (isset(AdminServConfig::$FOLDERS_OPTIONS['move']) && AdminServConfig::$FOLDERS_OPTIONS['move'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['move'][1])) || (isset(AdminServConfig::$FOLDERS_OPTIONS['delete']) && AdminServConfig::$FOLDERS_OPTIONS['delete'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['delete'][1])) ){
-					$currentDir = basename($currentPath);
-					$out .= '<form id="optionFolderForm" method="post" action="?p='. USER_PAGE .'&amp;d='.$currentPath.'">'
-						.'<div class="option-folder-list">'
-							.'<h3>'.Utils::t('Folder options').'<span class="arrow-down">&nbsp;</span></h3>'
-							.'<ul hidden="hidden">';
-								if(AdminServConfig::$FOLDERS_OPTIONS['rename'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['rename'][1]) ){
-									$out .= '<li><a class="button light rename" id="renameFolder" href=".">'.Utils::t('Rename').'</a></li>';
-								}
-								if(AdminServConfig::$FOLDERS_OPTIONS['move'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['move'][1])){
-									$out .= '<li><a class="button light move" id="moveFolder" href=".">'.Utils::t('Move').'</a></li>';
-								}
-								if(AdminServConfig::$FOLDERS_OPTIONS['delete'][0] && AdminServ::isAdminLevel(AdminServConfig::$FOLDERS_OPTIONS['delete'][1])){
-									$out .= '<li><a class="button light delete" id="deleteFolder" href="." data-confirm-text="'.Utils::t('Do you really want to remove this folder !currentDir?', array('!currentDir' => $currentDir)).'">'.Utils::t('Delete').'</a></li>';
-								}
-							$out .= '</ul>'
-						.'</div>'
-						.'<input type="hidden" name="optionFolderHiddenFieldAction" id="optionFolderHiddenFieldAction" value="" />'
-						.'<input type="hidden" name="optionFolderHiddenFieldValue" id="optionFolderHiddenFieldValue" value="" />'
-						.'<div id="renameFolderForm" class="option-form" hidden="hidden" data-title="'.Utils::t('Rename folder').'" data-cancel="'.Utils::t('Cancel').'" data-rename="'.Utils::t('Rename').'">'
-							.'<ul>'
-								.'<li>'
-									.'<span class="rename-map-name">'.$currentDir.'</span>'
-									.'<span class="rename-map-arrow">&nbsp;</span>'
-									.'<input class="text width2" type="text" name="renameFolderNewName" id="renameFolderNewName" value="'.$currentDir.'" />'
-								.'</li>'
-							.'</ul>'
-						.'</div>'
-						.'<div id="moveFolderForm" class="option-form" hidden="hidden" data-title="'.Utils::t('Move folder').'" data-cancel="'.Utils::t('Cancel').'" data-move="'.Utils::t('Move').'" data-root="'.Utils::t('Root').'" data-movethefolder="'.Utils::t('Move folder <b>!currentDir</b> in:', array('!currentDir' => $currentDir)).'"></div>'
-					.'</form>';
-				}
 			}
 		}
 		else{
 			AdminServ::error('Class "Folder" not exists');
 		}
-		
-		return $out;
 	}
 	
 	

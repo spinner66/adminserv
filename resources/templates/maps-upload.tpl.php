@@ -3,11 +3,11 @@
 		<?php echo AdminServUI::getMapsMenuList(); ?>
 	</section>
 	
-	<?php if( defined('IS_LOCAL') && IS_LOCAL ){ ?>
+	<?php if (defined('IS_LOCAL') && IS_LOCAL): ?>
 		<section class="cadre middle folders">
-			<?php echo $data['mapsDirectoryList']; ?>
+			<?php echo AdminServUI::getMapsDirectoryList($data['currentDir'], $args['directory']); ?>
 		</section>
-	<?php } ?>
+	<?php endif; ?>
 	
 	<section class="cadre right upload">
 		<h1><?php echo Utils::t('Send'); ?></h1>

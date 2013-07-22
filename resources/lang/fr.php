@@ -3,7 +3,7 @@
 * French translation
 *
 * @author   Kev717
-* @version  1.3
+* @version  1.4
 */
 $translate = array(
 	'Access server' => 'Accéder au serveur',
@@ -375,5 +375,6 @@ $translate = array(
 	'Server selection' => 'Sélection du serveur',
 	'Configuration' => 'Configuration',
 	'Force the scores' => 'Forcer les scores',
+	'Folders' => 'Dossiers',
 );
 ?>
