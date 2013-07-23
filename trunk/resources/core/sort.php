@@ -72,23 +72,23 @@ class AdminServSort {
 		return ($a < $b) ? -1 : 1;
 	}
 	public static function sortByEnviro($a, $b){
-		if($a['Environnement'] == 'Speed'){
-			$a['Environnement'] = 'Desert';
+		if($a['Environment'] == 'Speed'){
+			$a['Environment'] = 'Desert';
 		}
-		if($b['Environnement'] == 'Speed'){
-			$b['Environnement'] = 'Desert';
+		if($b['Environment'] == 'Speed'){
+			$b['Environment'] = 'Desert';
 		}
-		if($a['Environnement'] == 'Alpine'){
-			$a['Environnement'] = 'Snow';
+		if($a['Environment'] == 'Alpine'){
+			$a['Environment'] = 'Snow';
 		}
-		if($b['Environnement'] == 'Alpine'){
-			$b['Environnement'] = 'Snow';
+		if($b['Environment'] == 'Alpine'){
+			$b['Environment'] = 'Snow';
 		}
 		
-		if($a['Environnement'] == $b['Environnement']){
+		if($a['Environment'] == $b['Environment']){
 			return 0;
 		}
-		return ($a['Environnement'] < $b['Environnement']) ? -1 : 1;
+		return ($a['Environment'] < $b['Environment']) ? -1 : 1;
 	}
 	public static function sortByType($a, $b){
 		if($a['Type']['Name'] == $b['Type']['Name']){

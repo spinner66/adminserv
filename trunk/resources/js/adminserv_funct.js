@@ -571,7 +571,7 @@ function getMapList(mode, sort){
 									out += '<span class="detailModeTd">'+map.UId+'</span>';
 								}
 							out += '</td>'
-							+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>'
+							+'<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environment.toLowerCase()+'.png" alt="" />'+map.Environment+'</td>'
 							+'<td>'+map.Author+'</td>';
 							if(mode == 'detail'){
 								out += '<td>'+map.GoldTime+'</td>'
@@ -735,7 +735,7 @@ function setMapsOrderSort(sort, order){
 					out += '<li class="ui-state-default">'
 						+ '<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>'
 						+ '<div class="order-map-name" title="'+map.FileName+'">'+map.Name+'</div>'
-						+ '<div class="order-map-env"><img src="'+resourcesPath+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</div>'
+						+ '<div class="order-map-env"><img src="'+resourcesPath+'images/env/'+map.Environment.toLowerCase()+'.png" alt="" />'+map.Environment+'</div>'
 						+ '<div class="order-map-author"><img src="'+resourcesPath+'images/16/mapauthor.png" alt="" />'+map.Author+'</div>'
 					+ '</li>';
 				});
@@ -915,7 +915,7 @@ function matchset_mapImportSelection(){
 						+'<td class="imgleft"><img src="'+resourcesPath+'images/16/map.png" alt="" />'
 							+'<span title="'+map.FileName+'">'+map.Name+'</span>'
 						out += '</td>'
-						+'<td class="imgcenter"><img src="'+resourcesPath+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>';
+						+'<td class="imgcenter"><img src="'+resourcesPath+'images/env/'+map.Environment.toLowerCase()+'.png" alt="" />'+map.Environment+'</td>';
 						if(map.Type){
 							out += '<td><span title="'+map.Type.FullName+'">'+map.Type.Name+'</span></td>';
 						}
@@ -1002,7 +1002,7 @@ function matchset_mapSelection(removeId){
 						+ '<td class="imgleft"><img src="'+path_ressources+'images/16/map.png" alt="" />'
 							+ '<span title="'+map.FileName+'">'+map.Name+'</span>'
 						+ '</td>'
-						+ '<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environnement.toLowerCase()+'.png" alt="" />'+map.Environnement+'</td>';
+						+ '<td class="imgcenter"><img src="'+path_ressources+'images/env/'+map.Environment.toLowerCase()+'.png" alt="" />'+map.Environment+'</td>';
 						if(map.Type){
 							out += '<td><span title="'+map.Type.FullName+'">'+map.Type.Name+'</span></td>';
 						}

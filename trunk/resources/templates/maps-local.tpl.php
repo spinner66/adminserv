@@ -50,7 +50,7 @@
 							?>
 							<tr class="<?php echo ($i%2) ? 'even' : 'odd'; echo $mapClass; ?>">
 								<td class="imgleft"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/<?php echo $mapImg; ?>.png" alt="" /><span title="<?php echo $map['FileName']; ?>"><?php echo $map['Name']; ?></span></td>
-								<td class="imgcenter"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/env/<?php echo strtolower($map['Environnement']); ?>.png" alt="" /><?php echo $map['Environnement']; ?></td>
+								<td class="imgcenter"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/env/<?php echo strtolower($map['Environment']); ?>.png" alt="" /><?php echo $map['Environment']; ?></td>
 								<td><span title="<?php echo $map['Type']['FullName']; ?>"><?php echo $map['Type']['Name']; ?></span></td>
 								<td><?php echo $map['Author']; ?></td>
 								<td class="checkbox"><input type="checkbox" name="map[]" value="<?php echo $map['FileName']; ?>" /></td>

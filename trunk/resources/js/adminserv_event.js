@@ -1,12 +1,16 @@
 $(document).ready(function(){
 	
 	/**
-	* Effet de transition CSS
+	* Global
 	*/
 	$('#theme, #lang').hover(function(){
 		$(this).css('height', $(this).find('ul').height()+'px');
 	}, function(){
 		$(this).css('height', $(this).find('ul li:first-child').height()+'px');
+	});
+	$('#footer-inner a').click(function(event){
+		event.preventDefault();
+		window.open( $(this).attr('href') );
 	});
 	
 	
