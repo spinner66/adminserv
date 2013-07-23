@@ -72,8 +72,11 @@ class AdminServEvent {
 	*/
 	public static function logout(){
 		if( isset($_GET['error']) || isset($_GET['logout']) ){
+			$adminservPath = $_SESSION['adminserv']['path'];
 			session_unset();
 			session_destroy();
+			session_start();
+			$_SESSION['adminserv']['path'] = $adminservPath;
 			if( isset($_GET['logout']) ){
 				Utils::redirection(false);
 			}

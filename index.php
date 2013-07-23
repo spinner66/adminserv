@@ -55,10 +55,10 @@
 		AdminServEvent::switchServer();
 		
 		// SERVER CONNECTION
-		AdminServ::initialize();
-		
-		// PAGES BACKOFFICE
-		AdminServUI::initBackPage();
+		if (AdminServ::initialize()) {
+			// PAGES BACKOFFICE
+			AdminServUI::initBackPage();
+		}
 	}
 	else{
 		// PAGES FRONTOFFICE

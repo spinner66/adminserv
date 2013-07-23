@@ -48,7 +48,7 @@
 							<li class="ui-state-default">
 								<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>
 								<div class="order-map-name" title="<?php echo $map['FileName']; ?>"><?php echo $map['Name']; ?></div>
-								<div class="order-map-env"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/env/<?php echo strtolower($map['Environnement']); ?>.png" alt="" /><?php echo $map['Environnement']; ?></div>
+								<div class="order-map-env"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/env/<?php echo strtolower($map['Environment']); ?>.png" alt="" /><?php echo $map['Environment']; ?></div>
 								<div class="order-map-author"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/mapauthor.png" alt="" /><?php echo $map['Author']; ?></div>
 							</li>
 						<?php endforeach; ?>

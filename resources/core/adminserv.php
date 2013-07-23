@@ -128,10 +128,11 @@ class AdminServ {
 	* @param bool $fullInit -> Intialisation complète ? oui par défaut.
 	* Si non, ça ne recupère aucune info de base, seulement la connexion
 	* au serveur dédié et son authentication.
-	* @return true si réussi, sinon une erreur
+	* @return bool
 	*/
 	public static function initialize($fullInit = true){
 		global $client;
+		$out = false;
 		
 		if( isset($_SESSION['adminserv']['sid']) ){
 			// CONSTANTS
@@ -150,7 +151,7 @@ class AdminServ {
 				Utils::redirection(false, '?error='.urlencode( Utils::t('The server is not accessible.') ) );
 			}
 			else{
-				if( !self::userAllowedInAdminLevel(SERVER_NAME, USER_ADMINLEVEL) ){
+				if( !AdminServAdminLevel::userAllowedInLevel(USER_ADMINLEVEL) ){
 					Utils::redirection(false, '?error='.urlencode( Utils::t('You are not allowed at this admin level') ) );
 				}
 				else{
@@ -219,52 +220,22 @@ class AdminServ {
 									array_shift(ExtensionConfig::$GAMEMODES);
 								}
 								
-								return true;
+								$out = true;
 							}
 						}
 						else{
-							return true;
+							$out = true;
 						}
 					}
 				}
 			}
 		}
-		else{
-			return 'no session';
-		}
-	}
-	
-	
-	/**
-	* Vérifie si l'ip de l'utilisateur est autorisé dans le niveau admin
-	*
-	* @param string $serverName -> Le nom du serveur dans la config
-	* @param string $level      -> Le niveau admin correspondant à tester
-	* @return true si autorisé, sinon false
-	*/
-	public static function userAllowedInAdminLevel($serverName, $level){
-		$out = false;
-		$serverLevel = ServerConfig::$SERVERS[$serverName]['adminlevel'][$level];
-		
-		if( is_array($serverLevel) ){
-			if( in_array($_SERVER['REMOTE_ADDR'], $serverLevel) ){
-				$out = true;
-			}
-		}
-		else{
-			if($serverLevel === 'all'){
-				$out = true;
-			}
-			elseif($serverLevel === 'none'){
-				$out = false;
-			}
-			else{
-				$out = Utils::isLocalhostIP();
-			}
-		}
 		
 		return $out;
 	}
+	
+	
+
 	
 	
 	/**
@@ -304,19 +275,16 @@ class AdminServ {
 	* @param string $serverName -> Nom du serveur de la config
 	* @return array
 	*/
-	public static function getServerAdminLevel($serverName = null){
+	public static function getServerAdminLevel($serverName = SERVER_NAME){
 		$out = array();
 		$servers = ServerConfig::$SERVERS;
-		if($serverName === null){
-			$serverName = SERVER_NAME;
-		}
 		$authenticate = array('SuperAdmin', 'Admin', 'User');
 		
 		if( AdminServServerConfig::hasServer() && isset($servers[$serverName]) ){
 			foreach($servers[$serverName]['adminlevel'] as $levelName => $levelValues){
 				if($levelName != null){
 					if( in_array($levelName, $authenticate) && $levelValues != 'none' ){
-						if( self::userAllowedInAdminLevel($serverName, $levelName) ){
+						if( AdminServAdminLevel::userAllowedInLevel($levelName) ){
 							$out['levels'][] = $levelName;
 						}
 					}
@@ -1415,7 +1383,7 @@ class AdminServ {
 					// Environnement
 					$env = $map['Environnement'];
 					if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
-					$out['lst'][$i]['Environnement'] = $env;
+					$out['lst'][$i]['Environment'] = $env;
 					
 					// Autres
 					$out['lst'][$i]['UId'] = $map['UId'];
@@ -1506,7 +1474,7 @@ class AdminServ {
 							$name = htmlspecialchars($map['Name'], ENT_QUOTES, 'UTF-8');
 							$out[] = TmNick::toHtml($name, 10, true);
 							break;
-						case 'Environnement':
+						case 'Environment':
 							$env = $map['Environnement'];
 							if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
 							$out[] = $env;
@@ -1611,7 +1579,7 @@ class AdminServ {
 						$env = $Gbx->envir;
 						if($env == 'read error'){ $env = null; }
 						if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
-						$out['lst'][$file]['Environnement'] = $env;
+						$out['lst'][$file]['Environment'] = $env;
 						
 						// Autres
 						$out['lst'][$file]['FileName'] = $currentPath.$file;
@@ -2063,7 +2031,7 @@ class AdminServ {
 					// Environnement
 					$env = $Gbx->envir;
 					if($env == 'Speed'){ $env = 'Desert'; }else if($env == 'Alpine'){ $env = 'Snow'; }
-					$out['lst'][$i]['Environnement'] = $env;
+					$out['lst'][$i]['Environment'] = $env;
 					
 					// Autres
 					$out['lst'][$i]['FileName'] = $mapFileName;

@@ -41,7 +41,7 @@
 										<span class="detailModeTd"><?php echo $map['UId']; ?></span>
 									<?php endif; ?>
 								</td>
-								<td class="imgcenter"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/env/<?php echo strtolower($map['Environnement']); ?>.png" alt="" /><?php echo $map['Environnement']; ?></td>
+								<td class="imgcenter"><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/env/<?php echo strtolower($map['Environment']); ?>.png" alt="" /><?php echo $map['Environment']; ?></td>
 								<td><?php echo $map['Author']; ?></td>
 								<td<?php if (USER_MODE_MAPS == 'simple'): echo ' hidden="hidden"'; endif; ?>><?php echo $map['GoldTime']; ?></td>
 								<td<?php if (USER_MODE_MAPS == 'simple'): echo ' hidden="hidden"'; endif; ?>><?php echo $map['CopperPrice']; ?></td>
