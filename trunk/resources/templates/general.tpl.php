@@ -29,7 +29,7 @@
 					<?php endif; ?>
 				</td>
 			</tr>
-			<?php if ($data['serverInfo']['map']['callvote']['login']): ?>
+			<?php if ($data['serverInfo']['map']['callvote']['login'] && AdminServAdminLevel::hasPermission('cancel_vote')): ?>
 				<tr>
 					<td class="key"><?php echo Utils::t('Current vote'); ?></td>
 					<td class="value" id="map_currentcallvote">
@@ -38,7 +38,7 @@
 					</td>
 				</tr>
 			<?php endif; ?>
-			<?php if (AdminServ::isGameMode('Team', $data['serverInfo']['srv']['gameModeId'])): ?>
+			<?php if (AdminServ::isGameMode('Team', $data['serverInfo']['srv']['gameModeId']) && AdminServAdminLevel::hasPermission('force_scores')): ?>
 				<tr>
 					<td class="key"><?php echo Utils::t('Scores'); ?></td>
 					<td class="value" id="map_teamscore">
@@ -196,16 +196,28 @@
 				<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 				<span class="selected-files-count">(0)</span>
 				<div class="selected-files-option">
-					<input class="button dark" type="submit" name="IgnoreLoginList" id="IgnoreLoginList" value="<?php echo Utils::t('Ignore'); ?>" />
-					<input class="button dark" type="submit" name="GuestLoginList" id="GuestLoginList" value="<?php echo Utils::t('Guest'); ?>" />
-					<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="<?php echo Utils::t('Ban'); ?>" />
-					<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="<?php echo Utils::t('Kick'); ?>" />
-					<?php if ($data['isTeamGameMode']): ?>
+					<?php if (AdminServAdminLevel::hasPermission('player_ignore')): ?>
+						<input class="button dark" type="submit" name="IgnoreLoginList" id="IgnoreLoginList" value="<?php echo Utils::t('Ignore'); ?>" />
+					<?php endif; ?>
+					<?php if (AdminServAdminLevel::hasPermission('player_guest')): ?>
+						<input class="button dark" type="submit" name="GuestLoginList" id="GuestLoginList" value="<?php echo Utils::t('Guest'); ?>" />
+					<?php endif; ?>
+					<?php if (AdminServAdminLevel::hasPermission('player_ban')): ?>
+						<input class="button dark" type="submit" name="BanLoginList" id="BanLoginList" value="<?php echo Utils::t('Ban'); ?>" />
+					<?php endif; ?>
+					<?php if (AdminServAdminLevel::hasPermission('player_kick')): ?>
+						<input class="button dark" type="submit" name="KickLoginList" id="KickLoginList" value="<?php echo Utils::t('Kick'); ?>" />
+					<?php endif; ?>
+					<?php if ($data['isTeamGameMode'] && AdminServAdminLevel::hasPermission('player_changeteam')): ?>
 						<input class="button dark" type="submit" name="ForceBlueTeam" id="ForceBlueTeam" value="<?php echo Utils::t('Blue team'); ?>" />
 						<input class="button dark" type="submit" name="ForceRedTeam" id="ForceRedTeam" value="<?php echo Utils::t('Red team'); ?>" />
 					<?php endif; ?>
-					<input class="button dark" type="submit" name="ForceSpectatorList" id="ForceSpectatorList" value="<?php echo Utils::t('Spectator'); ?>" />
-					<input class="button dark" type="submit" name="ForcePlayerList" id="ForcePlayerList" value="<?php echo Utils::t('Player'); ?>" />
+					<?php if (AdminServAdminLevel::hasPermission('player_forcetospectator')): ?>
+						<input class="button dark" type="submit" name="ForceSpectatorList" id="ForceSpectatorList" value="<?php echo Utils::t('Spectator'); ?>" />
+					<?php endif; ?>
+					<?php if (AdminServAdminLevel::hasPermission('player_forcetoplayer')): ?>
+						<input class="button dark" type="submit" name="ForcePlayerList" id="ForcePlayerList" value="<?php echo Utils::t('Player'); ?>" />
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>

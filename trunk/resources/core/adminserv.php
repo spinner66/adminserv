@@ -284,7 +284,7 @@ class AdminServ {
 			foreach($servers[$serverName]['adminlevel'] as $levelName => $levelValues){
 				if($levelName != null){
 					if( in_array($levelName, $authenticate) && $levelValues != 'none' ){
-						if( AdminServAdminLevel::userAllowedInLevel($levelName) ){
+						if( AdminServAdminLevel::userAllowedInLevel($levelName, $serverName) ){
 							$out['levels'][] = $levelName;
 						}
 					}
