@@ -45,10 +45,32 @@ class AdminServAdminLevel {
 	*/
 	public static function hasAccess($access, $level = USER_ADMINLEVEL){
 		$out = false;
-		$levelData = self::getLevelData('access', $level);
 		
-		if (!empty($levelData) && isset($levelData[$access]) && $levelData[$access] === true) {
+		if ($access == 'general') {
 			$out = true;
+		}
+		else {
+			$pageToAccess = array(
+				'srvopts' => 'server_options',
+				'gameinfos' => 'game_infos',
+				'chat' => 'chat',
+				'maps-list' => 'maps_list',
+				'maps-local' => 'maps_local',
+				'maps-upload' => 'maps_upload',
+				'maps-order' => 'maps_order',
+				'maps-matchset' => 'maps_matchsettings',
+				'maps-creatematchset' => 'maps_create_matchsettings',
+				'plugins-list' => 'plugins_list',
+				'guestban' => 'guest_ban',
+			);
+			if (array_key_exists($access, $pageToAccess)) {
+				$access = $pageToAccess[$access];
+			}
+			$levelData = self::getLevelData('access', $level);
+			
+			if (!empty($levelData) && isset($levelData[$access]) && $levelData[$access] === true) {
+				$out = true;
+			}
 		}
 		
 		return $out;
@@ -107,28 +129,26 @@ class AdminServAdminLevel {
 	* @param string $level -> Nom du niveau admin
 	* @return bool
 	*/
-	public static function userAllowedInLevel($level){
+	public static function userAllowedInLevel($level, $server = null){
 		$out = false;
 		
-		if (defined('SERVER_ADMINLEVEL')) {
-			$serverLevels = unserialize(SERVER_ADMINLEVEL);
-			$serverLevel = $serverLevels[$level];
-			
-			if (is_array($serverLevel)) {
-				if (in_array($_SERVER['REMOTE_ADDR'], $serverLevel)) {
-					$out = true;
-				}
+		$serverLevels = ($server === null && defined('SERVER_ADMINLEVEL')) ? unserialize(SERVER_ADMINLEVEL) : ServerConfig::$SERVERS[$server]['adminlevel'];
+		$serverLevel = $serverLevels[$level];
+		
+		if (is_array($serverLevel)) {
+			if (in_array($_SERVER['REMOTE_ADDR'], $serverLevel)) {
+				$out = true;
+			}
+		}
+		else {
+			if ($serverLevel === 'all') {
+				$out = true;
+			}
+			elseif ($serverLevel === 'none') {
+				$out = false;
 			}
 			else {
-				if ($serverLevel === 'all') {
-					$out = true;
-				}
-				elseif ($serverLevel === 'none') {
-					$out = false;
-				}
-				else {
-					$out = Utils::isLocalhostIP();
-				}
+				$out = Utils::isLocalhostIP();
 			}
 		}
 		

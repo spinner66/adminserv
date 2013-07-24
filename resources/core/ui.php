@@ -453,11 +453,10 @@ class AdminServUI {
 	/**
 	* Retourne le menu pour les pages maps
 	*
-	* @return html
+	* @return template html
 	*/
 	public static function getMapsMenuList(){
-		global $directory;
-		$out = null;
+		global $data, $args;
 		$list = ExtensionConfig::$MAPSMENU;
 		$excludeLocalPage = array('maps-local', 'maps-matchset', 'maps-creatematchset');
 		if( !IS_LOCAL ){
@@ -466,17 +465,10 @@ class AdminServUI {
 			}
 		}
 		
-		if( count($list) > 0 ){
-			$out = '<nav class="vertical-nav">'
-				.'<ul>';
-					foreach($list as $page => $title){
-						$out .= '<li><a '; if(USER_PAGE == $page){ $out .= 'class="active" '; } $out .= 'href="?p='.$page; if($directory){ $out .= '&amp;d='.$directory; } $out .= '">'.Utils::t($title).'</a></li>';
-					}
-			$out .= '</ul>'
-			.'</nav>';
-		}
-		
-		return $out;
+		$data += array(
+			'menuList' => $list,
+		);
+		self::getTemplate('maps-menu');
 	}
 	
 	
@@ -600,9 +592,9 @@ class AdminServUI {
 		// Preprocess
 		if (strstr($pageName, '-')) {
 			$pageNameEx = explode('-', $pageName);
-			$pageIncludePath = AdminServConfig::$PATH_RESOURCES.'process/'.$pageNameEx[0].'.preprocess.php';
-			if (file_exists($pageIncludePath)) {
-				require_once $pageIncludePath;
+			$pagePreprocess = AdminServConfig::$PATH_RESOURCES.'process/'.$pageNameEx[0].'.preprocess.php';
+			if (file_exists($pagePreprocess)) {
+				require_once $pagePreprocess;
 			}
 		}
 		
@@ -621,7 +613,16 @@ class AdminServUI {
 		self::getHeader();
 		
 		// Template
-		self::getTemplate($pageName);
+		if (AdminServAdminLevel::hasAccess($pageName)) {
+			self::getTemplate($pageName);
+		}
+		else {
+			$data = array(
+				'errorTitle' => Utils::t('Erreur d\'accès à la page'),
+				'errorMessage' => Utils::t('Vous n\'avez pas les droits requis pour accéder à cette page. Veuillez contacter votre administrateur.'),
+			);
+			self::getTemplate('page-error');
+		}
 		
 		// Footer
 		self::getFooter();
