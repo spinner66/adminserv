@@ -3,6 +3,7 @@ class AdminLevelConfig {
 	public static $ADMINLEVELS = array(
 		'SuperAdmin' => array(
 			'adminlevel' => array(
+				'superadmin' => true,
 				'password' => '',
 				'selected' => true,
 			),
@@ -35,7 +36,7 @@ class AdminLevelConfig {
 				'cancel_vote' => true,
 				'srvopts_general_name' => true,
 				'srvopts_general_comment' => true,
-				'srvopts_general_serverpassword' => true,
+				'srvopts_general_playerpassword' => true,
 				'srvopts_general_spectatorpassword' => true,
 				'srvopts_general_nbplayers' => true,
 				'srvopts_general_nbspectators' => true,
