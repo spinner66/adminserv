@@ -547,7 +547,16 @@ class AdminServUI {
 		// Render page
 		if (in_array(USER_PAGE, $pagesList)) {
 			$pageKey = array_search(USER_PAGE, $pagesList);
-			self::renderPage($pagesList[$pageKey]);
+			if (AdminServAdminLevel::hasAccess($pagesList[$pageKey])) {
+				self::renderPage($pagesList[$pageKey]);
+			}
+			else {
+				$data = array(
+					'errorTitle' => Utils::t('Erreur d\'accès à la page'),
+					'errorMessage' => Utils::t('Vous n\'avez pas les droits requis pour accéder à cette page. Veuillez contacter votre administrateur.'),
+				);
+				self::getTemplate('page-error');
+			}
 		}
 		else {
 			if (self::isPageType('config')) {
@@ -613,16 +622,7 @@ class AdminServUI {
 		self::getHeader();
 		
 		// Template
-		if (AdminServAdminLevel::hasAccess($pageName)) {
-			self::getTemplate($pageName);
-		}
-		else {
-			$data = array(
-				'errorTitle' => Utils::t('Erreur d\'accès à la page'),
-				'errorMessage' => Utils::t('Vous n\'avez pas les droits requis pour accéder à cette page. Veuillez contacter votre administrateur.'),
-			);
-			self::getTemplate('page-error');
-		}
+		self::getTemplate($pageName);
 		
 		// Footer
 		self::getFooter();

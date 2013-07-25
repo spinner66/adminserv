@@ -43,34 +43,32 @@ class AdminServAdminLevel {
 	* @param string $level  -> Nom du niveau admin
 	* @return bool
 	*/
-	public static function hasAccess($access, $level = USER_ADMINLEVEL){
+	public static function hasAccess($access, $level = null){
 		$out = false;
 		
-		if ($access == 'general') {
-			$out = true;
+		$pageToAccess = array(
+			'srvopts' => 'server_options',
+			'gameinfos' => 'game_infos',
+			'chat' => 'chat',
+			'maps-list' => 'maps_list',
+			'maps-local' => 'maps_local',
+			'maps-upload' => 'maps_upload',
+			'maps-order' => 'maps_order',
+			'maps-matchset' => 'maps_matchsettings',
+			'maps-creatematchset' => 'maps_create_matchsettings',
+			'plugins-list' => 'plugins_list',
+			'guestban' => 'guest_ban',
+		);
+		if (array_key_exists($access, $pageToAccess)) {
+			$access = $pageToAccess[$access];
 		}
-		else {
-			$pageToAccess = array(
-				'srvopts' => 'server_options',
-				'gameinfos' => 'game_infos',
-				'chat' => 'chat',
-				'maps-list' => 'maps_list',
-				'maps-local' => 'maps_local',
-				'maps-upload' => 'maps_upload',
-				'maps-order' => 'maps_order',
-				'maps-matchset' => 'maps_matchsettings',
-				'maps-creatematchset' => 'maps_create_matchsettings',
-				'plugins-list' => 'plugins_list',
-				'guestban' => 'guest_ban',
-			);
-			if (array_key_exists($access, $pageToAccess)) {
-				$access = $pageToAccess[$access];
-			}
-			$levelData = self::getLevelData('access', $level);
-			
-			if (!empty($levelData) && isset($levelData[$access]) && $levelData[$access] === true) {
-				$out = true;
-			}
+		if ($level === null && defined('USER_ADMINLEVEL')) {
+			$level = USER_ADMINLEVEL;
+		}
+		$levelData = self::getLevelData('access', $level);
+		
+		if (!empty($levelData) && isset($levelData[$access]) && $levelData[$access] === true) {
+			$out = true;
 		}
 		
 		return $out;
@@ -80,16 +78,38 @@ class AdminServAdminLevel {
 	/**
 	* Vérifie s'il le niveau admin a bien la permission d'utiliser une fonctionnalité
 	*
-	* @param string $permission -> Nom de la permission
-	* @param string $level      -> Nom du niveau admin
+	* @param mixed  $permission     -> Nom de la permission ou tableau de plusieurs permissions
+	* @param string $level          -> Nom du niveau admin
+	* @param bool   $onlySuperAdmin -> Autoriser l'accès qu'au niveau SuperAdmin
 	* @return bool
 	*/
-	public static function hasPermission($permission, $level = USER_ADMINLEVEL){
+	public static function hasPermission($permission, $level = null, $onlySuperAdmin = false){
 		$out = false;
-		$levelData = self::getLevelData('permission');
+		if ($level === null && defined('USER_ADMINLEVEL')) {
+			$level = USER_ADMINLEVEL;
+		}
+		$levelData = self::getLevelData('permission', $level);
 		
-		if (!empty($levelData) && isset($levelData[$permission]) && $levelData[$permission] === true) {
-			$out = true;
+		if (!empty($levelData)) {
+			if (is_array($permission)) {
+				$result = array();
+				foreach ($permission as $perm) {
+					if (isset($levelData[$perm]) && $levelData[$perm] === true) {
+						$result[] = true;
+					}
+					else {
+						$result[] = false;
+					}
+				}
+				if (in_array(true, $result)) {
+					$out = true;
+				}
+			}
+			else {
+				if (isset($levelData[$permission]) && $levelData[$permission] === true) {
+					$out = true;
+				}
+			}
 		}
 		
 		return $out;
@@ -103,8 +123,11 @@ class AdminServAdminLevel {
 	* @param string $level -> Nom du niveau admin
 	* @return array
 	*/
-	public static function getLevelData($data = 'all', $level = USER_ADMINLEVEL){
+	public static function getLevelData($data = 'all', $level = null){
 		$out = array();
+		if ($level === null && defined('USER_ADMINLEVEL')) {
+			$level = USER_ADMINLEVEL;
+		}
 		
 		if (self::hasLevel($level)) {
 			$levelData = AdminLevelConfig::$ADMINLEVELS[$level];
