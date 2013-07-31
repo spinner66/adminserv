@@ -3,7 +3,7 @@ class AdminLevelConfig {
 	public static $ADMINLEVELS = array(
 		'SuperAdmin' => array(
 			'adminlevel' => array(
-				'superadmin' => true,
+				'type' => 'SuperAdmin',
 				'password' => '',
 				'selected' => true,
 			),
@@ -77,10 +77,14 @@ class AdminLevelConfig {
 			)
 		),
 		'Admin' => array(
-			
+			'adminlevel' => array(
+				'type' => 'Admin',
+			),
 		),
 		'User' => array(
-			
+			'adminlevel' => array(
+				'type' => 'User',
+			),
 		)
 	);
 }
