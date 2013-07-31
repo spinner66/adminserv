@@ -6,6 +6,16 @@
 class AdminServAdminLevel {
 	
 	/**
+	* Constantes
+	*/
+	public static $DEFAULT_LEVELS = array(
+		'SuperAdmin' => array('SuperAdmin', 'Admin', 'User'),
+		'Admin' => array('Admin', 'User'),
+		'User' => array('User'),
+	);
+	
+	
+	/**
 	* Vérifie s'il y a bien une config de niveaux admins
 	*
 	* @param string $levelName -> Tester si le niveau admin est présent
@@ -43,7 +53,7 @@ class AdminServAdminLevel {
 	* @param string $level  -> Nom du niveau admin
 	* @return bool
 	*/
-	public static function hasAccess($access, $level = null){
+	public static function hasAccess($access, $level = null) {
 		$out = false;
 		
 		$pageToAccess = array(
@@ -65,7 +75,7 @@ class AdminServAdminLevel {
 		if ($level === null && defined('USER_ADMINLEVEL')) {
 			$level = USER_ADMINLEVEL;
 		}
-		$levelData = self::getLevelData('access', $level);
+		$levelData = self::getLevelData($level, 'access');
 		
 		if (!empty($levelData) && isset($levelData[$access]) && $levelData[$access] === true) {
 			$out = true;
@@ -78,36 +88,71 @@ class AdminServAdminLevel {
 	/**
 	* Vérifie s'il le niveau admin a bien la permission d'utiliser une fonctionnalité
 	*
-	* @param mixed  $permission     -> Nom de la permission ou tableau de plusieurs permissions
-	* @param string $level          -> Nom du niveau admin
-	* @param bool   $onlySuperAdmin -> Autoriser l'accès qu'au niveau SuperAdmin
+	* @param mixed  $permission   -> Nom de la permission ou tableau de plusieurs permissions
+	* @param string $level        -> Nom du niveau admin
+	* @param string $minLevelType -> Type de niveau minimum à autoriser
 	* @return bool
 	*/
-	public static function hasPermission($permission, $level = null, $onlySuperAdmin = false){
+	public static function hasPermission($permission, $level = null, $minTypeLevel = null) {
 		$out = false;
 		if ($level === null && defined('USER_ADMINLEVEL')) {
 			$level = USER_ADMINLEVEL;
 		}
-		$levelData = self::getLevelData('permission', $level);
 		
-		if (!empty($levelData)) {
-			if (is_array($permission)) {
-				$result = array();
-				foreach ($permission as $perm) {
-					if (isset($levelData[$perm]) && $levelData[$perm] === true) {
-						$result[] = true;
-					}
-					else {
-						$result[] = false;
-					}
-				}
-				if (in_array(true, $result)) {
-					$out = true;
+		if ($level) {
+			if ($minTypeLevel !== null) {
+				$levelData = self::getLevelData($level, 'adminlevel');
+				$minTypeLevelAuthorized = self::getDefaultLevels($levelData['type']);
+				if (!in_array($minTypeLevel, $minTypeLevelAuthorized)) {
+					return false;
 				}
 			}
-			else {
-				if (isset($levelData[$permission]) && $levelData[$permission] === true) {
-					$out = true;
+			$levelData = self::getLevelData($level, 'permission');
+			
+			if (!empty($levelData)) {
+				if (is_array($permission)) {
+					$result = array();
+					foreach ($permission as $perm) {
+						if (isset($levelData[$perm]) && $levelData[$perm] === true) {
+							$result[] = true;
+						}
+						else {
+							$result[] = false;
+						}
+					}
+					if (in_array(true, $result)) {
+						$out = true;
+					}
+				}
+				else {
+					if (isset($levelData[$permission]) && $levelData[$permission] === true) {
+						$out = true;
+					}
+				}
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère les niveaux par défaut ou renvoie les niveaux autorisés suivant le type
+	*
+	* @param string $type -> Type de niveau
+	* @return array
+	*/
+	public static function getDefaultLevels($type = null){
+		$out = array();
+		
+		if ($type === null) {
+			$out = array_keys(self::$DEFAULT_LEVELS);
+		}
+		else {
+			foreach (self::$DEFAULT_LEVELS as $typeLevel => $authorizedLevel) {
+				if ($type === $typeLevel) {
+					$out = $authorizedLevel;
+					break;
 				}
 			}
 		}
@@ -123,7 +168,7 @@ class AdminServAdminLevel {
 	* @param string $level -> Nom du niveau admin
 	* @return array
 	*/
-	public static function getLevelData($data = 'all', $level = null){
+	public static function getLevelData($level = null, $data = 'all') {
 		$out = array();
 		if ($level === null && defined('USER_ADMINLEVEL')) {
 			$level = USER_ADMINLEVEL;
@@ -147,15 +192,49 @@ class AdminServAdminLevel {
 	
 	
 	/**
+	* Récupère la liste des niveaux admins configurés pour le serveur courant
+	*
+	* @param string $server -> Nom du serveur
+	* @return array
+	*/
+	public static function getCurrentServerLevelList($server = null) {
+		return ($server === null && defined('SERVER_ADMINLEVEL')) ? unserialize(SERVER_ADMINLEVEL) : ServerConfig::$SERVERS[$server]['adminlevel'];
+	}
+	
+	
+	/**
+	* Récupère les données des niveaux admins configurés pour le serveur courant
+	*
+	* @param string $server -> Nom du serveur
+	* @return array
+	*/
+	public static function getCurrentServerLevelData($server = null) {
+		$out = array();
+		$serverLevels = self::getCurrentServerLevelList($server);
+		
+		if (!empty($serverLevels)) {
+			foreach($serverLevels as $levelName => $levelData){
+				if (self::userAllowedInLevel($levelName, $server)) {
+					$out[$levelName] = self::getLevelData($levelName);
+				}
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Vérifie si l'ip de l'utilisateur est autorisé dans le niveau admin
 	*
-	* @param string $level -> Nom du niveau admin
+	* @param string $level  -> Nom du niveau admin
+	* @param string $server -> Nom du serveur
 	* @return bool
 	*/
-	public static function userAllowedInLevel($level, $server = null){
+	public static function userAllowedInLevel($level, $server = null) {
 		$out = false;
 		
-		$serverLevels = ($server === null && defined('SERVER_ADMINLEVEL')) ? unserialize(SERVER_ADMINLEVEL) : ServerConfig::$SERVERS[$server]['adminlevel'];
+		$serverLevels = self::getCurrentServerLevelList($server);
 		$serverLevel = $serverLevels[$level];
 		
 		if (is_array($serverLevel)) {

@@ -186,7 +186,7 @@
 				</fieldset>
 			<?php endif; ?>
 			
-			<?php if (AdminServAdminLevel::hasPermission('srvopts_adminlevelpassword', USER_ADMINLEVEL, true)): ?>
+			<?php if (AdminServAdminLevel::hasPermission('srvopts_adminlevelpassword', USER_ADMINLEVEL, 'SuperAdmin')): ?>
 				<fieldset class="srvopts_changeauthpassword">
 					<legend><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Change authentication password'); ?></legend>
 					<table>
