@@ -42,7 +42,9 @@
 				</fieldset>
 			<?php endif; ?>
 			
-			<?php echo AdminServUI::getTemplate('gameinfos-gamemode'); ?>
+			<?php if (AdminServAdminLevel::hasPermission('gameinfos_gamemode_options')): ?>
+				<?php echo AdminServUI::getTemplate('gameinfos-gamemode'); ?>
+			<?php endif; ?>
 		</div>
 		
 		<?php if (SERVER_MATCHSET): ?>
