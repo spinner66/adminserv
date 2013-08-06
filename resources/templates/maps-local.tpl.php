@@ -76,22 +76,40 @@
 			<div class="fleft">
 				<span class="nb-line"><?php if (is_array($data['maps'])): echo $data['maps']['nbm']['count'].' '.$data['maps']['nbm']['title']; endif; ?></span>
 			</div>
-			<div class="fright">
-				<div class="selected-files-label locked">
-					<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
-					<span class="selected-files-count">(0)</span>
-					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="<?php echo Utils::t('Delete'); ?>" data-confirm="<?php echo Utils::t('Do you really want to remove this selection?'); ?>" />
-						<input class="button dark" type="button" name="moveMap" id="moveMap" value="<?php echo Utils::t('Move'); ?>" />
-						<input class="button dark" type="button" name="renameMap" id="renameMap" value="<?php echo Utils::t('Rename'); ?>" />
-						<input class="button dark" type="submit" name="downloadMap" id="downloadMap" value="<?php echo Utils::t('Download'); ?>" />
-						<input class="button dark" type="submit" name="insertMap" id="insertMap" value="<?php echo Utils::t('Insert'); ?>" />
-						<input class="button dark" type="submit" name="addMap" id="addMap" value="<?php echo Utils::t('Add'); ?>" />
+			<?php if (AdminServAdminLevel::hasPermission(array('maps_local_add', 'maps_local_insert', 'maps_local_download', 'maps_local_rename', 'maps_local_move', 'maps_local_delete'))): ?>
+				<div class="fright">
+					<div class="selected-files-label locked">
+						<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
+						<span class="selected-files-count">(0)</span>
+						<div class="selected-files-option">
+							<?php if (AdminServAdminLevel::hasPermission('maps_local_delete')): ?>
+								<input class="button dark" type="submit" name="deleteMap" id="deleteMap" value="<?php echo Utils::t('Delete'); ?>" data-confirm="<?php echo Utils::t('Do you really want to remove this selection?'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_local_move')): ?>
+								<input class="button dark" type="button" name="moveMap" id="moveMap" value="<?php echo Utils::t('Move'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_local_rename')): ?>
+								<input class="button dark" type="button" name="renameMap" id="renameMap" value="<?php echo Utils::t('Rename'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_local_download')): ?>
+								<input class="button dark" type="submit" name="downloadMap" id="downloadMap" value="<?php echo Utils::t('Download'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_local_insert')): ?>
+								<input class="button dark" type="submit" name="insertMap" id="insertMap" value="<?php echo Utils::t('Insert'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_local_add')): ?>
+								<input class="button dark" type="submit" name="addMap" id="addMap" value="<?php echo Utils::t('Add'); ?>" />
+							<?php endif; ?>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div id="form-rename-map" class="option-form" hidden="hidden" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-rename="<?php echo Utils::t('Rename'); ?>" data-autorename="<?php echo Utils::t('Replace the special characters'); ?>"></div>
-			<div id="form-move-map" class="option-form" hidden="hidden" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-move="<?php echo Utils::t('Move'); ?>" data-inthefolder="<?php echo Utils::t('in the folder:'); ?>" data-root="<?php echo Utils::t('Root'); ?>"></div>
+			<?php endif; ?>
+			<?php if (AdminServAdminLevel::hasPermission('maps_local_rename')): ?>
+				<div id="form-rename-map" class="option-form" hidden="hidden" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-rename="<?php echo Utils::t('Rename'); ?>" data-autorename="<?php echo Utils::t('Replace the special characters'); ?>"></div>
+			<?php endif; ?>
+			<?php if (AdminServAdminLevel::hasPermission('maps_local_move')): ?>
+				<div id="form-move-map" class="option-form" hidden="hidden" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-move="<?php echo Utils::t('Move'); ?>" data-inthefolder="<?php echo Utils::t('in the folder:'); ?>" data-root="<?php echo Utils::t('Root'); ?>"></div>
+			<?php endif; ?>
 		</div>
 		<?php if (SERVER_MATCHSET): ?>
 			<div class="fleft options-checkbox">

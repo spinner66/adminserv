@@ -66,16 +66,22 @@
 			<div class="fleft">
 				<span class="nb-line"><?php echo $data['maps']['nbm']['count'].' '.$data['maps']['nbm']['title']; ?></span>
 			</div>
-			<div class="fright">
-				<div class="selected-files-label locked">
-					<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
-					<span class="selected-files-count">(0)</span>
-					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="removeMap" id="removeMap" value="<?php echo Utils::t('Delete'); ?>" />
-						<input class="button dark" type="submit" name="chooseNextMap" id="chooseNextMap" value="<?php echo Utils::t('Move after the current map'); ?>" />
+			<?php if (AdminServAdminLevel::hasPermission(array('maps_list_moveaftercurrent', 'maps_list_removetolist'))): ?>
+				<div class="fright">
+					<div class="selected-files-label locked">
+						<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
+						<span class="selected-files-count">(0)</span>
+						<div class="selected-files-option">
+							<?php if (AdminServAdminLevel::hasPermission('maps_list_removetolist')): ?>
+								<input class="button dark" type="submit" name="removeMap" id="removeMap" value="<?php echo Utils::t('Delete'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_list_moveaftercurrent')): ?>
+								<input class="button dark" type="submit" name="chooseNextMap" id="chooseNextMap" value="<?php echo Utils::t('Move after the current map'); ?>" />
+							<?php endif; ?>
+						</div>
 					</div>
 				</div>
-			</div>
+			<?php endif; ?>
 		</div>
 		
 		<input type="hidden" id="currentSort" name="currentSort" value="" />

@@ -532,6 +532,8 @@ class AdminServUI {
 	* Ititialise une page en back office
 	*/
 	public static function initBackPage() {
+		global $client, $data, $args;
+		
 		// Pages list
 		$pagesList = array(
 			'general',
@@ -542,7 +544,12 @@ class AdminServUI {
 			'guestban',
 		);
 		$pagesList = array_merge($pagesList, array_keys(ExtensionConfig::$MAPSMENU) );
-		$firstPage = array_shift($pagesList);;
+		$firstPage = array_shift($pagesList);
+		
+		// Access exception
+		if (!AdminServAdminLevel::hasPermission(array('maps_upload_add', 'maps_upload_insert', 'maps_upload_folder'))) {
+			AdminLevelConfig::$ADMINLEVELS[USER_ADMINLEVEL]['access']['maps_upload'] = false;
+		}
 		
 		// Render page
 		if (in_array(USER_PAGE, $pagesList)) {
@@ -555,7 +562,7 @@ class AdminServUI {
 					'errorTitle' => Utils::t('Erreur d\'accès à la page'),
 					'errorMessage' => Utils::t('Vous n\'avez pas les droits requis pour accéder à cette page. Veuillez contacter votre administrateur.'),
 				);
-				self::getTemplate('page-error');
+				self::renderPage('page-error');
 			}
 		}
 		else {

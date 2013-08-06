@@ -16,18 +16,24 @@
 		<h2><?php echo Utils::t('Transfer mode'); ?></h2>
 		<div class="transferMode options-radio-inline">
 			<ul>
-				<li class="selected">
-					<input class="text" type="radio" name="transferMode" id="transferModeAdd" value="add" checked="checked" />
-					<div class="name"><span><?php echo Utils::t('Add'); ?></span> <?php echo Utils::t('at the end of list'); ?></div>
-				</li>
-				<li>
-					<input class="text" type="radio" name="transferMode" id="transferModeInsert" value="insert" />
-					<div class="name"><span><?php echo Utils::t('Insert'); ?></span> <?php echo Utils::t('after current map'); ?></div>
-				</li>
-				<li>
-					<input class="text" type="radio" name="transferMode" id="transferModeLocal" value="local" />
-					<div class="name"><span><?php echo Utils::t('Send'); ?></span> <?php echo Utils::t('only in the folder'); ?></div>
-				</li>
+				<?php if (AdminServAdminLevel::hasPermission('maps_upload_add')): ?>
+					<li class="selected">
+						<input class="text" type="radio" name="transferMode" id="transferModeAdd" value="add" checked="checked" />
+						<div class="name"><span><?php echo Utils::t('Add'); ?></span> <?php echo Utils::t('at the end of list'); ?></div>
+					</li>
+				<?php endif; ?>
+				<?php if (AdminServAdminLevel::hasPermission('maps_upload_insert')): ?>
+					<li>
+						<input class="text" type="radio" name="transferMode" id="transferModeInsert" value="insert" />
+						<div class="name"><span><?php echo Utils::t('Insert'); ?></span> <?php echo Utils::t('after current map'); ?></div>
+					</li>
+				<?php endif; ?>
+				<?php if (AdminServAdminLevel::hasPermission('maps_upload_folder')): ?>
+					<li>
+						<input class="text" type="radio" name="transferMode" id="transferModeLocal" value="local" />
+						<div class="name"><span><?php echo Utils::t('Send'); ?></span> <?php echo Utils::t('only in the folder'); ?></div>
+					</li>
+				<?php endif; ?>
 			</ul>
 		</div>
 		
