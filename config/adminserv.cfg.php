@@ -16,7 +16,7 @@ class AdminServConfig {
 	const SUBTITLE = 'For maniaplanet servers'; // if null it's hidden
 	const LOGO = 'logo.png'; // if null it's hidden
 	const DEFAULT_THEME = 'red'; // The first theme to be loaded
-	const DEFAULT_LANGUAGE = 'auto'; // Can be fr, en, de, es or auto = automatic detection
+	const DEFAULT_LANGUAGE = 'auto'; // Can be language code (fr, en, etc) or auto = automatic detection
 	const USE_DISPLAYSERV = true; // Show DisplayServ tool on connection page
 	const AUTOSAVE_MATCHSETTINGS = true; // Save the MatchSettings in the server config (possibility to disable online)
 	
@@ -30,12 +30,6 @@ class AdminServConfig {
 	const COOKIE_EXPIRE = 90; // Expiration time for cookies, in days
 	
 	/* FILES AND FOLDERS */
-	public static $FOLDERS_OPTIONS = array( // Actions for the folders in maps page. You can disable or limit authorization level
-		'new' => array(true, 'Admin'),
-		'rename' => array(true, 'Admin'),
-		'move' => array(true, 'Admin'),
-		'delete' => array(true, 'SuperAdmin')
-	);
 	public static $MAPS_HIDDEN_FOLDERS = array('MatchSettings', 'Replays'); // Folders to be hidden in maps page
 	public static $MATCHSET_HIDDEN_FOLDERS = array('Campaigns', 'Replays'); // Folders to be hidden in matchsettings page
 	public static $MAP_EXTENSION = array('map.gbx', 'challenge.gbx', 'gbx'); // Double extensions used in maps page

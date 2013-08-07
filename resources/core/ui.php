@@ -411,13 +411,14 @@ class AdminServUI {
 	*/
 	public static function getGameInfosField($gameinfos, $name, $id){
 		global $data;
-		$data = array(
+		$data['gameInfosField'] = array(
 			'gameInfos' => $gameinfos,
 			'name' => $name,
 			'id' => $id
 		);
 		
 		self::getTemplate('gameinfos-field');
+		unset($data['gameInfosField']);
 	}
 	
 	
@@ -666,14 +667,11 @@ class AdminServUI {
 	*/
 	public static function getTemplate($templateName){
 		global $data, $args;
-		$out = null;
 		
 		$tplFile = AdminServConfig::$PATH_RESOURCES.'templates/'.$templateName.'.tpl.php';
 		if (file_exists($tplFile)) {
-			require_once $tplFile;
+			require $tplFile;
 		}
-		
-		return $out;
 	}
 }
 ?>

@@ -53,20 +53,34 @@
 			<div class="fleft">
 				<span class="nb-line"><?php if (is_array($data['matchsettingsList']['nbm'])): echo $data['matchsettingsList']['nbm']['count'].' '.$data['matchsettingsList']['nbm']['title']; endif; ?></span>
 			</div>
-			<div class="fright">
-				<div class="selected-files-label locked">
-					<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
-					<span class="selected-files-count">(0)</span>
-					<div class="selected-files-option">
-						<input class="button dark" type="submit" name="deleteMatchset" id="deleteMatchset" value="<?php echo Utils::t('Delete'); ?>" />
-						<input class="button dark" type="submit" name="editMatchset" id="editMatchset" value="<?php echo Utils::t('Edit'); ?>" />
-						<input class="button dark" type="submit" name="insertMatchset" id="insertMatchset" value="<?php echo Utils::t('Insert'); ?>" />
-						<input class="button dark" type="submit" name="addMatchset" id="addMatchset" value="<?php echo Utils::t('Add'); ?>" />
-						<input class="button dark" type="submit" name="loadMatchset" id="loadMatchset" value="<?php echo Utils::t('Load'); ?>" />
-						<input class="button dark" type="submit" name="saveMatchset" id="saveMatchset" value="<?php echo Utils::t('Save '); ?>" />
+			<?php if (AdminServAdminLevel::hasPermission(array('maps_matchsettings_save', 'maps_matchsettings_load', 'maps_matchsettings_add', 'maps_matchsettings_insert', 'maps_matchsettings_edit', 'maps_matchsettings_delete'))): ?>
+				<div class="fright">
+					<div class="selected-files-label locked">
+						<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
+						<span class="selected-files-count">(0)</span>
+						<div class="selected-files-option">
+							<?php if (AdminServAdminLevel::hasPermission('maps_matchsettings_delete')): ?>
+								<input class="button dark" type="submit" name="deleteMatchset" id="deleteMatchset" value="<?php echo Utils::t('Delete'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_matchsettings_edit')): ?>
+								<input class="button dark" type="submit" name="editMatchset" id="editMatchset" value="<?php echo Utils::t('Edit'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_matchsettings_insert')): ?>
+								<input class="button dark" type="submit" name="insertMatchset" id="insertMatchset" value="<?php echo Utils::t('Insert'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_matchsettings_add')): ?>
+								<input class="button dark" type="submit" name="addMatchset" id="addMatchset" value="<?php echo Utils::t('Add'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_matchsettings_load')): ?>
+								<input class="button dark" type="submit" name="loadMatchset" id="loadMatchset" value="<?php echo Utils::t('Load'); ?>" />
+							<?php endif; ?>
+							<?php if (AdminServAdminLevel::hasPermission('maps_matchsettings_save')): ?>
+								<input class="button dark" type="submit" name="saveMatchset" id="saveMatchset" value="<?php echo Utils::t('Save '); ?>" />
+							<?php endif; ?>
+						</div>
 					</div>
 				</div>
-			</div>
+			<?php endif; ?>
 		</div>
 		</form>
 	</section>

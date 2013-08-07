@@ -150,8 +150,12 @@
 				<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 				<span class="selected-files-count">(0)</span>
 				<div class="selected-files-option">
-					<input class="button dark" type="submit" name="blackListPlayer" id="blackListPlayer" value="<?php echo Utils::t('Blacklist'); ?>" />
-					<input class="button dark" type="submit" name="removeList" id="removeList" value="<?php echo Utils::t('Remove from the list'); ?>" />
+					<?php if (AdminServAdminLevel::hasPermission('guestban_addplayer')): ?>
+						<input class="button dark" type="submit" name="blackListPlayer" id="blackListPlayer" value="<?php echo Utils::t('Blacklist'); ?>" />
+					<?php endif; ?>
+					<?php if (AdminServAdminLevel::hasPermission('guestban_removeplayer')): ?>
+						<input class="button dark" type="submit" name="removeList" id="removeList" value="<?php echo Utils::t('Remove from the list'); ?>" />
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
@@ -160,44 +164,51 @@
 </section>
 
 <section class="cadre right">
-	<h1><?php echo Utils::t('Add'); ?></h1>
-	<div class="content last addPlayer">
-		<form method="post" action="?p=<?php echo USER_PAGE; ?>">
-			<div>
-				<select class="width2" name="addPlayerList" id="addPlayerList"<?php if ($data['players']['count'] == 0): echo ' hidden="hidden"'; endif; ?>>
-					<option value="none"><?php echo Utils::t('Select a player'); ?></option>
-					<?php echo $data['players']['listOptions']; ?>
-					<option value="more"><?php echo Utils::t('Enter another login'); ?></option>
-				</select>
-				<input class="text width2" type="text" name="addPlayerLogin" id="addPlayerLogin" data-default-value="<?php echo Utils::t('Player login'); ?>" value="<?php echo Utils::t('Player login'); ?>"<?php if ($data['players']['count'] != 0): echo ' hidden="hidden"'; endif; ?> />
-				<select class="addPlayerTypeList" name="addPlayerTypeList" id="addPlayerTypeList">
-					<option value="none"><?php echo Utils::t('Add in the'); ?></option>
-					<option value="guestlist">Guestlist</option>
-					<option value="blacklist">Blacklist</option>
-				</select>
-				<input class="button light" type="submit" name="addPlayer" id="addPlayer" value="<?php echo Utils::t('Add'); ?>" />
-			</div>
-		</form>
-	</div>
+	<?php if (AdminServAdminLevel::hasPermission('guestban_addplayer')): ?>
+		<h1><?php echo Utils::t('Add'); ?></h1>
+		<div class="content last addPlayer">
+			<form method="post" action="?p=<?php echo USER_PAGE; ?>">
+				<div>
+					<select class="width2" name="addPlayerList" id="addPlayerList"<?php if ($data['players']['count'] == 0): echo ' hidden="hidden"'; endif; ?>>
+						<option value="none"><?php echo Utils::t('Select a player'); ?></option>
+						<?php echo $data['players']['listOptions']; ?>
+						<option value="more"><?php echo Utils::t('Enter another login'); ?></option>
+					</select>
+					<input class="text width2" type="text" name="addPlayerLogin" id="addPlayerLogin" data-default-value="<?php echo Utils::t('Player login'); ?>" value="<?php echo Utils::t('Player login'); ?>"<?php if ($data['players']['count'] != 0): echo ' hidden="hidden"'; endif; ?> />
+					<select class="addPlayerTypeList" name="addPlayerTypeList" id="addPlayerTypeList">
+						<option value="none"><?php echo Utils::t('Add in the'); ?></option>
+						<option value="guestlist">Guestlist</option>
+						<option value="blacklist">Blacklist</option>
+					</select>
+					<input class="button light" type="submit" name="addPlayer" id="addPlayer" value="<?php echo Utils::t('Add'); ?>" />
+				</div>
+			</form>
+		</div>
+	<?php endif; ?>
 	
 	<?php if (isset($data['playlistDirectory']) && $data['playlistDirectory'] != 'Not directory'): ?>
 		<div id="playlists">
 			<form method="post" action="?p=<?php echo USER_PAGE; ?>">
-				<h1><?php echo Utils::t('Playlists'); ?>
-					<span id="form-new-playlist" hidden="hidden">
-						<select name="createPlaylistType" id="createPlaylistType">
-							<option value="none"><?php echo Utils::t('Type'); ?></option>
-							<option value="guestlist">Guestlist</option>
-							<option value="blacklist">Blacklist</option>
-						</select>
-						<input class="text" type="text" name="createPlaylistName" id="createPlaylistName" data-playlistname="<?php echo Utils::t('Playlist name'); ?>" value="<?php echo Utils::t('Playlist name'); ?>" />
-						<input class="button light" type="submit" name="createPlaylistValid" id="createPlaylistValid" value="<?php echo Utils::t('Create'); ?>" />
-					</span>
+				<h1>
+					<?php echo Utils::t('Playlists'); ?>
+					<?php if (AdminServAdminLevel::hasPermission('guestban_playlist_new')): ?>
+						<span id="form-new-playlist" hidden="hidden">
+							<select name="createPlaylistType" id="createPlaylistType">
+								<option value="none"><?php echo Utils::t('Type'); ?></option>
+								<option value="guestlist">Guestlist</option>
+								<option value="blacklist">Blacklist</option>
+							</select>
+							<input class="text" type="text" name="createPlaylistName" id="createPlaylistName" data-playlistname="<?php echo Utils::t('Playlist name'); ?>" value="<?php echo Utils::t('Playlist name'); ?>" />
+							<input class="button light" type="submit" name="createPlaylistValid" id="createPlaylistValid" value="<?php echo Utils::t('Create'); ?>" />
+						</span>
+					<?php endif; ?>
 				</h1>
 			</form>
 			<div class="title-detail">
 				<ul>
-					<li><a id="clickNewPlaylist" href="" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-newplaylist="<?php echo Utils::t('New playlist'); ?>"><?php echo Utils::t('New playlist'); ?></a></li>
+					<?php if (AdminServAdminLevel::hasPermission('guestban_playlist_new')): ?>
+						<li><a id="clickNewPlaylist" href="" data-cancel="<?php echo Utils::t('Cancel'); ?>" data-newplaylist="<?php echo Utils::t('New playlist'); ?>"><?php echo Utils::t('New playlist'); ?></a></li>
+					<?php endif; ?>
 					<li class="last"><input type="checkbox" name="checkAllPlaylists" id="checkAllPlaylists" value="" /></li>
 				</ul>
 			</div>
@@ -262,19 +273,27 @@
 				</tbody>
 			</table>
 			
-			<div class="options">
-				<div class="fright">
-					<div class="selected-files-label locked">
-						<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
-						<span class="selected-files-count">(0)</span>
-						<div class="selected-files-option">
-							<input class="button dark" type="submit" name="deletePlaylist" id="deletePlaylist" value="<?php echo Utils::t('Delete'); ?>" />
-							<input class="button dark" type="submit" name="loadPlaylist" id="loadPlaylist" value="<?php echo Utils::t('Load'); ?>" />
-							<input class="button dark" type="submit" name="savePlaylist" id="savePlaylist" value="<?php echo Utils::t('Save '); ?>" />
+			<?php if (AdminServAdminLevel::hasPermission(array('guestban_playlist_save', 'guestban_playlist_load', 'guestban_playlist_delete'))): ?>
+				<div class="options">
+					<div class="fright">
+						<div class="selected-files-label locked">
+							<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
+							<span class="selected-files-count">(0)</span>
+							<div class="selected-files-option">
+								<?php if (AdminServAdminLevel::hasPermission('guestban_playlist_delete')): ?>
+									<input class="button dark" type="submit" name="deletePlaylist" id="deletePlaylist" value="<?php echo Utils::t('Delete'); ?>" />
+								<?php endif; ?>
+								<?php if (AdminServAdminLevel::hasPermission('guestban_playlist_load')): ?>
+									<input class="button dark" type="submit" name="loadPlaylist" id="loadPlaylist" value="<?php echo Utils::t('Load'); ?>" />
+								<?php endif; ?>
+								<?php if (AdminServAdminLevel::hasPermission('guestban_playlist_save')): ?>
+									<input class="button dark" type="submit" name="savePlaylist" id="savePlaylist" value="<?php echo Utils::t('Save '); ?>" />
+								<?php endif; ?>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			<?php endif; ?>
 			</form>
 		</div>
 	<?php endif; ?>
