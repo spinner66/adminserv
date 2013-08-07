@@ -40,7 +40,7 @@
 		<h2><?php echo Utils::t('Options'); ?></h2>
 		<div class="options-checkbox">
 			<ul>
-				<?php if (SERVER_MATCHSET): ?>
+				<?php if (SERVER_MATCHSET && AdminServAdminLevel::hasPermission('maps_matchsettings_save')): ?>
 					<li>
 						<input class="text inline" type="checkbox" name="SaveCurrentMatchSettings" id="SaveCurrentMatchSettings"<?php if (AdminServConfig::AUTOSAVE_MATCHSETTINGS === true): echo ' checked="checked"'; endif; ?> value="" />
 						<label for="SaveCurrentMatchSettings" title="<?php echo SERVER_MATCHSET; ?>"><?php echo Utils::t('Save the current MatchSettings'); ?></label>
