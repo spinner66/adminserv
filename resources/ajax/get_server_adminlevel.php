@@ -13,7 +13,7 @@
 	
 	$out = array();
 	if($serverName != null){
-		$out = AdminServ::getServerAdminLevel($serverName);
+		$out = AdminServAdminLevel::getCurrentServerLevelList($serverName);
 	}
 	
 	echo json_encode($out);

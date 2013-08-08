@@ -54,4 +54,6 @@
 		$data['servers'] = ServerConfig::$SERVERS;
 	}
 	$data['count'] = count($data['servers']);
+	$adminLevels = AdminServAdminLevel::getStaticLevelList();
+	$data['adminLevels'] = $adminLevels['levels'];
 ?>

@@ -162,7 +162,7 @@
 								<input class="text" type="checkbox" name="AllowMapDownload" id="AllowMapDownload"<?php if (SERVER_VERSION_NAME == 'TmForever' && $data['srvOpt']['AllowChallengeDownload'] != 0): echo ' checked="checked"'; elseif (SERVER_VERSION_NAME == 'ManiaPlanet' && $data['srvOpt']['AllowMapDownload'] != 0): echo ' checked="checked"'; endif; ?> value="" />
 							</td>
 						</tr>
-						<tr<?php if (AdminServ::isAdminLevel('Admin') && !AdminServ::isAdminLevel('SuperAdmin')): echo ' hidden="hidden"'; endif; ?>>
+						<tr<?php if (AdminServAdminLevel::isMinTypeLevel('Admin') && !AdminServAdminLevel::isMinTypeLevel('SuperAdmin')): echo ' hidden="hidden"'; endif; ?>>
 							<td class="key"><label for="AutoSaveReplays"><?php echo Utils::t('Replays auto save'); ?></label></td>
 							<td class="value" colspan="4">
 								<input class="text" type="checkbox" name="AutoSaveReplays" id="AutoSaveReplays"<?php if ($data['srvOpt']['AutoSaveReplays'] != 0): echo ' checked="checked"'; endif; ?> value="" />
@@ -208,7 +208,7 @@
 				</fieldset>
 			<?php endif; ?>
 			
-			<?php if (IS_LOCAL && AdminServAdminLevel::hasPermission('srvopts_importexport')): ?>
+			<?php if (defined('IS_LOCAL') && IS_LOCAL && AdminServAdminLevel::hasPermission('srvopts_importexport')): ?>
 				<fieldset class="srvopts_importexport">
 					<legend><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/rt_team.png" alt="" /><?php echo Utils::t('Manage server options'); ?></legend>
 					<table>

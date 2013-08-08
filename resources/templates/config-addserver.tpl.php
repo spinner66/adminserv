@@ -70,7 +70,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="key"><label for="addServerAdmLvlADM"><?php echo Utils::t('Admin level'); ?></label></td>
+						<td class="key"><label for="addServerAdmLvlADM"><?php echo ucwords(Utils::t('Admin level')); ?></label></td>
 						<td class="value">
 							<input class="text width3" type="text" name="addServerAdmLvlADM" id="addServerAdmLvlADM" value="<?php echo $data['adminlevel']['Admin']; ?>" />
 						</td>

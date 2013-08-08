@@ -2,9 +2,11 @@
 	<h1><?php echo Utils::t('Game information'); ?></h1>
 	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 		<div class="content gameinfos">
-			<?php echo AdminServUI::getTemplate('gameinfos-general'); ?>
+			<?php if (AdminServAdminLevel::hasPermission(array('gameinfos_general_gamemode', 'gameinfos_general_warmup', 'gameinfos_general_options'))): ?>
+				<?php echo AdminServUI::getTemplate('gameinfos-general'); ?>
+			<?php endif; ?>
 			
-			<?php if (SERVER_VERSION_NAME == 'ManiaPlanet' && AdminServ::checkDisplayTeamMode($data['gameInfos']['next']['GameMode'], $data['gameInfos']['next']['ScriptName'])): ?>
+			<?php if (SERVER_VERSION_NAME == 'ManiaPlanet' && AdminServ::checkDisplayTeamMode($data['gameInfos']['next']['GameMode'], $data['gameInfos']['next']['ScriptName']) && AdminServAdminLevel::hasPermission('gameinfos_teams_options')): ?>
 				<fieldset class="gameinfos_teaminfos">
 					<legend><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/players.png" alt="" /><?php echo Utils::t('Team infos'); ?></legend>
 					<table>

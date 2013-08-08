@@ -1,10 +1,9 @@
 <?php
 class AdminLevelConfig {
 	public static $ADMINLEVELS = array(
-		'SuperAdmin' => array(
+		'Master' => array(
 			'adminlevel' => array(
 				'type' => 'SuperAdmin',
-				'selected' => true,
 			),
 			'access' => array(
 				'server_options' => true,
@@ -44,6 +43,7 @@ class AdminLevelConfig {
 				'gameinfos_general_gamemode' => true,
 				'gameinfos_general_options' => true,
 				'gameinfos_general_warmup' => true,
+				'gameinfos_teams_options' => true,
 				'gameinfos_gamemode_options' => true,
 				'chat_sendmessage' => true,
 				'maps_list_moveaftercurrent' => true,
@@ -75,7 +75,7 @@ class AdminLevelConfig {
 				'guestban_playlist_delete' => true,
 			)
 		),
-		'Admin' => array(
+		'Team' => array(
 			'adminlevel' => array(
 				'type' => 'Admin',
 			),
@@ -117,6 +117,7 @@ class AdminLevelConfig {
 				'gameinfos_general_gamemode' => true,
 				'gameinfos_general_options' => false,
 				'gameinfos_general_warmup' => true,
+				'gameinfos_teams_options' => true,
 				'gameinfos_gamemode_options' => true,
 				'chat_sendmessage' => true,
 				'maps_list_moveaftercurrent' => true,
@@ -148,23 +149,14 @@ class AdminLevelConfig {
 				'guestban_playlist_delete' => false,
 			)
 		),
-		'User' => array(
+		'Public' => array(
 			'adminlevel' => array(
 				'type' => 'User',
 			),
 			'access' => array(
-				'server_options' => false,
-				'game_infos' => true,
 				'chat' => true,
 				'maps_list' => true,
-				'maps_local' => false,
-				'maps_upload' => false,
-				'maps_order' => false,
-				'maps_matchsettings' => false,
-				'maps_create_matchsettings' => false,
 				'link_access_server' => true,
-				'plugins_list' => false,
-				'guest_ban' => false,
 			),
 			'permission' => array()
 		)

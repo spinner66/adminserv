@@ -547,11 +547,6 @@ class AdminServUI {
 		$pagesList = array_merge($pagesList, array_keys(ExtensionConfig::$MAPSMENU) );
 		$firstPage = array_shift($pagesList);
 		
-		// Access exception
-		if (!AdminServAdminLevel::hasPermission(array('maps_upload_add', 'maps_upload_insert', 'maps_upload_folder'))) {
-			AdminLevelConfig::$ADMINLEVELS[USER_ADMINLEVEL]['access']['maps_upload'] = false;
-		}
-		
 		// Render page
 		if (in_array(USER_PAGE, $pagesList)) {
 			$pageKey = array_search(USER_PAGE, $pagesList);

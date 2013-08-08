@@ -155,7 +155,8 @@ class AdminServ {
 					Utils::redirection(false, '?error='.urlencode( Utils::t('You are not allowed at this admin level') ) );
 				}
 				else{
-					if( !$client->query('Authenticate', USER_ADMINLEVEL, $_SESSION['adminserv']['password']) ){
+					$levelData = AdminServAdminLevel::getLevelData(USER_ADMINLEVEL, 'adminlevel');
+					if( !$client->query('Authenticate', $levelData['type'], $_SESSION['adminserv']['password']) ){
 						Utils::redirection(false, '?error='.urlencode( Utils::t('The password doesn\'t match to the server.') ) );
 					}
 					else{
@@ -230,69 +231,6 @@ class AdminServ {
 				}
 			}
 		}
-		
-		return $out;
-	}
-	
-	
-
-	
-	
-	/**
-	* Vérifie les accès à différent niveau d'admin
-	*
-	* @param  string $level -> Level minimum à tester
-	* @return true si autorisé, sinon false
-	*/
-	public static function isAdminLevel($level){
-		$out = false;
-		
-		switch($level){
-			case 'User':
-				if(USER_ADMINLEVEL == 'SuperAdmin' || USER_ADMINLEVEL == 'Admin' || USER_ADMINLEVEL == 'User'){
-					$out = true;
-				}
-				break;
-			case 'Admin':
-				if(USER_ADMINLEVEL == 'SuperAdmin' || USER_ADMINLEVEL == 'Admin'){
-					$out = true;
-				}
-				break;
-			case 'SuperAdmin':
-				if(USER_ADMINLEVEL == 'SuperAdmin'){
-					$out = true;
-				}
-				break;
-		}
-		
-		return $out;
-	}
-	
-	
-	/**
-	* Récupère la liste des niveaux admin
-	*
-	* @param string $serverName -> Nom du serveur de la config
-	* @return array
-	*/
-	public static function getServerAdminLevel($serverName = SERVER_NAME){
-		$out = array();
-		$servers = ServerConfig::$SERVERS;
-		$authenticate = array('SuperAdmin', 'Admin', 'User');
-		
-		if( AdminServServerConfig::hasServer() && isset($servers[$serverName]) ){
-			foreach($servers[$serverName]['adminlevel'] as $levelName => $levelValues){
-				if($levelName != null){
-					if( in_array($levelName, $authenticate) && $levelValues != 'none' ){
-						if( AdminServAdminLevel::userAllowedInLevel($levelName, $serverName) ){
-							$out['levels'][] = $levelName;
-						}
-					}
-				}
-			}
-		}
-		
-		$out['last'] = Utils::readCookieData('adminserv', 1);
 		
 		return $out;
 	}
@@ -439,14 +377,14 @@ class AdminServ {
 		
 		// REQUÊTES
 		$client->addCall($queryName['getMapInfo']);
-		if( self::isAdminLevel('Admin') ){
+		if( AdminServAdminLevel::isMinTypeLevel('Admin') ){
 			$client->addCall('GetMapsDirectory');
 		}
 		$client->addCall('GetGameMode');
 		$client->addCall('GetServerName');
 		$client->addCall('GetStatus');
 		$client->addCall('GetCurrentCallVote');
-		if( self::isAdminLevel('SuperAdmin') ){
+		if( AdminServAdminLevel::isMinTypeLevel('SuperAdmin') ){
 			$client->addCall('GetNetworkStats');
 		}
 		$client->addCall('GetPlayerList', array(AdminServConfig::LIMIT_PLAYERS_LIST, 0, 1) );
@@ -632,7 +570,7 @@ class AdminServ {
 		global $client;
 		$out = null;
 		
-		if( self::isAdminLevel('Admin') ){
+		if( AdminServAdminLevel::isMinTypeLevel('Admin') ){
 			if( !$client->query('GameDataDirectory') ){
 				self::error();
 			}
