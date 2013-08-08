@@ -28,9 +28,8 @@
 						}
 						
 						// Niveaux admins
-						$adminLevels = array('SuperAdmin', 'Admin', 'User');
 						$adminLevelsStatus = array();
-						foreach($adminLevels as $level){
+						foreach($data['adminLevels'] as $level){
 							if( array_key_exists($level, $serverData['adminlevel']) ){
 								if( is_array($serverData['adminlevel'][$level]) ){
 									$adminLevelsStatus[] = Utils::t('IP address');

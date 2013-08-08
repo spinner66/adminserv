@@ -192,13 +192,47 @@ class AdminServAdminLevel {
 	
 	
 	/**
+	* Détermine si le niveau utilisateur est au minimum de type $minTypeLevel
+	*
+	* @param string $minTypeLevel -> Type de niveau admin minimum
+	* @return bool
+	*/
+	public static function isMinTypeLevel($minTypeLevel) {
+		$out = false;
+		
+		$levelData = self::getLevelData(USER_ADMINLEVEL, 'adminlevel');
+		$minTypeLevelAuthorized = self::getDefaultLevels($levelData['type']);
+		if (in_array($minTypeLevel, $minTypeLevelAuthorized)) {
+			$out = true;
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
 	* Récupère la liste des niveaux admins configurés pour le serveur courant
 	*
 	* @param string $server -> Nom du serveur
 	* @return array
 	*/
-	public static function getCurrentServerLevelList($server = null) {
-		return ($server === null && defined('SERVER_ADMINLEVEL')) ? unserialize(SERVER_ADMINLEVEL) : ServerConfig::$SERVERS[$server]['adminlevel'];
+	public static function getCurrentServerLevelList($server) {
+		$out = array();
+		$servers = ServerConfig::$SERVERS;
+		
+		if (AdminServServerConfig::hasServer() && isset($servers[$server])) {
+			foreach ($servers[$server]['adminlevel'] as $levelName => $levelValues) {
+				if ($levelName != null && $levelValues != 'none') {
+					if (self::userAllowedInLevel($levelName, $server)) {
+						$out['levels'][] = $levelName;
+					}
+				}
+			}
+		}
+		
+		$out['last'] = Utils::readCookieData('adminserv', 1);
+		
+		return $out;
 	}
 	
 	
@@ -212,11 +246,9 @@ class AdminServAdminLevel {
 		$out = array();
 		$serverLevels = self::getCurrentServerLevelList($server);
 		
-		if (!empty($serverLevels)) {
-			foreach($serverLevels as $levelName => $levelData){
-				if (self::userAllowedInLevel($levelName, $server)) {
-					$out[$levelName] = self::getLevelData($levelName);
-				}
+		if (isset($serverLevels['levels']) && !empty($serverLevels['levels'])) {
+			foreach ($serverLevels['levels'] as $levelName => $levelData) {
+				$out[$levelName] = self::getLevelData($levelName);
 			}
 		}
 		
@@ -234,24 +266,44 @@ class AdminServAdminLevel {
 	public static function userAllowedInLevel($level, $server = null) {
 		$out = false;
 		
-		$serverLevels = self::getCurrentServerLevelList($server);
-		$serverLevel = $serverLevels[$level];
-		
-		if (is_array($serverLevel)) {
-			if (in_array($_SERVER['REMOTE_ADDR'], $serverLevel)) {
-				$out = true;
-			}
+		$servers = ServerConfig::$SERVERS;
+		if ($server === null && defined('SERVER_NAME')) {
+			$server = SERVER_NAME;
 		}
-		else {
-			if ($serverLevel === 'all') {
-				$out = true;
-			}
-			elseif ($serverLevel === 'none') {
-				$out = false;
+		if (AdminServServerConfig::hasServer() && isset($servers[$server])) {
+			$serverLevel = $servers[$server]['adminlevel'][$level];
+			
+			if (is_array($serverLevel)) {
+				if (in_array($_SERVER['REMOTE_ADDR'], $serverLevel)) {
+					$out = true;
+				}
 			}
 			else {
-				$out = Utils::isLocalhostIP();
+				if ($serverLevel === 'all') {
+					$out = true;
+				}
+				elseif ($serverLevel === 'none') {
+					$out = false;
+				}
+				else {
+					$out = Utils::isLocalhostIP();
+				}
 			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Récupère la liste des niveaux admins configurés
+	*/
+	public static function getStaticLevelList(){
+		$out = array();
+		$levels = AdminLevelConfig::$ADMINLEVELS;
+		
+		foreach ($levels as $levelName => $levelData) {
+			$out['levels'][] = $levelName;
 		}
 		
 		return $out;

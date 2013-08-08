@@ -1,6 +1,6 @@
 <?php
 	// GAMEDATA
-	if( AdminServ::isAdminLevel('Admin') ){
+	if( AdminServAdminLevel::isMinTypeLevel('Admin') ){
 		if( !$client->query('GameDataDirectory') ){
 			AdminServ::error();
 		}
