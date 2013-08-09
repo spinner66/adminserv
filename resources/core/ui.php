@@ -288,7 +288,7 @@ class AdminServUI {
 	* Récupère le header/footer du site
 	*/
 	public static function getHeader(){
-		global $id;
+		global $args;
 		
 		if( !isset($GLOBALS['body_class']) ){
 			$GLOBALS['body_class'] = null;
@@ -581,6 +581,7 @@ class AdminServUI {
 	* Ititialise une page en front office
 	*/
 	public static function initFrontPage() {
+		
 		// Render page
 		if (self::isPageType('config')) {
 			$pageTitle = 'Configuration';
