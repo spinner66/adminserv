@@ -151,12 +151,11 @@ class AdminServ {
 				Utils::redirection(false, '?error='.urlencode( Utils::t('The server is not accessible.') ) );
 			}
 			else{
-				if( !AdminServAdminLevel::userAllowedInLevel(USER_ADMINLEVEL) ){
+				if( !AdminServAdminLevel::userAllowed(USER_ADMINLEVEL) ){
 					Utils::redirection(false, '?error='.urlencode( Utils::t('You are not allowed at this admin level') ) );
 				}
 				else{
-					$levelData = AdminServAdminLevel::getLevelData(USER_ADMINLEVEL, 'adminlevel');
-					if( !$client->query('Authenticate', $levelData['type'], $_SESSION['adminserv']['password']) ){
+					if( !$client->query('Authenticate', AdminServAdminLevel::getType(), $_SESSION['adminserv']['password']) ){
 						Utils::redirection(false, '?error='.urlencode( Utils::t('The password doesn\'t match to the server.') ) );
 					}
 					else{
@@ -377,14 +376,14 @@ class AdminServ {
 		
 		// REQUÊTES
 		$client->addCall($queryName['getMapInfo']);
-		if( AdminServAdminLevel::isMinTypeLevel('Admin') ){
+		if( AdminServAdminLevel::isType('Admin') ){
 			$client->addCall('GetMapsDirectory');
 		}
 		$client->addCall('GetGameMode');
 		$client->addCall('GetServerName');
 		$client->addCall('GetStatus');
 		$client->addCall('GetCurrentCallVote');
-		if( AdminServAdminLevel::isMinTypeLevel('SuperAdmin') ){
+		if( AdminServAdminLevel::isType('SuperAdmin') ){
 			$client->addCall('GetNetworkStats');
 		}
 		$client->addCall('GetPlayerList', array(AdminServConfig::LIMIT_PLAYERS_LIST, 0, 1) );
@@ -570,7 +569,7 @@ class AdminServ {
 		global $client;
 		$out = null;
 		
-		if( AdminServAdminLevel::isMinTypeLevel('Admin') ){
+		if( AdminServAdminLevel::isType('Admin') ){
 			if( !$client->query('GameDataDirectory') ){
 				self::error();
 			}

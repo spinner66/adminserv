@@ -1,6 +1,6 @@
 <?php
 	// GAMEDATA
-	if( AdminServAdminLevel::isMinTypeLevel('Admin') ){
+	if( AdminServAdminLevel::isType('Admin') ){
 		if( !$client->query('GameDataDirectory') ){
 			AdminServ::error();
 		}
@@ -75,5 +75,5 @@
 	
 	// LECTURE
 	$data['srvOpt'] = AdminServ::getServerOptions();
-	$data['adminLevels'] = AdminServAdminLevel::getCurrentServerLevelList();
+	$data['adminLevels'] = AdminServAdminLevel::getServerList();
 ?>

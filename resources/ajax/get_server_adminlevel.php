@@ -2,6 +2,7 @@
 	// INCLUDES
 	session_start();
 	$configPath = '../../'.$_SESSION['adminserv']['path'].'config/';
+	require_once $configPath.'adminlevel.cfg.php';
 	require_once $configPath.'adminserv.cfg.php';
 	require_once $configPath.'servers.cfg.php';
 	require_once '../core/adminserv.php';
@@ -13,7 +14,7 @@
 	
 	$out = array();
 	if($serverName != null){
-		$out = AdminServAdminLevel::getCurrentServerLevelList($serverName);
+		$out = AdminServAdminLevel::getServerList($serverName);
 	}
 	
 	echo json_encode($out);
