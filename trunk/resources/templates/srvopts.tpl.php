@@ -162,7 +162,7 @@
 								<input class="text" type="checkbox" name="AllowMapDownload" id="AllowMapDownload"<?php if (SERVER_VERSION_NAME == 'TmForever' && $data['srvOpt']['AllowChallengeDownload'] != 0): echo ' checked="checked"'; elseif (SERVER_VERSION_NAME == 'ManiaPlanet' && $data['srvOpt']['AllowMapDownload'] != 0): echo ' checked="checked"'; endif; ?> value="" />
 							</td>
 						</tr>
-						<tr<?php if (AdminServAdminLevel::isMinTypeLevel('Admin') && !AdminServAdminLevel::isMinTypeLevel('SuperAdmin')): echo ' hidden="hidden"'; endif; ?>>
+						<tr<?php if (AdminServAdminLevel::isType('Admin') && !AdminServAdminLevel::isType('SuperAdmin')): echo ' hidden="hidden"'; endif; ?>>
 							<td class="key"><label for="AutoSaveReplays"><?php echo Utils::t('Replays auto save'); ?></label></td>
 							<td class="value" colspan="4">
 								<input class="text" type="checkbox" name="AutoSaveReplays" id="AutoSaveReplays"<?php if ($data['srvOpt']['AutoSaveReplays'] != 0): echo ' checked="checked"'; endif; ?> value="" />

@@ -17,14 +17,28 @@ class AdminServServerConfig {
 	/**
 	* Détermine si il y a au moins un serveur disponible
 	*
+	* @param string $serverName -> Tester si le serveur est présent
 	* @return bool
 	*/
-	public static function hasServer(){
+	public static function hasServer($serverName = null){
 		$out = false;
-		$serverList = ServerConfig::$SERVERS;
 		
-		if( isset($serverList) && count($serverList) > 0 && !isset($serverList['new server name']) && !isset($serverList['']) ){
-			$out = true;
+		if (class_exists('ServerConfig')) {
+			$serverList = ServerConfig::$SERVERS;
+			
+			if (isset($serverList) && !empty($serverList) && !isset($serverList['new server name']) && !isset($serverList[''])) {
+				if ($serverName) {
+					foreach ($serverList as $serverListName => $serverListData) {
+						if ($serverListName === $serverName) {
+							$out = true;
+							break;
+						}
+					}
+				}
+				else {
+					$out = true;
+				}
+			}
 		}
 		
 		return $out;

@@ -47,7 +47,7 @@ class AdminServPlugin {
 			if( isset(ExtensionConfig::$PLUGINS) && count(ExtensionConfig::$PLUGINS) > 0 ){
 				foreach(ExtensionConfig::$PLUGINS as $plugin){
 					$pluginConfig = self::getConfig($plugin);
-					if( ($pluginConfig['game'] == SERVER_VERSION_NAME || $pluginConfig['game'] == 'all') && AdminServAdminLevel::isMinTypeLevel($pluginConfig['adminlevel']) ){
+					if( ($pluginConfig['game'] == SERVER_VERSION_NAME || $pluginConfig['game'] == 'all') && AdminServAdminLevel::isType($pluginConfig['adminlevel']) ){
 						if($pluginName){
 							if($pluginName == $plugin){
 								$out = true;
@@ -125,7 +125,7 @@ class AdminServPlugin {
 		if( count(ExtensionConfig::$PLUGINS) > 0 ){
 			foreach(ExtensionConfig::$PLUGINS as $plugin){
 				$pluginInfos = self::getConfig($plugin);
-				if( ($pluginInfos['game'] == 'all' || $pluginInfos['game'] == SERVER_VERSION_NAME) && AdminServAdminLevel::isMinTypeLevel($pluginInfos['adminlevel']) ){
+				if( ($pluginInfos['game'] == 'all' || $pluginInfos['game'] == SERVER_VERSION_NAME) && AdminServAdminLevel::isType($pluginInfos['adminlevel']) ){
 					$pluginsList[$plugin] = $pluginInfos;
 				}
 			}

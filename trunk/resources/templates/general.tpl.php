@@ -91,7 +91,7 @@
 		</table>
 	</div>
 	
-	<?php if (AdminServAdminLevel::isMinTypeLevel('SuperAdmin')): ?>
+	<?php if (AdminServAdminLevel::isType('SuperAdmin')): ?>
 		<h1><?php echo Utils::t('Statistics'); ?></h1>
 		<div class="content last">
 			<table>
