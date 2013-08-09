@@ -13,6 +13,10 @@ class AdminServAdminLevel {
 		'Admin' => array('Admin', 'User'),
 		'User' => array('User'),
 	);
+	private static $CONFIG_PATH = './config/';
+	private static $CONFIG_FILENAME = 'adminlevel.cfg.php';
+	private static $CONFIG_START_TEMPLATE = "<?php\nclass AdminLevelConfig {\n\tpublic static \$ADMINLEVELS = array(\n\t\t/********************* ADMINLEVELS CONFIGURATION *********************/\n\t\t\n";
+	private static $CONFIG_END_TEMPLATE =  "\t);\n}\n?>";
 	
 	
 	/**
@@ -192,24 +196,32 @@ class AdminServAdminLevel {
 	
 	
 	/**
-	* Détermine si le niveau utilisateur est au minimum de type $levelType
+	* Récupère la position du niveau admin dans le fichier de config
 	*
-	* @param string $levelType -> Type de niveau admin minimum
-	* @return bool
+	* @param string $levelName -> Nom du niveau admin
+	* @return string
 	*/
-	public static function isType($levelType, $levelName = null) {
-		$out = false;
+	public static function getId($levelName = null) {
+		$id = 0;
+		$levelList = self::getStaticList();
 		if ($levelName === null && defined('USER_ADMINLEVEL')) {
 			$levelName = USER_ADMINLEVEL;
 		}
 		
-		$levelData = self::getData($levelName, 'adminlevel');
-		$levelTypeAuthorized = self::getDefaultType($levelData['type']);
-		if (in_array($levelType, $levelTypeAuthorized)) {
-			$out = true;
+		// On cherche la position du niveau à partir de son nom
+		if (!empty($levelList)) {
+			foreach ($levelList as $levelListName) {
+				if ($levelListName == $levelName) {
+					break;
+				}
+				else {
+					$id++;
+				}
+			}
 		}
 		
-		return $out;
+		// Si l'id = le nb total de levels -> pas trouvé
+		return ($id == count($levelList)) ? -1 : $id;
 	}
 	
 	
@@ -249,6 +261,28 @@ class AdminServAdminLevel {
 					$out = $levelName;
 				}
 			}
+		}
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Détermine si le niveau utilisateur est au minimum de type $levelType
+	*
+	* @param string $levelType -> Type de niveau admin minimum
+	* @return bool
+	*/
+	public static function isType($levelType, $levelName = null) {
+		$out = false;
+		if ($levelName === null && defined('USER_ADMINLEVEL')) {
+			$levelName = USER_ADMINLEVEL;
+		}
+		
+		$levelData = self::getData($levelName, 'adminlevel');
+		$levelTypeAuthorized = self::getDefaultType($levelData['type']);
+		if (in_array($levelType, $levelTypeAuthorized)) {
+			$out = true;
 		}
 		
 		return $out;
@@ -345,6 +379,85 @@ class AdminServAdminLevel {
 		}
 		
 		return $out;
+	}
+	
+	
+	/**
+	* Créer le template d'un niveau admin
+	*
+	* @param array $levelData -> assoc array(adminlevel => array(type), access, permission)
+	*/
+	public static function getTemplate($levelData){
+		$out = "\t\t'".$levelData['name']."' => array(\n"
+			."\t\t\t'adminlevel' => array(\n";
+				foreach ($levelData['adminlevel'] as $adminlevelName => $adminlevelData) {
+					$out .= "\t\t\t\t'$adminlevelName' => '$adminlevelData',\n";
+				}
+			$out .= "\t\t\t),\n"
+			."\t\t\t'access' => array(\n";
+				foreach ($levelData['access'] as $accessName => $accessData) {
+					$out .= "\t\t\t\t'$accessName' => ".var_export($accessData, true).",\n";
+				}
+			$out .= "\t\t\t),\n"
+			."\t\t\t'permission' => array(\n";
+				foreach ($levelData['permission'] as $permissionName => $permissionData) {
+					$out .= "\t\t\t\t'$permissionName' => ".var_export($permissionData, true).",\n";
+				}
+			$out .= "\t\t\t),\n"
+		."\t\t),\n";
+		
+		return $out;
+	}
+	
+	
+	/**
+	* Sauvegarde le fichier de configuration des niveaux admins
+	*
+	* @param array $levelData -> assoc array(adminlevel => array(type), access, permission)
+	* @param int   $editLevel -> Id du niveau à éditer
+	* @param array $levelList -> Liste des niveaux de la config
+	* @return bool or string error
+	*/
+	public static function saveConfig($levelData = array(), $editLevel = -1, $levelList = array()) {
+		// Liste des niveaux
+		$levels = (isset($levelList) && !empty($levelList)) ? $levelList : AdminLevelConfig::$ADMINLEVELS;
+		
+		// Template
+		$fileTemplate = self::$CONFIG_START_TEMPLATE;
+		$i = 0;
+		foreach ($levels as $levelName => $levelValues) {
+			// Édition
+			if ($i == $editLevel && isset($levelData) && !empty($levelData)) {
+				$fileTemplate .= self::getTemplate($levelData);
+			}
+			else {
+				// Récupération des données des niveaux existant
+				$getLevelsData = array(
+					'name' => $levelName,
+					'adminlevel' => $levelValues['adminlevel'],
+					'access' => $levelValues['access'],
+					'permission' => $levelValues['permission'],
+				);
+				
+				// Ajout des données au template
+				$fileTemplate .= self::getTemplate($getLevelsData);
+			}
+			$i++;
+		}
+		
+		// Ajout d'un nouveau
+		if ($editLevel === -1 && isset($levelData) && !empty($levelData)) {
+			if (self::getId($levelData['name']) === -1) {
+				$fileTemplate .= self::getTemplate($levelData);
+			}
+			else {
+				return Utils::t('The admin level already exist! Change the name.');
+			}
+		}
+		$fileTemplate .= self::$CONFIG_END_TEMPLATE;
+		
+		// Enregistrement
+		return File::save(self::$CONFIG_PATH.self::$CONFIG_FILENAME, $fileTemplate, false);
 	}
 }
 ?>

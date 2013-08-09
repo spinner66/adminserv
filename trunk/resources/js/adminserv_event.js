@@ -40,6 +40,12 @@ $(document).ready(function(){
 				// Mise à jour du nb de lignes sélectionnées
 				$('.cadre').updateNbSelectedLines();
 			});
+			// Supprimer un serveur
+			$('#deleteserver').click(function(){
+				if( !confirm( $(this).data('confirm-text') ) ){
+					return false;
+				}
+			});
 		}
 		else if( $('body').hasClass('section-config-addserver') ){
 			$('#addServerAdmLvlSA, #addServerAdmLvlADM, #addServerAdmLvlUSR').blur(function(){
@@ -66,6 +72,32 @@ $(document).ready(function(){
 						listStr += n.textContent+',';
 					});
 					$('#list').val(listStr.substring(0, listStr.length-1));
+				}
+			});
+		}
+		else if( $('body').hasClass('section-config-adminlevel') ){
+			// Clic sur les lignes
+			$('#levelList').on('click', 'tr', function(){
+				if( !$(this).hasClass('no-line') && !$(this).hasClass('table-separation') ){
+					// Si la ligne est déjà sélectionnée, on l'enlève
+					if( $(this).hasClass('selected') ){
+						$('#levelList tr').removeClass('selected');
+						$(this).find('td.checkbox input').prop('checked', false);
+					}
+					// Sinon, on l'ajoute
+					else{
+						$('#levelList tr').removeClass('selected');
+						$(this).addClass('selected').find('td.checkbox input').prop('checked', true);
+					}
+				}
+				
+				// Mise à jour du nb de lignes sélectionnées
+				$('.cadre').updateNbSelectedLines();
+			});
+			// Supprimer un niveau admin
+			$('#deletelevel').click(function(){
+				if( !confirm( $(this).data('confirm-text') ) ){
+					return false;
 				}
 			});
 		}

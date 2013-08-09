@@ -1146,10 +1146,12 @@ footer {
 .section-config-password input.width3 {
 	width: 30%;
 }
-.section-config-servers table tbody tr {
+.section-config-servers table tbody tr,
+.section-config-adminlevel table tbody tr {
 	height: 22px;
 }
-.section-config-servers table tbody tr input {
+.section-config-servers table tbody tr input,
+.section-config-adminlevel table tbody tr input {
 	margin-bottom: 4px;
 }
 

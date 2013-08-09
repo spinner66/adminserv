@@ -21,15 +21,11 @@
 				<?php foreach ($data['servers'] as $serverName => $serverData): ?>
 					<?php
 						// MatchSettings
-						if($serverData['matchsettings']){
-							$matchSettings = $serverData['matchsettings'];
-						}else{
-							$matchSettings = Utils::t('None');
-						}
+						$matchSettings = ($serverData['matchsettings']) ? $serverData['matchsettings'] : Utils::t('None');
 						
 						// Niveaux admins
 						$adminLevelsStatus = array();
-						foreach($data['adminLevels'] as $level){
+						foreach($data['adminLevelsType'] as $level){
 							if( array_key_exists($level, $serverData['adminlevel']) ){
 								if( is_array($serverData['adminlevel'][$level]) ){
 									$adminLevelsStatus[] = Utils::t('IP address');
@@ -82,7 +78,7 @@
 			<div class="selected-files-label locked">
 				<span class="selected-files-title"><?php echo Utils::t('For the selection'); ?></span>
 				<div class="selected-files-option">
-					<input class="button dark" type="submit" name="deleteserver" id="deleteserver" value="<?php echo Utils::t('Delete'); ?>" />
+					<input class="button dark" type="submit" name="deleteserver" id="deleteserver" data-confirm-text="<?php echo Utils::t('Do you really want to remove this selection?'); ?>" value="<?php echo Utils::t('Delete'); ?>" />
 					<input class="button dark" type="submit" name="duplicateserver" id="duplicateserver" value="<?php echo Utils::t('Duplicate'); ?>" />
 					<input class="button dark" type="submit" name="editserver" id="editserver" value="<?php echo Utils::t('Modify'); ?>" />
 				</div>
