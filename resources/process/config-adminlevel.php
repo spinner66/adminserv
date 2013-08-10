@@ -47,23 +47,11 @@
 	$data['levels'] = array();
 	if (AdminServAdminLevel::hasLevel()) {
 		foreach (AdminLevelConfig::$ADMINLEVELS as $levelName => $levelData) {
-			$allowedAccess = 0;
-			foreach ($levelData['access'] as $accessName => $accessData) {
-				if ($accessData === true) {
-					$allowedAccess++;
-				}
-			}
-			$allowedPermissions = 0;
-			foreach ($levelData['permission'] as $permissionName => $permissionData) {
-				if ($permissionData === true) {
-					$allowedPermissions++;
-				}
-			}
 			$data['levels'][] = array(
 				'name' => $levelName,
 				'type' => $levelData['adminlevel']['type'],
-				'allowed_access' => $allowedAccess.' '.Utils::t('allowed access'),
-				'allowed_permissions' => $allowedPermissions.' '.Utils::t('allowed permissions'),
+				'allowed_access' =>  count($levelData['access']).' '.Utils::t('authorized access'),
+				'allowed_permissions' => count($levelData['permission']).' '.Utils::t('authorized permissions'),
 			);
 		}
 	}

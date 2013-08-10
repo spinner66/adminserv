@@ -1,13 +1,13 @@
 <section class="cadre">
-	<h1><?php echo Utils::t('Servers order'); ?></h1>
+	<h1><?php echo Utils::t('Levels order'); ?></h1>
 	<form method="post" action="?p=<?php echo USER_PAGE; ?>">
 		<div class="content">
-			<ul id="sortableServersList">
-			<?php foreach ($data['servers'] as $serverName => $serverData): ?>
+			<ul id="sortableLevelsList">
+			<?php foreach ($data['levels'] as $levelName => $levelData): ?>
 				<li class="ui-state-default">
 					<div class="ui-icon ui-icon-arrowthick-2-n-s"></div>
-					<div class="order-server-name"><?php echo $serverName; ?></div>
-					<div class="order-server-addr-port"><?php echo $serverData['address'].' / '.$serverData['port']; ?></div>
+					<div class="order-server-name"><?php echo $levelName; ?></div>
+					<div class="order-server-addr-port"><?php echo $levelData['adminlevel']['type']; ?></div>
 				</li>
 			<?php endforeach; ?>
 			</ul>

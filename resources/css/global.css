@@ -1154,6 +1154,53 @@ footer {
 .section-config-adminlevel table tbody tr input {
 	margin-bottom: 4px;
 }
+.section-config-addlevel input.width3 {
+	width: 29.4%;
+}
+.section-config-addlevel select {
+	width: 31%;
+}
+.adminlevelSortableList td.value {
+	padding: 0 20px;
+	width: 40%;
+	vertical-align: top;
+}
+.adminlevelSortableList .ui-sortable {
+	position: relative;
+	padding: 2px;
+	min-height: 200px;
+	background: #f9f9f9;
+	border: 2px solid #f6f6f6;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+}
+.adminlevelSortableList .ui-sortable:after {
+	content: "";
+	position: absolute;
+	top: 90px;
+	right: -20px;
+	z-index: 5;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 10px 10px 10px 0;
+	border-color: transparent #ccc transparent transparent;
+}
+.adminlevelSortableList #selectedAccess.ui-sortable:after,
+.adminlevelSortableList #selectedPermission.ui-sortable:after {
+	right: auto;
+	left: -20px;
+	border-width: 10px 0 10px 10px;
+	border-color: transparent transparent transparent #ccc;
+}
+.adminlevelSortableList .ui-sortable li {
+	margin: 0;
+	padding: 3px 5px;
+	min-height: 14px;
+}
 
 
 /* Page General
