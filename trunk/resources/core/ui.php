@@ -581,7 +581,6 @@ class AdminServUI {
 	* Ititialise une page en front office
 	*/
 	public static function initFrontPage() {
-		
 		// Render page
 		if (self::isPageType('config')) {
 			$pageTitle = 'Configuration';

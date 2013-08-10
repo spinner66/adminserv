@@ -60,7 +60,7 @@ $(document).ready(function(){
 				placeholder: 'ui-state-highlight',
 				revert: true,
 				zIndex: 9999
-			});
+			}).disableSelection();
 			$('#reset').click(function(){
 				location.href = $('.section-config-serversorder .cadre form').attr('action');
 			});
@@ -98,6 +98,63 @@ $(document).ready(function(){
 			$('#deletelevel').click(function(){
 				if( !confirm( $(this).data('confirm-text') ) ){
 					return false;
+				}
+			});
+		}
+		else if( $('body').hasClass('section-config-addlevel') ){
+			// Access
+			$('#defaultAccess, #selectedAccess').sortable({
+				connectWith: '.adminlevelAccessList',
+				revert: true
+			}).disableSelection();
+			// Permission
+			$('#defaultPermission, #selectedPermission').sortable({
+				connectWith: '.adminlevelPermissionList',
+				revert: true
+			}).disableSelection();
+			
+			// Submit
+			$('#savelevel').click(function(){
+				var lists = {
+					access: {
+						list: '#selectedAccess li',
+						target: '#selectedAccessSortList'
+					},
+					permission: {
+						list: '#selectedPermission li',
+						target: '#selectedPermissionSortList'
+					}
+				};
+				$.each(lists, function(i, n){
+					var out = '';
+					var selector = $(n.list);
+					if(selector.length > 0){
+						selector.each(function(){
+							out += $(this).text()+',';
+						});
+						$(n.target).val(out.substring(0, out.length-1));
+					}
+				});
+			});
+		}
+		else if( $('body').hasClass('section-config-levelsorder') ){
+			// Tri manuel
+			$('#sortableLevelsList').sortable({
+				placeholder: 'ui-state-highlight',
+				revert: true,
+				zIndex: 9999
+			}).disableSelection();
+			$('#reset').click(function(){
+				location.href = $('.section-config-levelsorder .cadre form').attr('action');
+			});
+			$('#save').click(function(){
+				var listStr = '';
+				var list = $('#sortableLevelsList li .order-server-name');
+				if( list.length > 0 ){
+					$.each(list, function(i, n){
+						listStr += n.textContent+',';
+					});
+					$('#list').val(listStr.substring(0, listStr.length-1));
 				}
 			});
 		}

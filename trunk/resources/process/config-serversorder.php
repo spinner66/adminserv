@@ -4,7 +4,6 @@
 		$serverList = ServerConfig::$SERVERS;
 		$list = explode(',', $_POST['list']);
 		
-		$i = 0;
 		$newServerList = array();
 		foreach($list as $listServerName){
 			$newServerList[$listServerName] = array(
@@ -14,7 +13,6 @@
 				'matchsettings' => $serverList[$listServerName]['matchsettings'],
 				'adminlevel' => $serverList[$listServerName]['adminlevel']
 			);
-			$i++;
 		}
 		
 		AdminServServerConfig::saveServerConfig(array(), -1, $newServerList);

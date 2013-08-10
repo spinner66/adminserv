@@ -8,10 +8,79 @@ class AdminServAdminLevel {
 	/**
 	* Constantes
 	*/
-	public static $DEFAULT_LEVELS = array(
+	private static $DEFAULT_TYPE = array(
 		'SuperAdmin' => array('SuperAdmin', 'Admin', 'User'),
 		'Admin' => array('Admin', 'User'),
 		'User' => array('User'),
+	);
+	private static $DEFAULT_ACCESS = array(
+		'srvopts' => 'server_options',
+		'gameinfos' => 'game_infos',
+		'chat' => 'chat',
+		'maps-list' => 'maps_list',
+		'maps-local' => 'maps_local',
+		'maps-upload' => 'maps_upload',
+		'maps-order' => 'maps_order',
+		'maps-matchset' => 'maps_matchsettings',
+		'maps-creatematchset' => 'maps_create_matchsettings',
+		'link_access_server',
+		'plugins-list' => 'plugins_list',
+		'guestban' => 'guest_ban',
+	);
+	private static $DEFAULT_PERMISSION = array(
+		'speed_admin',
+		'switch_server',
+		'player_kick',
+		'player_ban',
+		'player_guest',
+		'player_ignore',
+		'player_forcetospectator',
+		'player_forcetoplayer',
+		'player_changeteam',
+		'force_scores',
+		'cancel_vote',
+		'srvopts_general_name',
+		'srvopts_general_comment',
+		'srvopts_general_playerpassword',
+		'srvopts_general_spectatorpassword',
+		'srvopts_general_nbplayers',
+		'srvopts_general_nbspectators',
+		'srvopts_advanced',
+		'srvopts_adminlevelpassword',
+		'srvopts_importexport',
+		'gameinfos_general_gamemode',
+		'gameinfos_general_options',
+		'gameinfos_general_warmup',
+		'gameinfos_teams_options',
+		'gameinfos_gamemode_options',
+		'chat_sendmessage',
+		'maps_list_moveaftercurrent',
+		'maps_list_removetolist',
+		'maps_local_add',
+		'maps_local_insert',
+		'maps_local_download',
+		'maps_local_rename',
+		'maps_local_move',
+		'maps_local_delete',
+		'maps_upload_add',
+		'maps_upload_insert',
+		'maps_upload_folder',
+		'maps_matchsettings_save',
+		'maps_matchsettings_load',
+		'maps_matchsettings_add',
+		'maps_matchsettings_insert',
+		'maps_matchsettings_edit',
+		'maps_matchsettings_delete',
+		'folder_new',
+		'folder_rename',
+		'folder_move',
+		'folder_delete',
+		'guestban_addplayer',
+		'guestban_removeplayer',
+		'guestban_playlist_new',
+		'guestban_playlist_save',
+		'guestban_playlist_load',
+		'guestban_playlist_delete',
 	);
 	private static $CONFIG_PATH = './config/';
 	private static $CONFIG_FILENAME = 'adminlevel.cfg.php';
@@ -60,28 +129,21 @@ class AdminServAdminLevel {
 	public static function hasAccess($access, $levelName = null) {
 		$out = false;
 		
-		$pageToAccess = array(
-			'srvopts' => 'server_options',
-			'gameinfos' => 'game_infos',
-			'chat' => 'chat',
-			'maps-list' => 'maps_list',
-			'maps-local' => 'maps_local',
-			'maps-upload' => 'maps_upload',
-			'maps-order' => 'maps_order',
-			'maps-matchset' => 'maps_matchsettings',
-			'maps-creatematchset' => 'maps_create_matchsettings',
-			'plugins-list' => 'plugins_list',
-			'guestban' => 'guest_ban',
-		);
-		if (array_key_exists($access, $pageToAccess)) {
-			$access = $pageToAccess[$access];
+		// Si l'accès demandé est le nom d'une page
+		$defaultAccess = self::getDefaultAccess();
+		if (array_key_exists($access, $defaultAccess)) {
+			foreach ($defaultAccess as $pageName => $accessName) {
+				if ($access == $pageName) {
+					$access = $accessName;
+					break;
+				}
+			}
 		}
 		if ($levelName === null && defined('USER_ADMINLEVEL')) {
 			$levelName = USER_ADMINLEVEL;
 		}
 		$levelData = self::getData($levelName, 'access');
-		
-		if (!empty($levelData) && isset($levelData[$access]) && $levelData[$access] === true) {
+		if (!empty($levelData) && in_array($access, $levelData)) {
 			$out = true;
 		}
 		
@@ -117,7 +179,7 @@ class AdminServAdminLevel {
 				if (is_array($permission)) {
 					$result = array();
 					foreach ($permission as $perm) {
-						if (isset($levelData[$perm]) && $levelData[$perm] === true) {
+						if (in_array($perm, $levelData)) {
 							$result[] = true;
 						}
 						else {
@@ -129,7 +191,7 @@ class AdminServAdminLevel {
 					}
 				}
 				else {
-					if (isset($levelData[$permission]) && $levelData[$permission] === true) {
+					if (in_array($permission, $levelData)) {
 						$out = true;
 					}
 				}
@@ -150,10 +212,10 @@ class AdminServAdminLevel {
 		$out = array();
 		
 		if ($levelType === null) {
-			$out = array_keys(self::$DEFAULT_LEVELS);
+			$out = array_keys(self::$DEFAULT_TYPE);
 		}
 		else {
-			foreach (self::$DEFAULT_LEVELS as $defaultTypeLevel => $defaultAuthorizedLevel) {
+			foreach (self::$DEFAULT_TYPE as $defaultTypeLevel => $defaultAuthorizedLevel) {
 				if ($levelType === $defaultTypeLevel) {
 					$out = $defaultAuthorizedLevel;
 					break;
@@ -162,6 +224,12 @@ class AdminServAdminLevel {
 		}
 		
 		return $out;
+	}
+	public static function getDefaultAccess(){
+		return self::$DEFAULT_ACCESS;
+	}
+	public static function getDefaultPermission(){
+		return self::$DEFAULT_PERMISSION;
 	}
 	
 	
@@ -249,17 +317,21 @@ class AdminServAdminLevel {
 	/**
 	* Récupère le nom à partir du type
 	*
-	* @param string $levelType -> Type du niveau admin
+	* @param int $levelId -> Numéro de la position dans la config
 	* @return string
 	*/
-	public static function getName($levelType) {
+	public static function getName($levelId) {
 		$out = null;
+		$levelList = self::getStaticList();
 		
-		if (self::hasLevel()) {
-			foreach (AdminLevelConfig::$ADMINLEVELS as $levelName => $levelData) {
-				if (self::getType($levelName) === $levelType) {
-					$out = $levelName;
+		if (!empty($levelList)) {
+			$i = 0;
+			foreach ($levelList as $levelListName) {
+				if ($i == $levelId) {
+					$out = $levelListName;
+					break;
 				}
+				$i++;
 			}
 		}
 		
@@ -395,13 +467,13 @@ class AdminServAdminLevel {
 				}
 			$out .= "\t\t\t),\n"
 			."\t\t\t'access' => array(\n";
-				foreach ($levelData['access'] as $accessName => $accessData) {
-					$out .= "\t\t\t\t'$accessName' => ".var_export($accessData, true).",\n";
+				foreach ($levelData['access'] as $accessName) {
+					$out .= "\t\t\t\t'$accessName',\n";
 				}
 			$out .= "\t\t\t),\n"
 			."\t\t\t'permission' => array(\n";
-				foreach ($levelData['permission'] as $permissionName => $permissionData) {
-					$out .= "\t\t\t\t'$permissionName' => ".var_export($permissionData, true).",\n";
+				foreach ($levelData['permission'] as $permissionName) {
+					$out .= "\t\t\t\t'$permissionName',\n";
 				}
 			$out .= "\t\t\t),\n"
 		."\t\t),\n";
