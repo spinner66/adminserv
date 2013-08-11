@@ -1088,7 +1088,7 @@ class AdminServ {
 		global $client;
 		$out = false;
 		$admin = null;
-		Utils::addCookieData('adminserv_user', array(AdminServUI::getTheme(), AdminServUI::getLang(), $nickname, $color), AdminServConfig::COOKIE_EXPIRE);
+		Utils::addCookieData('adminserv_user', array(AdminServUI::theme(), AdminServUI::lang(), $nickname, $color), AdminServConfig::COOKIE_EXPIRE);
 		
 		if($showAdminText){
 			$admin = '$fffAdmin:';

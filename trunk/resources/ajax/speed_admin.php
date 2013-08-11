@@ -3,6 +3,7 @@
 	session_start();
 	if( !isset($_SESSION['adminserv']['sid']) ){ exit; }
 	$configPath = '../../'.$_SESSION['adminserv']['path'].'config/';
+	require_once $configPath.'adminlevel.cfg.php';
 	require_once $configPath.'adminserv.cfg.php';
 	require_once $configPath.'extension.cfg.php';
 	require_once $configPath.'servers.cfg.php';
