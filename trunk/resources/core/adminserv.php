@@ -1,5 +1,5 @@
 <?php
-define('ADMINSERV_TIMER', true);
+define('ADMINSERV_TIMER', false);
 define('ADMINSERV_VERSION', '2.1.0');
 
 /**
@@ -218,6 +218,10 @@ class AdminServ {
 								// TmForever
 								if(SERVER_VERSION_NAME == 'TmForever'){
 									array_shift(ExtensionConfig::$GAMEMODES);
+									$stuntsGameMode = array_pop(ExtensionConfig::$GAMEMODES);
+									$CupGameMode = array_pop(ExtensionConfig::$GAMEMODES);
+									ExtensionConfig::$GAMEMODES[4] = $stuntsGameMode;
+									ExtensionConfig::$GAMEMODES[5] = $CupGameMode;
 								}
 								
 								$out = true;
@@ -241,18 +245,18 @@ class AdminServ {
 	* @param string $link -> Lien : #join=server_login ou /:manialink_name
 	* @return string
 	*/
-	public static function getProtocolLink($link){
+	public static function getProtocolLink($link) {
 		$out = null;
 		$protocolName = 'maniaplanet';
-		if( defined('LINK_PROTOCOL') && LINK_PROTOCOL ){
+		if (defined('LINK_PROTOCOL')) {
 			$protocolName = LINK_PROTOCOL;
 		}
 		$protocolSeparator = '://';
 		
-		if( defined('SERVER_VERSION_NAME') && SERVER_VERSION_NAME == 'ManiaPlanet'){
+		if (defined('SERVER_VERSION_NAME') && SERVER_VERSION_NAME == 'ManiaPlanet' && defined('SERVER_TITLE')) {
 			$out = $protocolName.$protocolSeparator.$link.'@'.SERVER_TITLE;
 		}
-		else{
+		else {
 			$out = $protocolName.$protocolSeparator.$link;
 		}
 		

@@ -131,11 +131,11 @@
 </fieldset>
 
 <fieldset id="gameMode-cup" class="gameinfos_cup" hidden="hidden">
-	<legend><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/rt_cup.png" alt="" /><?php echo AdminServ::getGameModeName(5, true); ?></legend>
+	<legend><img src="<?php echo AdminServConfig::$PATH_RESOURCES; ?>images/16/rt_cup.png" alt="" /><?php echo AdminServ::getGameModeName(5); ?></legend>
 	<table class="game_infos">
 		<?php echo AdminServUI::getGameInfosField($data['gameInfos'], 'Points limit', 'CupPointsLimit'); ?>
 		<?php echo AdminServUI::getGameInfosField($data['gameInfos'], 'Rounds per map', 'CupRoundsPerMap'); ?>
-		<?php echo AdminServUI::getGameInfosField($data['gameInfos'], 'Number of winner', 'CupNbWinners'); ?>
+		<?php echo AdminServUI::getGameInfosField($data['gameInfos'], 'Number of winners', 'CupNbWinners'); ?>
 		<?php echo AdminServUI::getGameInfosField($data['gameInfos'], 'All WarmUp duration', 'CupWarmUpDuration'); ?>
 	</table>
 </fieldset>
