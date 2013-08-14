@@ -2022,3 +2022,13 @@ footer {
 	width: 80%;
 	margin: 20px auto 30px;
 }
+
+
+/* Danish
+------------------------*/
+html[lang="dk"] #connection-inner .connection-label {
+	width: 85%;
+}
+html[lang="dk"] .section-servers-online-config fieldset {
+	width: 575px;
+}
