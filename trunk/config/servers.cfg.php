@@ -1,8 +1,8 @@
 <?php
 class ServerConfig {
-	public static $SERVERS = array(
-		/********************* SERVER CONFIGURATION *********************/
-		
+  public static $SERVERS = array(
+    /********************* SERVER CONFIGURATION *********************/
+    
     /*
     'new server name' => array(
       'address' => 'localhost',
@@ -12,5 +12,6 @@ class ServerConfig {
       'adminlevel' => array('SuperAdmin' => 'all', 'Admin' => 'all', 'User' => 'all')
     ),
     */
+  );
 }
 ?>
