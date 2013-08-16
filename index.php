@@ -31,6 +31,7 @@
 	$checkRightsList = array(
 		'./config/adminserv.cfg.php' => 666,
 		'./config/servers.cfg.php' => 666,
+		'./config/adminlevel.cfg.php' => 666,
 	);
 	if( in_array(true, AdminServConfig::$LOGS) ){
 		if( Utils::isWinServer() ){ $checkRightsList['./logs/'] = 666; }
