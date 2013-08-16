@@ -4,8 +4,14 @@
 		// Variables
 		$levelName = Str::replaceSpecialChars( htmlspecialchars(addslashes($_POST['addLevelName'])), false);
 		$levelType = $_POST['addLevelType'];
-		$levelAccess = explode(',', $_POST['selectedAccessSortList']);
-		$levelPermission = explode(',', $_POST['selectedPermissionSortList']);
+		$levelAccess = array();
+		if ($_POST['selectedAccessSortList']) {
+			$levelAccess = explode(',', $_POST['selectedAccessSortList']);
+		}
+		$levelPermission = array();
+		if ($_POST['selectedPermissionSortList']) {
+			$levelPermission = explode(',', $_POST['selectedPermissionSortList']);
+		}
 		$levelData = array(
 			'name' => $levelName,
 			'adminlevel' => array(
