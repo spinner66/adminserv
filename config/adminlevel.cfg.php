@@ -153,7 +153,6 @@ class AdminLevelConfig {
 				'link_access_server',
 			),
 			'permission' => array(
-				'',
 			),
 		),
 	);

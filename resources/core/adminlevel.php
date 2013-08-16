@@ -467,13 +467,17 @@ class AdminServAdminLevel {
 				}
 			$out .= "\t\t\t),\n"
 			."\t\t\t'access' => array(\n";
-				foreach ($levelData['access'] as $accessName) {
-					$out .= "\t\t\t\t'$accessName',\n";
+				if (!empty($levelData['access'])) {
+					foreach ($levelData['access'] as $accessName) {
+						$out .= "\t\t\t\t'$accessName',\n";
+					}
 				}
 			$out .= "\t\t\t),\n"
 			."\t\t\t'permission' => array(\n";
-				foreach ($levelData['permission'] as $permissionName) {
-					$out .= "\t\t\t\t'$permissionName',\n";
+				if (!empty($levelData['permission'])) {
+					foreach ($levelData['permission'] as $permissionName) {
+						$out .= "\t\t\t\t'$permissionName',\n";
+					}
 				}
 			$out .= "\t\t\t),\n"
 		."\t\t),\n";
